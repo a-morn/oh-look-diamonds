@@ -1,0 +1,23 @@
+---Nuvarande sprint---
+
+Bakcklog:
+Gör om mappstruktur och slänga gamla filer
+Ändra stora träd mindre.
+Ändra träd genomskinliga. 
+Ändra Dödljud lägre.
+Skapa Berg bg.
+Ändra Bg-himmel: gradient
+Fixa antizoom.
+Skapa Fåglar.
+Skpa Full Loop Catz
+Skapa Trälådor (eller annat hinder)
+Skapa Diamond shards
+
+Complete:
+Sätta upp git
+
+---Senare sprint---
+Skapa Läsa diamond-, diamond shar-d och trälådeposition från xml-fil.
+Nytt dödljud
+Nytt diamondljud
+Nytt diamond shard-ljud
