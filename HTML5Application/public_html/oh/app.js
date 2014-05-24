@@ -36,6 +36,14 @@ var queue;
 var manifest;
 var totalLoaded = 0;
 
+var loopTimer = 0;
+catzStateEnum = {
+    Normal : 0,
+    Uploop : 1,
+    Downloop : 2
+}
+var catzState;
+
 function init()
 {
     canvas                      = document.getElementById('mahCanvas');
@@ -221,7 +229,8 @@ function addGameView()
 function startGame()
 {            
     bg.removeEventListener("click", startGame);        
-    stage.addEventListener("click", catzUp);    
+    stage.addEventListener("stagemousedown", catzUp);    
+    stage.addEventListener("stagemouseup", catzEndLoop);    
     jump = false;
     
     createjs.Ticker.setPaused(false);       
@@ -242,23 +251,50 @@ function update(event)
 
 function updatecatzRocket()
 {    
-    if(jump)
+    if(catzState === catzStateEnum.Normal)   
     {
-        total = total + 0.07;
-        catzRocket.y = catzRocket.y - (1-total)*4*grav ;                
-        if (total>1)
-        {                          
-            jump=false;
-            total = 0;
-            catzRocket.gotoAndPlay("rockOn");
-        }
-    }
-    else
-    {       
+        console.log('normal');
         catzRocket.y = catzRocket.y+grav;
+        loopTimer = 0;        
     }    
+    else if (catzState === catzStateEnum.Uploop)
+    {
+        console.log('uploop' + loopTimer);
+        catzRocket.y = catzRocket.y-1.5*grav;
+        loopTimer = loopTimer + 1;        
+        diSpeed = diSpeed * 0.98;
+        bgSpeed = bgSpeed * 0.98;
+        fgSpeed = fgSpeed * 0.98;
+    }
+    else if (catzState === catzStateEnum.Downloop)
+    {
+        loopTimer = loopTimer + 1;
+        console.log('downloop' + loopTimer);
+        catzRocket.y = catzRocket.y+1.5*grav;        
+        diSpeed = diSpeed * 0.98;
+        bgSpeed = bgSpeed * 0.98;
+        fgSpeed = fgSpeed * 0.98;
+    }       
+    
+    if (loopTimer>15 && catzState === catzStateEnum.Downloop)
+    {   
+        console.log('>10 dl');
+        catzState = catzStateEnum.Uploop;
+        loopTimer = 0;
+        diSpeed = 12;
+        bgSpeed = 5;
+        fgSpeed = 14;
+    }
+    
+    if (loopTimer>15 && catzState === catzStateEnum.Uploop)
+    {        
+        catzState = catzStateEnum.Downloop;
+        loopTimer = 0;
+    }
+    
+    
 
-    if(catzRocket.y > 450)
+    if(catzRocket.y > 450 || catzRocket.y < -50)
     {
         reset();
     }
@@ -340,12 +376,20 @@ function updateDiamonds()
 }
 
 function catzUp()
-{
-    if (!jump)
-    {
+{            
+    if(catzState === catzStateEnum.Normal)
+    {        
+        catzState = catzStateEnum.Uploop;
         catzRocket.gotoAndPlay("jump");
     }
-    jump = true;      
+}
+
+function catzEndLoop()
+{
+    catzState = catzStateEnum.Normal;
+    diSpeed = 12;
+    bgSpeed = 5;
+    fgSpeed = 14;
 }
 
 function reset()
