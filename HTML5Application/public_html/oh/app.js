@@ -282,8 +282,10 @@ function updateFg()
     if(Math.random()>0.98)
     {
         var tree = new createjs.Bitmap(queue.getResult("fgTree1"));     
+        tree.scaleX = 0.5;
+        tree.scaleY = 0.5;
         tree.x = 1000;
-        tree.y = 200;
+        tree.y = 290;
         fgCont.addChild(tree);        
     }
     
@@ -349,6 +351,7 @@ function catzUp()
 function reset()
 {    
     var instance = createjs.Sound.play("catzRocketCrash");
+    instance.volume = 0.1;
     createjs.Ticker.setPaused(true);
     catzRocket.x = 300;
     catzRocket.y = 200;                
