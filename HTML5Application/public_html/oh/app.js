@@ -3,27 +3,17 @@
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-var canvas;
-var stage;
+var canvas; var stage; var main;
 
-var main;
-var startB;
-var creditsB;
-var credits;
-var titleView = new createjs.Container();
+var startB; var creditsB; var credits; var titleView = new createjs.Container();
 
 var bg;
-var catz;
 var text;
-
-var queue;
 
 var grav = 8;
 var jump;
 var score = 0;
 var total = 0;
-
-
 
 var diCont = new createjs.Container();
 var bgCont = new createjs.Container();
@@ -52,7 +42,7 @@ function init()
 
     manifest = [
                 //{id: "catz", src: "assets/catz.png"}, 
-                {id: "catzRocketSpriteSheet", src: "assets/catzRocketSpriteSheet.png"},
+                {id: "catzRocketSpriteSheet", src: "assets/catzRocketJumpSpriteSheet.png"},
                 {id: "diamond", src: "assets/diamond.png"}, 
                 {id: "meow", src: "assets/meow.mp3"},
                 {id: "main", src: "assets/main.png"}, 
@@ -195,20 +185,20 @@ function addGameView()
     text.x = 100;     
         
     var catzData = {
-         images: ["assets/catzRocketSpriteSheet.png"],
-        frames: {width:1235, height:1320},
+         images: ["assets/catzRocketJumpSpriteSheet.png"],
+        frames: {width:1720, height:4521},
         animations: {
-            rockOn:{ frames: [7, 8,9,10,11,10,9,8]},
-            jump:{ frames: [6,5,4,3,2,1,0,0,0,1,2,3,4,5,6], next: false, frequency: 1 }
+            rockOn: { frames: [23,22,21,20,19], next: false, frequency: 1 },
+            jump:{ frames: [18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1], next: false, frequency: 1 }
         }
     };
     var spriteSheet = new createjs.SpriteSheet(catzData);    
     catzRocket = new createjs.Sprite(spriteSheet, "rockOn");
     catzRocket.x = 300;
     catzRocket.y = 200;
-    catzRocket.scaleX = 0.1;
-    catzRocket.scaleY = 0.1;
-    catzRocket.currentFrame = 0;   
+    catzRocket.scaleX = 0.05;
+    catzRocket.scaleY = 0.05;
+    catzRocket.currentFrame = 20;   
         
     stage.addChild(bgCont);
     stage.addChild(catzRocket);         
@@ -390,6 +380,7 @@ function catzEndLoop()
     diSpeed = 12;
     bgSpeed = 5;
     fgSpeed = 14;
+    catzRocket.gotoAndPlay("rockOn");
 }
 
 function reset()
