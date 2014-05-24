@@ -7,6 +7,9 @@ var canvas; var stage; var main;
 
 var startB; var creditsB; var credits; var titleView = new createjs.Container();
 
+
+var seagullSheet;
+
 var bg;
 var text;
 
@@ -15,12 +18,18 @@ var jump;
 var score = 0;
 var total = 0;
 
+<<<<<<< HEAD
+=======
+
+var sgCont = new createjs.Container();
+>>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
 var diCont = new createjs.Container();
 var bgCont = new createjs.Container();
 var fgCont = new createjs.Container();
 var diSpeed = 12;
 var bgSpeed = 5;
 var fgSpeed = 14;
+var sgSpeed =12;
 
 var queue;
 var manifest;
@@ -42,7 +51,12 @@ function init()
 
     manifest = [
                 //{id: "catz", src: "assets/catz.png"}, 
+<<<<<<< HEAD
                 {id: "catzRocketSpriteSheet", src: "assets/catzRocketJumpSpriteSheet.png"},
+=======
+                {id: "catzRocketSpriteSheet", src: "assets/catzRocketSpriteSheet.png"},
+                {id: "seagullSpriteSheet", src: "assets/seagull.png"},
+>>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
                 {id: "diamond", src: "assets/diamond.png"}, 
                 {id: "meow", src: "assets/meow.mp3"},
                 {id: "main", src: "assets/main.png"}, 
@@ -55,6 +69,7 @@ function init()
                 {id:"diamondSound", src:"assets/diamondSound.mp3"},
                 {id:"catzRocketCrash", src:"assets/catzRocketCrash.mp3"},
                 {id:"fgGround", src:"assets/fgGround.png"}
+                
             ];
 
     queue = new createjs.LoadQueue(true);
@@ -200,8 +215,24 @@ function addGameView()
     catzRocket.scaleY = 0.05;
     catzRocket.currentFrame = 20;   
         
+    var seagullData = {
+         images: ["assets/seagull.png"],
+        frames: {width:1235, height:1320},
+        animations: {
+            flappy:{ frames: [7,8,9,10,11]}
+        }
+    };
+    seagullSheet = new createjs.SpriteSheet(seagullData);    
+    var seagull = new createjs.Sprite(seagullSheet,"flappy");
+    seagull.scaleX = 0.1;
+    seagull.scaleY = 0.1;
+    seagull.x = 900;
+    seagull.y = 50+ Math.random()*100;
+    sgCont.addChild(seagull);
+        
     stage.addChild(bgCont);
-    stage.addChild(catzRocket);         
+    stage.addChild(catzRocket); 
+    stage.addChild(sgCont);
     stage.addChild(diCont);    
     stage.addChild(fgCont);             
     stage.addChild(text);
@@ -235,6 +266,7 @@ function update(event)
         updateBg();
         updateFg();
         updateDiamonds();
+        updateSeagulls();
         stage.update(event); 
     }
 }
@@ -364,6 +396,37 @@ function updateDiamonds()
         }
     }   
 }
+
+function updateSeagulls()
+{
+    if(Math.random()>0.98)
+    {
+        var seagull = new createjs.Sprite(seagullSheet,"flappy");
+        seagull.scaleX = 0.1;
+        seagull.scaleY = 0.1;
+        seagull.x = 800;
+        seagull.y = 50 +Math.random()*200;
+        sgCont.addChild(seagull);
+    }
+    var arrayLength = sgCont.children.length;   
+    for (var i = 0; i < arrayLength; i++) {
+        var kid = sgCont.children[i];
+        kid.x = kid.x - sgSpeed;    
+        if (kid.x <= -100)
+        {
+          sgCont.removeChildAt(i);
+          arrayLength = arrayLength - 1;
+          i = i - 1;
+        }
+        if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - kid.y)< 30 )
+        {
+            sgCont.removeAllChildren();
+            reset();
+        }
+    }   
+}
+
+
 
 function catzUp()
 {            
