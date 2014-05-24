@@ -18,11 +18,8 @@ var jump;
 var score = 0;
 var total = 0;
 
-<<<<<<< HEAD
-=======
 
 var sgCont = new createjs.Container();
->>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
 var diCont = new createjs.Container();
 var bgCont = new createjs.Container();
 var fgCont = new createjs.Container();
@@ -40,7 +37,7 @@ catzStateEnum = {
     Normal : 0,
     Uploop : 1,
     Downloop : 2
-}
+};
 var catzState;
 
 function init()
@@ -51,12 +48,9 @@ function init()
 
     manifest = [
                 //{id: "catz", src: "assets/catz.png"}, 
-<<<<<<< HEAD
                 {id: "catzRocketSpriteSheet", src: "assets/catzRocketJumpSpriteSheet.png"},
-=======
                 {id: "catzRocketSpriteSheet", src: "assets/catzRocketSpriteSheet.png"},
                 {id: "seagullSpriteSheet", src: "assets/seagull.png"},
->>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
                 {id: "diamond", src: "assets/diamond.png"}, 
                 {id: "meow", src: "assets/meow.mp3"},
                 {id: "main", src: "assets/main.png"}, 
