@@ -20,8 +20,8 @@ var catz;
 var text;
 
 var queue;
-
-var grav = 8;
+var mousedown;
+var grav = 9;
 var jump;
 var score = 0;
 var total = 0;
@@ -31,7 +31,7 @@ var sgCont = new createjs.Container();
 var diCont = new createjs.Container();
 var bgCont = new createjs.Container();
 var fgCont = new createjs.Container();
-var diSpeed = 12;
+var diSpeed = 25;
 var bgSpeed = 5;
 var fgSpeed = 14;
 var sgSpeed =12;
@@ -305,11 +305,11 @@ function updatecatzRocket(event)
     else if (catzState === catzStateEnum.Downloop)
     {
         loopTimer+= event.delta;
-        catzVelocity += (2-5*Math.sin(catzRocket.rotation))
-*grav*event.delta/1000;  
-        diSpeed = diSpeed * 0.98;
-        bgSpeed = bgSpeed * 0.98;
-        fgSpeed = fgSpeed * 0.98;
+        catzVelocity += (2-8*Math.sin(catzRocket.rotation))
+            *grav*event.delta/1000;  
+//        diSpeed = diSpeed * 0.98;
+//        bgSpeed = bgSpeed * 0.98;
+//        fgSpeed = fgSpeed * 0.98;
         
         catzRocket.y+= 20*catzVelocity*event.delta/1000;
     }
@@ -318,6 +318,7 @@ function updatecatzRocket(event)
         createjs.Tween.removeAllTweens(catzRocket);
         tween = createjs.Tween.get(catzRocket)
             .to({rotation:-270},1000)
+            .to({rotation:-330},200)
             .call(catzRelease);
         catzState = catzStateEnum.Downloop;
         loopTimer = 0;
@@ -442,7 +443,8 @@ kid.y)< 30 )
 
 
 function catzUp()
-{            
+{
+    mousedown = true;
     if(catzState === catzStateEnum.Normal)
     {
         catzVelocity-=2;
@@ -456,11 +458,11 @@ function catzUp()
 
 function catzEndLoop()
 {
-    createjs.Tween.removeAllTweens(catzRocket);
-    duration = 800*(360+catzRocket.rotation)/90;
-    if(catzState!=catzStateEnum.Downloop)
-    {    //createjs.Tween.get(catzRocket).to({x:300 }
+    mousedown = false;
+    if(catzState!==catzStateEnum.Downloop)
+    {
         catzState = catzStateEnum.Normal;
+        console.log("interrupted");
     }
     diSpeed = 12;
     bgSpeed = 5;
@@ -469,7 +471,15 @@ function catzEndLoop()
 
 function catzRelease()
 {
-    catzState = catzStateEnum.Normal;
+    if(mousedown)
+    {
+        catzState = catzStateEnum.Uploop;
+    }
+    else
+    {
+        catzState = catzStateEnum.Normal;
+    }
+    rotation=0;
 }
 
 function reset()
