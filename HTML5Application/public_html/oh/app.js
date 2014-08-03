@@ -1,28 +1,33 @@
 /* 
-* To change this license header, choose License Headers in Project Properties.
+* To change this license header, choose License Headers in Project 
+Properties.
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
-var canvas; var stage; var main;
+var canvas;
+var stage;
 
-var startB; var creditsB; var credits; var titleView = new createjs.Container();
-
+var main;
+var startB;
+var creditsB;
+var credits;
+var titleView = new createjs.Container();
 
 var seagullSheet;
 
 var bg;
+var catz;
 var text;
+
+var queue;
 
 var grav = 8;
 var jump;
 var score = 0;
 var total = 0;
-
-<<<<<<< HEAD
-=======
+var catzVelocity = 0;
 
 var sgCont = new createjs.Container();
->>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
 var diCont = new createjs.Container();
 var bgCont = new createjs.Container();
 var fgCont = new createjs.Container();
@@ -51,14 +56,12 @@ function init()
 
     manifest = [
                 //{id: "catz", src: "assets/catz.png"}, 
-<<<<<<< HEAD
-                {id: "catzRocketSpriteSheet", src: "assets/catzRocketJumpSpriteSheet.png"},
-=======
-                {id: "catzRocketSpriteSheet", src: "assets/catzRocketSpriteSheet.png"},
+                {id: "catzRocketSpriteSheet", src: 
+"assets/catzRocketSpriteSheet.png"},
                 {id: "seagullSpriteSheet", src: "assets/seagull.png"},
->>>>>>> 941ba0d0e1ebf41385c36e17a3f6d1355f26c8c8
                 {id: "diamond", src: "assets/diamond.png"}, 
                 {id: "meow", src: "assets/meow.mp3"},
+                {id:"birdcry", src: "assets/birdcry.mp3"},
                 {id: "main", src: "assets/main.png"}, 
                 {id: "startB", src: "assets/startB.png"}, 
                 {id: "creditsB", src: "assets/creditsB.png"},
@@ -200,20 +203,23 @@ function addGameView()
     text.x = 100;     
         
     var catzData = {
-         images: ["assets/catzRocketJumpSpriteSheet.png"],
-        frames: {width:1720, height:4521},
+         images: ["assets/catzRocketSpriteSheet.png"],
+        frames: {width:1235, height:1320},
         animations: {
-            rockOn: { frames: [23,22,21,20,19], next: false, frequency: 1 },
-            jump:{ frames: [18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1], next: false, frequency: 1 }
+            rockOn:{ frames: [7, 8,9,10,11,10,9,8]},
+            jump:{ frames: [6,5,4,3,2,1,0,0,0,1,2,3,4,5,6], next: false, 
+frequency: 1 }
         }
     };
     var spriteSheet = new createjs.SpriteSheet(catzData);    
     catzRocket = new createjs.Sprite(spriteSheet, "rockOn");
     catzRocket.x = 300;
     catzRocket.y = 200;
-    catzRocket.scaleX = 0.05;
-    catzRocket.scaleY = 0.05;
-    catzRocket.currentFrame = 20;   
+    catzRocket.scaleX = 0.1;
+    catzRocket.scaleY = 0.1;
+    catzRocket.regY = 50;
+    catzRocket.regX = 50;
+    catzRocket.currentFrame = 0;   
         
     var seagullData = {
          images: ["assets/seagull.png"],
@@ -262,62 +268,65 @@ function update(event)
     if(!event.paused)
     {                
         text.text = score;
-        updatecatzRocket();
+        updatecatzRocket(event);
         updateBg();
-        updateFg();
+        updateFg(event);
         updateDiamonds();
         updateSeagulls();
         stage.update(event); 
+        
     }
 }
 
-function updatecatzRocket()
+function updatecatzRocket(event)
 {    
     if(catzState === catzStateEnum.Normal)   
     {
         console.log('normal');
-        catzRocket.y = catzRocket.y+grav;
-        loopTimer = 0;        
+        catzVelocity += grav*event.delta/1000;
+        catzRocket.y += 20*catzVelocity*event.delta/1000;
+        loopTimer = 0;
+        if(!createjs.Tween.hasActiveTweens(catzRocket))
+        {
+        catzRocket.rotation = Math.atan(catzVelocity/40)*360/3.14;
+        }
     }    
     else if (catzState === catzStateEnum.Uploop)
     {
+        catzVelocity -= 2.5*grav*event.delta/1000;
+        catzRocket.y += 20*catzVelocity*event.delta/1000;
         console.log('uploop' + loopTimer);
-        catzRocket.y = catzRocket.y-1.5*grav;
-        loopTimer = loopTimer + 1;        
-        diSpeed = diSpeed * 0.98;
-        bgSpeed = bgSpeed * 0.98;
-        fgSpeed = fgSpeed * 0.98;
+        loopTimer+= event.delta;   
+        if(!createjs.Tween.hasActiveTweens(catzRocket))
+        {
+        catzRocket.rotation = Math.atan(catzVelocity/40)*360/3.14;
+        }
     }
     else if (catzState === catzStateEnum.Downloop)
     {
-        loopTimer = loopTimer + 1;
-        console.log('downloop' + loopTimer);
-        catzRocket.y = catzRocket.y+1.5*grav;        
+        loopTimer+= event.delta;
+        catzVelocity += (2-5*Math.sin(catzRocket.rotation))
+*grav*event.delta/1000;  
         diSpeed = diSpeed * 0.98;
         bgSpeed = bgSpeed * 0.98;
         fgSpeed = fgSpeed * 0.98;
-    }       
-    
-    if (loopTimer>15 && catzState === catzStateEnum.Downloop)
-    {   
-        console.log('>10 dl');
-        catzState = catzStateEnum.Uploop;
-        loopTimer = 0;
-        diSpeed = 12;
-        bgSpeed = 5;
-        fgSpeed = 14;
+        
+        catzRocket.y+= 20*catzVelocity*event.delta/1000;
     }
-    
-    if (loopTimer>15 && catzState === catzStateEnum.Uploop)
-    {        
+    if (catzRocket.rotation<-30 && catzState === catzStateEnum.Uploop)
+    {
+        createjs.Tween.removeAllTweens(catzRocket);
+        tween = createjs.Tween.get(catzRocket)
+            .to({rotation:-270},1000)
+            .call(catzRelease);
         catzState = catzStateEnum.Downloop;
         loopTimer = 0;
     }
-    
-    
 
     if(catzRocket.y > 450 || catzRocket.y < -50)
     {
+        //var instance = createjs.Sound.play("catzRocketCrash");
+        //instance.volume = 0.1;
         reset();
     }
 }
@@ -335,7 +344,7 @@ function updateBg()
     }    
 }
 
-function updateFg()
+function updateFg(event)
 {
     if(Math.random()>0.98)
     {
@@ -354,7 +363,7 @@ function updateFg()
         {
           kid.x = kid.x + 4000;
         }
-        kid.x = kid.x - fgSpeed;     
+        kid.x = kid.x - fgSpeed*event.delta/10;     
     }                
     if (arrayLength>2)
     {
@@ -386,7 +395,8 @@ function updateDiamonds()
           arrayLength = arrayLength - 1;
           i = i - 1;
         }
-        if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - kid.y)< 30 )
+        if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - 
+kid.y)< 30 )
         {
             diCont.removeChildAt(i);
             score = score +1;
@@ -399,7 +409,7 @@ function updateDiamonds()
 
 function updateSeagulls()
 {
-    if(Math.random()>0.98)
+    if(Math.random()>1.1) // kill spawnrate
     {
         var seagull = new createjs.Sprite(seagullSheet,"flappy");
         seagull.scaleX = 0.1;
@@ -418,10 +428,13 @@ function updateSeagulls()
           arrayLength = arrayLength - 1;
           i = i - 1;
         }
-        if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - kid.y)< 30 )
+        if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - 
+kid.y)< 30 )
         {
             sgCont.removeAllChildren();
-            reset();
+            var instance = createjs.Sound.play("birdcry");
+            instance.volume = 0.1;
+            reset();;
         }
     }   
 }
@@ -431,28 +444,41 @@ function updateSeagulls()
 function catzUp()
 {            
     if(catzState === catzStateEnum.Normal)
-    {        
+    {
+        catzVelocity-=2;
         catzState = catzStateEnum.Uploop;
-        catzRocket.gotoAndPlay("jump");
+        //createjs.Tween.removeAllTweens(catzRocket);
+        //createjs.Tween.get(catzRocket)
+        //        .to({rotation:-65},800,createjs.Ease.quadOut);
     }
+   
 }
 
 function catzEndLoop()
 {
-    catzState = catzStateEnum.Normal;
+    createjs.Tween.removeAllTweens(catzRocket);
+    duration = 800*(360+catzRocket.rotation)/90;
+    if(catzState!=catzStateEnum.Downloop)
+    {    //createjs.Tween.get(catzRocket).to({x:300 }
+        catzState = catzStateEnum.Normal;
+    }
     diSpeed = 12;
     bgSpeed = 5;
     fgSpeed = 14;
-    catzRocket.gotoAndPlay("rockOn");
+}
+
+function catzRelease()
+{
+    catzState = catzStateEnum.Normal;
 }
 
 function reset()
 {    
-    var instance = createjs.Sound.play("catzRocketCrash");
-    instance.volume = 0.1;
     createjs.Ticker.setPaused(true);
     catzRocket.x = 300;
-    catzRocket.y = 200;                
+    catzRocket.y = 200;
+    catzState = catzStateEnum.Normal;
+    catzVelocity = 0;
     bg.addEventListener("click", startGame);        
     stage.removeEventListener("click", catzUp);  
     
