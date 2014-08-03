@@ -56,7 +56,7 @@ Menu = (function(){
 
         // Button Listeners
 
-        startB.addEventListener("click", (function(){house.init}));   
+        startB.addEventListener("click", (function(){house.Init();}));   
         creditsBCont.addEventListener("click", showCredits);
 
         stage.update();
