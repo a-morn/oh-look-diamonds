@@ -5,4 +5,5 @@ function StartGame()
     var rocketShip = RocketShip;
     var house = new House();
     house.Init(rocketShip);    
+    //rocketShip.Init();
 }

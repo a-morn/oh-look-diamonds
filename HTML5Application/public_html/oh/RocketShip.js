@@ -1,5 +1,7 @@
 var RocketShip = (function(){
     var 
+    diamondFrenzyCharge = 0,
+    catzRocketContainer = new createjs.Container(),
     rocketShip={},
     canvas,
     stage,    
@@ -139,13 +141,15 @@ var RocketShip = (function(){
         };
         var spriteSheet = new createjs.SpriteSheet(catzData);    
         catzRocket = new createjs.Sprite(spriteSheet, "rockOn");
-        catzRocket.x = 300;
-        catzRocket.y = 200;
+        
+        catzRocketContainer.x = 300;
+        catzRocketContainer.y = 200;
         catzRocket.scaleX = 0.1;
         catzRocket.scaleY = 0.1;
-        catzRocket.regY = 50;
-        catzRocket.regX = 50;
+        catzRocketContainer.regY = 50;
+        catzRocketContainer.regX = 50;
         catzRocket.currentFrame = 0;   
+        catzRocketContainer.addChild(catzRocket);
 
         var seagullData = {
              images: ["assets/seagull.png"],
@@ -163,7 +167,7 @@ var RocketShip = (function(){
         sgCont.addChild(seagull);
 
         stage.addChild(bg);
-        stage.addChild(catzRocket); 
+        stage.addChild(catzRocketContainer); 
         stage.addChild(sgCont);
         stage.addChild(diCont);    
         stage.addChild(fgCont);             
@@ -208,41 +212,39 @@ var RocketShip = (function(){
     {    
         if(catzState === catzStateEnum.Normal)   
         {
-            console.log('normal');
             catzVelocity += grav*event.delta/1000;
-            catzRocket.y += 20*catzVelocity*event.delta/1000;
+            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
             loopTimer = 0;
-            if(!createjs.Tween.hasActiveTweens(catzRocket))
+            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
-            catzRocket.rotation = Math.atan(catzVelocity/40)*360/3.14;
+            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
             }
         }    
         else if (catzState === catzStateEnum.Uploop)
         {
             catzVelocity -= 2.5*grav*event.delta/1000;
-            catzRocket.y += 20*catzVelocity*event.delta/1000;
-            console.log('uploop' + loopTimer);
+            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
             loopTimer+= event.delta;   
-            if(!createjs.Tween.hasActiveTweens(catzRocket))
+            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
-            catzRocket.rotation = Math.atan(catzVelocity/40)*360/3.14;
+            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
             }
         }
         else if (catzState === catzStateEnum.Downloop)
         {
             loopTimer+= event.delta;
-            catzVelocity += (2-8*Math.sin(catzRocket.rotation))
+            catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
                 *grav*event.delta/1000;  
     //        diSpeed = diSpeed * 0.98;
     //        bgSpeed = bgSpeed * 0.98;
     //        fgSpeed = fgSpeed * 0.98;
 
-            catzRocket.y+= 20*catzVelocity*event.delta/1000;
+            catzRocketContainer.y+= 20*catzVelocity*event.delta/1000;
         }
-        if (catzRocket.rotation<-30 && catzState === catzStateEnum.Uploop)
+        if (catzRocketContainer.rotation<-30 && catzState === catzStateEnum.Uploop)
         {
-            createjs.Tween.removeAllTweens(catzRocket);
-            tween = createjs.Tween.get(catzRocket)
+            createjs.Tween.removeAllTweens(catzRocketContainer);
+            tween = createjs.Tween.get(catzRocketContainer)
                 .to({rotation:-270},1000)
                 .to({rotation:-330},200)
                 .call(catzRelease);
@@ -250,10 +252,8 @@ var RocketShip = (function(){
             loopTimer = 0;
         }
 
-        if(catzRocket.y > 450 || catzRocket.y < -50)
-        {
-            //var instance = createjs.Sound.play("catzRocketCrash");
-            //instance.volume = 0.1;
+        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -50)
+        {            
             reset();
         }
     }
@@ -322,13 +322,14 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - 
-    kid.y)< 30 )
+            var catzBounds = catzRocketContainer.getTransformedBounds();
+            //50 and 50 is approx height and width of diamonds
+            if(Math.pow(catzBounds.x+catzBounds.width/2-(kid.x+50),2)+Math.pow(catzBounds.y+catzBounds.height/2-(kid.y+50),2)<5000)
             {
                 diCont.removeChildAt(i);
                 score = score +1;
                 arrayLength = arrayLength - 1;
-                i = i - 1;
+                icon = i - 1;
                 var instance = createjs.Sound.play("diamondSound");
             }
         }   
@@ -388,7 +389,6 @@ var RocketShip = (function(){
         if(catzState!==catzStateEnum.Downloop)
         {
             catzState = catzStateEnum.Normal;
-            console.log("interrupted");
         }
         diSpeed = 12;
         bgSpeed = 5;
@@ -411,8 +411,8 @@ var RocketShip = (function(){
     function reset()
     {    
         createjs.Ticker.setPaused(true);
-        catzRocket.x = 300;
-        catzRocket.y = 200;
+        catzRocketContainer.x = 300;
+        catzRocketContainer.y = 200;
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
         bg.addEventListener("click", startGame);        
