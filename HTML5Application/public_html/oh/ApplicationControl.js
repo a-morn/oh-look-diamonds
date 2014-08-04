@@ -1,8 +1,8 @@
 function StartGame()
 {    
-    var menu = new Menu();
+    //var menu = new Menu();
+    //menu.Init(house);
+    var rocketShip = RocketShip;
     var house = new House();
-    
-    menu.Init(house);
-    
+    house.Init(rocketShip);    
 }
