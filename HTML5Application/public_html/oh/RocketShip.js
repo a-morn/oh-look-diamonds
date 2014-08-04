@@ -1,6 +1,7 @@
 var RocketShip = (function(){
     var 
     diamondFrenzyCharge = 0,
+    hasFrenzy = false,
     catzRocketContainer = new createjs.Container(),
     rocketShip={},
     canvas,
@@ -15,7 +16,7 @@ var RocketShip = (function(){
     grav = 9,
     jump,
     score = 0,    
-    catzVelocity = 0,
+    catzVelocity = -2,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     bgCont = new createjs.Container(),
@@ -33,7 +34,7 @@ var RocketShip = (function(){
         Uploop : 1,
         Downloop : 2
     },
-    catzState;
+    catzState=catzStateEnum.Normal;
 
     rocketShip.Init = function()
     {
@@ -128,7 +129,9 @@ var RocketShip = (function(){
         fgCont.addChild(fgGround1, fgGround2);    
 
         text = new createjs.Text("0", "20px Courier New", "#ff7700"); 
-        text.x = 100;     
+        text.x = 20;     
+        textFrenzy = new createjs.Text("0", "20px Courier New", "#ff7700"); 
+        textFrenzy.x = 450;     
 
         var catzData = {
              images: ["assets/catzRocketSpriteSheet.png"],
@@ -166,12 +169,7 @@ var RocketShip = (function(){
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);
 
-        stage.addChild(bg);
-        stage.addChild(catzRocketContainer); 
-        stage.addChild(sgCont);
-        stage.addChild(diCont);    
-        stage.addChild(fgCont);             
-        stage.addChild(text);
+        stage.addChild(bg, catzRocketContainer, sgCont, diCont,fgCont,text, textFrenzy);
 
         bg.addEventListener("click", startGame);            
 
@@ -189,6 +187,7 @@ var RocketShip = (function(){
         stage.addEventListener("stagemousedown", catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
+        catzVelocity-=2;
 
         createjs.Ticker.setPaused(false);       
     }
@@ -197,7 +196,23 @@ var RocketShip = (function(){
     {
         if(!event.paused)
         {                
-            text.text = score;
+            text.text = "Total shards collected: " + score;
+            textFrenzy.text = "Frenzy Charge: " +diamondFrenzyCharge +
+                    "\n\Has frenzy: " + hasFrenzy;
+            if(diamondFrenzyCharge>0)
+            {
+                diamondFrenzyCharge -= event.delta/2000;
+            }
+            if(diamondFrenzyCharge>3 && !hasFrenzy)
+            {
+                hasFrenzy = true;
+                //catzRocketContainer.x+=100;
+            }
+            else if(diamondFrenzyCharge<3 && hasFrenzy)
+            {
+                hasFrenzy = false;
+                //catzRocketContainer.x-=100;
+            }
             updatecatzRocket(event);
             updateBg();
             updateFg(event);
@@ -206,6 +221,7 @@ var RocketShip = (function(){
             stage.update(event); 
 
         }
+        console.log(catzVelocity);
     }
 
     function updatecatzRocket(event)
@@ -331,6 +347,7 @@ var RocketShip = (function(){
                 arrayLength = arrayLength - 1;
                 icon = i - 1;
                 var instance = createjs.Sound.play("diamondSound");
+                diamondFrenzyCharge +=1;
             }
         }   
     }

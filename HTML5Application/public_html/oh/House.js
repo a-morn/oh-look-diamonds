@@ -90,7 +90,7 @@ House = (function(){
         telescopeContainer.x = 320;
         telescopeContainer.y = 170;
         
-        coordinates.x = 140;
+        coordinates.x = 370;
         coordinates.y = 380;
         
         catz.x =coordinates.x;
