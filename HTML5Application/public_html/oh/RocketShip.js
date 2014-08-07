@@ -6,13 +6,16 @@ var RocketShip = (function(){
     rocketShip={},
     canvas,
     stage,    
+    catzRocket,
     credits,
+    rocketFlame,
     titleView = new createjs.Container(),
     seagullSheet,
     bg,    
     text,
     queue,
     mousedown,
+    diamondSheet,
     grav = 9,
     jump,
     score = 0,    
@@ -47,20 +50,21 @@ var RocketShip = (function(){
                     {id: "catzRocketSpriteSheet", src: 
                     "assets/catzRocketSpriteSheet.png"},
                     {id: "seagullSpriteSheet", src: "assets/seagull.png"},
-                    {id: "diamond", src: "assets/diamond.png"}, 
+                    {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},
                     //{id:"birdcry", src: "assets/birdcry.mp3"},
                     {id: "main", src: "assets/main.png"}, 
                     {id: "startB", src: "assets/startB.png"}, 
                     {id: "creditsB", src: "assets/creditsB.png"},
-                    {id:"bg", src:"assets/bg.png"},
+                    {id:"bg", src:"assets/new assets/img/background.jpg"},
                     {id:"credits", src:"assets/credits.png"},
                     {id:"cload1", src:"assets/cload1.png"},
-                    {id:"fgTree1", src:"assets/fgTree1.png"},
+                    {id:"fgTree1", src:"assets/new assets/img/tree 8.png"},
                     {id:"diamondSound", src:"assets/diamondSound.mp3"},
-                    {id:"catzRocketCrash", src:"assets/catzRocketCrash.mp3"},
-                    {id:"fgGround", src:"assets/fgGround.png"}
-
+                    {id:"catzRocketCrash", src:"assets/new assets/sound/crash.ogg"},
+                    {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
+                    {id:"rocket", src:"assets/new assets/sprites/catzRocketNoShake.png"},
+                     {id:"flame", src:"assets/new assets/sprites/flame.png"}
                 ];
 
         queue = new createjs.LoadQueue(true);
@@ -108,7 +112,41 @@ var RocketShip = (function(){
 
         bgCont.addChild(cload1, cload2);                    
 
-        var diamond = new createjs.Bitmap(queue.getResult("diamond"));
+
+        var diamondData ={
+            "framerate":24,
+            "images":[queue.getResult("diamond")],
+            "frames":[
+                [0, 0, 256, 256, 0, -193, -133],
+                [256, 0, 256, 256, 0, -193, -133],
+                [512, 0, 256, 256, 0, -193, -133],
+                [768, 0, 256, 256, 0, -193, -133],
+                [1024, 0, 256, 256, 0, -193, -133],
+                [1280, 0, 256, 256, 0, -193, -133],
+                [1536, 0, 256, 256, 0, -193, -133],
+                [0, 256, 256, 256, 0, -193, -133],
+                [256, 256, 256, 256, 0, -193, -133],
+                [512, 256, 256, 256, 0, -193, -133],
+                [768, 256, 256, 256, 0, -193, -133],
+                [1024, 256, 256, 256, 0, -193, -133],
+                [1280, 256, 256, 256, 0, -193, -133],
+                [1536, 256, 256, 256, 0, -193, -133],
+                [0, 512, 256, 256, 0, -193, -133],
+                [256, 512, 256, 256, 0, -193, -133],
+                [512, 512, 256, 256, 0, -193, -133],
+                [768, 512, 256, 256, 0, -193, -133],
+                [1024, 512, 256, 256, 0, -193, -133],
+                [1280, 512, 256, 256, 0, -193, -133],
+                [1536, 512, 256, 256, 0, -193, -133],
+                [0, 768, 256, 256, 0, -193, -133],
+                [256, 768, 256, 256, 0, -193, -133],
+                [512, 768, 256, 256, 0, -193, -133],
+                [768, 768, 256, 256, 0, -193, -133]
+            ],
+            "animations":{"cycle": [0,24]}
+            };
+        diamondSheet = new createjs.SpriteSheet(diamondData);
+        var diamond = new createjs.Sprite(diamondSheet,"cycle");
 
         diamond.x = 900;
         diamond.y = 50+ Math.random()*100;
@@ -132,27 +170,84 @@ var RocketShip = (function(){
         text.x = 20;     
         textFrenzy = new createjs.Text("0", "20px Courier New", "#ff7700"); 
         textFrenzy.x = 450;     
-
-        var catzData = {
-             images: ["assets/catzRocketSpriteSheet.png"],
-            frames: {width:1235, height:1320},
-            animations: {
-                rockOn:{ frames: [7, 8,9,10,11,10,9,8]},
-                jump:{ frames: [6,5,4,3,2,1,0,0,0,1,2,3,4,5,6], next: false, 
-    frequency: 1 }
-            }
-        };
-        var spriteSheet = new createjs.SpriteSheet(catzData);    
-        catzRocket = new createjs.Sprite(spriteSheet, "rockOn");
+        
+        var rocketData = {
+            "framerate":12,
+            "images":[queue.getResult("rocket")],
+            "frames":[
+                [0, 0, 256, 256, 0, -275, -200],
+                [256, 0, 256, 256, 0, -275, -200],
+                [512, 0, 256, 256, 0, -275, -200],
+                [768, 0, 256, 256, 0, -275, -200],
+                [1024, 0, 256, 256, 0, -275, -200],
+                [1280, 0, 256, 256, 0, -275, -200],
+                [1536, 0, 256, 256, 0, -275, -200],
+                [0, 256, 256, 256, 0, -275, -200],
+                [256, 256, 256, 256, 0, -275, -200],
+                [512, 256, 256, 256, 0, -275, -200]
+            ],
+            "animations":{"cycle":[0,9]}
+            };
+        
+        var spriteSheet = new createjs.SpriteSheet(rocketData);    
+        catzRocket = new createjs.Sprite(spriteSheet, "cycle");
+        
+        
+        rocketData = {
+            "framerate":24,
+            "images":[queue.getResult("flame")],
+            "frames":[
+                [0, 0, 256, 256, 0, -292, -207],
+                [256, 0, 256, 256, 0, -292, -207],
+                [512, 0, 256, 256, 0, -292, -207],
+                [768, 0, 256, 256, 0, -292, -207],
+                [1024, 0, 256, 256, 0, -292, -207],
+                [1280, 0, 256, 256, 0, -292, -207],
+                [1536, 0, 256, 256, 0, -292, -207],
+                [0, 256, 256, 256, 0, -292, -207],
+                [256, 256, 256, 256, 0, -292, -207],
+                [512, 256, 256, 256, 0, -292, -207],
+                [768, 256, 256, 256, 0, -292, -207],
+                [1024, 256, 256, 256, 0, -292, -207],
+                [1280, 256, 256, 256, 0, -292, -207],
+                [1536, 256, 256, 256, 0, -292, -207],
+                [0, 512, 256, 256, 0, -292, -207],
+                [256, 512, 256, 256, 0, -292, -207],
+                [512, 512, 256, 256, 0, -292, -207],
+                [768, 512, 256, 256, 0, -292, -207],
+                [1024, 512, 256, 256, 0, -292, -207],
+                [1280, 512, 256, 256, 0, -292, -207],
+                [1536, 512, 256, 256, 0, -292, -207],
+                [0, 768, 256, 256, 0, -292, -207],
+                [256, 768, 256, 256, 0, -292, -207],
+                [512, 768, 256, 256, 0, -292, -207],
+                [768, 768, 256, 256, 0, -292, -207],
+                [1024, 768, 256, 256, 0, -292, -207],
+                [1280, 768, 256, 256, 0, -292, -207],
+                [1536, 768, 256, 256, 0, -292, -207],
+                [0, 1024, 256, 256, 0, -292, -207],
+                [256, 1024, 256, 256, 0, -292, -207],
+                [512, 1024, 256, 256, 0, -292, -207],
+                [768, 1024, 256, 256, 0, -292, -207]
+            ],
+            "animations":{"ignite":{frames:[0,31],next:"cycle"}, "cycle": [8,31]}
+            };
+        
+        var spriteSheet = new createjs.SpriteSheet(rocketData);    
+        rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
+        rocketFlame.alpha=0;
+        rocketFlame.scaleX = 0.4;
+        rocketFlame.scaleY = 0.4;
+        rocketFlame.x-=70;
         
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
-        catzRocket.scaleX = 0.1;
-        catzRocket.scaleY = 0.1;
+        catzRocket.scaleX = 0.4;
+        catzRocket.scaleY = 0.4;
         catzRocketContainer.regY = 50;
         catzRocketContainer.regX = 50;
         catzRocket.currentFrame = 0;   
-        catzRocketContainer.addChild(catzRocket);
+        catzRocketContainer.addChild(rocketFlame,catzRocket);
 
         var seagullData = {
              images: ["assets/seagull.png"],
@@ -176,8 +271,7 @@ var RocketShip = (function(){
         createjs.Ticker.on("tick", update);  
         createjs.Ticker.setFPS(30);            
         createjs.Ticker.setPaused(true);
-
-        catzRocket.gotoAndStop(7);    
+   
         stage.update();
     }
 
@@ -221,13 +315,13 @@ var RocketShip = (function(){
             stage.update(event); 
 
         }
-        console.log(catzVelocity);
     }
 
     function updatecatzRocket(event)
     {    
         if(catzState === catzStateEnum.Normal)   
         {
+
             catzVelocity += grav*event.delta/1000;
             catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
             loopTimer = 0;
@@ -257,8 +351,9 @@ var RocketShip = (function(){
 
             catzRocketContainer.y+= 20*catzVelocity*event.delta/1000;
         }
-        if (catzRocketContainer.rotation<-30 && catzState === catzStateEnum.Uploop)
+        if (catzRocketContainer.rotation<-40 && catzState === catzStateEnum.Uploop)
         {
+            rocketFlame.alpha = 0;
             createjs.Tween.removeAllTweens(catzRocketContainer);
             tween = createjs.Tween.get(catzRocketContainer)
                 .to({rotation:-270},1000)
@@ -292,8 +387,8 @@ var RocketShip = (function(){
         if(Math.random()>0.98)
         {
             var tree = new createjs.Bitmap(queue.getResult("fgTree1"));     
-            tree.scaleX = 0.5;
-            tree.scaleY = 0.5;
+            tree.scaleX = 0.8;
+            tree.scaleY = 0.8;
             tree.x = 1000;
             tree.y = 290;
             fgCont.addChild(tree);        
@@ -321,9 +416,9 @@ var RocketShip = (function(){
     {
         if(Math.random()>0.98)
         {
-            var di = new createjs.Bitmap(queue.getResult("diamond"));
-            di.scaleX = 0.1;
-            di.scaleY = 0.1;
+            var di = new createjs.Sprite(diamondSheet,"cycle");
+            di.scaleX = 0.5;
+            di.scaleY = 0.5;
             di.x = 800;
             di.y = 50 +Math.random()*200;
             diCont.addChild(di);
@@ -393,6 +488,8 @@ var RocketShip = (function(){
         {
             catzVelocity-=2;
             catzState = catzStateEnum.Uploop;
+            rocketFlame.alpha = 1;
+            rocketFlame.gotoAndPlay("ignite");
             //createjs.Tween.removeAllTweens(catzRocket);
             //createjs.Tween.get(catzRocket)
             //        .to({rotation:-65},800,createjs.Ease.quadOut);
@@ -406,6 +503,7 @@ var RocketShip = (function(){
         if(catzState!==catzStateEnum.Downloop)
         {
             catzState = catzStateEnum.Normal;
+            rocketFlame.alpha = 0;
         }
         diSpeed = 12;
         bgSpeed = 5;
@@ -417,10 +515,13 @@ var RocketShip = (function(){
         if(mousedown)
         {
             catzState = catzStateEnum.Uploop;
+            rocketFlame.alpha = 1;
+            rocketFlame.gotoAndPlay("ignite");
         }
         else
         {
             catzState = catzStateEnum.Normal;
+            rocketFlame.alpha=0;
         }
         rotation=0;
     }
@@ -430,6 +531,9 @@ var RocketShip = (function(){
         createjs.Ticker.setPaused(true);
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
+        catzRocketContainer.rotation =0;
+        createjs.Tween.removeAllTweens(catzRocketContainer);
+        rocketFlame.alpha=0;
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
         bg.addEventListener("click", startGame);        
