@@ -1,5 +1,6 @@
 var RocketShip = (function(){
     var 
+    catzBounds,
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
     catzRocketContainer = new createjs.Container(),
@@ -22,10 +23,8 @@ var RocketShip = (function(){
     catzVelocity = -2,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
-    bgCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     diSpeed = 25,
-    bgSpeed = 5,
     fgSpeed = 14,
     sgSpeed =12,
     bg,
@@ -96,22 +95,7 @@ var RocketShip = (function(){
         //catzRocket.x = 300;
         //catzRocket.y = 200;                           
 
-        bg = new createjs.Bitmap(queue.getResult("bg"));   
-
-        var cload1 = new createjs.Bitmap(queue.getResult("cload1"));
-        cload1.scaleX=0.3;
-        cload1.scaleY=0.3;
-        cload1.x = 10;
-        cload1.y = 50;                           
-
-        var cload2 = new createjs.Bitmap(queue.getResult("cload1"));
-        cload2.scaleX=0.3;
-        cload2.scaleY=0.3;
-        cload2.x = 500;
-        cload2.y = 80;                       
-
-        bgCont.addChild(cload1, cload2);                    
-
+        bg = new createjs.Bitmap(queue.getResult("bg"));                       
 
         var diamondData ={
             "framerate":24,
@@ -153,6 +137,8 @@ var RocketShip = (function(){
         diamond.scaleX = 0.1;
         diamond.scaleY = 0.1;
         diCont.addChild(diamond);
+        diCont.x = 0;
+        diCont.y = 0;
 
         var fgGround1 = new createjs.Bitmap(queue.getResult("fgGround"));
         //fgGround.scaleX=0.3;
@@ -247,8 +233,12 @@ var RocketShip = (function(){
         catzRocketContainer.regY = 50;
         catzRocketContainer.regX = 50;
         catzRocket.currentFrame = 0;   
+                        
         catzRocketContainer.addChild(rocketFlame,catzRocket);
-
+        
+        catzBounds = catzRocketContainer.getTransformedBounds();
+                
+       
         var seagullData = {
              images: ["assets/seagull.png"],
             frames: {width:1235, height:1320},
@@ -266,7 +256,7 @@ var RocketShip = (function(){
 
         stage.addChild(bg, catzRocketContainer, sgCont, diCont,fgCont,text, textFrenzy);
 
-        bg.addEventListener("click", startGame);            
+        bg.addEventListener("click", startGame);        
 
         createjs.Ticker.on("tick", update);  
         createjs.Ticker.setFPS(30);            
@@ -277,7 +267,10 @@ var RocketShip = (function(){
 
     function startGame()
     {            
-        bg.removeEventListener("click", startGame);        
+        bg.removeEventListener("click", startGame); 
+        bg.on("click", function(evt) {
+            console.log(evt.stageX + " y:" +evt.stageY);            
+        },null,false);
         stage.addEventListener("stagemousedown", catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
@@ -287,7 +280,7 @@ var RocketShip = (function(){
     }
 
     function update(event)
-    {
+    {        
         if(!event.paused)
         {                
             text.text = "Total shards collected: " + score;
@@ -307,8 +300,7 @@ var RocketShip = (function(){
                 hasFrenzy = false;
                 //catzRocketContainer.x-=100;
             }
-            updatecatzRocket(event);
-            updateBg();
+            updatecatzRocket(event);            
             updateFg(event);
             updateDiamonds();
             updateSeagulls();
@@ -369,19 +361,6 @@ var RocketShip = (function(){
         }
     }
 
-    function updateBg()
-    {
-        var arrayLength = bgCont.children.length;    
-        for (var i = 0; i < arrayLength; i++) {
-            var kid = bgCont.children[i];
-            kid.x = kid.x - bgSpeed;    
-            if (kid.x < -300)
-            {
-              kid.x = 800;
-            }
-        }    
-    }
-
     function updateFg(event)
     {
         if(Math.random()>0.98)
@@ -432,10 +411,11 @@ var RocketShip = (function(){
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }
-            var catzBounds = catzRocketContainer.getTransformedBounds();
+            }            
             //50 and 50 is approx height and width of diamonds
-            if(Math.pow(catzBounds.x+catzBounds.width/2-(kid.x+50),2)+Math.pow(catzBounds.y+catzBounds.height/2-(kid.y+50),2)<5000)
+            if((catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocketContainer.x > 
+                    kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
+                    && catzRocketContainer.y > kid.y)
             {
                 diCont.removeChildAt(i);
                 score = score +1;
