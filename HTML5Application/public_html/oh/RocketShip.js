@@ -377,7 +377,7 @@ var RocketShip = (function(){
         {
             loopTimer+= event.delta;
             catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
-                *grav*event.delta/1000;  
+                *grav*event.delta/1000+0.4;  
     //        diSpeed = diSpeed * 0.98;
     //        bgSpeed = bgSpeed * 0.98;
     //        fgSpeed = fgSpeed * 0.98;
@@ -543,8 +543,8 @@ var RocketShip = (function(){
         {
             catzState = catzStateEnum.Normal;
             rocketFlame.alpha=0;
-        }
-        rotation=0;
+            catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;            
+        }        
     }
 
     function reset()
