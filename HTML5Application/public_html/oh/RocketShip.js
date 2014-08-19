@@ -24,6 +24,7 @@ var RocketShip = (function(){
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
+    starCont = new createjs.Container(),
     diSpeed = 25,
     fgSpeed = 14,
     sgSpeed =12,
@@ -63,7 +64,8 @@ var RocketShip = (function(){
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.ogg"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"rocket", src:"assets/new assets/sprites/catzRocketNoShake.png"},
-                     {id:"flame", src:"assets/new assets/sprites/flame.png"}
+                    {id:"flame", src:"assets/new assets/sprites/flame.png"},
+                    {id:"star", src:"assets/new assets/img/star.png"}
                 ];
 
         queue = new createjs.LoadQueue(true);
@@ -178,7 +180,6 @@ var RocketShip = (function(){
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
         catzRocket = new createjs.Sprite(spriteSheet, "cycle");
         
-        
         rocketData = {
             "framerate":24,
             "images":[queue.getResult("flame")],
@@ -253,8 +254,10 @@ var RocketShip = (function(){
         seagull.x = 900;
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);
+        
+        setStars();
 
-        stage.addChild(bg, catzRocketContainer, sgCont, diCont,fgCont,text, textFrenzy);
+        stage.addChild(bg,starCont,catzRocketContainer, sgCont, diCont,fgCont,text, textFrenzy);
 
         bg.addEventListener("click", startGame);        
 
@@ -263,6 +266,22 @@ var RocketShip = (function(){
         createjs.Ticker.setPaused(true);
    
         stage.update();
+    }
+    
+    function setStars()
+    {
+        for(i=0;i<80;i++)
+        {
+            star = new createjs.Bitmap(queue.getResult("star"));
+            delay = Math.random()*2000;
+            star.x = Math.random()*800;
+            star.y= Math.random()*600;
+            createjs.Tween.get(star,{loop:true})
+                    .wait(delay)
+                    .to({alpha:0},1000)
+                    .to({alpha:1},1000);
+            starCont.addChild(star);
+        }
     }
 
     function startGame()
@@ -516,6 +535,10 @@ var RocketShip = (function(){
         rocketFlame.alpha=0;
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
+        
+        starCont.removeAllChildren();
+        setStars();
+        
         bg.addEventListener("click", startGame);        
         stage.removeEventListener("click", catzUp);  
 
