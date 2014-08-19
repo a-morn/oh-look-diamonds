@@ -6,6 +6,7 @@ var RocketShip = (function(){
     catzRocketContainer = new createjs.Container(),
     rocketShip={},
     canvas,
+    worldContainer,
     stage,    
     catzRocket,
     credits,
@@ -21,6 +22,7 @@ var RocketShip = (function(){
     jump,
     score = 0,    
     catzVelocity = -2,
+    cameraOffset = 0,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
@@ -56,7 +58,7 @@ var RocketShip = (function(){
                     {id: "main", src: "assets/main.png"}, 
                     {id: "startB", src: "assets/startB.png"}, 
                     {id: "creditsB", src: "assets/creditsB.png"},
-                    {id:"bg", src:"assets/new assets/img/background.jpg"},
+                    {id:"bg", src:"assets/new assets/img/background long.jpg"},
                     {id:"credits", src:"assets/credits.png"},
                     {id:"cload1", src:"assets/cload1.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 8.png"},
@@ -97,7 +99,8 @@ var RocketShip = (function(){
         //catzRocket.x = 300;
         //catzRocket.y = 200;                           
 
-        bg = new createjs.Bitmap(queue.getResult("bg"));                       
+        bg = new createjs.Bitmap(queue.getResult("bg"));
+        bg.y = -1200;
 
         var diamondData ={
             "framerate":24,
@@ -256,9 +259,10 @@ var RocketShip = (function(){
         sgCont.addChild(seagull);
         
         setStars();
-
-        stage.addChild(bg,starCont,catzRocketContainer, sgCont, diCont,fgCont,text, textFrenzy);
-
+        
+        worldContainer = new createjs.Container();
+        worldContainer.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,fgCont);
+        stage.addChild(worldContainer,text, textFrenzy);
         bg.addEventListener("click", startGame);        
 
         createjs.Ticker.on("tick", update);  
@@ -323,9 +327,27 @@ var RocketShip = (function(){
             updateFg(event);
             updateDiamonds();
             updateSeagulls();
+            updateWorldContainer();
             stage.update(event); 
 
         }
+    }
+    
+    function updateWorldContainer(event)
+    {
+//        catzScreenPosition = catzRocketContainer.y+worldContainer.y;
+//        if(catzScreenPosition<150)
+//        {
+//            worldContainer.y+= 150-catzScreenPosition;
+//        }
+//        else if(catzScreenPosition>250)
+//        {
+//            worldContainer.y-= catzScreenPosition-250;
+//        }
+          if(catzRocketContainer.y<200 && catzRocketContainer.y>-1350)
+          {
+              worldContainer.y=200-catzRocketContainer.y;
+          }
     }
 
     function updatecatzRocket(event)
@@ -374,7 +396,7 @@ var RocketShip = (function(){
             loopTimer = 0;
         }
 
-        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -50)
+        if(catzRocketContainer.y > 450)
         {            
             reset();
         }
@@ -528,6 +550,7 @@ var RocketShip = (function(){
     function reset()
     {    
         createjs.Ticker.setPaused(true);
+        //worldContainer.y = -600;
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
         catzRocketContainer.rotation =0;
@@ -538,7 +561,7 @@ var RocketShip = (function(){
         
         starCont.removeAllChildren();
         setStars();
-        
+
         bg.addEventListener("click", startGame);        
         stage.removeEventListener("click", catzUp);  
 
