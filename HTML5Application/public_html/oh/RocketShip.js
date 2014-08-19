@@ -18,7 +18,7 @@ var RocketShip = (function(){
     queue,
     mousedown,
     diamondSheet,
-    grav = 9,
+    grav = 12,
     jump,
     score = 0,    
     catzVelocity = -2,
@@ -290,10 +290,7 @@ var RocketShip = (function(){
 
     function startGame()
     {            
-        bg.removeEventListener("click", startGame); 
-        bg.on("click", function(evt) {
-            console.log(evt.stageX + " y:" +evt.stageY);            
-        },null,false);
+        bg.removeEventListener("click", startGame);         
         stage.addEventListener("stagemousedown", catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
@@ -384,13 +381,13 @@ var RocketShip = (function(){
 
             catzRocketContainer.y+= 20*catzVelocity*event.delta/1000;
         }
-        if (catzRocketContainer.rotation<-40 && catzState === catzStateEnum.Uploop)
+        if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
             rocketFlame.alpha = 0;
             createjs.Tween.removeAllTweens(catzRocketContainer);
             tween = createjs.Tween.get(catzRocketContainer)
                 .to({rotation:-270},1000)
-                .to({rotation:-330},200)
+                .to({rotation:-330},350)
                 .call(catzRelease);
             catzState = catzStateEnum.Downloop;
             loopTimer = 0;
@@ -434,14 +431,33 @@ var RocketShip = (function(){
 
     function updateDiamonds()
     {
-        if(Math.random()>0.98)
+        //Up
+        if(Math.random()>0.997)
         {
-            var di = new createjs.Sprite(diamondSheet,"cycle");
-            di.scaleX = 0.5;
-            di.scaleY = 0.5;
-            di.x = 800;
-            di.y = 50 +Math.random()*200;
-            diCont.addChild(di);
+            for (i = 0;i<5;i++)
+            {
+                var di = new createjs.Sprite(diamondSheet,"cycle");
+                di.scaleX = 0.5;
+                di.scaleY = 0.5;                                
+                di.x = 800+100*i;
+                di.y = 300-400/(5.1-i);
+                                
+                diCont.addChild(di);
+            }            
+        }
+        //loop
+        if(Math.random()>0.997)
+        {
+            var heightRan = Math.random()*-200;
+            for (i = 0;i<20;i++)
+            {
+                var di = new createjs.Sprite(diamondSheet,"cycle");
+                di.scaleX = 0.5;
+                di.scaleY = 0.5;                                
+                di.x = 800+Math.cos((i-4)*2*3.14/20)*300+60*i;
+                di.y = 50-Math.sin((i-4)*2*3.14/20)*300+heightRan;                                
+                diCont.addChild(di);                
+            }            
         }
         var arrayLength = diCont.children.length;   
         for (var i = 0; i < arrayLength; i++) {
@@ -536,6 +552,7 @@ var RocketShip = (function(){
         if(mousedown)
         {
             catzState = catzStateEnum.Uploop;
+            catzVelocity = 0;
             rocketFlame.alpha = 1;
             rocketFlame.gotoAndPlay("ignite");
         }
