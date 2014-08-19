@@ -279,7 +279,7 @@ var RocketShip = (function(){
             star = new createjs.Bitmap(queue.getResult("star"));
             delay = Math.random()*2000;
             star.x = Math.random()*800;
-            star.y= Math.random()*600;
+            star.y= Math.random()*900-450;
             createjs.Tween.get(star,{loop:true})
                     .wait(delay)
                     .to({alpha:0},1000)
@@ -344,7 +344,7 @@ var RocketShip = (function(){
 //        {
 //            worldContainer.y-= catzScreenPosition-250;
 //        }
-          if(catzRocketContainer.y<200 && catzRocketContainer.y>-1350)
+          if(catzRocketContainer.y<200 && catzRocketContainer.y>-250)
           {
               worldContainer.y=200-catzRocketContainer.y;
           }
@@ -396,7 +396,7 @@ var RocketShip = (function(){
             loopTimer = 0;
         }
 
-        if(catzRocketContainer.y > 450)
+        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -550)
         {            
             reset();
         }
