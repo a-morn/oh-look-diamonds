@@ -30,6 +30,7 @@ var RocketShip = (function(){
     diSpeed = 25,
     fgSpeed = 14,
     sgSpeed =12,
+    crashed = false,
     bg,
     queue,
     manifest,    
@@ -49,8 +50,6 @@ var RocketShip = (function(){
 
         manifest = [
                     //{id: "catz", src: "assets/catz.png"}, 
-                    {id: "catzRocketSpriteSheet", src: 
-                    "assets/catzRocketSpriteSheet.png"},
                     {id: "seagullSpriteSheet", src: "assets/seagull.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},
@@ -65,7 +64,7 @@ var RocketShip = (function(){
                     {id:"diamondSound", src:"assets/diamondSound.mp3"},
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.ogg"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
-                    {id:"rocket", src:"assets/new assets/sprites/catzRocketNoShake.png"},
+                    {id:"rocket", src:"assets/new assets/sprites/catzAllanimations.png"},
                     {id:"flame", src:"assets/new assets/sprites/flame.png"},
                     {id:"star", src:"assets/new assets/img/star.png"}
                 ];
@@ -163,7 +162,7 @@ var RocketShip = (function(){
         textFrenzy.x = 450;     
         
         var rocketData = {
-            "framerate":12,
+            "framerate":24,
             "images":[queue.getResult("rocket")],
             "frames":[
                 [0, 0, 256, 256, 0, -275, -200],
@@ -175,13 +174,30 @@ var RocketShip = (function(){
                 [1536, 0, 256, 256, 0, -275, -200],
                 [0, 256, 256, 256, 0, -275, -200],
                 [256, 256, 256, 256, 0, -275, -200],
-                [512, 256, 256, 256, 0, -275, -200]
+                [512, 256, 256, 256, 0, -275, -200],
+                [768, 256, 256, 256, 0, -275, -200],
+                [1024, 256, 256, 256, 0, -275, -200],
+                [1280, 256, 256, 256, 0, -275, -200],
+                [1536, 256, 256, 256, 0, -275, -200],
+                [0, 512, 256, 256, 0, -275, -200],
+                [256, 512, 256, 256, 0, -275, -200],
+                [512, 512, 256, 256, 0, -275, -200],
+                [768, 512, 256, 256, 0, -275, -200],
+                [1024, 512, 256, 256, 0, -275, -200],
+                [1280, 512, 256, 256, 0, -275, -200]
             ],
-            "animations":{"cycle":[0,9]}
-            };
+            "animations":{
+                "shake": {
+                    "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+                    "speed": 1
+                },
+                "no shake": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1}
+            }
+        }
+           
         
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        catzRocket = new createjs.Sprite(spriteSheet, "cycle");
+        catzRocket = new createjs.Sprite(spriteSheet, "no shake");
         
         rocketData = {
             "framerate":24,
@@ -320,11 +336,14 @@ var RocketShip = (function(){
                 hasFrenzy = false;
                 //catzRocketContainer.x-=100;
             }
-            updatecatzRocket(event);            
-            updateFg(event);
-            updateDiamonds();
-            updateSeagulls();
-            updateWorldContainer();
+            if(!crashed)
+            {
+                updatecatzRocket(event);            
+                updateFg(event);
+                updateDiamonds();
+                updateSeagulls();
+                updateWorldContainer();
+            }
             stage.update(event); 
 
         }
@@ -395,7 +414,7 @@ var RocketShip = (function(){
 
         if(catzRocketContainer.y > 450 || catzRocketContainer.y < -550)
         {            
-            reset();
+            crash();
         }
     }
 
@@ -511,7 +530,7 @@ var RocketShip = (function(){
                 sgCont.removeAllChildren();
                 var instance = createjs.Sound.play("birdcry");
                 instance.volume = 0.1;
-                reset();;
+                crash();
             }
         }   
     }
@@ -527,6 +546,7 @@ var RocketShip = (function(){
             catzState = catzStateEnum.Uploop;
             rocketFlame.alpha = 1;
             rocketFlame.gotoAndPlay("ignite");
+            catzRocket.gotoAndPlay("shake");
             //createjs.Tween.removeAllTweens(catzRocket);
             //createjs.Tween.get(catzRocket)
             //        .to({rotation:-65},800,createjs.Ease.quadOut);
@@ -541,6 +561,7 @@ var RocketShip = (function(){
         {
             catzState = catzStateEnum.Normal;
             rocketFlame.alpha = 0;
+            catzRocket.gotoAndPlay("no shake");
         }
         diSpeed = 12;
         bgSpeed = 5;
@@ -555,17 +576,41 @@ var RocketShip = (function(){
             catzVelocity = 0;
             rocketFlame.alpha = 1;
             rocketFlame.gotoAndPlay("ignite");
+            catzRocket.gotoAndPlay("shake");
         }
         else
         {
             catzState = catzStateEnum.Normal;
+            catzRocket.gotoAndPlay("no shake");
             rocketFlame.alpha=0;
             catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;            
         }        
     }
+    
+    function crash()
+    {
+        if(!crashed)
+        {
+            crashed = true
+            createjs.Tween.removeAllTweens(catzRocketContainer);
+            createjs.Tween.removeAllTweens(worldContainer);
+            rocketFlame.alpha=0;
+            var tween = createjs.Tween.get(worldContainer)
+                    .to({x:-50, y:20},50)
+                    .to({x:50, y:-40},50)
+                    .to({x:-50, y:50},50)
+                    .to({x:20, y:-20},50)
+                    .to({x:-10, y:10},50)
+                    .to({x:10, y:-10},50)
+                    .to({x:0, y:0},50)
+                    .wait(800)
+                    .call(reset);
+        }
+    }
 
     function reset()
     {    
+        console.log("reset");
         createjs.Ticker.setPaused(true);
         //worldContainer.y = -600;
         catzRocketContainer.x = 300;
@@ -575,7 +620,7 @@ var RocketShip = (function(){
         rocketFlame.alpha=0;
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
-        
+        crashed = false;
         starCont.removeAllChildren();
         setStars();
 
