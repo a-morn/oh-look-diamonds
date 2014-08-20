@@ -27,7 +27,9 @@ var RocketShip = (function(){
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     starCont = new createjs.Container(),
+    cloudCont = new createjs.Container(),
     diSpeed = 25,
+    cloudSpeed = 4,
     fgSpeed = 14,
     sgSpeed =12,
     crashed = false,
@@ -59,7 +61,11 @@ var RocketShip = (function(){
                     {id: "creditsB", src: "assets/creditsB.png"},
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},
                     {id:"credits", src:"assets/credits.png"},
-                    {id:"cload1", src:"assets/cload1.png"},
+                    {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
+                    {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
+                    {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
+                    {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
+                    {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 8.png"},
                     {id:"diamondSound", src:"assets/diamondSound.mp3"},
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.ogg"},
@@ -277,7 +283,7 @@ var RocketShip = (function(){
         setStars();
         
         worldContainer = new createjs.Container();
-        worldContainer.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,fgCont);
+        worldContainer.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
         stage.addChild(worldContainer,text, textFrenzy);
         bg.addEventListener("click", startGame);        
 
@@ -341,6 +347,7 @@ var RocketShip = (function(){
                 updatecatzRocket(event);            
                 updateFg(event);
                 updateDiamonds();
+                updateClouds(event);
                 updateSeagulls();
                 updateWorldContainer();
             }
@@ -394,9 +401,6 @@ var RocketShip = (function(){
             loopTimer+= event.delta;
             catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
                 *grav*event.delta/1000+0.4;  
-    //        diSpeed = diSpeed * 0.98;
-    //        bgSpeed = bgSpeed * 0.98;
-    //        fgSpeed = fgSpeed * 0.98;
 
             catzRocketContainer.y+= 20*catzVelocity*event.delta/1000;
         }
@@ -446,6 +450,35 @@ var RocketShip = (function(){
                 fgCont.removeChildAt(2);
             }        
         }
+    }
+    
+    function updateClouds(event)
+    {
+        if(Math.random()>0.98)
+        {
+            var cloudtype = Math.floor(Math.random()*5+1);
+            cloudtype = "cloud"+cloudtype.toString();
+            var yPos = Math.floor(Math.random()*600-550);
+            var scale = Math.random()*0.3+0.3;
+            var cloud = new createjs.Bitmap(queue.getResult(cloudtype));     
+            cloud.scaleX = scale;
+            cloud.scaleY = scale;
+            cloud.x = 1000;
+            cloud.y = yPos;
+            cloudCont.addChild(cloud); 
+            console.log("added cloud at " +yPos );
+        }
+        var arrayLength = cloudCont.children.length;    
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = cloudCont.children[i];  
+             kid.x = kid.x - diSpeed;   
+            if (kid.x <= -500)
+            {
+              cloudCont.removeChildAt(i);
+              arrayLength = arrayLength - 1;
+              i = i - 1;
+            }       
+        }  
     }
 
     function updateDiamonds()
@@ -563,9 +596,6 @@ var RocketShip = (function(){
             rocketFlame.alpha = 0;
             catzRocket.gotoAndPlay("no shake");
         }
-        diSpeed = 12;
-        bgSpeed = 5;
-        fgSpeed = 14;
     }
 
     function catzRelease()
