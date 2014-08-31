@@ -6,7 +6,7 @@ var RocketShip = (function(){
     catzRocketContainer = new createjs.Container(),
     rocketShip={},
     canvas,
-    worldContainer,
+    gameView,
     stage,    
     catzRocket,
     credits,
@@ -55,7 +55,6 @@ var RocketShip = (function(){
                     {id: "seagullSpriteSheet", src: "assets/seagull.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},
-                    //{id:"birdcry", src: "assets/birdcry.mp3"},
                     {id: "main", src: "assets/main.png"}, 
                     {id: "startB", src: "assets/startB.png"}, 
                     {id: "creditsB", src: "assets/creditsB.png"},
@@ -68,11 +67,15 @@ var RocketShip = (function(){
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 8.png"},
                     {id:"diamondSound", src:"assets/diamondSound.mp3"},
-                    {id:"catzRocketCrash", src:"assets/new assets/sound/crash.ogg"},
+                    {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"rocket", src:"assets/new assets/sprites/catzAllanimations.png"},
                     {id:"flame", src:"assets/new assets/sprites/flame.png"},
-                    {id:"star", src:"assets/new assets/img/star.png"}
+                    {id:"star", src:"assets/new assets/img/star.png"},
+                    {id:"house", src:"assets/new assets/img/house no hill.png"},
+                    {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
+                    {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
+                    {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
 
         queue = new createjs.LoadQueue(true);
@@ -89,23 +92,193 @@ var RocketShip = (function(){
 
     function handleComplete(event)
     {
-        addGameView();       
+        addHouseView();       
+    }
+    
+    function addHouseView()
+    {
+        stage.removeChild(gameView);
+        bg = new createjs.Bitmap(queue.getResult("bg"));
+        bg.y = -1200;
+        house = new createjs.Bitmap(queue.getResult("house"));   
+        house.scaleX=0.8;
+        house.scaleY=0.8;
+        house.y=-20;
+        var hoboData={
+            "framerate":24,
+            "images":[queue.getResult("hobo")],
+            "frames":[
+                [0, 0, 256, 256, 0, -139, -81],
+                [256, 0, 256, 256, 0, -139, -81],
+                [512, 0, 256, 256, 0, -139, -81],
+                [768, 0, 256, 256, 0, -139, -81],
+                [1024, 0, 256, 256, 0, -139, -81],
+                [1280, 0, 256, 256, 0, -139, -81],
+                [1536, 0, 256, 256, 0, -139, -81],
+                [0, 256, 256, 256, 0, -139, -81],
+                [256, 256, 256, 256, 0, -139, -81],
+                [512, 256, 256, 256, 0, -139, -81],
+                [768, 256, 256, 256, 0, -139, -81],
+                [1024, 256, 256, 256, 0, -139, -81],
+                [1280, 256, 256, 256, 0, -139, -81],
+                [1536, 256, 256, 256, 0, -139, -81],
+                [0, 512, 256, 256, 0, -139, -81],
+                [256, 512, 256, 256, 0, -139, -81],
+                [512, 512, 256, 256, 0, -139, -81],
+                [768, 512, 256, 256, 0, -139, -81],
+                [1024, 512, 256, 256, 0, -139, -81],
+                [1280, 512, 256, 256, 0, -139, -81],
+                [1536, 512, 256, 256, 0, -139, -81],
+                [0, 768, 256, 256, 0, -139, -81],
+                [256, 768, 256, 256, 0, -139, -81],
+                [512, 768, 256, 256, 0, -139, -81],
+                [768, 768, 256, 256, 0, -139, -81],
+                [1024, 768, 256, 256, 0, -139, -81],
+                [1280, 768, 256, 256, 0, -139, -81],
+                [1536, 768, 256, 256, 0, -139, -81],
+                [0, 1024, 256, 256, 0, -139, -81],
+                [256, 1024, 256, 256, 0, -139, -81],
+                [512, 1024, 256, 256, 0, -139, -81],
+                [768, 1024, 256, 256, 0, -139, -81],
+                [1024, 1024, 256, 256, 0, -139, -81],
+                [1280, 1024, 256, 256, 0, -139, -81],
+                [1536, 1024, 256, 256, 0, -139, -81],
+                [0, 1280, 256, 256, 0, -139, -81],
+                [256, 1280, 256, 256, 0, -139, -81],
+                [512, 1280, 256, 256, 0, -139, -81],
+                [768, 1280, 256, 256, 0, -139, -81],
+                [1024, 1280, 256, 256, 0, -139, -81],
+                [1280, 1280, 256, 256, 0, -139, -81],
+                [1536, 1280, 256, 256, 0, -139, -81],
+                [0, 1536, 256, 256, 0, -139, -81],
+                [256, 1536, 256, 256, 0, -139, -81],
+                [512, 1536, 256, 256, 0, -139, -81],
+                [768, 1536, 256, 256, 0, -139, -81],
+                [1024, 1536, 256, 256, 0, -139, -81],
+                [1280, 1536, 256, 256, 0, -139, -81],
+                [1536, 1536, 256, 256, 0, -139, -81],
+                [0, 1792, 256, 256, 0, -139, -81]
+            ],
+            "animations":{"cycle": [0,49],"still":[0]}
+        };
+        sheet = new createjs.SpriteSheet(hoboData);
+        hobo  = new createjs.Sprite(sheet,"cycle");
+        hobo.x=-80;
+        hobo.y=210;
+        hobo.scaleX=0.8;
+        hobo.scaleY=0.8;
+        
+        catData ={
+            "framerate":24,
+            "images":[queue.getResult("cat")],
+            "frames":[
+                [0, 0, 128, 256, 0, -183, -148],
+                [128, 0, 128, 256, 0, -183, -148],
+                [256, 0, 128, 256, 0, -183, -148],
+                [384, 0, 128, 256, 0, -183, -148],
+                [512, 0, 128, 256, 0, -183, -148],
+                [640, 0, 128, 256, 0, -183, -148],
+                [768, 0, 128, 256, 0, -183, -148],
+                [896, 0, 128, 256, 0, -183, -148],
+                [1024, 0, 128, 256, 0, -183, -148],
+                [1152, 0, 128, 256, 0, -183, -148],
+                [1280, 0, 128, 256, 0, -183, -148],
+                [1408, 0, 128, 256, 0, -183, -148],
+                [1536, 0, 128, 256, 0, -183, -148],
+                [1664, 0, 128, 256, 0, -183, -148],
+                [1792, 0, 128, 256, 0, -183, -148],
+                [0, 256, 128, 256, 0, -183, -148],
+                [128, 256, 128, 256, 0, -183, -148],
+                [256, 256, 128, 256, 0, -183, -148]
+            ],
+            "animations":{"cycle": [0,17],"still":[0]}
+        };
+        catSheet = new createjs.SpriteSheet(catData);
+        cat  = new createjs.Sprite(catSheet,"cycle");
+        //cat.x = 235;
+        //cat.y = 190;
+        cat.y=60;
+        cat.x=100;
+        cat.scaleX =0.8;
+        cat.scaleY =0.8;
+        
+        wickData = {
+            "framerate":24,
+            "images":[queue.getResult("wick")],
+            "frames":[
+                [0, 0, 128, 64, 0, -237, -166],
+                [128, 0, 128, 64, 0, -237, -166],
+                [256, 0, 128, 64, 0, -237, -166],
+                [384, 0, 128, 64, 0, -237, -166],
+                [512, 0, 128, 64, 0, -237, -166],
+                [640, 0, 128, 64, 0, -237, -166],
+                [768, 0, 128, 64, 0, -237, -166],
+                [896, 0, 128, 64, 0, -237, -166],
+                [1024, 0, 128, 64, 0, -237, -166],
+                [1152, 0, 128, 64, 0, -237, -166],
+                [1280, 0, 128, 64, 0, -237, -166],
+                [1408, 0, 128, 64, 0, -237, -166],
+                [1536, 0, 128, 64, 0, -237, -166],
+                [1664, 0, 128, 64, 0, -237, -166],
+                [1792, 0, 128, 64, 0, -237, -166],
+                [0, 64, 128, 64, 0, -237, -166],
+                [128, 64, 128, 64, 0, -237, -166],
+                [256, 64, 128, 64, 0, -237, -166],
+                [384, 64, 128, 64, 0, -237, -166],
+                [512, 64, 128, 64, 0, -237, -166],
+                [640, 64, 128, 64, 0, -237, -166],
+                [768, 64, 128, 64, 0, -237, -166],
+                [896, 64, 128, 64, 0, -237, -166],
+                [1024, 64, 128, 64, 0, -237, -166],
+                [1152, 64, 128, 64, 0, -237, -166],
+                [1280, 64, 128, 64, 0, -237, -166],
+                [1408, 64, 128, 64, 0, -237, -166],
+                [1536, 64, 128, 64, 0, -237, -166],
+                [1664, 64, 128, 64, 0, -237, -166],
+                [1792, 64, 128, 64, 0, -237, -166],
+                [0, 128, 128, 64, 0, -237, -166],
+                [128, 128, 128, 64, 0, -237, -166],
+                [256, 128, 128, 64, 0, -237, -166],
+                [384, 128, 128, 64, 0, -237, -166],
+                [512, 128, 128, 64, 0, -237, -166],
+                [640, 128, 128, 64, 0, -237, -166]
+            ],
+            "animations":{"cycle": [0,35],"still": [0]}
+        };
+        sheet = new createjs.SpriteSheet(wickData);
+        wick  = new createjs.Sprite(sheet,"still");
+        wick.y=50;
+        wick.x=-210;
+        wick.scaleX=1.5;
+        wick.scaleY=1.5;
+        wick.addEventListener("click",lightFuse);
+        setStars();
+        titleView.addChild(bg,starCont,house, cat, hobo,wick);
+        stage.addChild(titleView);
+        stage.update();
+        
+        createjs.Ticker.on("tick", houseTick);
+    }
+    
+    function lightFuse()
+    {
+        wick.gotoAndPlay("cycle");
+        wick.addEventListener("animationend",addGameView);
+    }
+    function houseTick()
+    {
+        stage.update();
     }
 
     function addGameView()
     {    
         stage.removeChild(titleView);
-        titleView = null;
-        credits = null;    
 
         //catzRocket = new createjs.Bitmap(queue.getResult("catzRocket"));
         //catzRocket.scaleX=0.1;
         //catzRocket.scaleY=0.1;
         //catzRocket.x = 300;
         //catzRocket.y = 200;                           
-
-        bg = new createjs.Bitmap(queue.getResult("bg"));
-        bg.y = -1200;
 
         var diamondData ={
             "framerate":24,
@@ -280,11 +453,9 @@ var RocketShip = (function(){
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);
         
-        setStars();
-        
-        worldContainer = new createjs.Container();
-        worldContainer.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
-        stage.addChild(worldContainer,text, textFrenzy);
+        gameView = new createjs.Container();
+        gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
+        stage.addChild(gameView,text, textFrenzy);
         bg.addEventListener("click", startGame);        
 
         createjs.Ticker.on("tick", update);  
@@ -358,18 +529,18 @@ var RocketShip = (function(){
     
     function updateWorldContainer(event)
     {
-//        catzScreenPosition = catzRocketContainer.y+worldContainer.y;
+//        catzScreenPosition = catzRocketContainer.y+gameView.y;
 //        if(catzScreenPosition<150)
 //        {
-//            worldContainer.y+= 150-catzScreenPosition;
+//            gameView.y+= 150-catzScreenPosition;
 //        }
 //        else if(catzScreenPosition>250)
 //        {
-//            worldContainer.y-= catzScreenPosition-250;
+//            gameView.y-= catzScreenPosition-250;
 //        }
           if(catzRocketContainer.y<200 && catzRocketContainer.y>-250)
           {
-              worldContainer.y=200-catzRocketContainer.y;
+              gameView.y=200-catzRocketContainer.y;
           }
     }
 
@@ -623,9 +794,9 @@ var RocketShip = (function(){
         {
             crashed = true
             createjs.Tween.removeAllTweens(catzRocketContainer);
-            createjs.Tween.removeAllTweens(worldContainer);
+            createjs.Tween.removeAllTweens(gameView);
             rocketFlame.alpha=0;
-            var tween = createjs.Tween.get(worldContainer)
+            var tween = createjs.Tween.get(gameView)
                     .to({x:-50, y:20},50)
                     .to({x:50, y:-40},50)
                     .to({x:-50, y:50},50)
@@ -642,7 +813,7 @@ var RocketShip = (function(){
     {    
         console.log("reset");
         createjs.Ticker.setPaused(true);
-        //worldContainer.y = -600;
+        //gameView.y = -600;
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
         catzRocketContainer.rotation =0;
