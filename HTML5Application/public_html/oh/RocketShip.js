@@ -16,8 +16,8 @@ var RocketShip = (function(){
     houseView = new createjs.Container(),
     seagullSheet,
     bg,    
-    text,
-    textFrenzy,
+    text, 
+    diamondShardCounter,
     queue,
     mousedown,
     diamondSheet,
@@ -63,8 +63,7 @@ var RocketShip = (function(){
         
         progressBar = new createjs.Shape();         
         
-        progressBar.graphics.beginFill("#907a91").drawRect(0,0,100,20); 
-        alert(progressBar.x);
+        progressBar.graphics.beginFill("#907a91").drawRect(0,0,100,20);         
         progressBar.x = canvas.width/2-50;        
         progressBar.y = canvas.height/2-10;
                                
@@ -75,6 +74,8 @@ var RocketShip = (function(){
                     {id: "seagullSpriteSheet", src: "assets/seagull.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
+                    {id: "diamondSound", src: "assets/diamondSound.mp3"},            
+                    {id: "diamondShardCounter", src: "assets/diamond.png"},                    
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
@@ -289,7 +290,7 @@ var RocketShip = (function(){
         wick.gotoAndPlay("still");
         wick.addEventListener("click",lightFuse);
         stage.removeAllEventListeners();
-        stage.removeChild(gameView,text, textFrenzy);
+        stage.removeChild(gameView,text, diamondShardCounter);
         stage.addChild(houseView);
         stage.update();
         createjs.Ticker.setFPS(20);
@@ -365,10 +366,12 @@ var RocketShip = (function(){
         fgGround2.y = 300;                       
         fgCont.addChild(fgGround1, fgGround2);    
 
-        text = new createjs.Text("0", "20px Courier New", "#ff7700"); 
-        text.x = 20;     
-        textFrenzy = new createjs.Text("0", "20px Courier New", "#ff7700"); 
-        textFrenzy.x = 450;     
+        diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
+        diamondShardCounter.scaleY= 0.3;
+        diamondShardCounter.scaleX= 0.3;        
+        text = new createjs.Text("0", "20px Courier New", "white"); 
+        text.x = 60;             
+        text.y = 25;
         
         var rocketData = {
             "framerate":24,
@@ -484,10 +487,10 @@ var RocketShip = (function(){
         sgCont.addChild(seagull);                
         
         rocketSong = createjs.Sound.play("palladiumAlloySong");
-        rocketSong.pause();
+        rocketSong.stop();
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
-        rocketSound.pause();
+        rocketSound.stop();
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
     }
@@ -495,7 +498,7 @@ var RocketShip = (function(){
     function gotoGameView()
     {
         stage.removeChild(houseView);
-        stage.addChild(gameView,text, textFrenzy);
+        stage.addChild(gameView,text, diamondShardCounter);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -505,7 +508,7 @@ var RocketShip = (function(){
         jump = false;
         catzVelocity=-20;
         
-        if(rocketSong.getPosition() < 10)
+        if(rocketSong.getPosition() === 0)
         {
             rocketSong.play();
         }
@@ -533,9 +536,7 @@ var RocketShip = (function(){
     {        
         if(!event.paused)
         {                
-            text.text = "Total shards collected: " + score;
-            textFrenzy.text = "Frenzy Charge: " +diamondFrenzyCharge +
-                    "\n\Has frenzy: " + hasFrenzy;
+            text.text = score;            
             if(diamondFrenzyCharge>0)
             {
                 diamondFrenzyCharge -= event.delta/2000;
