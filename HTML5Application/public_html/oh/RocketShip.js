@@ -8,8 +8,7 @@ var RocketShip = (function(){
     canvas,
     gameView,
     stage,    
-    catzRocket,
-    credits,
+    catzRocket,    
     rocketFlame,
     titleView = new createjs.Container(),
     seagullSheet,
@@ -22,51 +21,62 @@ var RocketShip = (function(){
     jump,
     score = 0,    
     catzVelocity = -2,
-    cameraOffset = 0,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
-    diSpeed = 25,
-    cloudSpeed = 4,
+    diSpeed = 25,    
     fgSpeed = 14,
     sgSpeed =12,
     crashed = false,
     bg,
     queue,
     manifest,    
+    rocketSong,
     loopTimer = 0,
     catzStateEnum = {
         Normal : 0,
         Uploop : 1,
         Downloop : 2
     },
-    catzState=catzStateEnum.Normal;
+    catzState=catzStateEnum.Normal,
+    progressBar;
 
     rocketShip.Init = function()
     {
-        canvas                      = document.getElementById('mahCanvas');
+        canvas = document.getElementById('mahCanvas');
+                
+        var style = canvas.style;
+        style.marginLeft = "auto";
+        style.marginRight = "auto";
+        var parentStyle = canvas.parentElement.style;
+        parentStyle.textAlign = "center";
+        parentStyle.width = "100%";
+        
         stage                       = new createjs.Stage(canvas);
         stage.mouseEventsEnabled    = true;
+        
+        progressBar = new createjs.Shape();         
+        
+        progressBar.graphics.beginFill("#907a91").drawRect(0,0,100,20); 
+        alert(progressBar.x);
+        progressBar.x = canvas.width/2-50;        
+        progressBar.y = canvas.height/2-10;
+                               
+        stage.addChild(progressBar);
 
         manifest = [
                     //{id: "catz", src: "assets/catz.png"}, 
                     {id: "seagullSpriteSheet", src: "assets/seagull.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
-                    {id: "meow", src: "assets/meow.mp3"},
-                    {id: "main", src: "assets/main.png"}, 
-                    {id: "startB", src: "assets/startB.png"}, 
-                    {id: "creditsB", src: "assets/creditsB.png"},
-                    {id:"bg", src:"assets/new assets/img/background long.jpg"},
-                    {id:"credits", src:"assets/credits.png"},
+                    {id: "meow", src: "assets/meow.mp3"},                    
+                    {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
                     {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
                     {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
-                    {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},
-                    {id:"fgTree1", src:"assets/new assets/img/tree 8.png"},
-                    {id:"diamondSound", src:"assets/diamondSound.mp3"},
+                    {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"rocket", src:"assets/new assets/sprites/catzAllanimations.png"},
@@ -75,6 +85,7 @@ var RocketShip = (function(){
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
+                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
 
@@ -86,12 +97,16 @@ var RocketShip = (function(){
     };
 
     function handleProgress(event)
-    {
-        event.loaded;
+    {                
+        progressBar.graphics.beginFill("#330033").drawRect(0,0,100*event.progress,20);                
+                
+        
+        stage.update();
     }
 
-    function handleComplete(event)
+    function handleComplete()
     {
+        stage.removeChild(progressBar);
         addHouseView();       
     }
     
@@ -272,13 +287,7 @@ var RocketShip = (function(){
 
     function addGameView()
     {    
-        stage.removeChild(titleView);
-
-        //catzRocket = new createjs.Bitmap(queue.getResult("catzRocket"));
-        //catzRocket.scaleX=0.1;
-        //catzRocket.scaleY=0.1;
-        //catzRocket.x = 300;
-        //catzRocket.y = 200;                           
+        stage.removeChild(titleView);                     
 
         var diamondData ={
             "framerate":24,
@@ -371,8 +380,8 @@ var RocketShip = (function(){
                     "speed": 1
                 },
                 "no shake": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1}
-            }
-        }
+            }            
+        };
            
         
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
@@ -451,7 +460,10 @@ var RocketShip = (function(){
         seagull.scaleY = 0.1;
         seagull.x = 900;
         seagull.y = 50+ Math.random()*100;
-        sgCont.addChild(seagull);
+        sgCont.addChild(seagull);                
+        
+        rocketSong = createjs.Sound.play("palladiumAlloySong");
+        rocketSong.pause();
         
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
@@ -482,10 +494,15 @@ var RocketShip = (function(){
     }
 
     function startGame()
-    {            
+    {                    
+        if(rocketSong.getPosition() < 10)
+        {
+            rocketSong.play();
+        }
         bg.removeEventListener("click", startGame);         
         stage.addEventListener("stagemousedown", catzUp);    
-        stage.addEventListener("stagemouseup", catzEndLoop);    
+        stage.addEventListener("stagemouseup", catzEndLoop);  
+        
         jump = false;
         catzVelocity-=2;
 
@@ -505,13 +522,11 @@ var RocketShip = (function(){
             }
             if(diamondFrenzyCharge>3 && !hasFrenzy)
             {
-                hasFrenzy = true;
-                //catzRocketContainer.x+=100;
+                hasFrenzy = true;                
             }
             else if(diamondFrenzyCharge<3 && hasFrenzy)
             {
                 hasFrenzy = false;
-                //catzRocketContainer.x-=100;
             }
             if(!crashed)
             {
@@ -550,6 +565,7 @@ var RocketShip = (function(){
         {
 
             catzVelocity += grav*event.delta/1000;
+            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
             catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
             loopTimer = 0;
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
@@ -823,11 +839,11 @@ var RocketShip = (function(){
         catzVelocity = 0;
         crashed = false;
         starCont.removeAllChildren();
-        setStars();
-
+        setStars();                        
+        
         bg.addEventListener("click", startGame);        
-        stage.removeEventListener("click", catzUp);  
-
+        stage.removeEventListener("click", catzUp);                  
+        
         stage.update();
     }
 
