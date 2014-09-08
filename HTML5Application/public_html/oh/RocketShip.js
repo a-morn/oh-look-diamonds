@@ -45,7 +45,9 @@ var RocketShip = (function(){
         Downloop : 2
     },
     catzState=catzStateEnum.Normal,
-    progressBar;
+    progressBar,
+    hoboSpeach,
+    catzSpeach;
 
     rocketShip.Init = function()
     {
@@ -91,6 +93,10 @@ var RocketShip = (function(){
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
                     {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
+                    {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
+                    {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
+                    {id:"catzSound2", src:"assets/new assets/sound/catz 4.mp3"},
                     {id:"rocketSound", src:"assets/new assets/sound/rocket.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
@@ -271,7 +277,18 @@ var RocketShip = (function(){
         wick.x=-210;
         wick.scaleX=1.5;
         wick.scaleY=1.5;
-        houseView.addChild(bg,starCont,house, cat, hobo,wick);
+        
+        hoboSpeach = new createjs.Text("0", "20px Courier New", "white"); 
+        hoboSpeach.x = 40;             
+        hoboSpeach.y = 200;
+        hoboSpeach.text = "";
+        
+        catzSpeach = new createjs.Text("0", "20px Courier New", "white"); 
+        catzSpeach.x = 370;             
+        catzSpeach.y = 180;
+        catzSpeach.text = "";
+        
+        houseView.addChild(bg,starCont,house, cat, hobo,wick, hoboSpeach, catzSpeach);
     }
     
     
@@ -289,6 +306,9 @@ var RocketShip = (function(){
         wick.removeAllEventListeners();
         wick.gotoAndPlay("still");
         wick.addEventListener("click",lightFuse);
+        
+        hobo.addEventListener("click",hoboConversation);
+        
         stage.removeAllEventListeners();
         stage.removeChild(gameView,text, diamondShardCounter);
         stage.addChild(houseView);
@@ -300,10 +320,22 @@ var RocketShip = (function(){
     
     function lightFuse()
     {
-        wick.x-=10;
+        wick.x-=15;
         wick.gotoAndPlay("cycle");
         wick.addEventListener("animationend",gotoGameView);
+        catzSpeach.text ="";
+        hoboSpeach.text ="";
     }
+    
+    function hoboConversation()
+    {        
+        var instance = createjs.Sound.play("hoboCatSound1");
+        
+        hoboSpeach.text = "good evening, kitten";
+                    
+        catzSpeach.text = "meow";                    
+    }
+    
     function houseTick()
     {
         stage.update();
