@@ -7,14 +7,17 @@ var RocketShip = (function(){
     rocketShip={},
     canvas,
     gameView,
+    gameListener,
+    houseListener,
     stage,    
     catzRocket,
     credits,
     rocketFlame,
-    titleView = new createjs.Container(),
+    houseView = new createjs.Container(),
     seagullSheet,
     bg,    
     text,
+    textFrenzy,
     queue,
     mousedown,
     diamondSheet,
@@ -92,14 +95,15 @@ var RocketShip = (function(){
 
     function handleComplete(event)
     {
-        addHouseView();       
+        createBG();
+        createHouseView();
+        createGameView();
+        stage.addChild(bg,starCont);
+        gotoHouseView();
     }
     
-    function addHouseView()
+    function createHouseView()
     {
-        stage.removeChild(gameView);
-        bg = new createjs.Bitmap(queue.getResult("bg"));
-        bg.y = -1200;
         house = new createjs.Bitmap(queue.getResult("house"));   
         house.scaleX=0.8;
         house.scaleY=0.8;
@@ -251,35 +255,46 @@ var RocketShip = (function(){
         wick.x=-210;
         wick.scaleX=1.5;
         wick.scaleY=1.5;
-        wick.addEventListener("click",lightFuse);
-        setStars();
-        titleView.addChild(bg,starCont,house, cat, hobo,wick);
-        stage.addChild(titleView);
-        stage.update();
+        houseView.addChild(bg,starCont,house, cat, hobo,wick);
+    }
+    
+    
+   function createBG()
+   {
         
-        createjs.Ticker.on("tick", houseTick);
+        bg = new createjs.Bitmap(queue.getResult("bg"));
+        bg.y = -1200;
+        setStars();
+   }
+    
+    function gotoHouseView()
+    {
+        wick.x=-210;
+        wick.removeAllEventListeners();
+        wick.gotoAndPlay("still");
+        wick.addEventListener("click",lightFuse);
+        stage.removeAllEventListeners();
+        stage.removeChild(gameView,text, textFrenzy);
+        stage.addChild(houseView);
+        stage.update();
+        createjs.Ticker.setFPS(20);
+        createjs.Ticker.off("tick", gameListener);
+        houseListener = createjs.Ticker.on("tick", houseTick,this);
     }
     
     function lightFuse()
     {
+        wick.x-=10;
         wick.gotoAndPlay("cycle");
-        wick.addEventListener("animationend",addGameView);
+        wick.addEventListener("animationend",gotoGameView);
     }
     function houseTick()
     {
         stage.update();
     }
 
-    function addGameView()
+    function createGameView()
     {    
-        stage.removeChild(titleView);
-
-        //catzRocket = new createjs.Bitmap(queue.getResult("catzRocket"));
-        //catzRocket.scaleX=0.1;
-        //catzRocket.scaleY=0.1;
-        //catzRocket.x = 300;
-        //catzRocket.y = 200;                           
-
         var diamondData ={
             "framerate":24,
             "images":[queue.getResult("diamond")],
@@ -452,16 +467,25 @@ var RocketShip = (function(){
         seagull.x = 900;
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);
-        
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
-        stage.addChild(gameView,text, textFrenzy);
-        bg.addEventListener("click", startGame);        
+        
 
-        createjs.Ticker.on("tick", update);  
+    }
+    
+    function gotoGameView()
+    {
+        stage.removeChild(houseView);
+        stage.addChild(gameView,text, textFrenzy);
+        //createjs.Ticker.removeAllEventListeners();  
+        createjs.Ticker.off("tick", houseListener);    
+        gameListener = createjs.Ticker.on("tick", update,this);  
         createjs.Ticker.setFPS(30);            
-        createjs.Ticker.setPaused(true);
-   
+        stage.addEventListener("stagemousedown", catzUp);    
+        stage.addEventListener("stagemouseup", catzEndLoop);    
+        jump = false;
+        catzVelocity=-20;
+        createjs.Ticker.setPaused(false);      
         stage.update();
     }
     
@@ -480,18 +504,7 @@ var RocketShip = (function(){
             starCont.addChild(star);
         }
     }
-
-    function startGame()
-    {            
-        bg.removeEventListener("click", startGame);         
-        stage.addEventListener("stagemousedown", catzUp);    
-        stage.addEventListener("stagemouseup", catzEndLoop);    
-        jump = false;
-        catzVelocity-=2;
-
-        createjs.Ticker.setPaused(false);       
-    }
-
+    
     function update(event)
     {        
         if(!event.paused)
@@ -637,7 +650,7 @@ var RocketShip = (function(){
             cloud.x = 1000;
             cloud.y = yPos;
             cloudCont.addChild(cloud); 
-            console.log("added cloud at " +yPos );
+            //console.log("added cloud at " +yPos );
         }
         var arrayLength = cloudCont.children.length;    
         for (var i = 0; i < arrayLength; i++) {
@@ -792,7 +805,7 @@ var RocketShip = (function(){
     {
         if(!crashed)
         {
-            crashed = true
+            crashed = true;
             createjs.Tween.removeAllTweens(catzRocketContainer);
             createjs.Tween.removeAllTweens(gameView);
             rocketFlame.alpha=0;
@@ -806,13 +819,13 @@ var RocketShip = (function(){
                     .to({x:0, y:0},50)
                     .wait(800)
                     .call(reset);
+            console.log("crashed");
         }
     }
 
     function reset()
     {    
         console.log("reset");
-        createjs.Ticker.setPaused(true);
         //gameView.y = -600;
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
@@ -822,12 +835,7 @@ var RocketShip = (function(){
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
         crashed = false;
-        starCont.removeAllChildren();
-        setStars();
-
-        bg.addEventListener("click", startGame);        
-        stage.removeEventListener("click", catzUp);  
-
+        gotoHouseView();
         stage.update();
     }
 
