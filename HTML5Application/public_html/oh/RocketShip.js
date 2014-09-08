@@ -77,7 +77,7 @@ var RocketShip = (function(){
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
                     {id: "diamondSound", src: "assets/diamondSound.mp3"},            
-                    {id: "diamondShardCounter", src: "assets/diamond.png"},                    
+                    {id: "diamondShardCounter", src: "assets/new assets/img/DiamondIcon.png"},                    
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
@@ -322,6 +322,7 @@ var RocketShip = (function(){
     {
         wick.x-=15;
         wick.gotoAndPlay("cycle");
+        wick.removeAllEventListeners();
         wick.addEventListener("animationend",gotoGameView);
         catzSpeach.text ="";
         hoboSpeach.text ="";
@@ -399,8 +400,8 @@ var RocketShip = (function(){
         fgCont.addChild(fgGround1, fgGround2);    
 
         diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
-        diamondShardCounter.scaleY= 0.3;
-        diamondShardCounter.scaleX= 0.3;        
+        diamondShardCounter.scaleY= 0.8;
+        diamondShardCounter.scaleX= 0.8;        
         text = new createjs.Text("0", "20px Courier New", "white"); 
         text.x = 60;             
         text.y = 25;
