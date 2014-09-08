@@ -12,6 +12,7 @@ var RocketShip = (function(){
     stage,    
     catzRocket,    
     rocketFlame,
+    rocketSound,
     houseView = new createjs.Container(),
     seagullSheet,
     bg,    
@@ -89,6 +90,7 @@ var RocketShip = (function(){
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
                     {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    {id:"rocketSound", src:"assets/new assets/sound/rocket.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
 
@@ -113,7 +115,6 @@ var RocketShip = (function(){
         stage.addChild(bg,starCont);
         gotoHouseView();
         stage.removeChild(progressBar);
-        addHouseView();       
     }
     
     function createHouseView()
@@ -484,6 +485,9 @@ var RocketShip = (function(){
         
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.pause();
+        rocketSound = createjs.Sound.play("rocketSound");
+        rocketSound.volume = 0.1;
+        rocketSound.pause();
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
     }
@@ -610,6 +614,7 @@ var RocketShip = (function(){
         if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
             rocketFlame.alpha = 0;
+            rocketSound.stop();
             createjs.Tween.removeAllTweens(catzRocketContainer);
             tween = createjs.Tween.get(catzRocketContainer)
                 .to({rotation:-270},1000)
@@ -775,6 +780,7 @@ var RocketShip = (function(){
 
     function catzUp()
     {
+        rocketSound.play();
         mousedown = true;
         if(catzState === catzStateEnum.Normal)
         {
@@ -792,6 +798,7 @@ var RocketShip = (function(){
 
     function catzEndLoop()
     {
+        rocketSound.stop();
         mousedown = false;
         if(catzState!==catzStateEnum.Downloop)
         {
@@ -805,6 +812,7 @@ var RocketShip = (function(){
     {
         if(mousedown)
         {
+            rocketSound.play();
             catzState = catzStateEnum.Uploop;
             catzVelocity = 0;
             rocketFlame.alpha = 1;
@@ -824,6 +832,8 @@ var RocketShip = (function(){
     {
         if(!crashed)
         {
+            var instance = createjs.Sound.play("catzRocketCrash");
+            instance.volume=0.5;
             crashed = true;
             createjs.Tween.removeAllTweens(catzRocketContainer);
             createjs.Tween.removeAllTweens(gameView);
