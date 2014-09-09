@@ -1,5 +1,6 @@
 var RocketShip = (function(){
     var 
+    dialogueCounter= 0,
     catzBounds,
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
@@ -47,7 +48,16 @@ var RocketShip = (function(){
     catzState=catzStateEnum.Normal,
     progressBar,
     hoboSpeach,
-    catzSpeach;
+    catzSpeach,
+    diamondSound,
+    hoboCatSound1,
+    hoboCatSound2,
+    catzSound1,
+    catzSound2,
+    lightFuseActive=false,
+    hoboActive=true,
+    wickExclamation,
+    hoboExclamation;
 
     rocketShip.Init = function()
     {
@@ -189,10 +199,10 @@ var RocketShip = (function(){
         };
         sheet = new createjs.SpriteSheet(hoboData);
         hobo  = new createjs.Sprite(sheet,"cycle");
-        hobo.x=-80;
-        hobo.y=210;
+        hobo.x=-110;
+        hobo.y=225;
         hobo.scaleX=0.8;
-        hobo.scaleY=0.8;
+        hobo.scaleY=0.8;                
         
         catData ={
             "framerate":24,
@@ -278,17 +288,42 @@ var RocketShip = (function(){
         wick.scaleX=1.5;
         wick.scaleY=1.5;
         
-        hoboSpeach = new createjs.Text("0", "20px Courier New", "white"); 
-        hoboSpeach.x = 40;             
-        hoboSpeach.y = 200;
+        hoboSpeach = new createjs.Text("0", "16px Courier New", "#ffffcc"); 
+        hoboSpeach.x = 10;             
+        hoboSpeach.y = 240;
         hoboSpeach.text = "";
+        hoboSpeach.alpha= 0;
         
-        catzSpeach = new createjs.Text("0", "20px Courier New", "white"); 
-        catzSpeach.x = 370;             
+        hoboExclamation = new createjs.Text("0", "18px Courier New", "#ffcc00"); 
+        hoboExclamation.x = 115;             
+        hoboExclamation.y = 280;
+        hoboExclamation.text = "!";
+        hoboExclamation.alpha= 0;
+        
+        catzSpeach = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
+        catzSpeach.x = 350;             
         catzSpeach.y = 180;
         catzSpeach.text = "";
+        catzSpeach.Alpha = 0;
         
-        houseView.addChild(bg,starCont,house, cat, hobo,wick, hoboSpeach, catzSpeach);
+        wickExclamation = new createjs.Text("0", "10px Courier New", "#ffcc00"); 
+        wickExclamation.x = 180;             
+        wickExclamation.y = 305;
+        wickExclamation.text = "<-- Fire up the rocket";
+        wickExclamation.alpha= 0;
+        
+        hoboCatSound1 = createjs.Sound.play("hoboCatSound1");
+        hoboCatSound1.stop();
+        hoboCatSound2 = createjs.Sound.play("hoboCatSound2");
+        hoboCatSound2.stop();
+        
+        catzSound1 = createjs.Sound.play("catzSound1");
+        catzSound1.stop();
+        catzSound2 = createjs.Sound.play("catzSound2");
+        catzSound2.stop();
+        
+        houseView.addChild(bg,starCont,house, cat, hobo,wick, hoboExclamation, 
+        wickExclamation, hoboSpeach, catzSpeach);
     }
     
     
@@ -305,7 +340,10 @@ var RocketShip = (function(){
         wick.x=-210;
         wick.removeAllEventListeners();
         wick.gotoAndPlay("still");
-        wick.addEventListener("click",lightFuse);
+        if(lightFuseActive)
+        {
+            wick.addEventListener("click",lightFuse);
+        }
         
         hobo.addEventListener("click",hoboConversation);
         
@@ -330,16 +368,88 @@ var RocketShip = (function(){
     
     function hoboConversation()
     {        
-        var instance = createjs.Sound.play("hoboCatSound1");
+        if(dialogueCounter ===0)
+        {
+            hoboCatSound1.play();        
+            hoboSpeach.text = "good evening";
+            hoboSpeach.alpha = 1;            
+        }
         
-        hoboSpeach.text = "good evening, kitten";
-                    
-        catzSpeach.text = "meow";                    
+        if(dialogueCounter ===1)
+        {                    
+            catzSound1.play();
+            catzSpeach.text = "meow";                    
+            catzSpeach.alpha = 1;
+        }
+        
+        if(dialogueCounter ===2)
+        {
+            hoboCatSound2.play();        
+            hoboSpeach.text = "whatcha lookin' at\n\
+there, kitten?";
+            hoboSpeach.alpha = 1;            
+        }
+        
+        if(dialogueCounter ===3)
+        {                    
+            catzSound1.play();
+            catzSpeach.text = "diamonds!";                    
+            catzSpeach.alpha = 1;
+        }
+        
+        if(dialogueCounter ===4)
+        {
+            hoboCatSound1.play();        
+            hoboSpeach.text = "Heh, kitten what you got\n\
+up there is none but \n\
+big balls of gas and fire";
+            hoboSpeach.alpha = 1;                        
+        }
+        
+        if(dialogueCounter ===5)
+        {
+            hoboCatSound2.play();        
+            hoboSpeach.text = "Wish I had me some \n\
+diamonds though\n\
+Then I could build myself \n\
+a house";
+            hoboSpeach.alpha = 1;                        
+        }
+        
+        if(dialogueCounter ===6)
+        {
+            hoboCatSound2.play();        
+            hoboSpeach.text = "Been awhile since \n\
+I built something \n\
+Been awhile since \n\
+I had a house";
+            hoboSpeach.alpha = 1;            
+            lightFuseActive = true;
+            hoboActive = false;
+            wick.addEventListener("click",lightFuse);
+        }
+        
+        dialogueCounter += 1;
     }
     
     function houseTick()
     {
         stage.update();
+        if(hoboSpeach.alpha !== 0)
+        {
+            hoboSpeach.alpha -= 0.01;
+        }
+        
+        if(catzSpeach.alpha !== 0)
+        {
+            catzSpeach.alpha -= 0.01;
+        }            
+        
+        
+        hoboExclamation.alpha = hoboActive;
+        
+        wickExclamation.alpha = lightFuseActive;
+        
     }
 
     function createGameView()
@@ -491,18 +601,18 @@ var RocketShip = (function(){
         rocketFlame.scaleY = 0.4;
         rocketFlame.x-=70;
         
-        catzRocketContainer.x = 300;
+        catzRocketContainer.x = 260;
         catzRocketContainer.y = 200;
         catzRocket.scaleX = 0.4;
         catzRocket.scaleY = 0.4;
         catzRocketContainer.regY = 50;
-        catzRocketContainer.regX = 50;
+        catzRocketContainer.regX = 260;
         catzRocket.currentFrame = 0;   
                         
         catzRocketContainer.addChild(rocketFlame,catzRocket);
         
         catzBounds = catzRocketContainer.getTransformedBounds();
-                
+        console.log(catzBounds);
        
         var seagullData = {
              images: ["assets/seagull.png"],
@@ -524,6 +634,9 @@ var RocketShip = (function(){
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
+        diamondSound = createjs.Sound.play("diamondSound");
+        diamondSound.stop();
+        
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
     }
@@ -614,7 +727,7 @@ var RocketShip = (function(){
     }
 
     function updatecatzRocket(event)
-    {    
+    {                                    
         if(catzState === catzStateEnum.Normal)   
         {
 
@@ -624,7 +737,7 @@ var RocketShip = (function(){
             loopTimer = 0;
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
-            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
             }
         }    
         else if (catzState === catzStateEnum.Uploop)
@@ -762,8 +875,7 @@ var RocketShip = (function(){
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }            
-            //50 and 50 is approx height and width of diamonds
+            }                        
             if((catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocketContainer.x > 
                     kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
                     && catzRocketContainer.y > kid.y)
@@ -772,7 +884,7 @@ var RocketShip = (function(){
                 score = score +1;
                 arrayLength = arrayLength - 1;
                 icon = i - 1;
-                var instance = createjs.Sound.play("diamondSound");
+                diamondSound.play();
                 diamondFrenzyCharge +=1;
             }
         }   
