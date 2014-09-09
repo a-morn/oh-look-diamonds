@@ -54,7 +54,7 @@ var RocketShip = (function(){
     hoboCatSound2,
     catzSound1,
     catzSound2,
-    lightFuseActive=false,
+    wickActive=false,
     hoboActive=true,
     wickExclamation,
     hoboExclamation,
@@ -109,6 +109,7 @@ var RocketShip = (function(){
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
                     {id:"catzSound2", src:"assets/new assets/sound/catz 4.mp3"},
                     {id:"rocketSound", src:"assets/new assets/sound/rocket.mp3"},
+                    {id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
 
@@ -323,6 +324,9 @@ var RocketShip = (function(){
         catzSound2 = createjs.Sound.play("catzSound2");
         catzSound2.stop();
         
+        rocketSong = createjs.Sound.play("palladiumAlloySong");
+        rocketSong.stop();
+        
         houseView.addChild(bg,starCont,house, cat, hobo,wick, hoboExclamation, 
         wickExclamation, hoboSpeach, catzSpeach);
     }
@@ -341,7 +345,7 @@ var RocketShip = (function(){
         wick.x=-210;
         wick.removeAllEventListeners();
         wick.gotoAndPlay("still");
-        if(lightFuseActive)
+        if(wickActive)
         {
             wick.addEventListener("click",lightFuse);
         }
@@ -358,11 +362,11 @@ var RocketShip = (function(){
     }
     
     function lightFuse()
-    {
+    {        
         wick.x-=15;
         wick.gotoAndPlay("cycle");
         wick.removeAllEventListeners();
-        wick.addEventListener("animationend",gotoGameView);
+        wick.addEventListener("animationend",function(){gotoGameView();});
         catzSpeach.text ="";
         hoboSpeach.text ="";
     }
@@ -370,7 +374,7 @@ var RocketShip = (function(){
     function hoboConversation()
     {        
         if(dialogueCounter ===0)
-        {
+        {            
             hoboCatSound1.play();        
             hoboSpeach.text = "good evening";
             hoboSpeach.alpha = 1;            
@@ -425,9 +429,20 @@ I built something \n\
 Been awhile since \n\
 I had a house";
             hoboSpeach.alpha = 1;            
-            lightFuseActive = true;
+            wickActive = true;
             hoboActive = false;
-            wick.addEventListener("click",lightFuse);
+            wick.addEventListener("click",lightFuse);            
+        }
+                
+        if(dialogueCounter > 6 && !dialogueCounter%3===0)
+        {            
+            hoboSpeach.text = "*cough*";
+            hoboSpeach.alpha = 1;                        
+        }
+        if(dialogueCounter > 6 && dialogueCounter%3===0)
+        {            
+            hoboSpeach.text = "hum hum";
+            hoboSpeach.alpha = 1;                        
         }
         
         dialogueCounter += 1;
@@ -436,20 +451,27 @@ I had a house";
     function houseTick()
     {
         stage.update();
-        if(hoboSpeach.alpha !== 0)
+        if(hoboSpeach.alpha > 0)
         {
-            hoboSpeach.alpha -= 0.01;
+            hoboSpeach.alpha -= 0.015;
         }
         
-        if(catzSpeach.alpha !== 0)
+        if(catzSpeach.alpha > 0)
         {
-            catzSpeach.alpha -= 0.01;
+            catzSpeach.alpha -= 0.015;
         }            
-        
+                
+        if(wickExclamation.alpha > 0.8 && wickExclamation.alpha < 0.9)
+        {                       
+            rocketSong.play();
+        }
         
         hoboExclamation.alpha = hoboActive;
         
-        wickExclamation.alpha = lightFuseActive;
+        if(wickActive && wickExclamation.alpha <1)
+        {
+            wickExclamation.alpha += 0.01;
+        }
         
     }
 
@@ -629,13 +651,12 @@ I had a house";
         seagull.x = 900;
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);                
-        
-        rocketSong = createjs.Sound.play("palladiumAlloySong");
-        rocketSong.stop();
+                
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
         diamondSound = createjs.Sound.play("diamondSound");
+        diamondSound.volume = 0.2;
         diamondSound.stop();
         
         gameView = new createjs.Container();
@@ -654,11 +675,7 @@ I had a house";
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
         catzVelocity=-20;
-        
-        if(rocketSong.getPosition() === 0)
-        {
-            rocketSong.play();
-        }
+                
         createjs.Ticker.setPaused(false);      
         stage.update();
     }
