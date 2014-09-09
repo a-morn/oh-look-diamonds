@@ -57,7 +57,8 @@ var RocketShip = (function(){
     lightFuseActive=false,
     hoboActive=true,
     wickExclamation,
-    hoboExclamation;
+    hoboExclamation,
+    heightOffset=0;
 
     rocketShip.Init = function()
     {
@@ -307,8 +308,8 @@ var RocketShip = (function(){
         catzSpeach.Alpha = 0;
         
         wickExclamation = new createjs.Text("0", "10px Courier New", "#ffcc00"); 
-        wickExclamation.x = 180;             
-        wickExclamation.y = 305;
+        wickExclamation.x = 185;             
+        wickExclamation.y = 310;
         wickExclamation.text = "<-- Fire up the rocket";
         wickExclamation.alpha= 0;
         
@@ -605,8 +606,8 @@ I had a house";
         catzRocketContainer.y = 200;
         catzRocket.scaleX = 0.4;
         catzRocket.scaleY = 0.4;
-        catzRocketContainer.regY = 50;
-        catzRocketContainer.regX = 260;
+        catzRocketContainer.regY = 100;
+        catzRocketContainer.regX = 150;
         catzRocket.currentFrame = 0;   
                         
         catzRocketContainer.addChild(rocketFlame,catzRocket);
@@ -727,36 +728,37 @@ I had a house";
     }
 
     function updatecatzRocket(event)
-    {                                    
+    {                       
+        catzRocketContainer.x = 260+
+                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+        catzRocketContainer.y = 200+
+                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+            +heightOffset;
         if(catzState === catzStateEnum.Normal)   
         {
-
             catzVelocity += grav*event.delta/1000;
-            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
-            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
+            heightOffset += 20*catzVelocity*event.delta/1000;            
             loopTimer = 0;
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
                 catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
-            }
+            }                        
         }    
         else if (catzState === catzStateEnum.Uploop)
         {
-            catzVelocity -= 2.5*grav*event.delta/1000;
-            catzRocketContainer.y += 20*catzVelocity*event.delta/1000;
+            catzVelocity -= 2.5*grav*event.delta/1000;            
+            
             loopTimer+= event.delta;   
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
-            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
             }
         }
         else if (catzState === catzStateEnum.Downloop)
         {
             loopTimer+= event.delta;
             catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
-                *grav*event.delta/1000+0.4;  
-
-            catzRocketContainer.y+= 20*catzVelocity*event.delta/1000;
+                *grav*event.delta/1000+0.4;              
         }
         if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
