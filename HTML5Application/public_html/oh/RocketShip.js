@@ -32,6 +32,7 @@ var RocketShip = (function(){
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
     diSpeed = 25,    
+    cloudSpeed = 25,
     fgSpeed = 14,
     sgSpeed =12,
     crashed = false,
@@ -363,6 +364,11 @@ var RocketShip = (function(){
     
     function lightFuse()
     {        
+        //if song hasn't started yet
+        if(rocketSong.getPosition()<100)
+        {
+            rocketSong.play();
+        }
         wick.x-=15;
         wick.gotoAndPlay("cycle");
         wick.removeAllEventListeners();
@@ -698,6 +704,11 @@ I had a house";
 
     function update(event)
     {        
+        diSpeed = 12.5+12.5* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);    
+        cloudSpeed = 12.5+12.5* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);
+        fgSpeed = 7+7* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);
+        sgSpeed = 6+6* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);        
+        
         if(!event.paused)
         {                
             text.text = score;            
@@ -746,7 +757,7 @@ I had a house";
 
     function updatecatzRocket(event)
     {                       
-        catzRocketContainer.x = 260+
+        catzRocketContainer.x = 200+
                     Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
         catzRocketContainer.y = 200+
                     Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
@@ -845,7 +856,7 @@ I had a house";
         var arrayLength = cloudCont.children.length;    
         for (var i = 0; i < arrayLength; i++) {
             var kid = cloudCont.children[i];  
-             kid.x = kid.x - diSpeed;   
+             kid.x = kid.x - cloudSpeed;   
             if (kid.x <= -500)
             {
               cloudCont.removeChildAt(i);
@@ -858,7 +869,7 @@ I had a house";
     function updateDiamonds()
     {
         //Up
-        if(Math.random()>0.997)
+        if(false)
         {
             for (i = 0;i<5;i++)
             {
@@ -872,7 +883,7 @@ I had a house";
             }            
         }
         //loop
-        if(Math.random()>0.997)
+        if(false)
         {
             var heightRan = Math.random()*-200;
             for (i = 0;i<20;i++)
@@ -885,7 +896,21 @@ I had a house";
                 diCont.addChild(di);                
             }            
         }
-        var arrayLength = diCont.children.length;   
+        
+        if(Math.random()>0.99)
+        {            
+            for (i = 0;i<20;i++)
+            {
+                var di = new createjs.Sprite(diamondSheet,"cycle");
+                di.scaleX = 0.5;
+                di.scaleY = 0.5;                                
+                di.x = 800+Math.cos(i/20*2*3.14-3.14/2)*350+50*i;
+                di.y = 100-Math.sin(i/20*2*3.14-3.14/2)*180;                                
+                diCont.addChild(di);                
+            }            
+        }
+
+        var arrayLength = diCont.children.length;
         for (var i = 0; i < arrayLength; i++) {
             var kid = diCont.children[i];
             kid.x = kid.x - diSpeed;    
