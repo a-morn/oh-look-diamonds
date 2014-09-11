@@ -5,15 +5,20 @@ var RocketShip = (function(){
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
     catzRocketContainer = new createjs.Container(),
+    cloudIsIn = new Array(),
     rocketShip={},
     canvas,
     gameView,
     gameListener,
     houseListener,
     stage,    
+    smoke,
+    exitSmoke,
+    leaves,
     catzRocket,    
     rocketFlame,
     rocketSound,
+    
     houseView = new createjs.Container(),
     seagullSheet,
     bg,    
@@ -26,6 +31,7 @@ var RocketShip = (function(){
     jump,
     score = 0,    
     catzVelocity = -2,
+    limitVelocity = 20,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
@@ -103,6 +109,8 @@ var RocketShip = (function(){
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
+                    {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
+                    {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
                     {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
@@ -135,6 +143,7 @@ var RocketShip = (function(){
         stage.addChild(bg,starCont);
         gotoHouseView();
         stage.removeChild(progressBar);
+        createjs.Sound.setMute(true);
     }
     
     function createHouseView()
@@ -641,7 +650,111 @@ I had a house";
         catzRocketContainer.addChild(rocketFlame,catzRocket);
         
         catzBounds = catzRocketContainer.getTransformedBounds();
-        console.log(catzBounds);
+        
+        
+        var smokeData = {
+            "framerate":24,
+            "images":[queue.getResult("smokepuffs")],
+            "frames":[
+                [0, 0, 512, 512, 0, -2, -84],
+                [512, 0, 512, 512, 0, -2, -84],
+                [1024, 0, 512, 512, 0, -2, -84],
+                [1536, 0, 512, 512, 0, -2, -84],
+                [2048, 0, 512, 512, 0, -2, -84],
+                [2560, 0, 512, 512, 0, -2, -84],
+                [3072, 0, 512, 512, 0, -2, -84],
+                [0, 512, 512, 512, 0, -2, -84],
+                [512, 512, 512, 512, 0, -2, -84],
+                [1024, 512, 512, 512, 0, -2, -84],
+                [1536, 512, 512, 512, 0, -2, -84],
+                [2048, 512, 512, 512, 0, -2, -84],
+                [2560, 512, 512, 512, 0, -2, -84],
+                [3072, 512, 512, 512, 0, -2, -84],
+                [0, 1024, 512, 512, 0, -2, -84],
+                [512, 1024, 512, 512, 0, -2, -84],
+                [1024, 1024, 512, 512, 0, -2, -84],
+                [1536, 1024, 512, 512, 0, -2, -84],
+                [2048, 1024, 512, 512, 0, -2, -84],
+                [2560, 1024, 512, 512, 0, -2, -84],
+                [3072, 1024, 512, 512, 0, -2, -84],
+                [0, 1536, 512, 512, 0, -2, -84],
+                [512, 1536, 512, 512, 0, -2, -84],
+                [1024, 1536, 512, 512, 0, -2, -84],
+                [1536, 1536, 512, 512, 0, -2, -84],
+                [2048, 1536, 512, 512, 0, -2, -84],
+                [2560, 1536, 512, 512, 0, -2, -84],
+                [3072, 1536, 512, 512, 0, -2, -84],
+                [0, 2048, 512, 512, 0, -2, -84],
+                [512, 2048, 512, 512, 0, -2, -84]
+            ],
+            "animations":{
+                "right": {
+                    "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+                    "speed": 1
+                },
+                "jump": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1},
+                "puff": {
+                    "frames": [20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+                    "speed":1
+                }
+            }
+        }
+        var smokeSheet = new createjs.SpriteSheet(smokeData);
+        smoke = new createjs.Sprite(smokeSheet,"jump");
+        smoke.alpha=0;
+        smoke.scaleX = 0.5;
+        smoke.scaleY = 0.5;
+        smoke.regX = 200;
+        smoke.regY = 350;
+        
+        exitSmoke = new createjs.Sprite(smokeSheet,"right");
+        exitSmoke.alpha=0;
+        exitSmoke.scaleX = 0.5;
+        exitSmoke.scaleY = 0.5;
+        exitSmoke.regX = 200;
+        exitSmoke.regY = 200;
+        
+        var leavesData ={
+            "framerate":24,
+            "images":[queue.getResult("leaves")],
+            "frames":[
+                [0, 0, 512, 256, 0, -171, -78],
+                [512, 0, 512, 256, 0, -171, -78],
+                [1024, 0, 512, 256, 0, -171, -78],
+                [1536, 0, 512, 256, 0, -171, -78],
+                [2048, 0, 512, 256, 0, -171, -78],
+                [2560, 0, 512, 256, 0, -171, -78],
+                [3072, 0, 512, 256, 0, -171, -78],
+                [0, 256, 512, 256, 0, -171, -78],
+                [512, 256, 512, 256, 0, -171, -78],
+                [1024, 256, 512, 256, 0, -171, -78],
+                [1536, 256, 512, 256, 0, -171, -78],
+                [2048, 256, 512, 256, 0, -171, -78],
+                [2560, 256, 512, 256, 0, -171, -78],
+                [3072, 256, 512, 256, 0, -171, -78],
+                [0, 512, 512, 256, 0, -171, -78],
+                [512, 512, 512, 256, 0, -171, -78],
+                [1024, 512, 512, 256, 0, -171, -78],
+                [1536, 512, 512, 256, 0, -171, -78],
+                [2048, 512, 512, 256, 0, -171, -78],
+                [2560, 512, 512, 256, 0, -171, -78],
+                [3072, 512, 512, 256, 0, -171, -78],
+                [0, 768, 512, 256, 0, -171, -78],
+                [512, 768, 512, 256, 0, -171, -78],
+                [1024, 768, 512, 256, 0, -171, -78],
+                [1536, 768, 512, 256, 0, -171, -78],
+                [2048, 768, 512, 256, 0, -171, -78],
+                [2560, 768, 512, 256, 0, -171, -78],
+                [3072, 768, 512, 256, 0, -171, -78]
+            ],
+            "animations":{"cycle":[0,27]}
+        };
+        
+                var leavesSheet = new createjs.SpriteSheet(leavesData);
+        leaves = new createjs.Sprite(leavesSheet,"cycle");
+        leaves.alpha=0;
+        leaves.scaleX = 0.5;
+        leaves.scaleY = 0.5;
        
         var seagullData = {
              images: ["assets/seagull.png"],
@@ -650,14 +763,15 @@ I had a house";
                 flappy:{ frames: [7,8,9,10,11]}
             }
         };
+        
         seagullSheet = new createjs.SpriteSheet(seagullData);    
         var seagull = new createjs.Sprite(seagullSheet,"flappy");
         seagull.scaleX = 0.1;
         seagull.scaleY = 0.1;
         seagull.x = 900;
         seagull.y = 50+ Math.random()*100;
-        sgCont.addChild(seagull);                
-                
+        sgCont.addChild(seagull);   
+        
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
@@ -666,7 +780,7 @@ I had a house";
         diamondSound.stop();
         
         gameView = new createjs.Container();
-        gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,cloudCont,fgCont);
+        gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,exitSmoke,smoke,cloudCont,fgCont,leaves);
     }
     
     function gotoGameView()
@@ -681,7 +795,6 @@ I had a house";
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
         catzVelocity=-20;
-                
         createjs.Ticker.setPaused(false);      
         stage.update();
     }
@@ -749,22 +862,21 @@ I had a house";
 //        {
 //            gameView.y-= catzScreenPosition-250;
 //        }
-          if(catzRocketContainer.y<200 && catzRocketContainer.y>-250)
+          bg.y = -1100-(catzRocketContainer.y)/2;
+          starCont.y=100-(catzRocketContainer.y)/2;
+          if(catzRocketContainer.y<200 && catzRocketContainer.y>-600)
           {
               gameView.y=200-catzRocketContainer.y;
+
           }
     }
 
     function updatecatzRocket(event)
     {                       
-        catzRocketContainer.x = 200+
-                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
-        catzRocketContainer.y = 200+
-                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
-            +heightOffset;
         if(catzState === catzStateEnum.Normal)   
         {
             catzVelocity += grav*event.delta/1000;
+            catzVelocity = Math.min(catzVelocity,limitVelocity);
             heightOffset += 20*catzVelocity*event.delta/1000;            
             loopTimer = 0;
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
@@ -774,8 +886,8 @@ I had a house";
         }    
         else if (catzState === catzStateEnum.Uploop)
         {
-            catzVelocity -= 2.5*grav*event.delta/1000;            
-            
+            catzVelocity -= 2*grav*event.delta/1000;          
+            heightOffset += 20*catzVelocity*event.delta/1000;   
             loopTimer+= event.delta;   
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
@@ -786,7 +898,7 @@ I had a house";
         {
             loopTimer+= event.delta;
             catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
-                *grav*event.delta/1000+0.4;              
+                *grav*event.delta/1000+0.4;
         }
         if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
@@ -800,8 +912,13 @@ I had a house";
             catzState = catzStateEnum.Downloop;
             loopTimer = 0;
         }
+        catzRocketContainer.x = 200+
+                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+        catzRocketContainer.y = 200+
+                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+            +heightOffset;
 
-        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -550)
+        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -1000)
         {            
             crash();
         }
@@ -811,9 +928,7 @@ I had a house";
     {
         if(Math.random()>0.98)
         {
-            var tree = new createjs.Bitmap(queue.getResult("fgTree1"));     
-            tree.scaleX = 0.8;
-            tree.scaleY = 0.8;
+            var tree = new createjs.Bitmap(queue.getResult("fgTree1"));
             tree.x = 1000;
             tree.y = 290;
             fgCont.addChild(tree);        
@@ -826,7 +941,20 @@ I had a house";
             {
               kid.x = kid.x + 4000;
             }
-            kid.x = kid.x - fgSpeed*event.delta/10;     
+            kid.x = kid.x - fgSpeed*event.delta/10; 
+            if((catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocketContainer.x > 
+                    kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
+                    && catzRocketContainer.y > kid.y)
+            {
+                console.log("woosh");
+                leaves.alpha = 1;
+                leaves.rotation = 0;
+                leaves.x = kid.x+50;
+                leaves.y = kid.y;
+                leaves.gotoAndPlay("cycle");
+                leaves.addEventListener("animationend",function(){hideLeaves();});
+
+            }
         }                
         if (arrayLength>2)
         {
@@ -835,17 +963,29 @@ I had a house";
                 fgCont.removeChildAt(2);
             }        
         }
+        
+        if(leaves.alpha===1)
+        {
+           leaves.x-= fgSpeed*event.delta/20;  
+        }
+    }
+    
+    function hideLeaves()
+    {
+        leaves.alpha=1;
     }
     
     function updateClouds(event)
     {
-        if(Math.random()>0.98)
+        if(Math.random()>0.97)
         {
             var cloudtype = Math.floor(Math.random()*5+1);
             cloudtype = "cloud"+cloudtype.toString();
-            var yPos = Math.floor(Math.random()*600-550);
+            var yPos = Math.floor(Math.random()*1000-1000);
             var scale = Math.random()*0.3+0.3;
-            var cloud = new createjs.Bitmap(queue.getResult(cloudtype));     
+            var cloud = new createjs.Bitmap(queue.getResult(cloudtype));
+            cloudIsIn[cloud]=false;
+
             cloud.scaleX = scale;
             cloud.scaleY = scale;
             cloud.x = 1000;
@@ -862,8 +1002,59 @@ I had a house";
               cloudCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }       
+            }
+            var rect = kid.getBounds();
+            if(catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocketContainer.x > 
+                    kid.x && catzRocketContainer.y < (kid.y+rect.height*kid.scaleY)
+                    && catzRocketContainer.y > kid.y && cloudIsIn[kid]===false)
+            {
+                cloudIsIn[kid] = true;
+                smoke.alpha = 1;
+                smoke.rotation = catzRocketContainer.rotation+270;
+                smoke.x = 200+
+                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+                smoke.y = 200+
+                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+            +heightOffset;
+                smoke.gotoAndPlay("jump");
+                smoke.addEventListener("animationend",function(){hideSmoke();});
+            }
+            else if(cloudIsIn[kid]===true
+                    && 
+                    ((catzRocketContainer.x-catzBounds.width/2)> (kid.x+rect.width*kid.scaleX)
+                    || catzRocketContainer.y-catzBounds.height/2 > (kid.y+rect.height*kid.scaleY)
+                    || (catzRocketContainer.y+catzBounds.height < kid.y)))
+            {
+                cloudIsIn[kid] = false;
+                exitSmoke.alpha = 1;
+                exitSmoke.rotation = catzRocketContainer.rotation;
+                exitSmoke.x = 200+
+                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+                exitSmoke.y = 200+
+                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+            +heightOffset;
+                exitSmoke.gotoAndPlay("right");
+                exitSmoke.addEventListener("animationend",function(){hideExitSmoke();});
+            }
         }  
+        if(smoke.alpha===1)
+        {
+            smoke.x-=cloudSpeed;
+        }
+        if(exitSmoke.alpha===1)
+        {
+            exitSmoke.x-=cloudSpeed;
+        }
+    }
+    
+    function hideSmoke()
+    {
+        smoke.alpha = 0;
+    }
+    
+    function hideExitSmoke()
+    {
+        exitSmoke.alpha = 0;
     }
 
     function updateDiamonds()
@@ -1048,11 +1239,14 @@ I had a house";
         //gameView.y = -600;
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
+                heightOffset=0;
         catzRocketContainer.rotation =0;
         createjs.Tween.removeAllTweens(catzRocketContainer);
         rocketFlame.alpha=0;
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
+        bg.y = -1200;
+        starCont.y=0;
         crashed = false;
         gotoHouseView();
         stage.update();
