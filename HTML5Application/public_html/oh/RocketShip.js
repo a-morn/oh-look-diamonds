@@ -18,7 +18,8 @@ var RocketShip = (function(){
     catzRocket,    
     rocketFlame,
     rocketSound,
-    
+    rocketSnake =  new createjs.Container(),
+    SnakeLine,
     houseView = new createjs.Container(),
     seagullSheet,
     bg,    
@@ -104,6 +105,7 @@ var RocketShip = (function(){
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
+                    {id:"fgTree1", src:"assets/new assets/img/tree 1.png"},
                     {id:"rocket", src:"assets/new assets/sprites/catzAllanimations.png"},
                     {id:"flame", src:"assets/new assets/sprites/flame.png"},
                     {id:"star", src:"assets/new assets/img/star.png"},
@@ -112,7 +114,7 @@ var RocketShip = (function(){
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
-                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    //{id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
                     {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
@@ -592,52 +594,52 @@ I had a house";
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
         catzRocket = new createjs.Sprite(spriteSheet, "no shake");
         
-        rocketData = {
-            "framerate":24,
-            "images":[queue.getResult("flame")],
-            "frames":[
-                [0, 0, 256, 256, 0, -292, -207],
-                [256, 0, 256, 256, 0, -292, -207],
-                [512, 0, 256, 256, 0, -292, -207],
-                [768, 0, 256, 256, 0, -292, -207],
-                [1024, 0, 256, 256, 0, -292, -207],
-                [1280, 0, 256, 256, 0, -292, -207],
-                [1536, 0, 256, 256, 0, -292, -207],
-                [0, 256, 256, 256, 0, -292, -207],
-                [256, 256, 256, 256, 0, -292, -207],
-                [512, 256, 256, 256, 0, -292, -207],
-                [768, 256, 256, 256, 0, -292, -207],
-                [1024, 256, 256, 256, 0, -292, -207],
-                [1280, 256, 256, 256, 0, -292, -207],
-                [1536, 256, 256, 256, 0, -292, -207],
-                [0, 512, 256, 256, 0, -292, -207],
-                [256, 512, 256, 256, 0, -292, -207],
-                [512, 512, 256, 256, 0, -292, -207],
-                [768, 512, 256, 256, 0, -292, -207],
-                [1024, 512, 256, 256, 0, -292, -207],
-                [1280, 512, 256, 256, 0, -292, -207],
-                [1536, 512, 256, 256, 0, -292, -207],
-                [0, 768, 256, 256, 0, -292, -207],
-                [256, 768, 256, 256, 0, -292, -207],
-                [512, 768, 256, 256, 0, -292, -207],
-                [768, 768, 256, 256, 0, -292, -207],
-                [1024, 768, 256, 256, 0, -292, -207],
-                [1280, 768, 256, 256, 0, -292, -207],
-                [1536, 768, 256, 256, 0, -292, -207],
-                [0, 1024, 256, 256, 0, -292, -207],
-                [256, 1024, 256, 256, 0, -292, -207],
-                [512, 1024, 256, 256, 0, -292, -207],
-                [768, 1024, 256, 256, 0, -292, -207]
-            ],
-            "animations":{"ignite":{frames:[0,31],next:"cycle"}, "cycle": [8,31]}
-            };
+//        rocketData = {
+//            "framerate":24,
+//            "images":[queue.getResult("flame")],
+//            "frames":[
+//                [0, 0, 256, 256, 0, -292, -207],
+//                [256, 0, 256, 256, 0, -292, -207],
+//                [512, 0, 256, 256, 0, -292, -207],
+//                [768, 0, 256, 256, 0, -292, -207],
+//                [1024, 0, 256, 256, 0, -292, -207],
+//                [1280, 0, 256, 256, 0, -292, -207],
+//                [1536, 0, 256, 256, 0, -292, -207],
+//                [0, 256, 256, 256, 0, -292, -207],
+//                [256, 256, 256, 256, 0, -292, -207],
+//                [512, 256, 256, 256, 0, -292, -207],
+//                [768, 256, 256, 256, 0, -292, -207],
+//                [1024, 256, 256, 256, 0, -292, -207],
+//                [1280, 256, 256, 256, 0, -292, -207],
+//                [1536, 256, 256, 256, 0, -292, -207],
+//                [0, 512, 256, 256, 0, -292, -207],
+//                [256, 512, 256, 256, 0, -292, -207],
+//                [512, 512, 256, 256, 0, -292, -207],
+//                [768, 512, 256, 256, 0, -292, -207],
+//                [1024, 512, 256, 256, 0, -292, -207],
+//                [1280, 512, 256, 256, 0, -292, -207],
+//                [1536, 512, 256, 256, 0, -292, -207],
+//                [0, 768, 256, 256, 0, -292, -207],
+//                [256, 768, 256, 256, 0, -292, -207],
+//                [512, 768, 256, 256, 0, -292, -207],
+//                [768, 768, 256, 256, 0, -292, -207],
+//                [1024, 768, 256, 256, 0, -292, -207],
+//                [1280, 768, 256, 256, 0, -292, -207],
+//                [1536, 768, 256, 256, 0, -292, -207],
+//                [0, 1024, 256, 256, 0, -292, -207],
+//                [256, 1024, 256, 256, 0, -292, -207],
+//                [512, 1024, 256, 256, 0, -292, -207],
+//                [768, 1024, 256, 256, 0, -292, -207]
+//            ],
+//            "animations":{"ignite":{frames:[0,31],next:"cycle"}, "cycle": [8,31]}
+//            };
         
-        var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
-        rocketFlame.alpha=0;
-        rocketFlame.scaleX = 0.4;
-        rocketFlame.scaleY = 0.4;
-        rocketFlame.x-=70;
+//        var spriteSheet = new createjs.SpriteSheet(rocketData);    
+//        rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
+//        rocketFlame.alpha=0;
+//        rocketFlame.scaleX = 0.4;
+//        rocketFlame.scaleY = 0.4;
+//        rocketFlame.x-=70;
         
         catzRocketContainer.x = 260;
         catzRocketContainer.y = 200;
@@ -645,12 +647,29 @@ I had a house";
         catzRocket.scaleY = 0.4;
         catzRocketContainer.regY = 100;
         catzRocketContainer.regX = 150;
-        catzRocket.currentFrame = 0;   
-                        
-        catzRocketContainer.addChild(rocketFlame,catzRocket);
-        
+        catzRocket.currentFrame = 0;              
+        catzRocketContainer.addChild(catzRocket);
         catzBounds = catzRocketContainer.getTransformedBounds();
         
+        rocketSnake.x=0;
+        rocketSnake.y=0;
+        var snakeAmt = 12;
+        for(i=0;i<snakeAmt;i++)
+        {
+            var shape = new createjs.Shape();
+            var x = 260-i*5;
+            var r = 12;
+            shape.graphics.f("#99ccff").dc(x,200,r);
+            shape.regY=0;
+            shape.regX=0;
+            rocketSnake.addChild(shape);
+            if(i>0)
+            {
+                shape.alpha=0;
+            }
+        }
+        
+        SnakeLine = new createjs.Shape();
         
         var smokeData = {
             "framerate":24,
@@ -772,6 +791,8 @@ I had a house";
         seagull.y = 50+ Math.random()*100;
         sgCont.addChild(seagull);   
         
+
+        
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
@@ -780,7 +801,8 @@ I had a house";
         diamondSound.stop();
         
         gameView = new createjs.Container();
-        gameView.addChild(bg,starCont, catzRocketContainer,sgCont, diCont,exitSmoke,smoke,cloudCont,fgCont,leaves);
+        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,catzRocketContainer,sgCont, diCont,
+            exitSmoke,smoke,cloudCont,fgCont,leaves);
     }
     
     function gotoGameView()
@@ -844,6 +866,7 @@ I had a house";
                 updateDiamonds();
                 updateClouds(event);
                 updateSeagulls();
+                updateRocketSnake();
                 updateWorldContainer();
             }
             stage.update(event); 
@@ -902,7 +925,6 @@ I had a house";
         }
         if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
-            rocketFlame.alpha = 0;
             rocketSound.stop();
             createjs.Tween.removeAllTweens(catzRocketContainer);
             tween = createjs.Tween.get(catzRocketContainer)
@@ -1156,8 +1178,53 @@ I had a house";
             }
         }   
     }
-
-
+    
+    function updateRocketSnake()
+    {
+        var arrayLength = rocketSnake.children.length; 
+        for (var i = arrayLength-1; i >0 ; i--) {
+            var kid = rocketSnake.children[i];
+            kid.x = rocketSnake.children[i-1].x-3*Math.cos(6.28*catzRocketContainer.rotation/360);
+            kid.y = rocketSnake.children[i-1].y;
+        }
+        rocketSnake.children[0].x = -60+
+                    Math.cos((catzRocketContainer.rotation+110)/360*2*Math.PI)*195;
+        rocketSnake.children[0] .y =
+                    Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI)*240
+            +heightOffset;
+        SnakeLine.graphics = new createjs.Graphics();
+        for (var i = arrayLength-1; i >0 ; i--) {
+            var kid = rocketSnake.children[i];
+            SnakeLine.graphics.setStrokeStyle(24-i*2,1);
+            SnakeLine.graphics.beginStroke("#99ccff");
+            SnakeLine.graphics.moveTo(kid.x+260,kid.y+200);
+            SnakeLine.graphics.lineTo(rocketSnake.children[i-1].x+260,rocketSnake.children[i-1].y+200);
+            SnakeLine.graphics.endStroke();
+        }
+    }
+    
+    function showSnake()
+    {
+        rocketSnake.children[0].x = -60+
+                    Math.cos((catzRocketContainer.rotation+110)/360*2*Math.PI)*195;
+        rocketSnake.children[0] .y =
+                    Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI)*240
+            +heightOffset;
+        var arrayLength = rocketSnake.children.length;    
+        for (var i = arrayLength-1; i >0 ; i--) {
+            var kid = rocketSnake.children[i];
+            kid.x = rocketSnake.children[0].x;
+            kid.y = rocketSnake.children[0].y;
+        }
+        rocketSnake.alpha=1;
+        SnakeLine.alpha = 1;
+    }
+    
+    function hideSnake()
+    {
+        rocketSnake.alpha=0;
+        SnakeLine.alpha = 0;
+    }
 
     function catzUp()
     {
@@ -1167,8 +1234,8 @@ I had a house";
         {
             catzVelocity-=2;
             catzState = catzStateEnum.Uploop;
-            rocketFlame.alpha = 1;
-            rocketFlame.gotoAndPlay("ignite");
+            showSnake();
+            //rocketFlame.gotoAndPlay("ignite");
             catzRocket.gotoAndPlay("shake");
             //createjs.Tween.removeAllTweens(catzRocket);
             //createjs.Tween.get(catzRocket)
@@ -1184,27 +1251,25 @@ I had a house";
         if(catzState!==catzStateEnum.Downloop)
         {
             catzState = catzStateEnum.Normal;
-            rocketFlame.alpha = 0;
+            hideSnake();
             catzRocket.gotoAndPlay("no shake");
         }
     }
 
     function catzRelease()
     {
+        catzVelocity = 10;
         if(mousedown)
         {
             rocketSound.play();
             catzState = catzStateEnum.Uploop;
-            catzVelocity = 0;
-            rocketFlame.alpha = 1;
-            rocketFlame.gotoAndPlay("ignite");
             catzRocket.gotoAndPlay("shake");
         }
         else
         {
             catzState = catzStateEnum.Normal;
             catzRocket.gotoAndPlay("no shake");
-            rocketFlame.alpha=0;
+            hideSnake();
             catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;            
         }        
     }
@@ -1218,7 +1283,7 @@ I had a house";
             crashed = true;
             createjs.Tween.removeAllTweens(catzRocketContainer);
             createjs.Tween.removeAllTweens(gameView);
-            rocketFlame.alpha=0;
+            hideSnake();
             var tween = createjs.Tween.get(gameView)
                     .to({x:-50, y:20},50)
                     .to({x:50, y:-40},50)
@@ -1242,7 +1307,7 @@ I had a house";
                 heightOffset=0;
         catzRocketContainer.rotation =0;
         createjs.Tween.removeAllTweens(catzRocketContainer);
-        rocketFlame.alpha=0;
+        hideSnake();
         catzState = catzStateEnum.Normal;
         catzVelocity = 0;
         bg.y = -1200;
