@@ -8,6 +8,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
+    debugText,
     gameView,
     gameListener,
     houseListener,
@@ -17,6 +18,7 @@ var RocketShip = (function(){
     leaves,
     catzRocket,    
     rocketFlame,
+    flameColor = "#33cc66",
     rocketSound,
     rocketSnake =  new createjs.Container(),
     SnakeLine,
@@ -32,7 +34,7 @@ var RocketShip = (function(){
     jump,
     score = 0,    
     catzVelocity = -2,
-    limitVelocity = 20,
+    limitVelocity = 30,
     sgCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
@@ -51,7 +53,14 @@ var RocketShip = (function(){
     catzStateEnum = {
         Normal : 0,
         Uploop : 1,
-        Downloop : 2
+        Downloop : 2,
+        SecondUploop : 3,
+        SecondDownloop : 4,
+        Slingshot : 5,
+        TerminalVelocity : 6,
+        EmergencyBoost : 7,
+        SlammerReady : 8,
+        Slammer : 9,
     },
     catzState=catzStateEnum.Normal,
     progressBar,
@@ -106,7 +115,7 @@ var RocketShip = (function(){
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 1.png"},
-                    {id:"rocket", src:"assets/new assets/sprites/catzAllanimations.png"},
+                    {id:"rocket", src:"assets/new assets/sprites/catzAllanimationsNewColors.png"},
                     {id:"flame", src:"assets/new assets/sprites/flame.png"},
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
@@ -120,7 +129,7 @@ var RocketShip = (function(){
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
                     {id:"catzSound2", src:"assets/new assets/sound/catz 4.mp3"},
                     {id:"rocketSound", src:"assets/new assets/sound/rocket.mp3"},
-                    {id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
+                    //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"}
                 ];
 
@@ -494,6 +503,11 @@ I had a house";
 
     function createGameView()
     {    
+        
+        debugText = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
+        debugText.x=500;
+        debugText.y=0;
+        
         var diamondData ={
             "framerate":24,
             "images":[queue.getResult("diamond")],
@@ -560,34 +574,34 @@ I had a house";
             "framerate":24,
             "images":[queue.getResult("rocket")],
             "frames":[
-                [0, 0, 256, 256, 0, -275, -200],
-                [256, 0, 256, 256, 0, -275, -200],
-                [512, 0, 256, 256, 0, -275, -200],
-                [768, 0, 256, 256, 0, -275, -200],
-                [1024, 0, 256, 256, 0, -275, -200],
-                [1280, 0, 256, 256, 0, -275, -200],
-                [1536, 0, 256, 256, 0, -275, -200],
-                [0, 256, 256, 256, 0, -275, -200],
-                [256, 256, 256, 256, 0, -275, -200],
-                [512, 256, 256, 256, 0, -275, -200],
-                [768, 256, 256, 256, 0, -275, -200],
-                [1024, 256, 256, 256, 0, -275, -200],
-                [1280, 256, 256, 256, 0, -275, -200],
-                [1536, 256, 256, 256, 0, -275, -200],
-                [0, 512, 256, 256, 0, -275, -200],
-                [256, 512, 256, 256, 0, -275, -200],
-                [512, 512, 256, 256, 0, -275, -200],
-                [768, 512, 256, 256, 0, -275, -200],
-                [1024, 512, 256, 256, 0, -275, -200],
-                [1280, 512, 256, 256, 0, -275, -200]
+            [0, 0, 256, 128, 0, -274, -199],
+            [256, 0, 256, 128, 0, -274, -199],
+            [512, 0, 256, 128, 0, -274, -199],
+            [768, 0, 256, 128, 0, -274, -199],
+            [1024, 0, 256, 128, 0, -274, -199],
+            [1280, 0, 256, 128, 0, -274, -199],
+            [1536, 0, 256, 128, 0, -274, -199],
+            [0, 128, 256, 128, 0, -274, -199],
+            [256, 128, 256, 128, 0, -274, -199],
+            [512, 128, 256, 128, 0, -274, -199],
+            [768, 128, 256, 128, 0, -274, -199],
+            [1024, 128, 256, 128, 0, -274, -199],
+            [1280, 128, 256, 128, 0, -274, -199],
+            [1536, 128, 256, 128, 0, -274, -199],
+            [0, 256, 256, 128, 0, -274, -199],
+            [256, 256, 256, 128, 0, -274, -199],
+            [512, 256, 256, 128, 0, -274, -199],
+            [768, 256, 256, 128, 0, -274, -199],
+            [1024, 256, 256, 128, 0, -274, -199],
+            [1280, 256, 256, 128, 0, -274, -199]
             ],
             "animations":{
+                "no shake": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1},
                 "shake": {
                     "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
                     "speed": 1
-                },
-                "no shake": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1}
-            }            
+                }
+            }        
         };
            
         
@@ -659,7 +673,7 @@ I had a house";
             var shape = new createjs.Shape();
             var x = 260-i*5;
             var r = 12;
-            shape.graphics.f("#99ccff").dc(x,200,r);
+            shape.graphics.f(flameColor).dc(x,200,r);
             shape.regY=0;
             shape.regX=0;
             rocketSnake.addChild(shape);
@@ -799,7 +813,6 @@ I had a house";
         diamondSound = createjs.Sound.play("diamondSound");
         diamondSound.volume = 0.2;
         diamondSound.stop();
-        
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont,rocketSnake,SnakeLine,catzRocketContainer,sgCont, diCont,
             exitSmoke,smoke,cloudCont,fgCont,leaves);
@@ -807,8 +820,9 @@ I had a house";
     
     function gotoGameView()
     {
+        hideSnake();
         stage.removeChild(houseView);
-        stage.addChild(gameView,text, diamondShardCounter);
+        stage.addChild(gameView,text, diamondShardCounter,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -869,8 +883,11 @@ I had a house";
                 updateRocketSnake();
                 updateWorldContainer();
             }
+            debugText.text = 
+                "rotation "+catzRocketContainer.rotation
+                +"\n velocity "+catzVelocity
+                +"\n state "+catzState;
             stage.update(event); 
-
         }
     }
     
@@ -899,17 +916,37 @@ I had a house";
         if(catzState === catzStateEnum.Normal)   
         {
             catzVelocity += grav*event.delta/1000;
-            catzVelocity = Math.min(catzVelocity,limitVelocity);
+            if(catzVelocity>=limitVelocity)
+            {
+                catzVelocity = limitVelocity;
+                catzState = catzStateEnum.TerminalVelocity;
+                catzRocket.gotoAndPlay("shake");
+            }
             heightOffset += 20*catzVelocity*event.delta/1000;            
             loopTimer = 0;
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
             {
                 catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
             }                        
-        }    
+        }   
+        else if (catzState === catzStateEnum.TerminalVelocity)
+        {
+            heightOffset += 20*catzVelocity*event.delta/1000;
+            catzRocketContainer.rotation =-280;
+        }
+        else if (catzState === catzStateEnum.EmergencyBoost)
+        {
+            catzVelocity -= 10*grav*event.delta/1000; 
+            heightOffset += 20*catzVelocity*event.delta/1000;
+            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+            if(catzRocketContainer.rotation<0)
+            {
+                catzState = catzStateEnum.Uploop;
+            }
+        }
         else if (catzState === catzStateEnum.Uploop)
         {
-            catzVelocity -= 2*grav*event.delta/1000;          
+            catzVelocity -= 2.3*grav*event.delta/1000;          
             heightOffset += 20*catzVelocity*event.delta/1000;   
             loopTimer+= event.delta;   
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
@@ -917,11 +954,19 @@ I had a house";
                 catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
             }
         }
-        else if (catzState === catzStateEnum.Downloop)
+        else if (catzState === catzStateEnum.Downloop || catzState === catzStateEnum.SlammerReady)
         {
             loopTimer+= event.delta;
-            catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))
-                *grav*event.delta/1000+0.4;
+            catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))*
+                grav*event.delta/1000+0.4;
+        }
+        else if (catzState === catzStateEnum.Slammer && catzRocketContainer.rotation<-250)
+        {
+            createjs.Tween.removeAllTweens(catzRocketContainer);
+            catzVelocity = limitVelocity;
+            catzState = catzStateEnum.TerminalVelocity;
+            catzRocket.gotoAndPlay("shake");
+            hideSnake();
         }
         if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
         {
@@ -934,12 +979,55 @@ I had a house";
             catzState = catzStateEnum.Downloop;
             loopTimer = 0;
         }
-        catzRocketContainer.x = 200+
-                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
-        catzRocketContainer.y = 200+
-                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
-            +heightOffset;
-
+        else if (catzState === catzStateEnum.SecondUploop)
+        {
+            catzVelocity -= 5.5*grav*event.delta/1000;          
+            //heightOffset += 20*catzVelocity*event.delta/1000;  
+            heightOffset += 20*catzVelocity*event.delta/1000;
+            loopTimer+= event.delta;   
+            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            {
+                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+            }
+        }
+        else if (catzState === catzStateEnum.SecondDownloop)
+        {
+            heightOffset += 150*event.delta/1000;
+        }
+        else if (catzState === catzStateEnum.Slingshot && catzRocketContainer.rotation <-400)
+        {
+            createjs.Tween.removeAllTweens(catzRocketContainer);
+            catzState = catzStateEnum.Normal;
+            catzRocket.gotoAndPlay("no shake");
+            hideSnake();
+            heightOffset-=110*Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI);
+            catzVelocity =-20;
+            //Math.atan(catzVelocity/40)*360/3.14;
+        }
+        if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.SecondUploop)
+        {
+            restartSecondLoop();
+            catzState = catzStateEnum.SecondDownloop;
+            heightOffset+=110*Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI);
+            loopTimer = 0;
+        }
+        if(catzState != catzStateEnum.SecondDownloop 
+                && catzState != catzStateEnum.Slingshot)
+        {
+            catzRocketContainer.x = 200+
+                        Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+            catzRocketContainer.y = 200+
+                        Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+                +heightOffset;
+        }
+        else
+        {
+            catzRocketContainer.x = 255+
+                Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*80;
+            catzRocketContainer.y = 200+
+                Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*100
+                +heightOffset;
+        }
         if(catzRocketContainer.y > 450 || catzRocketContainer.y < -1000)
         {            
             crash();
@@ -1033,11 +1121,8 @@ I had a house";
                 cloudIsIn[kid] = true;
                 smoke.alpha = 1;
                 smoke.rotation = catzRocketContainer.rotation+270;
-                smoke.x = 200+
-                    Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
-                smoke.y = 200+
-                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
-            +heightOffset;
+                smoke.x = catzRocketContainer.x;
+                smoke.y = catzRocketContainer.y;
                 smoke.gotoAndPlay("jump");
                 smoke.addEventListener("animationend",function(){hideSmoke();});
             }
@@ -1053,8 +1138,7 @@ I had a house";
                 exitSmoke.x = 200+
                     Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
                 exitSmoke.y = 200+
-                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
-            +heightOffset;
+                    Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210;
                 exitSmoke.gotoAndPlay("right");
                 exitSmoke.addEventListener("animationend",function(){hideExitSmoke();});
             }
@@ -1187,16 +1271,30 @@ I had a house";
             kid.x = rocketSnake.children[i-1].x-3*Math.cos(6.28*catzRocketContainer.rotation/360);
             kid.y = rocketSnake.children[i-1].y;
         }
-        rocketSnake.children[0].x = -60+
-                    Math.cos((catzRocketContainer.rotation+110)/360*2*Math.PI)*195;
-        rocketSnake.children[0] .y =
-                    Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI)*240
+        if(catzState != catzStateEnum.SecondDownloop 
+        // && catzState != catzStateEnum.SecondUploop 
+        && catzState != catzStateEnum.Slingshot)
+        {
+            rocketSnake.children[0].x = -60+
+                Math.cos((catzRocketContainer.rotation+107)/360*2*Math.PI)*185;
+            rocketSnake.children[0] .y =
+                Math.sin((catzRocketContainer.rotation+107)/360*2*Math.PI)*220
             +heightOffset;
+        }
+        else 
+        {
+            rocketSnake.children[0].x =-5+
+                Math.cos((catzRocketContainer.rotation+110)/360*2*Math.PI)*100;
+            rocketSnake.children[0] .y =
+                Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI)*120
+            +heightOffset;
+        }
+
         SnakeLine.graphics = new createjs.Graphics();
         for (var i = arrayLength-1; i >0 ; i--) {
             var kid = rocketSnake.children[i];
             SnakeLine.graphics.setStrokeStyle(24-i*2,1);
-            SnakeLine.graphics.beginStroke("#99ccff");
+            SnakeLine.graphics.beginStroke(flameColor);
             SnakeLine.graphics.moveTo(kid.x+260,kid.y+200);
             SnakeLine.graphics.lineTo(rocketSnake.children[i-1].x+260,rocketSnake.children[i-1].y+200);
             SnakeLine.graphics.endStroke();
@@ -1225,7 +1323,7 @@ I had a house";
         rocketSnake.alpha=0;
         SnakeLine.alpha = 0;
     }
-
+    
     function catzUp()
     {
         rocketSound.play();
@@ -1241,19 +1339,54 @@ I had a house";
             //createjs.Tween.get(catzRocket)
             //        .to({rotation:-65},800,createjs.Ease.quadOut);
         }
-
+        else if(catzState === catzStateEnum.TerminalVelocity)
+        {
+           catzState = catzStateEnum.EmergencyBoost;
+           showSnake();
+        }
+        else if(catzState === catzStateEnum.SlammerReady 
+                && catzRocketContainer.rotation>-250)
+        {
+           catzState = catzStateEnum.Slammer;
+        }
     }
 
     function catzEndLoop()
     {
         rocketSound.stop();
         mousedown = false;
-        if(catzState!==catzStateEnum.Downloop)
+        if(catzState!==catzStateEnum.Downloop
+                && catzState!==catzStateEnum.SlammerReady 
+                && catzState!==catzStateEnum.Slammer 
+                && catzState!==catzStateEnum.SecondDownloop
+                && catzState!==catzStateEnum.Slingshot)
         {
             catzState = catzStateEnum.Normal;
             hideSnake();
             catzRocket.gotoAndPlay("no shake");
         }
+        else if (catzState===catzStateEnum.SecondDownloop)
+        {
+            catzState = catzStateEnum.Slingshot;
+        }
+        else if (catzState===catzStateEnum.Downloop)
+        {
+            catzState = catzStateEnum.SlammerReady;
+        }
+    }
+    
+    function restartSecondLoop()
+    {
+        createjs.Tween.removeAllTweens(catzRocketContainer);
+        tween = createjs.Tween.get(catzRocketContainer,{loop:true})
+        .to({rotation:-270},500)
+        .to({rotation:-420},500);
+//        catzRocketContainer.rotation = catzRocketContainer.rotation%360;
+//        createjs.Tween.removeAllTweens(catzRocketContainer);
+//        tween = createjs.Tween.get(catzRocketContainer)
+//        .to({rotation:-270},500)
+//        .to({rotation:-420},500)
+//        .call(restartSecondLoop);
     }
 
     function catzRelease()
@@ -1261,9 +1394,10 @@ I had a house";
         catzVelocity = 10;
         if(mousedown)
         {
-            rocketSound.play();
-            catzState = catzStateEnum.Uploop;
-            catzRocket.gotoAndPlay("shake");
+                catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;
+                rocketSound.play();
+                catzState = catzStateEnum.SecondUploop;
+                catzRocket.gotoAndPlay("shake");
         }
         else
         {
@@ -1304,7 +1438,7 @@ I had a house";
         //gameView.y = -600;
         catzRocketContainer.x = 300;
         catzRocketContainer.y = 200;
-                heightOffset=0;
+        heightOffset=0;
         catzRocketContainer.rotation =0;
         createjs.Tween.removeAllTweens(catzRocketContainer);
         hideSnake();
