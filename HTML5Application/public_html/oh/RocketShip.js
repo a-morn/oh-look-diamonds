@@ -944,15 +944,6 @@ I had a house";
     
     function updateWorldContainer(event)
     {
-//        catzScreenPosition = catzRocketContainer.y+gameView.y;
-//        if(catzScreenPosition<150)
-//        {
-//            gameView.y+= 150-catzScreenPosition;
-//        }
-//        else if(catzScreenPosition>250)
-//        {
-//            gameView.y-= catzScreenPosition-250;
-//        }
           bg.y = -1100-(catzRocketContainer.y)/2;
           starCont.y=100-(catzRocketContainer.y)/2;
           if(catzRocketContainer.y<200 && catzRocketContainer.y>-600)
@@ -1062,8 +1053,8 @@ I had a house";
             heightOffset+=110*Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI);
             loopTimer = 0;
         }
-        if(catzState != catzStateEnum.SecondDownloop 
-                && catzState != catzStateEnum.Slingshot)
+        if(catzState !== catzStateEnum.SecondDownloop 
+                && catzState !== catzStateEnum.Slingshot)
         {
             catzRocketContainer.x = 200+
                         Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
@@ -1213,35 +1204,7 @@ I had a house";
     }
 
     function updateDiamonds()
-    {
-        //Up
-        if(false)
-        {
-            for (i = 0;i<5;i++)
-            {
-                var di = new createjs.Sprite(diamondSheet,"cycle");
-                di.scaleX = 0.5;
-                di.scaleY = 0.5;                                
-                di.x = 800+100*i;
-                di.y = 300-400/(5.1-i);
-                                
-                diCont.addChild(di);
-            }            
-        }
-        //loop
-        if(false)
-        {
-            var heightRan = Math.random()*-200;
-            for (i = 0;i<20;i++)
-            {
-                var di = new createjs.Sprite(diamondSheet,"cycle");
-                di.scaleX = 0.5;
-                di.scaleY = 0.5;                                
-                di.x = 800+Math.cos((i-4)*2*3.14/20)*300+60*i;
-                di.y = 50-Math.sin((i-4)*2*3.14/20)*300+heightRan;                                
-                diCont.addChild(di);                
-            }            
-        }
+    {      
         
         if(Math.random()>0.99)
         {            
@@ -1265,10 +1228,10 @@ I had a house";
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }                        
-            if((catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocketContainer.x > 
-                    kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
-                    && catzRocketContainer.y > kid.y)
+            }                                   
+            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
+                    kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
+                    && catzRocketContainer.y-80 > kid.y)
             {
                 diCont.removeChildAt(i);
                 score = score +1;
