@@ -78,6 +78,7 @@ var RocketShip = (function(){
     hoboActive=true,
     wickExclamation,
     hoboExclamation,
+    hoboConversationNumber=0,
     heightOffset=0;
 
     rocketShip.Init = function()
@@ -127,7 +128,7 @@ var RocketShip = (function(){
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
-                    //{id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
                     {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
@@ -156,9 +157,9 @@ var RocketShip = (function(){
         createHouseView();
         createGameView();
         stage.addChild(bg,starCont);
-        gotoHouseView();
+        gotoHouseViewNormal();
         stage.removeChild(progressBar);
-        createjs.Sound.setMute(true);
+        //createjs.Sound.setMute(true);
     }
     
     function createHouseView()
@@ -371,9 +372,27 @@ var RocketShip = (function(){
         bg.y = -1200;
         setStars();
    }
-    
     function gotoHouseView()
     {
+        if(score>0 && hoboConversationNumber===0)
+        {
+            hoboConversationNumber = 1;
+            hoboActive = true;
+            dialogueCounter = 0;
+            wickActive = false;
+        }
+        if(score>50 && hoboConversationNumber===1)
+        {
+            hoboConversationNumber = 2;
+            hoboActive = true;
+            dialogueCounter = 0;
+            wickActive = false;
+        }
+    }
+    
+    function gotoHouseViewNormal()
+    {        
+        gotoHouseView();
         wick.x=-210;
         wick.removeAllEventListeners();
         wick.gotoAndPlay("still");
@@ -395,6 +414,7 @@ var RocketShip = (function(){
     
     function gotoHouseViewFromAbove()
     {
+        gotoHouseView();
         console.log("aboveCrash");
         crashRocket.alpha=1;
         crashRocket.x=250;
@@ -408,6 +428,7 @@ var RocketShip = (function(){
     
     function gotoHouseViewFromBelow()
     {
+        gotoHouseView();
         console.log("belowCrash");
         crashRocket.alpha=1;
         crashRocket.x=0;
@@ -435,82 +456,161 @@ var RocketShip = (function(){
     }
     
     function hoboConversation()
-    {        
-        if(dialogueCounter ===0)
-        {            
-            hoboCatSound1.play();        
-            hoboSpeach.text = "good evening";
-            hoboSpeach.alpha = 1;            
-        }
-        
-        if(dialogueCounter ===1)
-        {                    
-            catzSound1.play();
-            catzSpeach.text = "meow";                    
-            catzSpeach.alpha = 1;
-        }
-        
-        if(dialogueCounter ===2)
+    {     
+        if(hoboConversationNumber === 0)
         {
-            hoboCatSound2.play();        
-            hoboSpeach.text = "whatcha lookin' at\n\
+            
+            if(dialogueCounter ===0)
+            {            
+                hoboCatSound1.play();        
+                hoboSpeach.text = "good evening";
+                hoboSpeach.alpha = 1;            
+            }
+
+            else if(dialogueCounter ===1)
+            {                    
+                catzSound1.play();
+                catzSpeach.text = "meow";                    
+                catzSpeach.alpha = 1;
+            }
+
+            else if(dialogueCounter ===2)
+            {
+                hoboCatSound2.play();        
+                hoboSpeach.text = "whatcha lookin' at\n\
 there, kitten?";
-            hoboSpeach.alpha = 1;            
-        }
-        
-        if(dialogueCounter ===3)
-        {                    
-            catzSound1.play();
-            catzSpeach.text = "diamonds!";                    
-            catzSpeach.alpha = 1;
-        }
-        
-        if(dialogueCounter ===4)
-        {
-            hoboCatSound1.play();        
-            hoboSpeach.text = "Heh, kitten what you got\n\
+                hoboSpeach.alpha = 1;            
+            }
+
+            else if(dialogueCounter ===3)
+            {                    
+                catzSound1.play();
+                catzSpeach.text = "diamonds!";                    
+                catzSpeach.alpha = 1;
+            }
+
+            else if(dialogueCounter ===4)
+            {
+                hoboCatSound1.play();        
+                hoboSpeach.text = "Heh, kitten what you got\n\
 up there is none but \n\
 big balls of gas and fire";
-            hoboSpeach.alpha = 1;                        
-        }
-        
-        if(dialogueCounter ===5)
-        {
-            hoboCatSound2.play();        
-            hoboSpeach.text = "Wish I had me some \n\
+                hoboSpeach.alpha = 1;                        
+            }
+
+            else if(dialogueCounter ===5)
+            {
+                hoboCatSound2.play();        
+                hoboSpeach.text = "Wish I had me some \n\
 diamonds though\n\
 Then I could build myself \n\
 a house";
-            hoboSpeach.alpha = 1;                        
-        }
+                hoboSpeach.alpha = 1;                        
+            }
         
-        if(dialogueCounter ===6)
-        {
-            hoboCatSound2.play();        
-            hoboSpeach.text = "Been awhile since \n\
+            else if(dialogueCounter ===6)
+            {
+                hoboCatSound2.play();        
+                hoboSpeach.text = "Been awhile since \n\
 I built something \n\
 Been awhile since \n\
 I had a house";
-            hoboSpeach.alpha = 1;            
-            wickActive = true;
-            hoboActive = false;
-            wick.addEventListener("click",lightFuse);            
+                hoboSpeach.alpha = 1;            
+                wickActive = true;
+                hoboActive = false;
+                wick.addEventListener("click",lightFuse);            
+            }
+
+            else if(dialogueCounter > 6 && !dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "*cough*";
+                hoboSpeach.alpha = 1;                        
+            }
+            
+            else if(dialogueCounter > 6 && dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "hum hum";
+                hoboSpeach.alpha = 1;                        
+            }            
         }
-                
-        if(dialogueCounter > 6 && !dialogueCounter%3===0)
-        {            
-            hoboSpeach.text = "*cough*";
-            hoboSpeach.alpha = 1;                        
+        else if(hoboConversationNumber === 1)
+        {
+            if(dialogueCounter ===0)
+            {            
+                hoboCatSound1.play();        
+                hoboSpeach.text = "well I be damned - a diamond!";
+                hoboSpeach.alpha = 1;         
+                hoboCatSound1.play();  
+            }
+            else if (dialogueCounter ===1)
+            {            
+                catzSound1.play();
+                catzSpeach.text = "meow!";                    
+                catzSpeach.alpha = 1;           
+            }
+            
+            else if(dialogueCounter ===2)
+            {            
+                hoboCatSound1.play();        
+                hoboSpeach.text = "for me? \n\
+much obliged, kitten!";
+                hoboSpeach.alpha = 1;            
+                hoboCatSound2.play();  
+                hoboActive = false;
+                wickActive = true;
+            }            
+            else if(dialogueCounter > 2 && !dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "*cough*";
+                hoboSpeach.alpha = 1;                        
+            }
+            
+            else if(dialogueCounter > 2 && dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "hum hum";
+                hoboSpeach.alpha = 1;                        
+            }       
         }
-        if(dialogueCounter > 6 && dialogueCounter%3===0)
-        {            
-            hoboSpeach.text = "hum hum";
-            hoboSpeach.alpha = 1;                        
+        else if(hoboConversationNumber === 2)
+        {
+            if(dialogueCounter ===0)
+            {            
+                hoboCatSound1.play();        
+                hoboSpeach.text = "well look at that\n\
+guess I'mma build myself a house!";
+                hoboSpeach.alpha = 1;         
+                hoboCatSound1.play();  
+            }
+            else if (dialogueCounter ===1)
+            {            
+                catzSound1.play();
+                catzSpeach.text = "meow!";                    
+                catzSpeach.alpha = 1;           
+            }            
+            
+            if(dialogueCounter ===2)
+            {            
+                hoboCatSound1.play();        
+                hoboSpeach.text = "you keep 'em commin' kitten!";
+                hoboSpeach.alpha = 1;         
+                hoboCatSound1.play();  
+                hoboActive = false;
+                wickActive = true;
+            }
+            
+            else if(dialogueCounter > 2 && !dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "*whistles*";
+                hoboSpeach.alpha = 1;                        
+            }
+            
+            else if(dialogueCounter > 2 && dialogueCounter%3===0)
+            {            
+                hoboSpeach.text = "hum hum";                
+            }
         }
-        
-        dialogueCounter += 1;
+        dialogueCounter += 1;       
     }
-    
     function houseTick()
     {
         stage.update();
@@ -526,10 +626,13 @@ I had a house";
                 
         if(wickExclamation.alpha > 0.8 && wickExclamation.alpha < 0.9)
         {                       
-            rocketSong.play();
+            if(rocketSong.getPosition()<100)
+            {
+                rocketSong.play();
+            }
         }
         
-        hoboExclamation.alpha = hoboActive;
+        hoboExclamation.alpha = hoboActive;                
         
         if(wickActive && wickExclamation.alpha <1)
         {
