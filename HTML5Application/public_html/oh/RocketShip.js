@@ -63,7 +63,7 @@ var RocketShip = (function(){
         TerminalVelocity : 6,
         EmergencyBoost : 7,
         SlammerReady : 8,
-        Slammer : 9,
+        Slammer : 9
     },
     catzState=catzStateEnum.Normal,
     progressBar,
@@ -400,7 +400,7 @@ var RocketShip = (function(){
         crashRocket.x=250;
         crashRocket.y =-100;
         crashRocket.rotation=75;
-        var tween4 = createjs.Tween.get(crashRocket)
+        createjs.Tween.get(crashRocket)
                 .to({x:350, y:450},200)
                 .wait(1500)
                 .to({x:220, y:320, rotation:-30},800, createjs.Ease.quadIn);
@@ -413,7 +413,7 @@ var RocketShip = (function(){
         crashRocket.x=0;
         crashRocket.y =800;
         crashRocket.rotation=-80;
-        var tween4 = createjs.Tween.get(crashRocket)
+        createjs.Tween.get(crashRocket)
                 .to({x:280, y:400},200)
                 .wait(1500)
                 .to({x:220, y:320, rotation:-30},800, createjs.Ease.quadIn);
@@ -1283,8 +1283,8 @@ I had a house";
             kid.x = rocketSnake.children[i-1].x-2*Math.cos(6.28*catzRocketContainer.rotation/360);
             kid.y = rocketSnake.children[i-1].y;
         }
-        if(catzState != catzStateEnum.SecondDownloop 
-        && catzState != catzStateEnum.Slingshot)
+        if(catzState !== catzStateEnum.SecondDownloop 
+        && catzState !== catzStateEnum.Slingshot)
         {
             rocketSnake.children[0].x = -60+
                 Math.cos((catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
@@ -1466,7 +1466,7 @@ I had a house";
         instance.volume=0.5;
 
         hideSnake();
-        var tween = createjs.Tween.get(houseView)
+        createjs.Tween.get(houseView)
                 .wait(200)
                 .to({x:-50, y:20},50)
                 .to({x:50, y:-40},50)
@@ -1476,13 +1476,13 @@ I had a house";
                 .to({x:10, y:-10},50)
                 .to({x:0, y:0},50)
                 .wait(800);
-        var tween2 = createjs.Tween.get(wick)
+        createjs.Tween.get(wick)
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
             .call(activateWick);
         cat.x = 100;
         cat.y = 160;
-        var tween3 = createjs.Tween.get(cat)
+        createjs.Tween.get(cat)
                 .wait(800)
                 .to({x:130, y:140, rotation:10},250)
                 .to({x:70, y:120, rotation:-10},250)
