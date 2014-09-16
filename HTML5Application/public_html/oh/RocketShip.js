@@ -34,8 +34,7 @@ var RocketShip = (function(){
     mousedown,
     diamondSheet,
     grav = 12,
-    jump,
-    score = 0,    
+    jump,       
     catzVelocity = -2,
     limitVelocity = 30,
     sgCont = new createjs.Container(),
@@ -79,7 +78,12 @@ var RocketShip = (function(){
     wickExclamation,
     hoboExclamation,
     hoboConversationNumber=0,
-    heightOffset=0;
+    heightOffset=0,
+    gameStats = {
+        score : 0,
+        HoboCatHouse : 0
+        }
+    ;
 
     rocketShip.Init = function()
     {
@@ -373,21 +377,29 @@ var RocketShip = (function(){
         setStars();
    }
     function gotoHouseView()
-    {
-        if(score>0 && hoboConversationNumber===0)
-        {
-            hoboConversationNumber = 1;
-            hoboActive = true;
-            dialogCounter = 0;
-            wickActive = false;
-        }
-        if(score>50 && hoboConversationNumber===1)
-        {
-            hoboConversationNumber = 2;
-            hoboActive = true;
-            dialogCounter = 0;
-            wickActive = false;
-        }
+    {       
+        var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
+        for(i=0;i<hoboCatzProgression.length;i++)
+        {                        
+            if(hoboCatzProgression[i].HasHappend === "no")
+            {                                
+                if(hoboCatzProgression[i].ConditionType === "Score")
+                {                                        
+                    if(hoboCatzProgression[i].Condition.OperatorType === "LargerThan")
+                    {                        
+                        if(gameStats.score>hoboCatzProgression[i].Condition.Score)
+                        {
+                            hoboConversationNumber = hoboCatzProgression[i].ConversationNumber;
+                            hoboActive = true;
+                            wickActive = false;
+                            dialogCounter = 0;
+                            hoboCatzProgression[i].HasHappend = "yes";
+                            return;
+                        }
+                    }
+                }
+            }
+        }        
     }
     
     function gotoHouseViewNormal()
@@ -457,9 +469,7 @@ var RocketShip = (function(){
     
     function hoboConversation()
     {     
-        var dialog = dialogJSON.HoboCatz[hoboConversationNumber];
-        console.log(dialog.length);
-        console.log(dialogCounter);
+        var dialog = dialogJSON.HoboCatz[hoboConversationNumber];        
         if(dialog.length > dialogCounter)
         {
             if (dialog[dialogCounter].Who === "Catz")
@@ -763,7 +773,7 @@ var RocketShip = (function(){
                     "speed":1
                 }
             }
-        }
+        };
         var smokeSheet = new createjs.SpriteSheet(smokeData);
         smoke = new createjs.Sprite(smokeSheet,"jump");
         smoke.alpha=0;
@@ -892,7 +902,7 @@ var RocketShip = (function(){
         
         if(!event.paused)
         {                
-            text.text = score;            
+            text.text = gameStats.score;            
             if(diamondFrenzyCharge>0)
             {
                 diamondFrenzyCharge -= event.delta/2000;
@@ -1216,7 +1226,7 @@ var RocketShip = (function(){
                     && catzRocketContainer.y-80 > kid.y)
             {
                 diCont.removeChildAt(i);
-                score = score +1;
+                gameStats.score += 1;
                 arrayLength = arrayLength - 1;
                 icon = i - 1;
                 diamondSound.play();
