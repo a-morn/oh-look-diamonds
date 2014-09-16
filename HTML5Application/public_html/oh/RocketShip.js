@@ -1,6 +1,6 @@
 var RocketShip = (function(){
     var 
-    dialogueCounter= 0,
+    dialogCounter= 0,
     catzBounds,
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
@@ -378,14 +378,14 @@ var RocketShip = (function(){
         {
             hoboConversationNumber = 1;
             hoboActive = true;
-            dialogueCounter = 0;
+            dialogCounter = 0;
             wickActive = false;
         }
         if(score>50 && hoboConversationNumber===1)
         {
             hoboConversationNumber = 2;
             hoboActive = true;
-            dialogueCounter = 0;
+            dialogCounter = 0;
             wickActive = false;
         }
     }
@@ -457,159 +457,38 @@ var RocketShip = (function(){
     
     function hoboConversation()
     {     
-        if(hoboConversationNumber === 0)
+        var dialog = dialogJSON.HoboCatz[hoboConversationNumber];
+        console.log(dialog.length);
+        console.log(dialogCounter);
+        if(dialog.length > dialogCounter)
         {
-            
-            if(dialogueCounter ===0)
-            {            
-                hoboCatSound1.play();        
-                hoboSpeach.text = "good evening";
-                hoboSpeach.alpha = 1;            
-            }
-
-            else if(dialogueCounter ===1)
-            {                    
-                catzSound1.play();
-                catzSpeach.text = "meow";                    
+            if (dialog[dialogCounter].Who === "Catz")
+            {
+                catzSpeach.text = dialog[dialogCounter].What;            
                 catzSpeach.alpha = 1;
-            }
-
-            else if(dialogueCounter ===2)
-            {
-                hoboCatSound2.play();        
-                hoboSpeach.text = "whatcha lookin' at\n\
-there, kitten?";
-                hoboSpeach.alpha = 1;            
-            }
-
-            else if(dialogueCounter ===3)
-            {                    
                 catzSound1.play();
-                catzSpeach.text = "diamonds!";                    
-                catzSpeach.alpha = 1;
             }
-
-            else if(dialogueCounter ===4)
+            else if (dialog[dialogCounter].Who === "Hobo-Cat")
             {
-                hoboCatSound1.play();        
-                hoboSpeach.text = "Heh, kitten what you got\n\
-up there is none but \n\
-big balls of gas and fire";
-                hoboSpeach.alpha = 1;                        
-            }
+                hoboSpeach.text = dialog[dialogCounter].What;
+                hoboSpeach.alpha = 1;
+                hoboCatSound1.play();  
+            }                  
 
-            else if(dialogueCounter ===5)
+            if(dialog.length -1 === dialogCounter)
             {
-                hoboCatSound2.play();        
-                hoboSpeach.text = "Wish I had me some \n\
-diamonds though\n\
-Then I could build myself \n\
-a house";
-                hoboSpeach.alpha = 1;                        
+                wickActive = true;
+                hoboActive = false;
+                wick.addEventListener("click",lightFuse);
             }
+        }
         
-            else if(dialogueCounter ===6)
-            {
-                hoboCatSound2.play();        
-                hoboSpeach.text = "Been awhile since \n\
-I built something \n\
-Been awhile since \n\
-I had a house";
-                hoboSpeach.alpha = 1;            
-                wickActive = true;
-                hoboActive = false;
-                wick.addEventListener("click",lightFuse);            
-            }
-
-            else if(dialogueCounter > 6 && !dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "*cough*";
-                hoboSpeach.alpha = 1;                        
-            }
-            
-            else if(dialogueCounter > 6 && dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "hum hum";
-                hoboSpeach.alpha = 1;                        
-            }            
-        }
-        else if(hoboConversationNumber === 1)
+        else
         {
-            if(dialogueCounter ===0)
-            {            
-                hoboCatSound1.play();        
-                hoboSpeach.text = "well I be damned - a diamond!";
-                hoboSpeach.alpha = 1;         
-                hoboCatSound1.play();  
-            }
-            else if (dialogueCounter ===1)
-            {            
-                catzSound1.play();
-                catzSpeach.text = "meow!";                    
-                catzSpeach.alpha = 1;           
-            }
-            
-            else if(dialogueCounter ===2)
-            {            
-                hoboCatSound1.play();        
-                hoboSpeach.text = "for me? \n\
-much obliged, kitten!";
-                hoboSpeach.alpha = 1;            
-                hoboCatSound2.play();  
-                hoboActive = false;
-                wickActive = true;
-            }            
-            else if(dialogueCounter > 2 && !dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "*cough*";
-                hoboSpeach.alpha = 1;                        
-            }
-            
-            else if(dialogueCounter > 2 && dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "hum hum";
-                hoboSpeach.alpha = 1;                        
-            }       
+            //Idle dialog
         }
-        else if(hoboConversationNumber === 2)
-        {
-            if(dialogueCounter ===0)
-            {            
-                hoboCatSound1.play();        
-                hoboSpeach.text = "well look at that\n\
-guess I'mma build myself a house!";
-                hoboSpeach.alpha = 1;         
-                hoboCatSound1.play();  
-            }
-            else if (dialogueCounter ===1)
-            {            
-                catzSound1.play();
-                catzSpeach.text = "meow!";                    
-                catzSpeach.alpha = 1;           
-            }            
-            
-            if(dialogueCounter ===2)
-            {            
-                hoboCatSound1.play();        
-                hoboSpeach.text = "you keep 'em commin' kitten!";
-                hoboSpeach.alpha = 1;         
-                hoboCatSound1.play();  
-                hoboActive = false;
-                wickActive = true;
-            }
-            
-            else if(dialogueCounter > 2 && !dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "*whistles*";
-                hoboSpeach.alpha = 1;                        
-            }
-            
-            else if(dialogueCounter > 2 && dialogueCounter%3===0)
-            {            
-                hoboSpeach.text = "hum hum";                
-            }
-        }
-        dialogueCounter += 1;       
+        
+        dialogCounter +=1;
     }
     function houseTick()
     {
