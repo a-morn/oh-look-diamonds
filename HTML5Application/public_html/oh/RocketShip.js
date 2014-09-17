@@ -81,14 +81,21 @@ var RocketShip = (function(){
     heightOffset=0,
     gameStats = {
         score : 0,
-        HoboCatHouse : false,
-        BuildOrphan : false
+        HoboCatHouseBuilt : false,
+        BuildOrphanage : false,
+        OrphanageBuilt : false,
+        CurrentlyBuilding: false,
+        BuildRehab: false,
+        RehabBuilt: false
         },
     choice1,
     choice2,
     choice3,
     choices=[],
-    choiceIDs=[]
+    choiceIDs=[],
+    hoboCatHouse,
+    rehab,
+    orphanage
     ;
 
     rocketShip.Init = function()
@@ -359,19 +366,19 @@ var RocketShip = (function(){
         
         choice1 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
         choice1.x = 0;             
-        choice1.y = 0;
+        choice1.y = 40;
         choice1.text = "";
         choice1.Alpha = 0;
         
         choice2 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
         choice2.x = 0;             
-        choice2.y = 20;
+        choice2.y = 60;
         choice2.text = "";
         choice2.Alpha = 0;
         
         choice3 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
         choice3.x = 0;             
-        choice3.y = 40;
+        choice3.y = 80;
         choice3.text = "";
         choice3.Alpha = 0;
         
@@ -390,6 +397,21 @@ var RocketShip = (function(){
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
         
+        hoboCatHouse = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        hoboCatHouse.x = 400;             
+        hoboCatHouse.y = 40;
+        hoboCatHouse.text = "hoboCatHouse";        
+        
+        orphanage = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        orphanage.x = 400;             
+        orphanage.y = 140;
+        orphanage.text = "orphanage";        
+        
+        rehab = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        rehab.x = 400;             
+        rehab.y = 240;
+        rehab.text = "rehab";        
+        
         houseView.addChild(bg,starCont,cat,house, hobo,wick, crashRocket, hoboExclamation, 
         wickExclamation, hoboSpeach, catzSpeach, choice1, choice2, choice3);
     }
@@ -403,37 +425,62 @@ var RocketShip = (function(){
         setStars();
    }
     function gotoHouseView()
-    {       
+    {                       
         var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
         for(i=0;i<hoboCatzProgression.length;i++)
         {                        
-            if(hoboCatzProgression[i].HasHappend === "no")
-            {                                
-                if(hoboCatzProgression[i].ConditionType === "Score")
-                {                                        
-                    if(hoboCatzProgression[i].Condition.OperatorType === "LargerThan")
-                    {                        
-                        if(gameStats.score>hoboCatzProgression[i].Condition.Score)
-                        {
-                            hoboDialogNumber = hoboCatzProgression[i].ConversationNumber;
-                            hoboActive = true;
-                            wickActive = false;
-                            dialogID = 0;
-                            hoboCatzProgression[i].HasHappend = "yes";
-                            return;
+        conditionLoop:
+            if(!hoboCatzProgression[i].HasHappend || hoboCatzProgression[i].ShouldReoccur && 
+                hoboCatzProgression[i].Chance>Math.random())
+            {                                                
+                for(j=0; j<hoboCatzProgression[i].Conditions.length; j++)       
+                {
+                    if(hoboCatzProgression[i].Conditions[j].ConditionType === "Score")
+                    {                                        
+                        if(hoboCatzProgression[i].Conditions[j].OperatorType === "LargerThan")
+                        {                        
+                            if(gameStats.score>hoboCatzProgression[i].Conditions[j].Score)
+                            {
+                                //pass                                
+                            }
+                            else
+                            {
+                                break conditionLoop;
+                            }
+                        }
+                        else if(hoboCatzProgression[i].Conditions[j].OperatorType === "LessThan")
+                        {                        
+                            if(gameStats.score<hoboCatzProgression[i].Conditions[j].Score)
+                            {
+                                //pass
+                            }
+                            else
+                            {
+                                //next iter
+                                break conditionLoop;
+                            }
                         }
                     }
-                    if(hoboCatzProgression[i].Condition.OperatorType === "LessThan")
+                    else if(hoboCatzProgression[i].Conditions[j].ConditionType === "State")
                     {                        
-                        if(gameStats.score<hoboCatzProgression[i].Condition.Score)
-                        {
-                            hoboDialogNumber = hoboCatzProgression[i].ConversationNumber;
-                            hoboActive = true;
-                            wickActive = false;
-                            dialogID = 0;
-                            hoboCatzProgression[i].HasHappend = "yes";
-                            return;
+                        if(gameStats[hoboCatzProgression[i].Conditions[j].State] === hoboCatzProgression[i].Conditions[j].On)
+                        {                            
+                            //pass
                         }
+                        else
+                        {
+                            break conditionLoop;
+                        }
+                    }
+                    //If all conditions have been passed                    
+                    if(j===hoboCatzProgression[i].Conditions.length-1)
+                    {                        
+                        hoboDialogNumber = hoboCatzProgression[i].ConversationNumber;
+                        hoboActive = true;
+                        wickActive = false;
+                        dialogID = 0;
+                        hoboCatzProgression[i].HasHappend = "yes";
+                        return;
                     }
                 }
             }
@@ -510,9 +557,21 @@ var RocketShip = (function(){
         var dialog = dialogJSON.HoboCatz[hoboDialogNumber];                   
         if(dialog.dialog[dialogID])
         {            
-            if(dialog.dialog[dialogID].Trigger)
+            if(dialog.dialog[dialogID].Triggers)
             {
-                gameStats[dialog.dialog[dialogID].Trigger]=true;                                
+                for(i =0; i<dialog.dialog[dialogID].Triggers.length; i++)
+                {
+                    if(dialog.dialog[dialogID].Triggers[i].Stat === "score")
+                    {
+                        gameStats.score += dialog.dialog[dialogID].Triggers[i].Value;
+                        //Should be a "cash-withdrawn"-animation triggered here
+                        text.text = gameStats.score;
+                    }
+                    else
+                    {
+                        gameStats[dialog.dialog[dialogID].Triggers[i].Stat]= dialog.dialog[dialogID].Triggers[i].Value;                                
+                    }
+                }
             }
             
             if (dialog.dialog[dialogID].Who === "Catz")
@@ -528,7 +587,7 @@ var RocketShip = (function(){
                 hoboCatSound1.play();  
             }                             
             
-            if(dialog.dialog[dialogID].Choice === "yes")
+            if(dialog.dialog[dialogID].Choice)
             {                
                 
                 for (i=0;i<dialog.dialog[dialogID].Choices.length;i++)
@@ -542,7 +601,8 @@ var RocketShip = (function(){
                     {
                         choices[i].addEventListener("click",
                                 function()
-                                {                                                 
+                                {                                        
+                                    console.log(choiceIDs[0]);
                                     dialogID = choiceIDs[0];                                                                                                
 
                                     console.log(choiceIDs);
@@ -558,6 +618,7 @@ var RocketShip = (function(){
                         choices[i].addEventListener("click",
                                 function()
                                 {                                                 
+                                    console.log(choiceIDs[1]);
                                     dialogID = choiceIDs[1];                                                                                                                                    
                                     choice1.alpha = 0;
                                     choice2.alpha = 0;
@@ -569,14 +630,36 @@ var RocketShip = (function(){
                 }                
             }
             else
-            {
-                if(dialog.dialog[dialogID].End)
+            {                                
+                if(!dialog.dialog[dialogID].End)
                 {
-                    wickActive = true;
-                    hoboActive = false;
-                    wick.addEventListener("click",lightFuse);
+                    dialogID = dialog.dialog[dialogID].NextID;                
                 }
-                dialogID = dialog.dialog[dialogID].NextID;
+            }
+            if(dialog.dialog[dialogID].End)
+            {
+                //This doesn't work right as activateWick is called from gotoHouseView
+                wickActive = true;
+                hoboActive = false;
+                wick.addEventListener("click",lightFuse);
+                //Add new buildings
+                if(gameStats.HoboCatHouseBuilt && !houseView.contains(hoboCatHouse))
+                {
+                    houseView.addChild(hoboCatHouse);
+                }
+
+                if(gameStats.OrphanageBuilt && !houseView.contains(orphanage))
+                {
+                    houseView.addChild(orphanage);
+                }
+
+                if(gameStats.RehabBuilt && !houseView.contains(rehab))
+                {
+                    houseView.addChild(rehab);
+                }
+                
+                //To shift to idle speach. Should be implemented smarter.
+                dialogID = 999;
             }
         }
         
@@ -615,6 +698,15 @@ var RocketShip = (function(){
         {
             wickExclamation.alpha += 0.01;
         }
+        
+        debugText.text = 
+                "rotation "+catzRocketContainer.rotation
+                +"\nvelocity "+catzVelocity
+                +"\nstate "+catzState
+                +"\nflameFrame"+rocketFlame.currentFrame
+                + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
+                + "\nBuilding orphanage "+ gameStats.BuildOrphanage
+                + "HoboDialogNo: " + hoboDialogNumber;
         
     }
     
@@ -1018,8 +1110,9 @@ var RocketShip = (function(){
                 +"\nvelocity "+catzVelocity
                 +"\nstate "+catzState
                 +"\nflameFrame"+rocketFlame.currentFrame
-                + "\nHoboCatHouseBuilt"+ gameStats.HoboCatHouse 
-                + "\nBuilding orphanage"+ gameStats.BuildOrphan;
+                + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
+                + "\nBuilding orphanage "+ gameStats.BuildOrphanage
+                + "HoboDialogNo: " + hoboDialogNumber;
             stage.update(event); 
         }
     }
@@ -1515,7 +1608,7 @@ var RocketShip = (function(){
     function crash()
     {
         stage.removeAllEventListeners();
-        stage.removeChild(gameView,text, diamondShardCounter);
+        stage.removeChild(gameView);
         stage.addChild(houseView);
         stage.update();
         wickExclamation.alpha= 0;
@@ -1547,6 +1640,7 @@ var RocketShip = (function(){
         var instance = createjs.Sound.play("catzRocketCrash");
         instance.volume=0.5;
 
+        //shold check for hoboActive here
         hideSnake();
         createjs.Tween.get(houseView)
                 .wait(200)
