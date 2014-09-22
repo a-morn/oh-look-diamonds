@@ -12,7 +12,8 @@ var RocketShip = (function(){
     gameView,
     gameListener,
     houseListener,
-    stage,    
+    stage,
+    wind=0,
     smoke,
     cat,
     crashRocket,
@@ -232,6 +233,8 @@ var RocketShip = (function(){
         hobo.scaleY=0.8;        
         
         crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
+        crashRocket.regX=180;
+        crashRocket.regY=83;
         crashRocket.scaleX=0.5;
         crashRocket.scaleY=0.5;  
         crashRocket.alpha = 0;
@@ -397,26 +400,26 @@ var RocketShip = (function(){
     {
         console.log("aboveCrash");
         crashRocket.alpha=1;
-        crashRocket.x=250;
-        crashRocket.y =-100;
-        crashRocket.rotation=75;
+        crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
+        crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
+        crashRocket.rotation=catzRocketContainer.rotation;
         createjs.Tween.get(crashRocket)
-                .to({x:350, y:450},200)
+                .to({x:315, y:310},200)
                 .wait(1500)
-                .to({x:220, y:320, rotation:-30},800, createjs.Ease.quadIn);
+                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
     }
     
     function gotoHouseViewFromBelow()
     {
         console.log("belowCrash");
         crashRocket.alpha=1;
-        crashRocket.x=0;
-        crashRocket.y =800;
-        crashRocket.rotation=-80;
+        crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
+        crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
+        crashRocket.rotation=catzRocketContainer.rotation;
         createjs.Tween.get(crashRocket)
-                .to({x:280, y:400},200)
+                .to({x:315, y:310},200)
                 .wait(1500)
-                .to({x:220, y:320, rotation:-30},800, createjs.Ease.quadIn);
+                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
     }
     
     function lightFuse()
@@ -930,6 +933,7 @@ I had a house";
                 updateDiamonds();
                 updateClouds(event);
                 updateSeagulls();
+                updateWind();
                 updateRocketSnake();
                 updateWorldContainer();
             }
@@ -937,7 +941,7 @@ I had a house";
                 "rotation "+catzRocketContainer.rotation
                 +"\nvelocity "+catzVelocity
                 +"\nstate "+catzState
-                +"\nflameFrame"+rocketFlame.currentFrame;
+                +"\nwind"+wind;
             stage.update(event); 
         }
     }
@@ -957,7 +961,7 @@ I had a house";
     {                       
         if(catzState === catzStateEnum.Normal)   
         {
-            catzVelocity += grav*event.delta/1000;
+            catzVelocity += (grav+wind)*event.delta/1000;
             if(catzVelocity>=limitVelocity)
             {
                 catzVelocity = limitVelocity;
@@ -978,7 +982,7 @@ I had a house";
         }
         else if (catzState === catzStateEnum.EmergencyBoost)
         {
-            catzVelocity -= 10*grav*event.delta/1000; 
+            catzVelocity -= (10*grav-3.7*wind)*event.delta/1000; 
             heightOffset += 20*catzVelocity*event.delta/1000;
             catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
             if(catzRocketContainer.rotation<0)
@@ -988,7 +992,7 @@ I had a house";
         }
         else if (catzState === catzStateEnum.Uploop)
         {
-            catzVelocity -= 2.3*grav*event.delta/1000;          
+            catzVelocity -= (2.3*grav-wind)*event.delta/1000;          
             heightOffset += 20*catzVelocity*event.delta/1000;   
             loopTimer+= event.delta;   
             if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
@@ -999,8 +1003,8 @@ I had a house";
         else if (catzState === catzStateEnum.Downloop || catzState === catzStateEnum.SlammerReady)
         {
             loopTimer+= event.delta;
-            catzVelocity += (2-8*Math.sin(catzRocketContainer.rotation))*
-                grav*event.delta/1000+0.4;
+            catzVelocity += ((2-8*Math.sin(catzRocketContainer.rotation))*
+                grav+6*wind)*event.delta/1000+0.4;
         }
         else if (catzState === catzStateEnum.Slammer && catzRocketContainer.rotation<-250)
         {
@@ -1023,7 +1027,7 @@ I had a house";
         }
         else if (catzState === catzStateEnum.SecondUploop)
         {
-            catzVelocity -= 5.5*grav*event.delta/1000;          
+            catzVelocity -= (5.5*grav-2*wind)*event.delta/1000;          
             //heightOffset += 20*catzVelocity*event.delta/1000;  
             heightOffset += 20*catzVelocity*event.delta/1000;
             loopTimer+= event.delta;   
@@ -1034,7 +1038,14 @@ I had a house";
         }
         else if (catzState === catzStateEnum.SecondDownloop)
         {
-            heightOffset += 150*event.delta/1000;
+            if(wind>=0)
+            {
+                heightOffset += (150+12*wind)*event.delta/1000;
+            }
+            else
+            {
+                heightOffset += (150+40*wind)*event.delta/1000;
+            }
         }
         else if (catzState === catzStateEnum.Slingshot && catzRocketContainer.rotation <-400)
         {
@@ -1242,6 +1253,29 @@ I had a house";
             }
         }   
     }
+    
+    function updateWind()
+    {
+        if(Math.random()>0.97)
+        {
+            if(Math.random()>0.2)
+            {
+                if(Math.random()>0.5)
+                {
+                    wind = -0.73*grav;
+                }
+                else
+                {
+                    wind = 2*grav;
+                }
+            }
+            else
+            {
+                wind = 0;
+            }
+        }
+    }
+    
 
     function updateSeagulls()
     {
