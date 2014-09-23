@@ -973,8 +973,8 @@ var RocketShip = (function(){
         silouette.scaleX = 0.25;
         silouette.scaleY = 0.25;
         silouette.alpha = 0;
-        silouette.x = 130;
-        silouette.y = 75;
+        silouette.x = 110;
+        silouette.y = 90;
                 
         catzRocketContainer.x = 260;
         catzRocketContainer.y = 200;
@@ -1554,7 +1554,7 @@ var RocketShip = (function(){
                     y =Math.random()*700-500;
                     for (var i=0; i<10 ;i++)
                     {
-                        spawnGoose(1000+50*i,y);
+                        spawnGoose(1000+100*i,y);
                     }
                 }
                 else if(rand>0.97)
@@ -1715,9 +1715,9 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
-            kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
-            && catzRocketContainer.y-80 > kid.y)
+            if((catzRocketContainer.x-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
+            kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
+            && catzRocketContainer.y > kid.y)
             {
                 gooseCont.removeChild(kid);
                 var instance = createjs.Sound.play("birdcry");
@@ -1740,9 +1740,9 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
-            kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
-            && catzRocketContainer.y-80 > kid.y)
+            if((catzRocketContainer.x-catzBounds.width)<kid.x && catzRocketContainer.x > 
+            kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
+            && catzRocketContainer.y > kid.y)
             {
                 sgCont.removeChild(kid);
                 var instance = createjs.Sound.play("birdcry");
@@ -1917,8 +1917,8 @@ var RocketShip = (function(){
         stage.removeAllEventListeners();
         leaves.alpha = 1;
         leaves.rotation = 0;
-        leaves.x = catzRocketContainer.x+50;
-        leaves.y = catzRocketContainer.y;
+        leaves.x = catzRocketContainer.x-50;
+        leaves.y = catzRocketContainer.y-50;
         leaves.gotoAndPlay("cycle");
         leaves.addEventListener("animationend",function(){hideLeaves();});
     }
