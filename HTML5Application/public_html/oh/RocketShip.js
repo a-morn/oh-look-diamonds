@@ -76,7 +76,7 @@ var RocketShip = (function(){
         Normal : 0,
         Birds : 1,
         Wind : 2,
-        Thunder : 3,
+        Thunder : 3
     },
     directorState=directorStateEnum.Normal,
     directorTimer=0,
@@ -107,10 +107,7 @@ var RocketShip = (function(){
     choice2,
     choice3,
     choices=[],
-    choiceIDs=[],
-    hoboCatHouse,
-    rehab,
-    orphanage
+    choiceIDs=[]    
     ;
     
     function Director() 
@@ -132,7 +129,7 @@ var RocketShip = (function(){
         this.color = color;
         this.DirectorInit();
         this.graphics.beginFill(color).drawRect(0, 0, 50, 200);
-    }
+    };
     
 
     rocketShip.Init = function()
@@ -466,22 +463,7 @@ var RocketShip = (function(){
         catzSound2.stop();
         
         rocketSong = createjs.Sound.play("palladiumAlloySong");
-        rocketSong.stop();
-        
-        hoboCatHouse = new createjs.Text("", "20px Courier New", "#ffcc00"); 
-        hoboCatHouse.x = 400;             
-        hoboCatHouse.y = 40;
-        hoboCatHouse.text = "hoboCatHouse";        
-        
-        orphanage = new createjs.Text("", "20px Courier New", "#ffcc00"); 
-        orphanage.x = 400;             
-        orphanage.y = 140;
-        orphanage.text = "orphanage";        
-        
-        rehab = new createjs.Text("", "20px Courier New", "#ffcc00"); 
-        rehab.x = 400;             
-        rehab.y = 240;
-        rehab.text = "rehab";        
+        rocketSong.stop();                
         
         houseView.addChild(bg,starCont,diamondHouse,cat,house, hobo,wick, crashRocket, hoboExclamation, 
         wickExclamation, hoboSpeach, catzSpeach, choice1, choice2, choice3);
@@ -497,6 +479,7 @@ var RocketShip = (function(){
    }
     function gotoHouseView()
     {
+        console.log(gameStats);
         var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
         for(i=0;i<hoboCatzProgression.length;i++)
         {                        
@@ -611,18 +594,20 @@ var RocketShip = (function(){
     
     function updateHouse()
     {
-        if(gameStats.RehabBuilt)
+        var numberOfHouses = gameStats.HoboCatHouseBuilt + gameStats.OrphanageBuilt +
+                gameStats.RehabBuilt;        
+        if(numberOfHouses===1)
         {
             diamondHouse.alpha=1;
-            diamondHouse.gotoAndPlay("third");
+            diamondHouse.gotoAndPlay("first");
         }
-        else if(gameStats.OrphanageBuilt){
+        else if(numberOfHouses===2){
             diamondHouse.alpha=1;
             diamondHouse.gotoAndPlay("second");
         }
-        else if(gameStats.HoboCatHouseBuilt){
-            diamondHouse.alpha=1;
-            diamondHouse.gotoAndPlay("first");
+        else if(numberOfHouses===3){
+            diamondHouse.alpha=1;            
+            diamondHouse.gotoAndPlay("third");            
         }
         else{
             diamondHouse.alpha=0;
@@ -734,25 +719,10 @@ var RocketShip = (function(){
                 //This doesn't work right as activateWick is called from gotoHouseView
                 wickActive = true;
                 hoboActive = false;
-                wick.addEventListener("click",lightFuse);
-                //Add new buildings
-                if(gameStats.HoboCatHouseBuilt && !houseView.contains(hoboCatHouse))
-                {
-                    houseView.addChild(hoboCatHouse);
-                }
-
-                if(gameStats.OrphanageBuilt && !houseView.contains(orphanage))
-                {
-                    houseView.addChild(orphanage);
-                }
-
-                if(gameStats.RehabBuilt && !houseView.contains(rehab))
-                {
-                    houseView.addChild(rehab);
-                }
+                wick.addEventListener("click",lightFuse);                                
                 
                 //To shift to idle speach. Should be implemented smarter.
-                dialogID = 999;
+                updateHouse();
             }
         }
         

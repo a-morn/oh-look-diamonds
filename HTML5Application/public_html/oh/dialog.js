@@ -77,7 +77,7 @@ for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text
 
 
 {"dialog":[
-        {"Who": "Hobo-Cat", "What": "all done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":false, "NextID":1,"Triggers":[{Stat:"OrphanageBuilt", Value: true},{Stat:"BuildOrphanage", Value: false}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]},
+        {"Who": "Hobo-Cat", "What": "all done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":false, "NextID":1,"Triggers":[{Stat:"RehabBuilt", Value: true},{Stat:"BuildRehab", Value: false}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]},
         {"End":true}
     ], "idle":{"what":"hum hum"}}
 ]
