@@ -8,6 +8,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
+    hit = false,
     debugText,
     gameView,
     silouette,
@@ -41,12 +42,14 @@ var RocketShip = (function(){
     jump,       
     catzVelocity = -2,
     limitVelocity = 30,
+    lightningCont = new createjs.Container(),
     sgCont = new createjs.Container(),
     gooseCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
+    thunderCont = new createjs.Container(),
     windCont = new createjs.Container(),
     diSpeed = 25,    
     cloudSpeed = 25,
@@ -1145,7 +1148,7 @@ var RocketShip = (function(){
         diamondSound.stop();
         gameView = new createjs.Container();
         gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, gooseCont, diCont,
-            exitSmoke,smoke,cloudCont,fgCont,leaves);
+            exitSmoke,smoke,cloudCont,lightningCont,thunderCont,fgCont,leaves);
     }
     
     function gotoGameView()
@@ -1214,6 +1217,7 @@ var RocketShip = (function(){
                 updateSeagulls();
                 updateRocketSnake();
                 updateWorldContainer();
+                updateThunderClouds();
             }
             debugText.text = 
                 "rotation "+catzRocketContainer.rotation
@@ -1488,6 +1492,58 @@ var RocketShip = (function(){
         }
     }
     
+    function spawnThunderCloud(xPos,yPos)
+    {
+        console.log("thundercloud spawned");
+        var cloudtype = Math.floor(Math.random()*5+1);
+        cloudtype = "cloud"+cloudtype.toString();
+        var scale = Math.random()*0.3+0.3;
+        var cloud = new createjs.Bitmap(queue.getResult(cloudtype));
+        cloud.scaleX = scale;
+        cloud.scaleY = scale;
+        cloud.x = xPos;
+        cloud.y = yPos;
+        cloud.filters = [new createjs.ColorFilter(0.3,0.3,0.3,1, 0,0,55,0)];
+        rect = cloud.getBounds();
+        cloud.cache(rect.x,rect.y,rect.width,rect.height);
+        thunderCont.addChild(cloud); 
+    }
+    
+    function updateThunderClouds(event)
+    {
+        var arrayLength = thunderCont.children.length;    
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = thunderCont.children[i];  
+             kid.x = kid.x - cloudSpeed;   
+            if (kid.x <= -500)
+            {
+              thunderCont.removeChildAt(i);
+              arrayLength = arrayLength - 1;
+              i = i - 1;
+            }
+            var rect = kid.getBounds();
+            if(hit ===false && catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocketContainer.x > 
+                    kid.x && catzRocketContainer.y < (kid.y+rect.height*kid.scaleY+100)
+                    && catzRocketContainer.y > kid.y+50)
+            {
+                    var lightning= new createjs.Shape();
+                    lightning.graphics.setStrokeStyle(15,1);
+                    lightning.graphics.beginStroke(flameColor);
+                    lightning.graphics.moveTo(kid.x,kid.y);
+                    lightning.graphics.lineTo(catzRocketContainer.x,catzRocketContainer.y);
+                    lightning.graphics.endStroke();
+                    lightning.graphics.setStrokeStyle(12,1);
+                    lightning.graphics.beginStroke(flameColor);
+                    lightning.graphics.moveTo(catzRocketContainer.x,catzRocketContainer.y);
+                    lightning.graphics.lineTo(Math.random()*300+100,500);
+                    lightning.graphics.endStroke();
+                    lightningCont.addChild(lightning);
+                    createjs.Tween.get(lightning).to({alpha:0},300);
+                    getHit();
+            }
+        }
+    }
+    
 
     
     function hideSmoke()
@@ -1534,6 +1590,11 @@ var RocketShip = (function(){
                 }
                 break;
             case directorStateEnum.Thunder:
+                var rand =Math.random();
+                if(rand>0.98)
+                {
+                    spawnThunderCloud(1000,Math.floor(Math.random()*1000-1000));                   
+                }
                break;
             case directorStateEnum.Wind:
                 var rand =Math.random();
@@ -1550,7 +1611,8 @@ var RocketShip = (function(){
         if(directorTimer>7000)
         {
             noWind();
-            directorState = Math.floor(Math.random()*3);
+            //directorState = Math.floor(Math.random()*4);
+            directorState =3;
             directorTimer=0;
         }
     }
@@ -1879,6 +1941,7 @@ var RocketShip = (function(){
     
     function getHit()
     {
+        hit = true;
         console.log("hit");
         silouette.alpha=1;
         catzRocket.alpha = 0;
@@ -1895,6 +1958,8 @@ var RocketShip = (function(){
     
     function crash()
     {
+        hit = false;
+        lightningCont.removeAllChildren();
         directorState=directorStateEnum.Normal;
         noWind();
         silouette.alpha=0;
