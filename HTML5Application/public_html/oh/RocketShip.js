@@ -10,11 +10,13 @@ var RocketShip = (function(){
     canvas,
     debugText,
     gameView,
+    silouette,
     gameListener,
     houseListener,
     stage,
     wind=0,
     smoke,
+    windSheet,
     cat,
     crashRocket,
     exitSmoke,
@@ -30,6 +32,7 @@ var RocketShip = (function(){
     bg,    
     wick,
     text, 
+    diamondHouse,
     diamondShardCounter,
     queue,
     mousedown,
@@ -39,14 +42,16 @@ var RocketShip = (function(){
     catzVelocity = -2,
     limitVelocity = 30,
     sgCont = new createjs.Container(),
+    gooseCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
+    windCont = new createjs.Container(),
     diSpeed = 25,    
     cloudSpeed = 25,
     fgSpeed = 14,
-    sgSpeed =12,
+    sgSpeed =25,
     crashed = false,
     bg,
     queue,
@@ -66,6 +71,15 @@ var RocketShip = (function(){
         Slammer : 9
     },
     catzState=catzStateEnum.Normal,
+    loopTimer = 0,
+    directorStateEnum = {
+        Normal : 0,
+        Birds : 1,
+        Wind : 2,
+        Thunder : 3,
+    },
+    directorState=directorStateEnum.Normal,
+    directorTimer=0,
     progressBar,
     hoboSpeach,
     catzSpeach,
@@ -98,6 +112,28 @@ var RocketShip = (function(){
     rehab,
     orphanage
     ;
+    
+    function Director() 
+    {
+        this.initialize();
+    }
+    //inheritance
+    Director.prototype = new createjs.Shape();
+    Director.prototype.DirectorInit = Director.prototype.initialize;
+
+    //props
+    Director.prototype.state = "normal";
+    Director.prototype.opponent = null;
+    Director.prototype.freeze = 0;
+
+    //constructor
+    Director.prototype.initialize = function (color) 
+    {
+        this.color = color;
+        this.DirectorInit();
+        this.graphics.beginFill(color).drawRect(0, 0, 50, 200);
+    }
+    
 
     rocketShip.Init = function()
     {
@@ -123,7 +159,7 @@ var RocketShip = (function(){
 
         manifest = [
                     //{id: "catz", src: "assets/catz.png"}, 
-                    {id: "seagullSpriteSheet", src: "assets/seagull.png"},
+                    {id: "enemybirds", src: "assets/new assets/sprites/enemy birds.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "rocketSilouette", src: "assets/new assets/img/catzRocketSilouette.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
@@ -140,13 +176,15 @@ var RocketShip = (function(){
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocket", src:"assets/new assets/sprites/catzAllanimationsNewColors.png"},
                     {id:"flame", src:"assets/new assets/sprites/newFlame.png"},
+                    {id:"wind", src:"assets/new assets/sprites/wind.png"},
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
+                    {id:"diamondhouse", src:"assets/new assets/sprites/diamond house progression.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
-                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    //{id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
                     {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
@@ -258,6 +296,36 @@ var RocketShip = (function(){
         crashRocket.alpha = 0;
         crashRocket.x=220;
         crashRocket.y=320;
+        
+        dHouseData = {
+            "framerate":24,
+            "images":[queue.getResult("diamondhouse")],
+            "frames":[
+                [0, 0, 128, 128, 0, 0, 0],
+                [128, 0, 128, 128, 0, 0, 0],
+                [256, 0, 128, 128, 0, 0, 0],
+                [384, 0, 128, 128, 0, 0, 0],
+                [512, 0, 128, 128, 0, 0, 0],
+                [640, 0, 128, 128, 0, 0, 0],
+                [768, 0, 128, 128, 0, 0, 0]
+            ],
+            "animations":{
+                "first": [0],
+                "second": [1],
+                "third": [2],
+                "fourth": [3],
+                "fifth": [4],
+                "sixth": [5],
+                "seventh": [6]
+                }
+        };
+        dSheet = new createjs.SpriteSheet(dHouseData);
+        diamondHouse = new createjs.Sprite(dSheet,"first");
+        diamondHouse.alpha=0;
+        diamondHouse.x=450;
+        diamondHouse.y=310;
+        diamondHouse.rotation = 12;
+        
         
         catData ={
             "framerate":24,
@@ -415,7 +483,7 @@ var RocketShip = (function(){
         rehab.y = 240;
         rehab.text = "rehab";        
         
-        houseView.addChild(bg,starCont,cat,house, hobo,wick, crashRocket, hoboExclamation, 
+        houseView.addChild(bg,starCont,diamondHouse,cat,house, hobo,wick, crashRocket, hoboExclamation, 
         wickExclamation, hoboSpeach, catzSpeach, choice1, choice2, choice3);
     }
     
@@ -428,7 +496,7 @@ var RocketShip = (function(){
         setStars();
    }
     function gotoHouseView()
-    {                       
+    {
         var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
         for(i=0;i<hoboCatzProgression.length;i++)
         {                        
@@ -487,11 +555,12 @@ var RocketShip = (function(){
                     }
                 }
             }
-        }        
+        }  
+        updateHouse();
     }
     
     function gotoHouseViewNormal()
-    {        
+    {
         gotoHouseView();
         wick.x=-210;
         wick.removeAllEventListeners();
@@ -538,6 +607,27 @@ var RocketShip = (function(){
                 .to({x:315, y:310},200)
                 .wait(1500)
                 .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
+    }
+    
+    function updateHouse()
+    {
+        if(gameStats.RehabBuilt)
+        {
+            diamondHouse.alpha=1;
+            diamondHouse.gotoAndPlay("third");
+        }
+        else if(gameStats.OrphanageBuilt){
+            diamondHouse.alpha=1;
+            diamondHouse.gotoAndPlay("second");
+        }
+        else if(gameStats.HoboCatHouseBuilt){
+            diamondHouse.alpha=1;
+            diamondHouse.gotoAndPlay("first");
+        }
+        else{
+            diamondHouse.alpha=0;
+        }
+
     }
     
     function lightFuse()
@@ -706,7 +796,6 @@ var RocketShip = (function(){
                 "rotation "+catzRocketContainer.rotation
                 +"\nvelocity "+catzVelocity
                 +"\nstate "+catzState
-                +"\nflameFrame"+rocketFlame.currentFrame
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
                 + "HoboDialogNo: " + hoboDialogNumber;
@@ -721,7 +810,7 @@ var RocketShip = (function(){
 
     function createGameView()
     {    
-        
+        directorState=directorStateEnum.Normal;
         debugText = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
         debugText.x=500;
         debugText.y=0;
@@ -880,6 +969,13 @@ var RocketShip = (function(){
         rocketFlame.regY = 265;
         rocketFlame.regX = 390;
         
+        silouette = new createjs.Bitmap(queue.getResult("rocketSilouette"));
+        silouette.scaleX = 0.25;
+        silouette.scaleY = 0.25;
+        silouette.alpha = 0;
+        silouette.x = 130;
+        silouette.y = 75;
+                
         catzRocketContainer.x = 260;
         catzRocketContainer.y = 200;
         catzRocket.scaleX = 0.4;
@@ -887,7 +983,7 @@ var RocketShip = (function(){
         catzRocketContainer.regY = 100;
         catzRocketContainer.regX = 150;
         catzRocket.currentFrame = 0;              
-        catzRocketContainer.addChild(catzRocket);
+        catzRocketContainer.addChild(catzRocket,silouette);
         catzBounds = catzRocketContainer.getTransformedBounds();
         
         rocketSnake.x=0;
@@ -1015,23 +1111,62 @@ var RocketShip = (function(){
         leaves.scaleY = 0.5;
        
         var seagullData = {
-             images: ["assets/seagull.png"],
-            frames: {width:1235, height:1320},
-            animations: {
-                flappy:{ frames: [7,8,9,10,11]}
+             images: [queue.getResult("enemybirds")],
+            "framerate":10,
+            "frames":[
+                [0, 0, 256, 256, 0, 128, 128],
+                [256, 0, 256, 256, 0, 128, 128],
+                [512, 0, 256, 256, 0, 128, 128],
+                [768, 0, 256, 256, 0, 128, 128],
+                [1024, 0, 256, 256, 0, 128, 128],
+                [1280, 0, 256, 256, 0, 128, 128],
+                [1536, 0, 256, 256, 0, 128, 128],
+                [0, 256, 256, 256, 0, 128, 128],
+                [256, 256, 256, 256, 0, 128, 128],
+                [512, 256, 256, 256, 0, 128, 128],
+                [768, 256, 256, 256, 0, 128, 128],
+                [1024, 256, 256, 256, 0, 128, 128],
+                [1280, 256, 256, 256, 0, 128, 128],
+                [1536, 256, 256, 256, 0, 128, 128]
+            ],
+            "animations":{
+                "bat": {"frames": [0, 1, 2, 3], "speed": 1},
+                "seagull": {"frames": [6, 7, 8, 9], "speed": 1},
+                "goose": {"frames": [10, 11, 12], "speed": 1},
+                "eagle strike": {"frames": [5], "speed": 1},
+                "eagle soar": {"frames": [4], "speed": 1}
             }
         };
         
-        seagullSheet = new createjs.SpriteSheet(seagullData);    
-        var seagull = new createjs.Sprite(seagullSheet,"flappy");
-        seagull.scaleX = 0.1;
-        seagull.scaleY = 0.1;
-        seagull.x = 900;
-        seagull.y = 50+ Math.random()*100;
-        sgCont.addChild(seagull);   
+        seagullSheet = new createjs.SpriteSheet(seagullData);
         
-
-        
+        var windData = {
+            "framerate":24,
+            "images":[queue.getResult("wind")],
+            "frames":[
+                [0, 0, 64, 64, 0, 32, 32],
+                [64, 0, 64, 64, 0, 32, 32],
+                [128, 0, 64, 64, 0, 32, 32],
+                [192, 0, 64, 64, 0, 32, 32],
+                [256, 0, 64, 64, 0, 32, 32],
+                [320, 0, 64, 64, 0, 32, 32],
+                [384, 0, 64, 64, 0, 32, 32],
+                [448, 0, 64, 64, 0, 32, 32],
+                [512, 0, 64, 64, 0, 32, 32],
+                [576, 0, 64, 64, 0, 32, 32],
+                [640, 0, 64, 64, 0, 32, 32],
+                [704, 0, 64, 64, 0, 32, 32],
+                [768, 0, 64, 64, 0, 32, 32],
+                [832, 0, 64, 64, 0, 32, 32],
+                [896, 0, 64, 64, 0, 32, 32]
+            ],
+            "animations":{
+                "cycle": [0,14]
+            }
+        };
+        windSheet = new createjs.SpriteSheet(windData);  
+            
+            
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
@@ -1039,7 +1174,7 @@ var RocketShip = (function(){
         diamondSound.volume = 0.2;
         diamondSound.stop();
         gameView = new createjs.Container();
-        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, diCont,
+        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, gooseCont, diCont,
             exitSmoke,smoke,cloudCont,fgCont,leaves);
     }
     
@@ -1047,7 +1182,7 @@ var RocketShip = (function(){
     {
         hideSnake();
         stage.removeChild(houseView);
-        stage.addChild(gameView,text, diamondShardCounter,debugText);
+        stage.addChild(gameView, windCont, text, diamondShardCounter,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -1100,12 +1235,13 @@ var RocketShip = (function(){
             }
             if(!crashed)
             {
-                updatecatzRocket(event);            
+                updatecatzRocket(event); 
+                updateDirector(event);
                 updateFg(event);
                 updateDiamonds();
                 updateClouds(event);
+                updateGoose();
                 updateSeagulls();
-                updateWind();
                 updateRocketSnake();
                 updateWorldContainer();
             }
@@ -1114,6 +1250,8 @@ var RocketShip = (function(){
                 +"\nvelocity "+catzVelocity
                 +"\nstate "+catzState
                 +"\nwind"+wind
+                +"\ndirectorState"+directorState
+                +"\ndirectorTimer"+directorTimer
                 +"\nflameFrame"+rocketFlame.currentFrame
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
@@ -1311,7 +1449,7 @@ var RocketShip = (function(){
     
     function hideLeaves()
     {
-        leaves.alpha=1;
+        leaves.alpha=0;
     }
     
     function updateClouds(event)
@@ -1380,6 +1518,8 @@ var RocketShip = (function(){
         }
     }
     
+
+    
     function hideSmoke()
     {
         smoke.alpha = 0;
@@ -1388,6 +1528,61 @@ var RocketShip = (function(){
     function hideExitSmoke()
     {
         exitSmoke.alpha = 0;
+    }
+    
+    function updateDirector(event)
+    {
+        directorTimer+=event.delta;
+        switch(directorState)
+        {
+            case directorStateEnum.Normal:
+               break;
+            case directorStateEnum.Birds:
+                var rand =Math.random();
+                if(rand>0.99)
+                {
+                    y =Math.random()*700-500;
+                    spawnGoose(1000,y);
+                    for (var i=1; i<6 ;i++)
+                    {
+                        spawnGoose(1000+50*i,y+i*50);
+                        spawnGoose(1000+50*i,y-i*50);
+                    }
+                }
+                else if(rand>0.98)
+                {
+                    y =Math.random()*700-500;
+                    for (var i=0; i<10 ;i++)
+                    {
+                        spawnGoose(1000+50*i,y);
+                    }
+                }
+                else if(rand>0.97)
+                {
+                   spawnSeagull(1000,-500 +Math.random()*700);
+                   spawnSeagull(1000,-500 +Math.random()*700);
+                }
+                break;
+            case directorStateEnum.Thunder:
+               break;
+            case directorStateEnum.Wind:
+                var rand =Math.random();
+                if(rand>0.98)
+                {
+                    upWind();
+                }
+                else if (rand>0.96)
+                {
+                    downWind();
+                }
+                break;
+        }
+        if(directorTimer>7000)
+        {
+            noWind();
+            directorState = Math.floor(Math.random()*3);
+            directorTimer=0;
+        }
     }
 
     function updateDiamonds()
@@ -1430,57 +1625,129 @@ var RocketShip = (function(){
         }   
     }
     
-    function updateWind()
+    
+    function upWind()
     {
-        if(Math.random()>0.97)
-        {
-            if(Math.random()>0.2)
-            {
-                if(Math.random()>0.5)
-                {
-                    wind = -0.73*grav;
-                }
-                else
-                {
-                    wind = 2*grav;
-                }
-            }
-            else
-            {
-                wind = 0;
-            }
+        wind = -0.73*grav;
+        windCont.removeAllChildren();
+        var windSprite1 = new createjs.Sprite(windSheet,"cycle");
+        windSprite1.x = 50;
+        windSprite1.y = 50;
+        windSprite1.scaleX = -1;
+        windSprite1.scaleY = -1;
+        windSprite1.rotation = 10;
+        var windSprite2 = new createjs.Sprite(windSheet,"cycle");
+        windSprite2.x = 200;
+        windSprite2.y = 300;
+        windSprite2.scaleX = -1;
+        windSprite2.scaleY = -1;
+        windSprite1.rotation = 10;
+        var windSprite3 = new createjs.Sprite(windSheet,"cycle");
+        windSprite3.x = 500;
+        windSprite3.y = 400;
+        windSprite3.scaleX = -1;
+        windSprite3.scaleY = -1;
+        windSprite1.rotation = 10;
+        windCont.addChild(windSprite1,windSprite2,windSprite3);
         }
+         
+    function downWind()
+    {
+        wind = 2*grav;
+        windCont.removeAllChildren();
+        var windSprite1 = new createjs.Sprite(windSheet,"cycle");
+        windSprite1.x = 50;
+        windSprite1.y = 50;
+        windSprite1.scaleX = 1;
+        windSprite1.scaleY = 1;
+        windSprite1.rotation = 10;
+        var windSprite2 = new createjs.Sprite(windSheet,"cycle");
+        windSprite2.x = 270;
+        windSprite2.y = 170;
+        windSprite2.scaleX = 1;
+        windSprite2.scaleY = 1;
+        windSprite1.rotation = 10;
+        var windSprite3 = new createjs.Sprite(windSheet,"cycle");
+        windSprite3.x = 700;
+        windSprite3.y = 400;
+        windSprite3.scaleX = 1;
+        windSprite3.scaleY = 1;
+        windSprite1.rotation = 10;
+        windCont.addChild(windSprite1,windSprite2,windSprite3);
+    }
+    
+    function noWind()
+    {
+        wind = 0;
+        windCont.removeAllChildren();
+    }
+    
+    function spawnGoose(x,y)
+    {
+        var seagull = new createjs.Sprite(seagullSheet,"goose");
+        seagull.scaleX = 0.8;
+        seagull.scaleY = 0.8;
+        seagull.x = x;
+        seagull.y = y;
+        gooseCont.addChild(seagull);
+    }
+    
+    function spawnSeagull(x,y)
+    {
+        var seagull = new createjs.Sprite(seagullSheet,"seagull");
+        seagull.scaleX = 0.8;
+        seagull.scaleY = 0.8;
+        seagull.x = x;
+        seagull.y = y;
+        sgCont.addChild(seagull);
     }
     
 
+    function updateGoose()
+    {
+        var arrayLength = gooseCont.children.length;   
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = gooseCont.children[i];
+            kid.x = kid.x - sgSpeed;    
+            if (kid.x <= -100)
+            {
+              gooseCont.removeChildAt(i);
+              arrayLength = arrayLength - 1;
+              i = i - 1;
+            }
+            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
+            kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
+            && catzRocketContainer.y-80 > kid.y)
+            {
+                gooseCont.removeChild(kid);
+                var instance = createjs.Sound.play("birdcry");
+                instance.volume = 0.1;
+                getHit();
+            }
+        }   
+    }
+    
     function updateSeagulls()
     {
-        if(Math.random()>1.1) // kill spawnrate
-        {
-            var seagull = new createjs.Sprite(seagullSheet,"flappy");
-            seagull.scaleX = 0.1;
-            seagull.scaleY = 0.1;
-            seagull.x = 800;
-            seagull.y = 50 +Math.random()*200;
-            sgCont.addChild(seagull);
-        }
         var arrayLength = sgCont.children.length;   
         for (var i = 0; i < arrayLength; i++) {
             var kid = sgCont.children[i];
             kid.x = kid.x - sgSpeed;    
+            kid.y += 10*Math.cos(kid.x/300);
             if (kid.x <= -100)
             {
               sgCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if(Math.abs(catzRocket.x - kid.x) < 30 && Math.abs(catzRocket.y - 
-    kid.y)< 30 )
+            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
+            kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
+            && catzRocketContainer.y-80 > kid.y)
             {
-                sgCont.removeAllChildren();
+                sgCont.removeChild(kid);
                 var instance = createjs.Sound.play("birdcry");
                 instance.volume = 0.1;
-                crash();
+                getHit();
             }
         }   
     }
@@ -1640,8 +1907,28 @@ var RocketShip = (function(){
         }        
     }
     
+    function getHit()
+    {
+        console.log("hit");
+        silouette.alpha=1;
+        catzRocket.alpha = 0;
+        catzVelocity =Math.min(catzVelocity+20,limitVelocity); 
+        catzEndLoop();
+        stage.removeAllEventListeners();
+        leaves.alpha = 1;
+        leaves.rotation = 0;
+        leaves.x = catzRocketContainer.x+50;
+        leaves.y = catzRocketContainer.y;
+        leaves.gotoAndPlay("cycle");
+        leaves.addEventListener("animationend",function(){hideLeaves();});
+    }
+    
     function crash()
     {
+        directorState=directorStateEnum.Normal;
+        noWind();
+        silouette.alpha=0;
+        catzRocket.alpha = 1;
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(houseView);
