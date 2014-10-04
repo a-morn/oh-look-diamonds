@@ -1,7 +1,9 @@
 var RocketShip = (function(){
     var 
     dialogID= 0,
+    diamondDistanceCounter =0,
     catzBounds,
+    onTrack=false,
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
     catzRocketContainer = new createjs.Container(),
@@ -16,9 +18,11 @@ var RocketShip = (function(){
     houseListener,
     stage,
     wind=0,
+    trackTimer = 0,
     smoke,
     windSheet,
     cat,
+    track,
     crashRocket,
     exitSmoke,
     leaves,
@@ -45,12 +49,20 @@ var RocketShip = (function(){
     lightningCont = new createjs.Container(),
     sgCont = new createjs.Container(),
     gooseCont = new createjs.Container(),
+    hawkCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
     thunderCont = new createjs.Container(),
     windCont = new createjs.Container(),
+    sheetDict,
+    containerDict = {
+        "diamond" : diCont,
+        "seagull" : sgCont,
+        "goose" : gooseCont,
+        "hawk" : hawkCont,
+    },
     diSpeed = 25,    
     cloudSpeed = 25,
     fgSpeed = 14,
@@ -79,7 +91,7 @@ var RocketShip = (function(){
         Normal : 0,
         Birds : 1,
         Wind : 2,
-        Thunder : 3
+        Thunder : 3,
     },
     directorState=directorStateEnum.Normal,
     directorTimer=0,
@@ -104,7 +116,8 @@ var RocketShip = (function(){
         OrphanageBuilt : false,
         CurrentlyBuilding: false,
         BuildRehab: false,
-        RehabBuilt: false
+        RehabBuilt: false,
+        Difficulty : 0
         },
     choice1,
     choice2,
@@ -570,7 +583,6 @@ var RocketShip = (function(){
     function gotoHouseViewFromAbove()
     {
         gotoHouseView();
-        console.log("aboveCrash");
         crashRocket.alpha=1;
         crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
         crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
@@ -584,7 +596,6 @@ var RocketShip = (function(){
     function gotoHouseViewFromBelow()
     {
         gotoHouseView();
-        console.log("belowCrash");
         crashRocket.alpha=1;
         crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
         crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
@@ -682,11 +693,9 @@ var RocketShip = (function(){
                     {
                         choices[i].addEventListener("click",
                                 function()
-                                {                                        
-                                    console.log(choiceIDs[0]);
+                                {                             
                                     dialogID = choiceIDs[0];                                                                                                
 
-                                    console.log(choiceIDs);
                                     choice1.alpha = 0;
                                     choice2.alpha = 0;
                                     choice3.alpha = 0;
@@ -698,8 +707,7 @@ var RocketShip = (function(){
                     {                        
                         choices[i].addEventListener("click",
                                 function()
-                                {                                                 
-                                    console.log(choiceIDs[1]);
+                                {                             
                                     dialogID = choiceIDs[1];                                                                                                                                    
                                     choice1.alpha = 0;
                                     choice2.alpha = 0;
@@ -771,7 +779,8 @@ var RocketShip = (function(){
                 +"\nstate "+catzState
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
-                + "HoboDialogNo: " + hoboDialogNumber;
+                + "HoboDialogNo: " + hoboDialogNumber
+                + "\nonTrack: " + onTrack;
         
     }
     
@@ -792,41 +801,40 @@ var RocketShip = (function(){
             "framerate":24,
             "images":[queue.getResult("diamond")],
             "frames":[
-                [0, 0, 256, 256, 0, -193, -133],
-                [256, 0, 256, 256, 0, -193, -133],
-                [512, 0, 256, 256, 0, -193, -133],
-                [768, 0, 256, 256, 0, -193, -133],
-                [1024, 0, 256, 256, 0, -193, -133],
-                [1280, 0, 256, 256, 0, -193, -133],
-                [1536, 0, 256, 256, 0, -193, -133],
-                [0, 256, 256, 256, 0, -193, -133],
-                [256, 256, 256, 256, 0, -193, -133],
-                [512, 256, 256, 256, 0, -193, -133],
-                [768, 256, 256, 256, 0, -193, -133],
-                [1024, 256, 256, 256, 0, -193, -133],
-                [1280, 256, 256, 256, 0, -193, -133],
-                [1536, 256, 256, 256, 0, -193, -133],
-                [0, 512, 256, 256, 0, -193, -133],
-                [256, 512, 256, 256, 0, -193, -133],
-                [512, 512, 256, 256, 0, -193, -133],
-                [768, 512, 256, 256, 0, -193, -133],
-                [1024, 512, 256, 256, 0, -193, -133],
-                [1280, 512, 256, 256, 0, -193, -133],
-                [1536, 512, 256, 256, 0, -193, -133],
-                [0, 768, 256, 256, 0, -193, -133],
-                [256, 768, 256, 256, 0, -193, -133],
-                [512, 768, 256, 256, 0, -193, -133],
-                [768, 768, 256, 256, 0, -193, -133]
+                [0, 0, 256, 256, 0, 128, 128],
+                [256, 0, 256, 256, 0, 128, 128],
+                [512, 0, 256, 256, 0, 128, 128],
+                [768, 0, 256, 256, 0, 0, 128],
+                [1024, 0, 256, 256, 0, 128, 128],
+                [1280, 0, 256, 256, 0, 128, 128],
+                [1536, 0, 256, 256, 0, 128, 128],
+                [0, 256, 256, 256, 0, 128, 128],
+                [256, 256, 256, 256, 0, 128, 128],
+                [512, 256, 256, 256, 0, 128, 128],
+                [768, 256, 256, 256, 0, 128, 128],
+                [1024, 256, 256, 256, 0, 128, 128],
+                [1280, 256, 256, 256, 0, 128, 128],
+                [1536, 256, 256, 256, 0, 128, 128],
+                [0, 512, 256, 256, 0, 128, 128],
+                [256, 512, 256, 256, 0, 128, 128],
+                [512, 512, 256, 256, 0, 128, 128],
+                [768, 512, 256, 256, 0, 128, 128],
+                [1024, 512, 256, 256, 0, 128, 128],
+                [1280, 512, 256, 256, 0, 128, 128],
+                [1536, 512, 256, 256, 0, 128, 128],
+                [0, 768, 256, 256, 0, 128, 128],
+                [256, 768, 256, 256, 0, 128, 128],
+                [512, 768, 256, 256, 0, 128, 128],
+                [768, 768, 256, 256, 0, 128, 128]
             ],
             "animations":{"cycle": [0,24]}
             };
         diamondSheet = new createjs.SpriteSheet(diamondData);
         var diamond = new createjs.Sprite(diamondSheet,"cycle");
 
-        diamond.x = 900;
-        diamond.y = 50+ Math.random()*100;
-        diamond.scaleX = 0.1;
-        diamond.scaleY = 0.1;
+        diamond.x = 0;
+        diamond.y = 0;
+        
         diCont.addChild(diamond);
         diCont.x = 0;
         diCont.y = 0;
@@ -1147,7 +1155,13 @@ var RocketShip = (function(){
         diamondSound.volume = 0.2;
         diamondSound.stop();
         gameView = new createjs.Container();
-        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, gooseCont, diCont,
+         sheetDict = {
+        "diamond" : diamondSheet,
+        "seagull" : seagullSheet,
+        "goose" : seagullSheet,
+        "hawk" : seagullSheet,
+        };
+        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, hawkCont, gooseCont, diCont,
             exitSmoke,smoke,cloudCont,lightningCont,thunderCont,fgCont,leaves);
     }
     
@@ -1186,11 +1200,11 @@ var RocketShip = (function(){
 
     function update(event)
     {        
-        diSpeed = 12.5+12.5* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);    
+        diSpeed = 0.4+0.4* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);    
+        diamondDistanceCounter += diSpeed*event.delta;
         cloudSpeed = 12.5+12.5* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);
         fgSpeed = 7+7* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);
         sgSpeed = 6+6* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI);        
-        
         if(!event.paused)
         {                
             text.text = gameStats.score;            
@@ -1211,10 +1225,10 @@ var RocketShip = (function(){
                 updatecatzRocket(event); 
                 updateDirector(event);
                 updateFg(event);
-                updateDiamonds();
+                updateDiamonds(event);
                 updateClouds(event);
                 updateGoose();
-                updateSeagulls();
+                updateSeagulls(event);
                 updateRocketSnake();
                 updateWorldContainer();
                 updateThunderClouds();
@@ -1229,7 +1243,9 @@ var RocketShip = (function(){
                 +"\nflameFrame"+rocketFlame.currentFrame
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
+                + "\nonTrack: " + onTrack
                 + "HoboDialogNo: " + hoboDialogNumber;
+        
             stage.update(event); 
         }
     }
@@ -1397,7 +1413,6 @@ var RocketShip = (function(){
                     kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
                     && catzRocketContainer.y > kid.y)
             {
-                console.log("woosh");
                 leaves.alpha = 1;
                 leaves.rotation = 0;
                 leaves.x = kid.x+50;
@@ -1442,7 +1457,6 @@ var RocketShip = (function(){
             cloud.x = 1000;
             cloud.y = yPos;
             cloudCont.addChild(cloud); 
-            //console.log("added cloud at " +yPos );
         }
         var arrayLength = cloudCont.children.length;    
         for (var i = 0; i < arrayLength; i++) {
@@ -1556,9 +1570,86 @@ var RocketShip = (function(){
         exitSmoke.alpha = 0;
     }
     
+    function generateTrack()
+    {
+        if(gameStats.Difficulty>=0)
+        {
+            var rand = Math.floor(Math.random()*tracksJSON["easy"].length);
+            var element1  = $.extend(true, [], tracksJSON["easy"][0]);
+            for (i=0;i<element1.length;i++)
+            {
+                element1[i].x+=800;
+                element1[i].y+=catzRocketContainer.y;
+            }
+            rand = Math.floor(Math.random()*tracksJSON["easy"].length);
+            var element2 = $.extend(true,[],tracksJSON["easy"][2]);
+            for (i=0;i<element2.length;i++)
+            {
+                element2[i].x+=element1[element1.length-1].x;
+                element2[i].y+=element1[element1.length-1].y;
+            }
+            return element1.concat(element2);
+        }
+        else if(gameStats.Difficulty===1)
+        {
+            
+        }
+        else if(gameStats.Difficulty>1)
+        {
+            
+        }
+    }
+    
+    
     function updateDirector(event)
     {
         directorTimer+=event.delta;
+        if (onTrack)
+        {
+            if(diCont.getNumChildren()===0)
+            {
+                onTrack =false;
+            }
+        }
+        else
+        {
+            trackTimer+=event.delta;
+            if (trackTimer>5000)
+            {
+                trackTimer=0;
+                onTrack=true;
+                gameStats.Difficulty++;
+                track = generateTrack();
+                for (i=0; i<track.length;i++)
+                {
+                    if (track[i].graphicType==="bitmap")
+                    {
+                        var bitmap = new createjs.Bitmap(queue.getResult(track[i].type));
+                        var cont = containerDict[track[i].type];
+                        bitmap.x = track[i].x;
+                        bitmap.y = track[i].y;
+                        cont.addChild(bitmap);
+                    }
+                    else if(track[i].graphicType==="sprite")
+                    {
+                        var sheet = sheetDict[track[i].type];
+                        
+                        var sprite = new createjs.Sprite(sheet,track[i].animation);
+                        sprite.x = track[i].x; 
+                                console.log("!x:"+track[i].x);
+                        sprite.y = track[i].y;
+                        if(track[i].type ==="diamond")
+                        {
+                            sprite.scaleX=0.8;
+                            sprite.scaleY=0.8;
+                        }
+                        var cont = containerDict[track[i].type];
+                        cont.addChild(sprite);
+                        
+                    }
+                }
+            }
+        }
         switch(directorState)
         {
             case directorStateEnum.Normal:
@@ -1612,40 +1703,25 @@ var RocketShip = (function(){
         {
             noWind();
             //directorState = Math.floor(Math.random()*4);
-            directorState =3;
+            directorState = 0;
             directorTimer=0;
         }
     }
 
-    function updateDiamonds()
+    function updateDiamonds(event)
     {      
-        
-        if(Math.random()>0.99)
-        {            
-            for (i = 0;i<20;i++)
-            {
-                var di = new createjs.Sprite(diamondSheet,"cycle");
-                di.scaleX = 0.5;
-                di.scaleY = 0.5;                                
-                di.x = 800+Math.cos(i/20*2*3.14-3.14/2)*350+50*i;
-                di.y = 100-Math.sin(i/20*2*3.14-3.14/2)*180;                                
-                diCont.addChild(di);                
-            }            
-        }
-
         var arrayLength = diCont.children.length;
         for (var i = 0; i < arrayLength; i++) {
             var kid = diCont.children[i];
-            kid.x = kid.x - diSpeed;    
+            kid.x = kid.x - diSpeed*event.delta;    
             if (kid.x <= -100)
             {
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
             }                                   
-            if((catzRocketContainer.x-20-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
-                    kid.x && (catzRocketContainer.y-80-catzBounds.height) < kid.y
-                    && catzRocketContainer.y-80 > kid.y)
+            if(Math.pow(catzRocketContainer.x-kid.x,2) +
+                    Math.pow(catzRocketContainer.y-kid.y,2) <2500)
             {
                 diCont.removeChildAt(i);
                 gameStats.score += 1;
@@ -1759,13 +1835,13 @@ var RocketShip = (function(){
         }   
     }
     
-    function updateSeagulls()
+    function updateSeagulls(event)
     {
         var arrayLength = sgCont.children.length;   
         for (var i = 0; i < arrayLength; i++) {
             var kid = sgCont.children[i];
-            kid.x = kid.x - sgSpeed;    
-            kid.y += 10*Math.cos(kid.x/300);
+            kid.x = kid.x - diSpeed*event.delta;    
+            kid.y += Math.cos(kid.x/2);
             if (kid.x <= -100)
             {
               sgCont.removeChildAt(i);
@@ -1845,7 +1921,6 @@ var RocketShip = (function(){
         SnakeLine.alpha = 1;
         rocketFlame.alpha =1;
         rocketFlame.gotoAndPlay("ignite");
-        console.log("ignite");
     }
     
     function hideSnake()
@@ -1942,7 +2017,6 @@ var RocketShip = (function(){
     function getHit()
     {
         hit = true;
-        console.log("hit");
         silouette.alpha=1;
         catzRocket.alpha = 0;
         catzVelocity =Math.min(catzVelocity+20,limitVelocity); 
@@ -1996,7 +2070,7 @@ var RocketShip = (function(){
         starCont.y=0;
         var instance = createjs.Sound.play("catzRocketCrash");
         instance.volume=0.5;
-
+        onTrack=false;
         //shold check for hoboActive here
         hideSnake();
         createjs.Tween.get(houseView)
@@ -2022,7 +2096,6 @@ var RocketShip = (function(){
                 .to({x:130, y:100, rotation:10},250)
                 .to({x:70, y:80, rotation:-10},250)
                 .to({x:100, y:60, rotation:0},250);
-        console.log("crashed");
         stage.update();
     }
     return rocketShip;
