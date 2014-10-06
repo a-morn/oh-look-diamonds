@@ -992,14 +992,14 @@ var RocketShip = (function(){
         {
             var shape = new createjs.Shape();
             var x = 260-i*5;
-            var r = 8;
+            var r = 9;
             shape.graphics.f(flameColor).dc(x,200,r);
-            shape.regY=0;
-            shape.regX=0;
+            shape.regY=5;
+            shape.regX=5;
             rocketSnake.addChild(shape);
             if(i>0)
             {
-                shape.alpha=0;
+                //shape.alpha=0;
             }
         }
         
@@ -1989,7 +1989,7 @@ var RocketShip = (function(){
             var kid = rocketSnake.children[i];
             kid.x = rocketSnake.children[i-1].x-2*Math.cos(6.28*catzRocketContainer.rotation/360);
             kid.y = rocketSnake.children[i-1].y;
-        }
+        }           
         if(catzState !== catzStateEnum.SecondDownloop 
         && catzState !== catzStateEnum.Slingshot)
         {
@@ -2011,16 +2011,19 @@ var RocketShip = (function(){
             rocketFlame.x =catzRocketContainer.x;
             rocketFlame.y = catzRocketContainer.y;
         }
-        rocketFlame.rotation =catzRocketContainer.rotation;
         SnakeLine.graphics = new createjs.Graphics();
+        SnakeLine.x=260;
+        SnakeLine.y=200;
         for (var i = arrayLength-1; i >0 ; i--) {
             var kid = rocketSnake.children[i];
             SnakeLine.graphics.setStrokeStyle(arrayLength*2-i*2,1);
             SnakeLine.graphics.beginStroke(flameColor);
-            SnakeLine.graphics.moveTo(kid.x+260,kid.y+200);
-            SnakeLine.graphics.lineTo(rocketSnake.children[i-1].x+260,rocketSnake.children[i-1].y+200);
+            SnakeLine.graphics.moveTo(kid.x-i*5,kid.y);
+            SnakeLine.graphics.lineTo(rocketSnake.children[i-1].x-(i-1)*5,rocketSnake.children[i-1].y);
             SnakeLine.graphics.endStroke();
-        }
+        } 
+        rocketFlame.rotation =catzRocketContainer.rotation;
+
     }
     
     function showSnake()
@@ -2033,12 +2036,13 @@ var RocketShip = (function(){
         rocketFlame.x = rocketSnake.children[0].x;
         rocketFlame.y = rocketSnake.children[0].y;
         rocketFlame.rotation =catzRocketContainer.rotation;
+        //rocketSnake.alpha=1;
         var arrayLength = rocketSnake.children.length;    
-        for (var i = arrayLength-1; i >0 ; i--) {
-            var kid = rocketSnake.children[i];
-            kid.x = rocketSnake.children[0].x+2*Math.cos(6.28*catzRocketContainer.rotation/360);
-            kid.y = rocketSnake.children[0].y;
-        }
+//        for (var i = arrayLength-1; i >0 ; i--) {
+//            var kid = rocketSnake.children[i];
+//            kid.x = rocketSnake.children[0].x+2*Math.cos(6.28*catzRocketContainer.rotation/360);
+//            kid.y = rocketSnake.children[0].y;
+//        }
         //rocketSnake.alpha=1;
         SnakeLine.alpha = 1;
         rocketFlame.alpha =1;
