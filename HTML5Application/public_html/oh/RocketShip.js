@@ -10,6 +10,10 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
+    polygonVertices,
+    polygonLine,
+    norm,
+    newBounds,
     hit = false,
     debugText,
     gameView,
@@ -49,6 +53,8 @@ var RocketShip = (function(){
     jump,       
     catzVelocity = -2,
     limitVelocity = 30,
+    attackBirdCont = new createjs.Container(),
+    collisionCheckDebug = new createjs.Container(),
     lightningCont = new createjs.Container(),
     sgCont = new createjs.Container(),
     gooseCont = new createjs.Container(),
@@ -1166,6 +1172,34 @@ var RocketShip = (function(){
         windSheet = new createjs.SpriteSheet(windData);  
             
             
+        polygonVertices = [
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1}
+        ];
+        newBounds = {
+            height: 25,
+            width: 60,
+            nose: 35,
+            noseLen: 37.17
+        };
+        norm = [
+            {x:1,y:1, vert1: 0, vert2: 3},
+            {x:1,y:1, vert1: 0, vert2: 1},
+            {x:1,y:1, vert1: 0, vert2: 3},
+            {x:1,y:1, vert1: 1, vert2: 3},
+        ];
+        //noseLen=sqrt(width^2+nose^2)
+        polygonLine = new createjs.Shape();
+        attackBird = new AttackBird();
+        attackBird2 = new AttackBird();
+        attackBird2.x =100;
+        attackBird2.y =100;
+        attackBirdCont.addChild(attackBird, attackBird2);
+        collisionCheckDebug.addChild(polygonLine);
+        
         rocketSound = createjs.Sound.play("rocketSound");
         rocketSound.volume = 0.1;
         rocketSound.stop();
@@ -1179,8 +1213,9 @@ var RocketShip = (function(){
         "goose" : seagullSheet,
         "hawk" : seagullSheet,
         };
-        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,catzRocketContainer,sgCont, hawkCont, gooseCont, diCont,
-            exitSmoke,smoke,cloudCont,lightningCont,thunderCont,fgCont,leaves);
+        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,
+            catzRocketContainer,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
+            exitSmoke,smoke,cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
     }
     
     function gotoGameView()
@@ -1246,7 +1281,9 @@ var RocketShip = (function(){
             if(!crashed)
             {
                 updateFrenzy(event);
-                updatecatzRocket(event); 
+                updatecatzRocket(event);
+                updateVertices();
+                drawCollisionModels();
                 updateDirector(event);
                 updateFg(event);
                 updateDiamonds(event);
@@ -1256,6 +1293,8 @@ var RocketShip = (function(){
                 updateRocketSnake();
                 updateWorldContainer();
                 updateThunderClouds();
+                updateAttackBird(event);
+
             }
             debugText.text = 
                 "rotation "+catzRocketContainer.rotation
@@ -1840,9 +1879,9 @@ var RocketShip = (function(){
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }                                   
-            if(Math.pow(catzRocketContainer.x-kid.x,2) +
-                    Math.pow(catzRocketContainer.y-kid.y,2) <2500)
+            }                   
+            var isOverlap = overlapCheckCircle(kid.x,kid.y,25);
+            if(isOverlap)
             {
                 diCont.removeChildAt(i);
                 gameStats.score += 1;
@@ -1932,6 +1971,23 @@ var RocketShip = (function(){
         sgCont.addChild(seagull);
     }
     
+    function updateAttackBird(event)
+    {
+        var arrayLength = attackBirdCont.children.length;   
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = attackBirdCont.children[i];
+            kid.update(catzRocketContainer.x,catzRocketContainer.y,event);
+            var colTrue = collisionCheck(kid);
+            if(colTrue)
+            {
+                kid.alpha=0.5;
+            }
+            else
+            {
+                kid.alpha=1;
+            }
+        }   
+    }
 
     function updateGoose()
     {
@@ -2160,6 +2216,163 @@ var RocketShip = (function(){
             hideSnake();
             catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;            
         }        
+    }
+    
+    //hittar de globala x-y koordinaterna till hörnen på raketen, samt normalvektorer
+    function updateVertices()
+    {
+        var s = Math.sin(catzRocketContainer.rotation*Math.PI/180);
+        var c = Math.cos(catzRocketContainer.rotation*Math.PI/180);
+        var x = catzRocketContainer.x-10*c-13*s;
+        var y = catzRocketContainer.y+13*c-10*s;
+        var h = (newBounds.height/2);
+        var w = (newBounds.width/2);
+        polygonVertices[0].x=x-w*c-h*s;
+        polygonVertices[0].y=y+h*c-w*s;
+        polygonVertices[1].x=x-w*c+h*s;
+        polygonVertices[1].y=y-h*c-w*s;
+        polygonVertices[2].x=x+w*c+h*s;
+        polygonVertices[2].y=y-h*c+w*s;
+        polygonVertices[3].x=x+(w+newBounds.nose)*c;
+        polygonVertices[3].y=y+(w+newBounds.nose)*s;
+        polygonVertices[4].x=x+w*c-h*s;
+        polygonVertices[4].y=y+h*c+w*s;
+        
+        norm[0].x =(polygonVertices[0].y-polygonVertices[1].y)/newBounds.height;
+        norm[0].y =(polygonVertices[1].x-polygonVertices[0].x)/newBounds.height;
+        norm[1].x =(polygonVertices[1].y-polygonVertices[2].y)/newBounds.width;
+        norm[1].y =(polygonVertices[2].x-polygonVertices[1].x)/newBounds.width;
+        norm[2].x =(polygonVertices[2].y-polygonVertices[3].y)/newBounds.noseLen;
+        norm[2].y =(polygonVertices[3].x-polygonVertices[2].x)/newBounds.noseLen;
+        norm[3].x =(polygonVertices[3].y-polygonVertices[4].y)/newBounds.noseLen;
+        norm[3].y =(polygonVertices[4].x-polygonVertices[3].x)/newBounds.noseLen;
+    }
+    
+    function collisionCheck(bird)
+    {
+        var closestVertex=0;
+        var minDist=Infinity;
+        for(var i=0; i<polygonVertices.length;i++)
+        {
+            var dist = Math.pow((polygonVertices[i].x-bird.x),2)+Math.pow((polygonVertices[i].x-bird.x),2);
+            if(dist<minDist)
+            {
+                closestVertex=i;
+                minDist=dist;
+            }
+        }
+        var x= bird.x-polygonVertices[closestVertex].x;
+        var y= bird.y-polygonVertices[closestVertex].y;
+        var normX = x/Math.sqrt(y*y+x*x);
+        var normY = y/Math.sqrt(y*y+x*x);
+        proj1 = normX*polygonVertices[closestVertex].x+
+                normY*polygonVertices[closestVertex].y;
+        projC = normX*bird.x+normY*bird.y;
+        if(Math.abs(projC-proj1)<bird.rad)
+        {
+            
+            collisionResolve(bird,normX,normY,projC-proj1);
+            return true;
+        }
+        var closestNorm=0;
+        var maxNormDist=-Infinity;
+        for(var i=0; i<norm.length;i++)
+        {
+            var proj1 = norm[i].x*polygonVertices[norm[i].vert1].x+
+                    norm[i].y*polygonVertices[norm[i].vert1].y;
+            var proj2 = norm[i].x*polygonVertices[norm[i].vert2].x+
+                    norm[i].y*polygonVertices[norm[i].vert2].y;
+            var projC = norm[i].x*bird.x+norm[i].y*bird.y;
+            if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
+            {
+                return false;
+            }
+            else if (projC-Math.max(proj1,proj2)>maxNormDist)
+            {
+                closestNorm=i;
+                maxNormDist =projC-Math.max(proj1,proj2);
+            }
+            else if (Math.min(proj1,proj2)-projC>maxNormDist)
+            {
+                closestNorm=i;
+                maxNormDist =Math.min(proj1,proj2)-projC;
+            }
+        }
+        collisionResolve(bird,norm[closestNorm].x,norm[closestNorm].y,maxNormDist);
+        return true;
+    }
+    
+    //enklare, snabbare variant av kollisionhanteringen som kan användas vid tex diamanplockning
+    function overlapCheckCircle(x,y,r)
+    {
+        for(var i=0; i<norm.length;i++)
+        {
+            var proj1 = norm[i].x*polygonVertices[norm[i].vert1].x+
+                    norm[i].y*polygonVertices[norm[i].vert1].y;
+            var proj2 = norm[i].x*polygonVertices[norm[i].vert2].x+
+                    norm[i].y*polygonVertices[norm[i].vert2].y;
+            var projC = norm[i].x*x+norm[i].y*y;
+            if(projC-Math.max(proj1,proj2)>r || Math.min(proj1,proj2)-projC>r)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    function sign(x) {
+    x = +x; // convert to a number
+    if (x === 0 || isNaN(x))
+    {    
+        return x;
+    }
+    return x > 0 ? 1 : -1;
+}
+    
+    function collisionResolve(bird,normX,normY,normDist)
+    { 
+        //bird.x+=normX*normDist;
+        //bird.y+=normY*normDist;
+        normX=normX*sign(normDist);
+        normY=normY*sign(normDist);
+//        rvY = catzVelocity-bird.velocityY;
+//        velAlongNormal = rvY*normY -bird.velocityX*normX;
+//        if(velAlongNormal<0)
+//        {
+//            console.log("not resolved");
+//            return;
+//        }
+        var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
+        bird.velocityX+=reflect*normX;
+        bird.velocityY+=reflect*normY;
+        var speed = Math.sqrt(bird.velocityX*bird.velocityX+bird.velocityY*bird.velocityY)
+        bird.x+=bird.velocityX*normDist/speed;
+        bird.y+=bird.velocityY*normDist/speed;
+                  console.log("resolved at velx:"+bird.velocityX+" vely:"+bird.velocityY 
+                +" normDist: "+normDist+ " normX:"+normX+" normY:"+normY);
+}
+    
+    function drawCollisionModels()
+    {
+        polygonLine.graphics = new createjs.Graphics();
+        polygonLine.x=0;
+        polygonLine.y=0;
+        for (var i = 0; i <polygonVertices.length ; i++) 
+        {
+            polygonLine.graphics.setStrokeStyle(2,1);
+            polygonLine.graphics.beginStroke("black");
+            polygonLine.graphics.moveTo(polygonVertices[i].x,polygonVertices[i].y);
+            if(i===polygonVertices.length-1)
+            {
+                polygonLine.graphics.lineTo( polygonVertices[0].x, polygonVertices[0].y);
+            
+            }
+            else
+            {
+                polygonLine.graphics.lineTo( polygonVertices[i+1].x, polygonVertices[i+1].y);
+            }
+            polygonLine.graphics.endStroke();
+        } 
     }
     
     function getHit()
