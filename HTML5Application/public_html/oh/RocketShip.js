@@ -2,18 +2,23 @@ var RocketShip = (function(){
     var 
     dialogID= 0,
     diamondDistanceCounter =0,
+    invincibilityCounter=0,
     catzBounds,
     onTrack=false,
     diamondFrenzyCharge = 0,
     hasFrenzy = false,
+    isWounded = false,
     catzRocketContainer = new createjs.Container(),
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
     polygonVertices,
+    catzVertices,
     polygonLine,
+    catzNorm,
     norm,
     newBounds,
+    catzBounds,
     hit = false,
     debugText,
     gameView,
@@ -1191,13 +1196,27 @@ var RocketShip = (function(){
             {x:1,y:1, vert1: 0, vert2: 3},
             {x:1,y:1, vert1: 1, vert2: 3},
         ];
+        catzVertices = [
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1},
+        ];
+        catzBounds = {
+            height: 15,
+            width: 40,
+        };
+        catzNorm = [
+            {x:1,y:1, vert1: 0, vert2: 1},
+            {x:1,y:1, vert1: 0, vert2: 2},
+        ];
         //noseLen=sqrt(width^2+nose^2)
         polygonLine = new createjs.Shape();
-        attackBird = new AttackBird();
-        attackBird2 = new AttackBird();
-        attackBird2.x =100;
-        attackBird2.y =100;
-        attackBirdCont.addChild(attackBird, attackBird2);
+        attackBird = new AttackBird(3);
+        attackBird2 = new AttackBird(5);
+        attackBird3 = new AttackBird(6);
+        
+        attackBirdCont.addChild(attackBird, attackBird2,attackBird3);
         collisionCheckDebug.addChild(polygonLine);
         
         rocketSound = createjs.Sound.play("rocketSound");
@@ -1265,6 +1284,10 @@ var RocketShip = (function(){
         sgSpeed = (6+6* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
         if(!event.paused)
         {                
+            if(invincibilityCounter>0)
+            {
+                invincibilityCounter-=event.delta;
+            }
             text.text = gameStats.score;            
             if(diamondFrenzyCharge>0)
             {
@@ -1978,9 +2001,23 @@ var RocketShip = (function(){
             var kid = attackBirdCont.children[i];
             kid.update(catzRocketContainer.x,catzRocketContainer.y,event);
             var colTrue = collisionCheck(kid);
+            catzCollisionCheck(kid);
             if(colTrue)
             {
                 kid.alpha=0.5;
+                var distx=(polygonVertices[3].x-kid.x);
+                var disty=(polygonVertices[3].y-kid.y);
+                if(distx*distx+disty*disty<100)
+                {
+                    attackBirdCont.removeChild(kid);
+                    leaves.alpha=1;
+                    leaves.x=kid.x;
+                    leaves.y=kid.y;
+                    leaves.gotoAndPlay("cycle");
+                    leaves.addEventListener("animationend",function(){hideLeaves();});
+                    newKid = new AttackBird(Math.random()*5+2)
+                    attackBirdCont.addChild(newKid);
+                }
             }
             else
             {
@@ -2196,6 +2233,10 @@ var RocketShip = (function(){
 
     function catzRelease()
     {
+        if(isWounded)
+        {
+            isWounded=false;
+        }
         if(mousedown)
         {
                 catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;
@@ -2246,6 +2287,32 @@ var RocketShip = (function(){
         norm[2].y =(polygonVertices[3].x-polygonVertices[2].x)/newBounds.noseLen;
         norm[3].x =(polygonVertices[3].y-polygonVertices[4].y)/newBounds.noseLen;
         norm[3].y =(polygonVertices[4].x-polygonVertices[3].x)/newBounds.noseLen;
+        
+        if(isWounded)
+        {
+            var x = catzRocketContainer.x-55*c+3*s;
+            var y = catzRocketContainer.y-3*c-55*s;
+        }
+        else
+        {
+            var x = catzRocketContainer.x-5*c+3*s;
+            var y = catzRocketContainer.y-3*c-5*s;
+        }
+        var h = (catzBounds.height/2);
+        var w = (catzBounds.width/2);
+        catzVertices[0].x=x-w*c-h*s;
+        catzVertices[0].y=y+h*c-w*s;
+        catzVertices[1].x=x-w*c+h*s;
+        catzVertices[1].y=y-h*c-w*s;
+        catzVertices[2].x=x+w*c+h*s;
+        catzVertices[2].y=y-h*c+w*s;
+        catzVertices[3].x=x+w*c-h*s;
+        catzVertices[3].y=y+h*c+w*s;
+        
+        catzNorm[0].x =(catzVertices[0].y-catzVertices[1].y)/catzBounds.height;
+        catzNorm[0].y =(catzVertices[1].x-catzVertices[0].x)/catzBounds.height;
+        catzNorm[1].x =(catzVertices[1].y-catzVertices[2].y)/catzBounds.width;
+        catzNorm[1].y =(catzVertices[2].x-catzVertices[1].x)/catzBounds.width;
     }
     
     function collisionCheck(bird)
@@ -2320,6 +2387,32 @@ var RocketShip = (function(){
         return true;
     }
     
+    function catzCollisionCheck(bird)
+    {
+        for(var i=0; i<catzNorm.length;i++)
+        {
+            var proj1 = catzNorm[i].x*catzVertices[catzNorm[i].vert1].x+
+                    catzNorm[i].y*catzVertices[catzNorm[i].vert1].y;
+            var proj2 = catzNorm[i].x*catzVertices[catzNorm[i].vert2].x+
+                    catzNorm[i].y*catzVertices[catzNorm[i].vert2].y;
+            var projC = catzNorm[i].x*bird.x+catzNorm[i].y*bird.y;
+            if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
+            {
+                return false;
+            }
+        }
+        if(invincibilityCounter<=0)
+        {
+            if(!isWounded)
+            {
+                isWounded=true;
+                invincibilityCounter=1000;
+            }
+            else{ getHit();}
+        }
+        return true;
+    }
+    
     function sign(x) {
     x = +x; // convert to a number
     if (x === 0 || isNaN(x))
@@ -2331,20 +2424,20 @@ var RocketShip = (function(){
     
     function collisionResolve(bird,normX,normY,normDist)
     { 
-        //bird.x+=normX*normDist;
-        //bird.y+=normY*normDist;
         normX=normX*sign(normDist);
         normY=normY*sign(normDist);
-//        rvY = catzVelocity-bird.velocityY;
-//        velAlongNormal = rvY*normY -bird.velocityX*normX;
-//        if(velAlongNormal<0)
-//        {
-//            console.log("not resolved");
-//            return;
-//        }
+        rvY = catzVelocity-bird.velocityY;
+        velAlongNormal = rvY*(catzRocketContainer.y-bird.y) 
+                -bird.velocityX*(catzRocketContainer.x-bird.x);
+        if(velAlongNormal>0)
+        {
+            console.log("not resolved");
+            return;
+        }
         var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
         bird.velocityX+=reflect*normX;
         bird.velocityY+=reflect*normY;
+        catzVelocity-=reflect*normY/200;
         var speed = Math.sqrt(bird.velocityX*bird.velocityX+bird.velocityY*bird.velocityY)
         bird.x+=bird.velocityX*normDist/speed;
         bird.y+=bird.velocityY*normDist/speed;
@@ -2370,6 +2463,22 @@ var RocketShip = (function(){
             else
             {
                 polygonLine.graphics.lineTo( polygonVertices[i+1].x, polygonVertices[i+1].y);
+            }
+            polygonLine.graphics.endStroke();
+        } 
+        for (var i = 0; i <catzVertices.length ; i++) 
+        {
+            polygonLine.graphics.setStrokeStyle(2,1);
+            polygonLine.graphics.beginStroke("red");
+            polygonLine.graphics.moveTo(catzVertices[i].x,catzVertices[i].y);
+            if(i===catzVertices.length-1)
+            {
+                polygonLine.graphics.lineTo( catzVertices[0].x, catzVertices[0].y);
+            
+            }
+            else
+            {
+                polygonLine.graphics.lineTo( catzVertices[i+1].x, catzVertices[i+1].y);
             }
             polygonLine.graphics.endStroke();
         } 

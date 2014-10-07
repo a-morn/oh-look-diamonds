@@ -1,6 +1,6 @@
-function AttackBird() 
+function AttackBird(acc) 
 {
-    this.initialize();
+    this.initialize(acc);
 }
 //inheritance
 AttackBird.prototype = new createjs.Shape();
@@ -14,9 +14,10 @@ AttackBird.prototype.acceleration = 3;
 AttackBird.prototype.rad = 25;
 
 //constructor
-AttackBird.prototype.initialize = function () 
+AttackBird.prototype.initialize = function (acc) 
 {
     this.BirdInit();
+    this.acceleration = acc;
     this.graphics.beginFill("black").dc(0, 0, this.rad);
     //this.regX = this.rad;
     //this.regY = this.rad;
