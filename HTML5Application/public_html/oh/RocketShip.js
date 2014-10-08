@@ -1,17 +1,12 @@
 var RocketShip = (function(){
     var 
-    dialogID= 0,
-    diamondDistanceCounter =0,
-    invincibilityCounter=0,
-    catzBounds,
-    onTrack=false,
-    diamondFrenzyCharge = 0,
-    hasFrenzy = false,
-    isWounded = false,
-    catzRocketContainer = new createjs.Container(),
+    catzRocket,
+    dialogID= 0,            
+    onTrack=false,                
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
+    catzBounds,
     polygonVertices,
     catzVertices,
     polygonLine,
@@ -22,9 +17,7 @@ var RocketShip = (function(){
     hit = false,
     debugText,
     gameView,
-    silouette,
-    frenzyCount = 0,
-    frenzyTimer = 0,
+    silouette,    
     gameListener,
     houseListener,
     stage,
@@ -34,14 +27,10 @@ var RocketShip = (function(){
     windSheet,
     cat,
     track,
-    crashRocket,
-    frenzyReady = false,
+    crashRocket,    
     exitSmoke,
-    leaves,
-    catzRocket,    
-    rocketFlame,
-    flameColor = "#99ccff",
-    rocketSound,
+    leaves,    
+    flameColor = "#99ccff",    
     rocketSnake =  new createjs.Container(),
     SnakeLine,
     houseView = new createjs.Container(),
@@ -55,9 +44,7 @@ var RocketShip = (function(){
     mousedown,
     diamondSheet,
     grav = 12,
-    jump,       
-    catzVelocity = -2,
-    limitVelocity = 30,
+    jump,           
     attackBirdCont = new createjs.Container(),
     collisionCheckDebug = new createjs.Container(),
     lightningCont = new createjs.Container(),
@@ -86,28 +73,13 @@ var RocketShip = (function(){
     queue,
     manifest,    
     rocketSong,
-    loopTimer = 0,
-    catzStateEnum = {
-        Normal : 0,
-        Uploop : 1,
-        Downloop : 2,
-        SecondUploop : 3,
-        SecondDownloop : 4,
-        Slingshot : 5,
-        TerminalVelocity : 6,
-        EmergencyBoost : 7,
-        SlammerReady : 8,
-        Slammer : 9,
-        Frenzy : 10,
-        FrenzyUploop : 11
-    },
-    catzState=catzStateEnum.Normal,
+    loopTimer = 0,        
     loopTimer = 0,
     directorStateEnum = {
         Normal : 0,
         Birds : 1,
         Wind : 2,
-        Thunder : 3,
+        Thunder : 3
     },
     directorState=directorStateEnum.Normal,
     directorTimer=0,
@@ -166,6 +138,8 @@ var RocketShip = (function(){
 
     rocketShip.Init = function()
     {
+        catzRocket = CatzRocket;
+        catzRocket.Init();
         canvas = document.getElementById('mahCanvas');
                 
         var style = canvas.style;
@@ -243,8 +217,7 @@ var RocketShip = (function(){
         createGameView();
         stage.addChild(bg,starCont);
         gotoHouseViewNormal();
-        stage.removeChild(progressBar);
-        //createjs.Sound.setMute(true);
+        stage.removeChild(progressBar);        
     }
     
     function createHouseView()
@@ -599,9 +572,9 @@ var RocketShip = (function(){
     {
         gotoHouseView();
         crashRocket.alpha=1;
-        crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
-        crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
-        crashRocket.rotation=catzRocketContainer.rotation;
+        crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
+        crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        crashRocket.rotation=catzRocket.catzRocketContainer.rotation;
         createjs.Tween.get(crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)
@@ -612,9 +585,9 @@ var RocketShip = (function(){
     {
         gotoHouseView();
         crashRocket.alpha=1;
-        crashRocket.x=315-400*Math.cos(catzRocketContainer.rotation*6.28/360);
-        crashRocket.y =310-400*Math.sin(catzRocketContainer.rotation*6.28/360);
-        crashRocket.rotation=catzRocketContainer.rotation;
+        crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
+        crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        crashRocket.rotation=catzRocket.catzRocketContainer.rotation;
         createjs.Tween.get(crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)
@@ -789,9 +762,9 @@ var RocketShip = (function(){
         }
         
         debugText.text = 
-                "rotation "+catzRocketContainer.rotation
-                +"\nvelocity "+catzVelocity
-                +"\nstate "+catzState
+                "rotation "+catzRocket.catzRocketContainer.rotation
+                +"\nvelocity "+catzRocket.catzVelocity
+                +"\nstate "+catzRocket.catzState
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
                 + "HoboDialogNo: " + hoboDialogNumber
@@ -922,7 +895,7 @@ var RocketShip = (function(){
            
         
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        catzRocket = new createjs.Sprite(spriteSheet, "no shake");
+        catzRocket.catzRocket = new createjs.Sprite(spriteSheet, "no shake");
         
         rocketData = {
             "framerate":24,
@@ -970,31 +943,32 @@ var RocketShip = (function(){
             }
         };
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
-        rocketFlame.alpha=0;
-        rocketFlame.scaleX = 0.4;
-        rocketFlame.scaleY = 0.4;
-        rocketFlame.x=190;
-        rocketFlame.y=200;
-        rocketFlame.regY = 265;
-        rocketFlame.regX = 390;
+        catzRocket.rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
+        catzRocket.rocketFlame.alpha=0;
+        catzRocket.rocketFlame.scaleX = 0.4;
+        catzRocket.rocketFlame.scaleY = 0.4;
+        catzRocket.rocketFlame.x=190;
+        catzRocket.rocketFlame.y=200;
+        catzRocket.rocketFlame.regY = 265;
+        catzRocket.rocketFlame.regX = 390;
         
-        silouette = new createjs.Bitmap(queue.getResult("rocketSilouette"));
-        silouette.scaleX = 0.25;
-        silouette.scaleY = 0.25;
-        silouette.alpha = 0;
-        silouette.x = 110;
-        silouette.y = 90;
-                
-        catzRocketContainer.x = 260;
-        catzRocketContainer.y = 200;
-        catzRocket.scaleX = 0.4;
-        catzRocket.scaleY = 0.4;
-        catzRocketContainer.regY = 100;
-        catzRocketContainer.regX = 150;
-        catzRocket.currentFrame = 0;              
-        catzRocketContainer.addChild(catzRocket,silouette);
-        catzBounds = catzRocketContainer.getTransformedBounds();
+        catzRocket.silouette = new createjs.Bitmap(queue.getResult("rocketSilouette"));
+        catzRocket.silouette.scaleX = 0.25;
+        catzRocket.silouette.scaleY = 0.25;
+        catzRocket.silouette.alpha = 0;
+        catzRocket.silouette.x = 110;
+        catzRocket.silouette.y = 90;
+        
+        console.log(catzRocket);
+        catzRocket.catzRocketContainer.x = 260;
+        catzRocket.catzRocketContainer.y = 200;
+        catzRocket.catzRocket.scaleX = 0.4;
+        catzRocket.catzRocket.scaleY = 0.4;
+        catzRocket.catzRocketContainer.regY = 100;
+        catzRocket.catzRocketContainer.regX = 150;
+        catzRocket.catzRocket.currentFrame = 0;              
+        catzRocket.catzRocketContainer.addChild(catzRocket.catzRocket,catzRocket.silouette);
+        catzBounds = catzRocket.catzRocketContainer.getTransformedBounds();
         
         rocketSnake.x=0;
         rocketSnake.y=0;
@@ -1194,21 +1168,21 @@ var RocketShip = (function(){
             {x:1,y:1, vert1: 0, vert2: 3},
             {x:1,y:1, vert1: 0, vert2: 1},
             {x:1,y:1, vert1: 0, vert2: 3},
-            {x:1,y:1, vert1: 1, vert2: 3},
+            {x:1,y:1, vert1: 1, vert2: 3}
         ];
         catzVertices = [
             {x:1,y:1},
             {x:1,y:1},
             {x:1,y:1},
-            {x:1,y:1},
+            {x:1,y:1}
         ];
         catzBounds = {
             height: 15,
-            width: 40,
+            width: 40
         };
         catzNorm = [
             {x:1,y:1, vert1: 0, vert2: 1},
-            {x:1,y:1, vert1: 0, vert2: 2},
+            {x:1,y:1, vert1: 0, vert2: 2}
         ];
         //noseLen=sqrt(width^2+nose^2)
         polygonLine = new createjs.Shape();
@@ -1219,9 +1193,9 @@ var RocketShip = (function(){
         attackBirdCont.addChild(attackBird, attackBird2,attackBird3);
         collisionCheckDebug.addChild(polygonLine);
         
-        rocketSound = createjs.Sound.play("rocketSound");
-        rocketSound.volume = 0.1;
-        rocketSound.stop();
+        catzRocket.rocketSound = createjs.Sound.play("rocketSound");
+        catzRocket.rocketSound.volume = 0.1;
+        catzRocket.rocketSound.stop();
         diamondSound = createjs.Sound.play("diamondSound");
         diamondSound.volume = 0.2;
         diamondSound.stop();
@@ -1230,11 +1204,12 @@ var RocketShip = (function(){
         "diamond" : diamondSheet,
         "seagull" : seagullSheet,
         "goose" : seagullSheet,
-        "hawk" : seagullSheet,
+        "hawk" : seagullSheet
         };
-        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,rocketFlame,
-            catzRocketContainer,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
-            exitSmoke,smoke,cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
+        
+        gameView.addChild(bg,starCont,rocketSnake,SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
+            exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
+             cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
     }
     
     function gotoGameView()
@@ -1249,7 +1224,7 @@ var RocketShip = (function(){
         stage.addEventListener("stagemousedown", catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
-        catzVelocity=-20;
+        catzRocket.catzVelocity=-20;
         createjs.Ticker.setPaused(false);      
         stage.update();
     }
@@ -1273,33 +1248,32 @@ var RocketShip = (function(){
     function update(event)
     { 
         var mult=1;
-        if ( catzState===catzStateEnum.Frenzy || catzState===catzStateEnum.FrenzyUploop)
+        if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
         {
             mult=2;
         }
-        diSpeed = (0.4+0.4* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI))*mult;    
-        //diamondDistanceCounter += diSpeed*event.delta;
-        cloudSpeed = (12.5+12.5* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI))*mult;
-        fgSpeed = (7+7* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI))*mult;
-        sgSpeed = (6+6* Math.cos((catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
+        diSpeed = (0.4+0.4* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
+        cloudSpeed = (12.5+12.5* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
+        fgSpeed = (7+7* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
+        sgSpeed = (6+6* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
         if(!event.paused)
         {                
-            if(invincibilityCounter>0)
+            if(catzRocket.invincibilityCounter>0)
             {
-                invincibilityCounter-=event.delta;
+                catzRocket.invincibilityCounter-=event.delta;
             }
             text.text = gameStats.score;            
-            if(diamondFrenzyCharge>0)
+            if(catzRocket.diamondFrenzyCharge>0)
             {
-                diamondFrenzyCharge -= event.delta/2000;
+                catzRocket.diamondFrenzyCharge -= event.delta/2000;
             }
-            if(diamondFrenzyCharge>3 && !hasFrenzy)
+            if(catzRocket.diamondFrenzyCharge>3 && !catzRocket.hasFrenzy)
             {
-                hasFrenzy = true;                
+                catzRocket.hasFrenzy = true;                
             }
-            else if(diamondFrenzyCharge<3 && hasFrenzy)
+            else if(catzRocket.diamondFrenzyCharge<3 && catzRocket.hasFrenzy)
             {
-                hasFrenzy = false;
+                catzRocket.hasFrenzy = false;
             }
             if(!crashed)
             {
@@ -1320,19 +1294,19 @@ var RocketShip = (function(){
 
             }
             debugText.text = 
-                "rotation "+catzRocketContainer.rotation
-                +"\nvelocity "+catzVelocity
-                +"\nstate "+catzState
+                "rotation "+catzRocket.catzRocketContainer.rotation
+                +"\nvelocity "+catzRocket.catzVelocity
+                +"\nstate "+catzRocket.catzState
                 +"\nwind"+wind
                 +"\ndirectorState"+directorState
                 +"\ndirectorTimer"+directorTimer
-                +"\nflameFrame"+rocketFlame.currentFrame
+                +"\nflameFrame"+catzRocket.rocketFlame.currentFrame
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
                 + "\nonTrack: " + onTrack
-                + "\nFrenzy: " + frenzyCount
-                + "\nFrenzyTimer: " + frenzyTimer
-                + "\nfrenzyReady: " + frenzyReady
+                + "\nFrenzy: " + catzRocket.frenzyCount
+                + "\nFrenzyTimer: " + catzRocket.frenzyTimer
+                + "\nfrenzyReady: " + catzRocket.frenzyReady
                 + "\nHoboDialogNo: " + hoboDialogNumber;
         
             stage.update(event); 
@@ -1341,190 +1315,191 @@ var RocketShip = (function(){
     
     function updateWorldContainer(event)
     {
-          bg.y = -1100-(catzRocketContainer.y)/2;
-          starCont.y=100-(catzRocketContainer.y)/2;
-          if(catzRocketContainer.y<200 && catzRocketContainer.y>-600)
+          bg.y = -1100-(catzRocket.catzRocketContainer.y)/2;
+          starCont.y=100-(catzRocket.catzRocketContainer.y)/2;
+          if(catzRocket.catzRocketContainer.y<200 && catzRocket.catzRocketContainer.y>-600)
           {
-              gameView.y=200-catzRocketContainer.y;
+              gameView.y=200-catzRocket.catzRocketContainer.y;
 
           }
     }
     
     function updateFrenzy(event)
     {
-        if (catzState===catzStateEnum.Frenzy)
+        if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy)
         {
-            frenzyTimer+=event.delta;
-            if(frenzyTimer>1500)
+            catzRocket.frenzyTimer+=event.delta;
+            if(catzRocket.frenzyTimer>1500)
             {
-                catzState=catzStateEnum.Normal;
-                catzRocket.gotoAndPlay("no shake");
-                frenzyCount=0;
-                frenzyTimer=0;
+                catzRocket.catzState=catzRocket.catzStateEnum.Normal;
+                catzRocket.catzRocket.gotoAndPlay("no shake");
+                catzRocket.frenzyCount=0;
+                catzRocket.frenzyTimer=0;
                 smoke.alpha = 1;
-                smoke.rotation = catzRocketContainer.rotation+270;
-                smoke.x = catzRocketContainer.x;
-                smoke.y = catzRocketContainer.y;
+                smoke.rotation = catzRocket.catzRocketContainer.rotation+270;
+                smoke.x = catzRocket.catzRocketContainer.x;
+                smoke.y = catzRocket.catzRocketContainer.y;
                 smoke.gotoAndPlay("jump");
                 smoke.addEventListener("animationend",function(){hideSmoke();});
             }
-            frenzyReady=false;
+            catzRocket.frenzyReady=false;
         }
-        else if (frenzyReady===true)
+        else if (catzRocket.frenzyReady===true)
         {
-            frenzyTimer+=event.delta;
-            if(frenzyTimer>500)
+            catzRocket.frenzyTimer+=event.delta;
+            if(catzRocket.frenzyTimer>500)
             {
-                if (catzState===catzStateEnum.SecondDownloop)
+                if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)
                 {
-                    catzState = catzStateEnum.Slingshot;
+                    catzRocket.catzState = catzRocket.catzStateEnum.Slingshot;
                 }
-                else if (catzState!==catzStateEnum.Downloop &&
-                        catzState!==catzStateEnum.SlammerReady &&
-                        catzState!==catzStateEnum.Slammer &&
-                        catzState!==catzStateEnum.Slingshot)
+                else if (catzRocket.catzState!==catzRocket.catzStateEnum.Downloop &&
+                        catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady &&
+                        catzRocket.catzState!==catzRocket.catzStateEnum.Slammer &&
+                        catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot)
                 {
-                    console.log(catzState);
+                    console.log(catzRocket.catzState);
                     if(mousedown)
                     {
-                        catzState=catzStateEnum.FrenzyUploop;
+                        catzRocket.catzState=catzRocket.catzStateEnum.FrenzyUploop;
                     }
                     else
                     {
-                        catzState=catzStateEnum.Frenzy;
+                        catzRocket.catzState=catzRocket.catzStateEnum.Frenzy;
                     }
-                    catzRocket.gotoAndPlay("frenzy");
+                    catzRocket.catzRocket.gotoAndPlay("frenzy");
                     hideSnake();
-                    frenzyTimer=0;
-                    frenzyReady=false;
+                    catzRocket.frenzyTimer=0;
+                    catzRocket.frenzyReady=false;
                     smoke.alpha = 1;
-                    smoke.rotation = catzRocketContainer.rotation+270;
-                    smoke.x = catzRocketContainer.x+200;
-                    smoke.y = catzRocketContainer.y;
+                    smoke.rotation = catzRocket.catzRocketContainer.rotation+270;
+                    smoke.x = catzRocket.catzRocketContainer.x+200;
+                    smoke.y = catzRocket.catzRocketContainer.y;
                     smoke.gotoAndPlay("jump");
                     smoke.addEventListener("animationend",function(){hideSmoke();});
                 }
             }
         }
-        else if (catzState!==catzStateEnum.Frenzy 
-                && catzState!==catzStateEnum.FrenzyUploop
-                && frenzyCount>0)
+        else if (catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy 
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop
+                && catzRocket.frenzyCount>0)
         {
-            if (frenzyCount>100)
+            if (catzRocket.frenzyCount>100)
             {
-                catzRocket.gotoAndPlay("frenzy ready");
-                frenzyReady=true;
-                frenzyTimer= 0;
+                catzRocket.catzRocket.gotoAndPlay("frenzy ready");
+                catzRocket.frenzyReady=true;
+                catzRocket.frenzyTimer= 0;
             }
-            frenzyTimer+=event.delta;
-            if(frenzyTimer>2000)
+            catzRocket.frenzyTimer+=event.delta;
+            if(catzRocket.frenzyTimer>2000)
             {
-                frenzyCount=0;
-                frenzyTimer=0;
+                catzRocket.frenzyCount=0;
+                catzRocket.frenzyTimer=0;
             }
         }
     }
 
     function updatecatzRocket(event)
     {      
-        if(catzState === catzStateEnum.Normal)   
+        if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)   
         {
-            catzVelocity += (grav+wind)*event.delta/1000;
-            if(catzVelocity>=limitVelocity)
+            catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
+            if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
             {
-                catzVelocity = limitVelocity;
-                catzState = catzStateEnum.TerminalVelocity;
-                catzRocket.gotoAndPlay("shake");
+                catzRocket.catzVelocity = catzRocket.limitVelocity;
+                catzRocket.catzState = catzRocket.catzStateEnum.TerminalVelocity;
+                catzRocket.catzRocket.gotoAndPlay("shake");
             }
-            heightOffset += 20*catzVelocity*event.delta/1000;            
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
             loopTimer = 0;
-            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         }   
-        if(catzState === catzStateEnum.Frenzy)   
+        if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)   
         {
-            catzVelocity += (1/2)*(grav+wind)*event.delta/1000;
-            heightOffset += 20*catzVelocity*event.delta/1000;            
+            catzRocket.catzVelocity += (1/2)*(grav+wind)*event.delta/1000;
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
             loopTimer = 0;
-            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         }   
-        if(catzState === catzStateEnum.FrenzyUploop)   
+        if(catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop)   
         {
-            catzVelocity -= (1/2)*(2.3*grav-wind)*event.delta/1000; 
-            heightOffset += 20*catzVelocity*event.delta/1000;            
+            catzRocket.catzVelocity -= (1/2)*(2.3*grav-wind)*event.delta/1000; 
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
             loopTimer = 0;
-            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;                
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         }   
-        else if (catzState === catzStateEnum.TerminalVelocity)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
         {
-            heightOffset += 20*catzVelocity*event.delta/1000;
-            catzRocketContainer.rotation =-280;
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
+            catzRocket.catzRocketContainer.rotation =-280;
         }
-        else if (catzState === catzStateEnum.EmergencyBoost)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
         {
-            catzVelocity -= (10*grav-3.7*wind)*event.delta/1000; 
-            heightOffset += 20*catzVelocity*event.delta/1000;
-            catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
-            if(catzRocketContainer.rotation<0)
+            catzRocket.catzVelocity -= (10*grav-3.7*wind)*event.delta/1000; 
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
+            catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
+            if(catzRocket.catzRocketContainer.rotation<0)
             {
-                catzState = catzStateEnum.Uploop;
+                catzRocket.catzState = catzRocket.catzStateEnum.Uploop;
             }
         }
-        else if (catzState === catzStateEnum.Uploop)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
         {
-            catzVelocity -= (2.3*grav-wind)*event.delta/1000;          
-            heightOffset += 20*catzVelocity*event.delta/1000;   
+            catzRocket.catzVelocity -= (2.3*grav-wind)*event.delta/1000;          
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
             loopTimer+= event.delta;   
-            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
             }
         }
-        else if (catzState === catzStateEnum.Downloop || catzState === catzStateEnum.SlammerReady)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.Downloop || 
+                catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady)
         {
             loopTimer+= event.delta;
-            catzVelocity += ((2-8*Math.sin(catzRocketContainer.rotation))*
+            catzRocket.catzVelocity += ((2-8*Math.sin(catzRocket.catzRocketContainer.rotation))*
                 grav+6*wind)*event.delta/1000+0.4;
         }
-        else if (catzState === catzStateEnum.Slammer && catzRocketContainer.rotation<-250)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.Slammer && catzRocket.catzRocketContainer.rotation<-250)
         {
-            createjs.Tween.removeAllTweens(catzRocketContainer);
-            catzVelocity = limitVelocity;
-            catzState = catzStateEnum.TerminalVelocity;
-            catzRocket.gotoAndPlay("shake");
+            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            catzRocket.catzVelocity = catzRocket.limitVelocity;
+            catzRocket.catzState = catzRocket.catzStateEnum.TerminalVelocity;
+            catzRocket.catzRocket.gotoAndPlay("shake");
             hideSnake();
         }
-        if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.Uploop)
+        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
         {
-            rocketSound.stop();
-            createjs.Tween.removeAllTweens(catzRocketContainer);
-            tween = createjs.Tween.get(catzRocketContainer)
+            catzRocket.rocketSound.stop();
+            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            tween = createjs.Tween.get(catzRocket.catzRocketContainer)
                 .to({rotation:-270},1000)
                 .to({rotation:-330},350)
                 .call(catzRelease);
-            catzState = catzStateEnum.Downloop;
+            catzRocket.catzState = catzRocket.catzStateEnum.Downloop;
             loopTimer = 0;
         }
-        else if (catzState === catzStateEnum.SecondUploop)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop)
         {
-            catzVelocity -= (5.5*grav-2*wind)*event.delta/1000;          
+            catzRocket.catzVelocity -= (5.5*grav-2*wind)*event.delta/1000;          
             //heightOffset += 20*catzVelocity*event.delta/1000;  
-            heightOffset += 20*catzVelocity*event.delta/1000;
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
             loopTimer+= event.delta;   
-            if(!createjs.Tween.hasActiveTweens(catzRocketContainer))
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocketContainer.rotation = Math.atan(catzVelocity/40)*360/3.14;
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
             }
         }
-        else if (catzState === catzStateEnum.SecondDownloop)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondDownloop)
         {
             if(wind>=0)
             {
@@ -1535,41 +1510,40 @@ var RocketShip = (function(){
                 heightOffset += (150+40*wind)*event.delta/1000;
             }
         }
-        else if (catzState === catzStateEnum.Slingshot && catzRocketContainer.rotation <-400)
+        else if (catzRocket.catzState === catzRocket.catzStateEnum.Slingshot && catzRocket.catzRocketContainer.rotation <-400)
         {
-            createjs.Tween.removeAllTweens(catzRocketContainer);
-            catzState = catzStateEnum.Normal;
-            catzRocket.gotoAndPlay("no shake");
+            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            catzRocket.catzState = catzRocket.catzStateEnum.Normal;
+            catzRocket.catzRocket.gotoAndPlay("no shake");
             hideSnake();
-            heightOffset-=110*Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI);
-            catzVelocity =-20;
-            //Math.atan(catzVelocity/40)*360/3.14;
+            heightOffset-=110*Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI);
+            catzRocket.catzVelocity =-20;            
         }
-        if (catzRocketContainer.rotation<-60 && catzState === catzStateEnum.SecondUploop)
+        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop)
         {
             restartSecondLoop();
-            catzState = catzStateEnum.SecondDownloop;
-            heightOffset+=110*Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI);
+            catzRocket.catzState = catzRocket.catzStateEnum.SecondDownloop;
+            heightOffset+=110*Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI);
             loopTimer = 0;
         }
-        if(catzState !== catzStateEnum.SecondDownloop 
-                && catzState !== catzStateEnum.Slingshot)
+        if(catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop 
+                && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot)
         {
-            catzRocketContainer.x = 200+
-                        Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
-            catzRocketContainer.y = 200+
-                        Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*210
+            catzRocket.catzRocketContainer.x = 200+
+                        Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
+            catzRocket.catzRocketContainer.y = 200+
+                        Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*210
                 +heightOffset;
         }
         else
         {
-            catzRocketContainer.x = 255+
-                Math.cos((catzRocketContainer.rotation+90)/360*2*Math.PI)*80;
-            catzRocketContainer.y = 200+
-                Math.sin((catzRocketContainer.rotation+90)/360*2*Math.PI)*100
+            catzRocket.catzRocketContainer.x = 255+
+                Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*80;
+            catzRocket.catzRocketContainer.y = 200+
+                Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*100
                 +heightOffset;
         }
-        if(catzRocketContainer.y > 450 || catzRocketContainer.y < -1000)
+        if(catzRocket.catzRocketContainer.y > 450 || catzRocket.catzRocketContainer.y < -1000)
         {            
             crash();
         }
@@ -1593,9 +1567,9 @@ var RocketShip = (function(){
               kid.x = kid.x + 4000;
             }
             kid.x = kid.x - fgSpeed*event.delta/10; 
-            if((catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocketContainer.x > 
-                    kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
-                    && catzRocketContainer.y > kid.y)
+            if((catzRocket.catzRocketContainer.x-catzBounds.width)<(kid.x) && catzRocket.catzRocketContainer.x > 
+                    kid.x && (catzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
+                    && catzRocket.catzRocketContainer.y > kid.y)
             {
                 leaves.alpha = 1;
                 leaves.rotation = 0;
@@ -1653,29 +1627,29 @@ var RocketShip = (function(){
               i = i - 1;
             }
             var rect = kid.getBounds();
-            if(catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocketContainer.x > 
-                    kid.x && catzRocketContainer.y < (kid.y+rect.height*kid.scaleY)
-                    && catzRocketContainer.y > kid.y && cloudIsIn[kid]===false)
+            if(catzRocket.catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocket.catzRocketContainer.x > 
+                    kid.x && catzRocket.catzRocketContainer.y < (kid.y+rect.height*kid.scaleY)
+                    && catzRocket.catzRocketContainer.y > kid.y && cloudIsIn[kid]===false)
             {
                 cloudIsIn[kid] = true;
                 smoke.alpha = 1;
-                smoke.rotation = catzRocketContainer.rotation+270;
-                smoke.x = catzRocketContainer.x;
-                smoke.y = catzRocketContainer.y;
+                smoke.rotation = catzRocket.catzRocketContainer.rotation+270;
+                smoke.x = catzRocket.catzRocketContainer.x;
+                smoke.y = catzRocket.catzRocketContainer.y;
                 smoke.gotoAndPlay("jump");
                 smoke.addEventListener("animationend",function(){hideSmoke();});
             }
             else if(cloudIsIn[kid]===true
                     && 
-                    ((catzRocketContainer.x-catzBounds.width/2)> (kid.x+rect.width*kid.scaleX)
-                    || catzRocketContainer.y-catzBounds.height/2 > (kid.y+rect.height*kid.scaleY)
-                    || (catzRocketContainer.y+catzBounds.height < kid.y)))
+                    ((catzRocket.catzRocketContainer.x-catzBounds.width/2)> (kid.x+rect.width*kid.scaleX)
+                    || catzRocket.catzRocketContainer.y-catzBounds.height/2 > (kid.y+rect.height*kid.scaleY)
+                    || (catzRocket.catzRocketContainer.y+catzBounds.height < kid.y)))
             {
                 cloudIsIn[kid] = false;
                 exitSmoke.alpha = 1;
-                exitSmoke.rotation = catzRocketContainer.rotation;
-                exitSmoke.x = catzRocketContainer.x;
-                exitSmoke.y = catzRocketContainer.y;
+                exitSmoke.rotation = catzRocket.catzRocketContainer.rotation;
+                exitSmoke.x = catzRocket.catzRocketContainer.x;
+                exitSmoke.y = catzRocket.catzRocketContainer.y;
                 exitSmoke.gotoAndPlay("right");
                 exitSmoke.addEventListener("animationend",function(){hideExitSmoke();});
             }
@@ -1720,19 +1694,19 @@ var RocketShip = (function(){
               i = i - 1;
             }
             var rect = kid.getBounds();
-            if(hit ===false && catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocketContainer.x > 
-                    kid.x && catzRocketContainer.y < (kid.y+rect.height*kid.scaleY+100)
-                    && catzRocketContainer.y > kid.y+50)
+            if(hit ===false && catzRocket.catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocket.catzRocketContainer.x > 
+                    kid.x && catzRocket.catzRocketContainer.y < (kid.y+rect.height*kid.scaleY+100)
+                    && catzRocket.catzRocketContainer.y > kid.y+50)
             {
                     var lightning= new createjs.Shape();
                     lightning.graphics.setStrokeStyle(15,1);
                     lightning.graphics.beginStroke(flameColor);
                     lightning.graphics.moveTo(kid.x,kid.y);
-                    lightning.graphics.lineTo(catzRocketContainer.x,catzRocketContainer.y);
+                    lightning.graphics.lineTo(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y);
                     lightning.graphics.endStroke();
                     lightning.graphics.setStrokeStyle(12,1);
                     lightning.graphics.beginStroke(flameColor);
-                    lightning.graphics.moveTo(catzRocketContainer.x,catzRocketContainer.y);
+                    lightning.graphics.moveTo(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y);
                     lightning.graphics.lineTo(Math.random()*300+100,500);
                     lightning.graphics.endStroke();
                     lightningCont.addChild(lightning);
@@ -1763,7 +1737,7 @@ var RocketShip = (function(){
             for (i=0;i<element1.length;i++)
             {
                 element1[i].x+=800;
-                element1[i].y+=catzRocketContainer.y;
+                element1[i].y+=catzRocket.catzRocketContainer.y;
             }
             rand = Math.floor(Math.random()*tracksJSON["easy"].length);
             var element2 = $.extend(true,[],tracksJSON["easy"][2]);
@@ -1908,11 +1882,11 @@ var RocketShip = (function(){
             {
                 diCont.removeChildAt(i);
                 gameStats.score += 1;
-                frenzyCount+=10;
+                catzRocket.frenzyCount+=10;
                 arrayLength = arrayLength - 1;
                 icon = i - 1;
                 diamondSound.play();
-                diamondFrenzyCharge +=1;
+                catzRocket.diamondFrenzyCharge +=1;
             }
         }   
     }
@@ -1999,7 +1973,7 @@ var RocketShip = (function(){
         var arrayLength = attackBirdCont.children.length;   
         for (var i = 0; i < arrayLength; i++) {
             var kid = attackBirdCont.children[i];
-            kid.update(catzRocketContainer.x,catzRocketContainer.y,event);
+            kid.update(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y,event);
             var colTrue = collisionCheck(kid);
             catzCollisionCheck(kid);
             if(colTrue)
@@ -2015,7 +1989,7 @@ var RocketShip = (function(){
                     leaves.y=kid.y;
                     leaves.gotoAndPlay("cycle");
                     leaves.addEventListener("animationend",function(){hideLeaves();});
-                    newKid = new AttackBird(Math.random()*5+2)
+                    newKid = new AttackBird(Math.random()*5+2);
                     attackBirdCont.addChild(newKid);
                 }
             }
@@ -2038,9 +2012,9 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if((catzRocketContainer.x-catzBounds.width)<kid.x && catzRocketContainer.x-20 > 
-            kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
-            && catzRocketContainer.y > kid.y)
+            if((catzRocket.catzRocketContainer.x-catzBounds.width)<kid.x && catzRocket.catzRocketContainer.x-20 > 
+            kid.x && (catzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
+            && catzRocket.catzRocketContainer.y > kid.y)
             {
                 gooseCont.removeChild(kid);
                 var instance = createjs.Sound.play("birdcry");
@@ -2063,9 +2037,9 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }
-            if((catzRocketContainer.x-catzBounds.width)<kid.x && catzRocketContainer.x > 
-            kid.x && (catzRocketContainer.y-catzBounds.height) < kid.y
-            && catzRocketContainer.y > kid.y)
+            if((catzRocket.catzRocketContainer.x-catzBounds.width)<kid.x && catzRocket.catzRocketContainer.x > 
+            kid.x && (catzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
+            && catzRocket.catzRocketContainer.y > kid.y)
             {
                 sgCont.removeChild(kid);
                 var instance = createjs.Sound.play("birdcry");
@@ -2080,29 +2054,29 @@ var RocketShip = (function(){
         var arrayLength = rocketSnake.children.length; 
         for (var i = arrayLength-1; i >0 ; i--) {
             var kid = rocketSnake.children[i];
-            kid.x = rocketSnake.children[i-1].x-2*Math.cos(6.28*catzRocketContainer.rotation/360);
+            kid.x = rocketSnake.children[i-1].x-2*Math.cos(6.28*catzRocket.catzRocketContainer.rotation/360);
             kid.y = rocketSnake.children[i-1].y;
         }           
-        if(catzState !== catzStateEnum.SecondDownloop 
-        && catzState !== catzStateEnum.Slingshot)
+        if(catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop 
+        && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot)
         {
             rocketSnake.children[0].x = -60+
-                Math.cos((catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
+                Math.cos((catzRocket.catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
             rocketSnake.children[0] .y =
-                Math.sin((catzRocketContainer.rotation+100)/360*2*Math.PI)*232
+                Math.sin((catzRocket.catzRocketContainer.rotation+100)/360*2*Math.PI)*232
             +heightOffset;
-            rocketFlame.x =catzRocketContainer.x;
-            rocketFlame.y = catzRocketContainer.y;
+            catzRocket.rocketFlame.x = catzRocket.catzRocketContainer.x;
+            catzRocket.rocketFlame.y = catzRocket.catzRocketContainer.y;
         }
         else 
         {
             rocketSnake.children[0].x =-5+
-                Math.cos((catzRocketContainer.rotation+110)/360*2*Math.PI)*100;
+                Math.cos((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI)*100;
             rocketSnake.children[0] .y =
-                Math.sin((catzRocketContainer.rotation+110)/360*2*Math.PI)*120
+                Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI)*120
             +heightOffset;
-            rocketFlame.x =catzRocketContainer.x;
-            rocketFlame.y = catzRocketContainer.y;
+            catzRocket.rocketFlame.x = catzRocket.catzRocketContainer.x;
+            catzRocket.rocketFlame.y = catzRocket.catzRocketContainer.y;
         }
         SnakeLine.graphics = new createjs.Graphics();
         SnakeLine.x=260;
@@ -2115,112 +2089,102 @@ var RocketShip = (function(){
             SnakeLine.graphics.lineTo(rocketSnake.children[i-1].x-(i-1)*5,rocketSnake.children[i-1].y);
             SnakeLine.graphics.endStroke();
         } 
-        rocketFlame.rotation =catzRocketContainer.rotation;
+        catzRocket.rocketFlame.rotation =catzRocket.catzRocketContainer.rotation;
 
     }
     
     function showSnake()
     {
         rocketSnake.children[0].x = -60+
-            Math.cos((catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
+            Math.cos((catzRocket.catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
         rocketSnake.children[0] .y =
-            Math.sin((catzRocketContainer.rotation+100)/360*2*Math.PI)*232
+            Math.sin((catzRocket.catzRocketContainer.rotation+100)/360*2*Math.PI)*232
             +heightOffset;
-        rocketFlame.x = rocketSnake.children[0].x;
-        rocketFlame.y = rocketSnake.children[0].y;
-        rocketFlame.rotation =catzRocketContainer.rotation;
-        //rocketSnake.alpha=1;
-        var arrayLength = rocketSnake.children.length;    
-//        for (var i = arrayLength-1; i >0 ; i--) {
-//            var kid = rocketSnake.children[i];
-//            kid.x = rocketSnake.children[0].x+2*Math.cos(6.28*catzRocketContainer.rotation/360);
-//            kid.y = rocketSnake.children[0].y;
-//        }
-        //rocketSnake.alpha=1;
+        catzRocket.rocketFlame.x = rocketSnake.children[0].x;
+        catzRocket.rocketFlame.y = rocketSnake.children[0].y;
+        catzRocket.rocketFlame.rotation =catzRocket.catzRocketContainer.rotation;
+        
         SnakeLine.alpha = 1;
-        rocketFlame.alpha =1;
-        rocketFlame.gotoAndPlay("ignite");
+        catzRocket.rocketFlame.alpha =1;
+        catzRocket.rocketFlame.gotoAndPlay("ignite");
     }
     
     function hideSnake()
     {
         rocketSnake.alpha=0;
         SnakeLine.alpha = 0;
-        rocketFlame.alpha = 0;
+        catzRocket.rocketFlame.alpha = 0;
     }
     
     function catzUp()
     {
-        rocketSound.play();
+        catzRocket.rocketSound.play();
         mousedown = true;
-        if(catzState === catzStateEnum.Normal)
+        if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
         {
-            catzVelocity-=2;
-            catzState = catzStateEnum.Uploop;
+            catzRocket.catzVelocity-=2;
+            catzRocket.catzState = catzRocket.catzStateEnum.Uploop;
             showSnake();
             //rocketFlame.gotoAndPlay("ignite");
-            if(!frenzyReady)
+            if(!catzRocket.frenzyReady)
             {
-                catzRocket.gotoAndPlay("shake");                
-            }
-            //createjs.Tween.removeAllTweens(catzRocket);
-            //createjs.Tween.get(catzRocket)
-            //        .to({rotation:-65},800,createjs.Ease.quadOut);
+                catzRocket.catzRocket.gotoAndPlay("shake");                
+            }            
         }
-        else if(catzState === catzStateEnum.Frenzy)
+        else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
         {
-            catzVelocity-=2;
-            catzState = catzStateEnum.FrenzyUploop;
+            catzRocket.catzVelocity-=2;
+            catzRocket.catzState = catzRocket.catzStateEnum.FrenzyUploop;
         }
-        else if(catzState === catzStateEnum.TerminalVelocity)
+        else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
         {
-           catzState = catzStateEnum.EmergencyBoost;
+           catzRocket.catzState = catzRocket.catzStateEnum.EmergencyBoost;
            showSnake();
         }
-        else if(catzState === catzStateEnum.SlammerReady 
-                && catzRocketContainer.rotation>-250)
+        else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
+                && catzRocket.catzRocketContainer.rotation>-250)
         {
-           catzState = catzStateEnum.Slammer;
+           catzRocket.catzState = catzRocket.catzStateEnum.Slammer;
         }
     }
 
     function catzEndLoop()
     {
-        rocketSound.stop();
+        catzRocket.rocketSound.stop();
         mousedown = false;
-        if(catzState!==catzStateEnum.Downloop
-                && catzState!==catzStateEnum.SlammerReady 
-                && catzState!==catzStateEnum.Slammer 
-                && catzState!==catzStateEnum.SecondDownloop
-                && catzState!==catzStateEnum.Slingshot
-                && catzState!==catzStateEnum.Frenzy
-                && catzState!==catzStateEnum.FrenzyUploop)
+        if(catzRocket.catzState!==catzRocket.catzStateEnum.Downloop
+                && catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady 
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Slammer 
+                && catzRocket.catzState!==catzRocket.catzStateEnum.SecondDownloop
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
         {
-            catzState = catzStateEnum.Normal;
+            catzRocket.catzState = catzRocket.catzStateEnum.Normal;
             hideSnake();            
-            if(!frenzyReady)
+            if(!catzRocket.frenzyReady)
             {
-                catzRocket.gotoAndPlay("no shake");                
+                catzRocket.catzRocket.gotoAndPlay("no shake");                
             }
         }
-        else if (catzState===catzStateEnum.SecondDownloop)
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)
         {
-            catzState = catzStateEnum.Slingshot;
+            catzRocket.catzState = catzRocket.catzStateEnum.Slingshot;
         }
-        else if (catzState===catzStateEnum.Downloop)
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.Downloop)
         {
-            catzState = catzStateEnum.SlammerReady;
+            catzRocket.catzState = catzRocket.catzStateEnum.SlammerReady;
         }
-        else if (catzState===catzStateEnum.FrenzyUploop)
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
         {
-            catzState = catzStateEnum.Frenzy;
+            catzRocket.catzState = catzRocket.catzStateEnum.Frenzy;
         }
     }
     
     function restartSecondLoop()
     {
-        createjs.Tween.removeAllTweens(catzRocketContainer);
-        tween = createjs.Tween.get(catzRocketContainer,{loop:true})
+        createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+        tween = createjs.Tween.get(catzRocket.catzRocketContainer,{loop:true})
         .to({rotation:-270},500)
         .to({rotation:-420},500);
 //        catzRocketContainer.rotation = catzRocketContainer.rotation%360;
@@ -2233,39 +2197,39 @@ var RocketShip = (function(){
 
     function catzRelease()
     {
-        if(isWounded)
+        if(catzRocket.isWounded)
         {
-            isWounded=false;
+            catzRocket.isWounded=false;
         }
         if(mousedown)
         {
-                catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;
-                rocketSound.play();
-                catzState = catzStateEnum.SecondUploop;
-                if(!frenzyReady)
+                catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;
+                catzRocket.rocketSound.play();
+                catzRocket.catzState = catzRocket.catzStateEnum.SecondUploop;
+                if(!catzRocket.frenzyReady)
                 {
-                    catzRocket.gotoAndPlay("shake");                    
+                    catzRocket.catzRocket.gotoAndPlay("shake");                    
                 }
         }
         else
         {
-            catzState = catzStateEnum.Normal;
-            if(!frenzyReady)
+            catzRocket.catzState = catzRocket.catzStateEnum.Normal;
+            if(!catzRocket.frenzyReady)
             {
-                catzRocket.gotoAndPlay("no shake");                    
+                catzRocket.catzRocket.gotoAndPlay("no shake");                    
             }
             hideSnake();
-            catzVelocity = Math.tan(catzRocketContainer.rotation *3.14/360)*40;            
+            catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;            
         }        
     }
     
     //hittar de globala x-y koordinaterna till hörnen på raketen, samt normalvektorer
     function updateVertices()
     {
-        var s = Math.sin(catzRocketContainer.rotation*Math.PI/180);
-        var c = Math.cos(catzRocketContainer.rotation*Math.PI/180);
-        var x = catzRocketContainer.x-10*c-13*s;
-        var y = catzRocketContainer.y+13*c-10*s;
+        var s = Math.sin(catzRocket.catzRocketContainer.rotation*Math.PI/180);
+        var c = Math.cos(catzRocket.catzRocketContainer.rotation*Math.PI/180);
+        var x = catzRocket.catzRocketContainer.x-10*c-13*s;
+        var y = catzRocket.catzRocketContainer.y+13*c-10*s;
         var h = (newBounds.height/2);
         var w = (newBounds.width/2);
         polygonVertices[0].x=x-w*c-h*s;
@@ -2288,15 +2252,15 @@ var RocketShip = (function(){
         norm[3].x =(polygonVertices[3].y-polygonVertices[4].y)/newBounds.noseLen;
         norm[3].y =(polygonVertices[4].x-polygonVertices[3].x)/newBounds.noseLen;
         
-        if(isWounded)
+        if(catzRocket.isWounded)
         {
-            var x = catzRocketContainer.x-55*c+3*s;
-            var y = catzRocketContainer.y-3*c-55*s;
+            var x = catzRocket.catzRocketContainer.x-55*c+3*s;
+            var y = catzRocket.catzRocketContainer.y-3*c-55*s;
         }
         else
         {
-            var x = catzRocketContainer.x-5*c+3*s;
-            var y = catzRocketContainer.y-3*c-5*s;
+            var x = catzRocket.catzRocketContainer.x-5*c+3*s;
+            var y = catzRocket.catzRocketContainer.y-3*c-5*s;
         }
         var h = (catzBounds.height/2);
         var w = (catzBounds.width/2);
@@ -2401,12 +2365,12 @@ var RocketShip = (function(){
                 return false;
             }
         }
-        if(invincibilityCounter<=0)
+        if(catzRocket.invincibilityCounter<=0)
         {
-            if(!isWounded)
+            if(!catzRocket.isWounded)
             {
-                isWounded=true;
-                invincibilityCounter=1000;
+                catzRocket.isWounded=true;
+                catzRocket.invincibilityCounter=1000;
             }
             else{ getHit();}
         }
@@ -2426,9 +2390,9 @@ var RocketShip = (function(){
     { 
         normX=normX*sign(normDist);
         normY=normY*sign(normDist);
-        rvY = catzVelocity-bird.velocityY;
-        velAlongNormal = rvY*(catzRocketContainer.y-bird.y) 
-                -bird.velocityX*(catzRocketContainer.x-bird.x);
+        rvY = catzRocket.catzVelocity-bird.velocityY;
+        velAlongNormal = rvY*(catzRocket.catzRocketContainer.y-bird.y) 
+                -bird.velocityX*(catzRocket.catzRocketContainer.x-bird.x);
         if(velAlongNormal>0)
         {
             console.log("not resolved");
@@ -2437,12 +2401,12 @@ var RocketShip = (function(){
         var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
         bird.velocityX+=reflect*normX;
         bird.velocityY+=reflect*normY;
-        catzVelocity-=reflect*normY/200;
-        var speed = Math.sqrt(bird.velocityX*bird.velocityX+bird.velocityY*bird.velocityY)
+        catzRocket.catzVelocity-=reflect*normY/200;
+        var speed = Math.sqrt(bird.velocityX*bird.velocityX+bird.velocityY*bird.velocityY);
         bird.x+=bird.velocityX*normDist/speed;
         bird.y+=bird.velocityY*normDist/speed;
-                  console.log("resolved at velx:"+bird.velocityX+" vely:"+bird.velocityY 
-                +" normDist: "+normDist+ " normX:"+normX+" normY:"+normY);
+//                  console.log("resolved at velx:"+bird.velocityX+" vely:"+bird.velocityY 
+//                +" normDist: "+normDist+ " normX:"+normX+" normY:"+normY);
 }
     
     function drawCollisionModels()
@@ -2487,15 +2451,15 @@ var RocketShip = (function(){
     function getHit()
     {
         hit = true;
-        silouette.alpha=1;
-        catzRocket.alpha = 0;
-        catzVelocity =Math.min(catzVelocity+20,limitVelocity); 
+        catzRocket.silouette.alpha=1;
+        catzRocket.catzRocket.alpha = 0;
+        catzRocket.catzVelocity =Math.min(catzRocket.catzVelocity+20,catzRocket.limitVelocity); 
         catzEndLoop();
         stage.removeAllEventListeners();
         leaves.alpha = 1;
         leaves.rotation = 0;
-        leaves.x = catzRocketContainer.x-50;
-        leaves.y = catzRocketContainer.y-50;
+        leaves.x = catzRocket.catzRocketContainer.x-50;
+        leaves.y = catzRocket.catzRocketContainer.y-50;
         leaves.gotoAndPlay("cycle");
         leaves.addEventListener("animationend",function(){hideLeaves();});
     }
@@ -2506,8 +2470,8 @@ var RocketShip = (function(){
         lightningCont.removeAllChildren();
         directorState=directorStateEnum.Normal;
         noWind();
-        silouette.alpha=0;
-        catzRocket.alpha = 1;
+        catzRocket.silouette.alpha=0;
+        catzRocket.catzRocket.alpha = 1;
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(houseView);
@@ -2519,27 +2483,27 @@ var RocketShip = (function(){
         wick.x=-100;
         wick.removeAllEventListeners();
         wick.gotoAndPlay("still");
-        createjs.Tween.removeAllTweens(catzRocketContainer);
+        createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
         createjs.Tween.removeAllTweens(houseView);
-        if(catzRocketContainer.y > 450)
+        if(catzRocket.catzRocketContainer.y > 450)
         {            
             gotoHouseViewFromAbove();
         }
-        else if (catzRocketContainer.y < -1000)
+        else if (catzRocket.catzRocketContainer.y < -1000)
         {
             gotoHouseViewFromBelow();               
         }
-        catzRocketContainer.x = 300;
-        catzRocketContainer.y = 200;
+        catzRocket.catzRocketContainer.x = 300;
+        catzRocket.catzRocketContainer.y = 200;
         heightOffset=0;
-        catzRocketContainer.rotation =0;
+        catzRocket.catzRocketContainer.rotation =0;
         hideSnake();
-        frenzyReady=false;
-        frenzyTimer=0;
-        frenzyCount=0;
-        catzRocket.gotoAndPlay("no shake");
-        catzState = catzStateEnum.Normal;
-        catzVelocity = 0;
+        catzRocket.frenzyReady=false;
+        catzRocket.frenzyTimer=0;
+        catzRocket.frenzyCount=0;
+        catzRocket.catzRocket.gotoAndPlay("no shake");
+        catzRocket.catzState = catzRocket.catzStateEnum.Normal;
+        catzRocket.catzVelocity = 0;
         bg.y = -1200;
         starCont.y=0;
         var instance = createjs.Sound.play("catzRocketCrash");
