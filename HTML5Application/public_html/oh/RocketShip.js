@@ -2004,11 +2004,6 @@ var RocketShip = (function(){
         }
     }
     
-    function catzMoveAndCollisionCheck()
-    {
-        
-    }
-    
     function moveAndCollisionCheck(bird,event)
     {
         isCollide = collisionCheck(bird);
@@ -2179,8 +2174,8 @@ var RocketShip = (function(){
     
      function collisionResolve(bird,normX,normY,normDist)
     { 
-        bird.x+=normX*normDist;
-        bird.y+=normY*normDist;
+        bird.x+=normX*normDist*2;
+        bird.y+=normY*normDist*2;
         normX=normX*sign(normDist);
         normY=normY*sign(normDist);
         lastResolveNorm[0]=normX;
