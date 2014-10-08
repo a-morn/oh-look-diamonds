@@ -130,40 +130,45 @@ var House = (function(){
             
             if(dialog.dialog[house.dialogID].Choice)
             {                                
-                for (i=0;i<dialog.dialog[house.dialogID].Choices.length;i++)
-                {                    
-                    house.choices[i].text=dialog.dialog[house.dialogID].Choices[i].text;
-                    house.choices[i].alpha = 1;
-                    house.choiceIDs[i] = dialog.dialog[house.dialogID].Choices[i].ChoiceID;                                        
-
-                    //fulfixen                    
+                for (var i=0;i<dialog.dialog[house.dialogID].Choices.length;i++)
+                {           
+                    
                     if(i===0)
                     {
-                        house.choices[i].addEventListener("click",
-                                function()
-                                {                             
-                                    house.dialogID = house.choiceIDs[0];                                                                                                
+                        house.choices[i].text=dialog.dialog[house.dialogID].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.dialogID].Choices[i].ChoiceID;                                                                                
 
-                                    house.choice1.alpha = 0;
-                                    house.choice2.alpha = 0;
-                                    house.choice3.alpha = 0;
-                                    hoboDialog(gameStats, text);
-                                }
-                            );
-                    }
-                    if(i===1)
-                    {                        
                         house.choices[i].addEventListener("click",
-                                function()
-                                {                             
-                                    house.dialogID = house.choiceIDs[1];                                                                                                                                    
-                                    house.choice1.alpha = 0;
-                                    house.choice2.alpha = 0;
-                                    house.choice3.alpha = 0;
-                                    hoboDialog(gameStats, text);
-                                }
-                            );
+                            function()
+                            {                             
+                                house.dialogID = house.choiceIDs[0];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;
+                                house.hoboDialog(gameStats, text);
+                            });                        
                     }
+                    
+                    if(i===1)
+                    {
+                        house.choices[i].text=dialog.dialog[house.dialogID].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.dialogID].Choices[i].ChoiceID;                                                                                
+
+                        house.choices[i].addEventListener("click",
+                            function()
+                            {                             
+                                house.dialogID = house.choiceIDs[1];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;
+                                house.hoboDialog(gameStats, text);
+                            });                        
+                    }
+                    
                 }                
             }
             else

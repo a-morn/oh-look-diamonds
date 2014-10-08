@@ -1073,8 +1073,7 @@ var RocketShip = (function(){
                         catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady &&
                         catzRocket.catzState!==catzRocket.catzStateEnum.Slammer &&
                         catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot)
-                {
-                    console.log(catzRocket.catzState);
+                {                    
                     if(mousedown)
                     {
                         catzRocket.catzState=catzRocket.catzStateEnum.FrenzyUploop;
