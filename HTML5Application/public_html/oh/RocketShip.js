@@ -7,7 +7,9 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
+    godMode = false,
     catzBounds,
+    lastResolveNorm = [1,0],
     polygonVertices,
     catzVertices,
     polygonLine,
@@ -906,7 +908,7 @@ var RocketShip = (function(){
         attackBird2 = new AttackBird(5);
         attackBird3 = new AttackBird(6);
         
-        attackBirdCont.addChild(attackBird, attackBird2,attackBird3);
+        attackBirdCont.addChild(attackBird,attackBird2,attackBird3);
         collisionCheckDebug.addChild(polygonLine);
         
         catzRocket.rocketSound = createjs.Sound.play("rocketSound");
@@ -1689,22 +1691,23 @@ var RocketShip = (function(){
             var kid = attackBirdCont.children[i];
             kid.update(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y,event);
             var colTrue = moveAndCollisionCheck(kid,event);
+            catzCollisionCheck(kid);
             if(colTrue)
             {
                 kid.alpha=0.5;
-                var distx=(polygonVertices[3].x-kid.x);
-                var disty=(polygonVertices[3].y-kid.y);
-                if(distx*distx+disty*disty<100)
-                {
-                    attackBirdCont.removeChild(kid);
-                    leaves.alpha=1;
-                    leaves.x=kid.x;
-                    leaves.y=kid.y;
-                    leaves.gotoAndPlay("cycle");
-                    leaves.addEventListener("animationend",function(){hideLeaves();});
-                    newKid = new AttackBird(Math.random()*5+2);
-                    attackBirdCont.addChild(newKid);
-                }
+//                var distx=(polygonVertices[3].x-kid.x);
+//                var disty=(polygonVertices[3].y-kid.y);
+//                if(distx*distx+disty*disty<100)
+//                {
+//                    attackBirdCont.removeChild(kid);
+//                    leaves.alpha=1;
+//                    leaves.x=kid.x;
+//                    leaves.y=kid.y;
+//                    leaves.gotoAndPlay("cycle");
+//                    leaves.addEventListener("animationend",function(){hideLeaves();});
+//                    newKid = new AttackBird(Math.random()*5+2);
+//                    attackBirdCont.addChild(newKid);
+//                }
             }
             else
             {
@@ -1956,14 +1959,14 @@ var RocketShip = (function(){
         polygonVertices[4].x=x+w*c-h*s;
         polygonVertices[4].y=y+h*c+w*s;
         
-        norm[0].x =(polygonVertices[0].y-polygonVertices[1].y)/newBounds.height;
-        norm[0].y =(polygonVertices[1].x-polygonVertices[0].x)/newBounds.height;
-        norm[1].x =(polygonVertices[1].y-polygonVertices[2].y)/newBounds.width;
-        norm[1].y =(polygonVertices[2].x-polygonVertices[1].x)/newBounds.width;
-        norm[2].x =(polygonVertices[2].y-polygonVertices[3].y)/newBounds.noseLen;
-        norm[2].y =(polygonVertices[3].x-polygonVertices[2].x)/newBounds.noseLen;
-        norm[3].x =(polygonVertices[3].y-polygonVertices[4].y)/newBounds.noseLen;
-        norm[3].y =(polygonVertices[4].x-polygonVertices[3].x)/newBounds.noseLen;
+        norm[0].x =-(polygonVertices[0].y-polygonVertices[1].y)/newBounds.height;
+        norm[0].y =-(polygonVertices[1].x-polygonVertices[0].x)/newBounds.height;
+        norm[1].x =-(polygonVertices[1].y-polygonVertices[2].y)/newBounds.width;
+        norm[1].y =-(polygonVertices[2].x-polygonVertices[1].x)/newBounds.width;
+        norm[2].x =-(polygonVertices[2].y-polygonVertices[3].y)/newBounds.noseLen;
+        norm[2].y =-(polygonVertices[3].x-polygonVertices[2].x)/newBounds.noseLen;
+        norm[3].x =-(polygonVertices[3].y-polygonVertices[4].y)/newBounds.noseLen;
+        norm[3].y =-(polygonVertices[4].x-polygonVertices[3].x)/newBounds.noseLen;
         
         if(catzRocket.isWounded)
         {
@@ -2007,21 +2010,21 @@ var RocketShip = (function(){
     }
     
     function moveAndCollisionCheck(bird,event)
-    {   
-        isCollide = collisionCheck(bird);    
+    {
+        isCollide = collisionCheck(bird);
         var dispX = bird.velocityX*event.delta/1000;
         var dispY = bird.velocityY*event.delta/1000;
-        if(Math.abs(dispX)>bird.rad/2 || Math.abs(dispY)>bird.rad/2)
+        if(dispX>bird.rad/2 || dispY>bird.rad/2 )
         {
-            var noSteps = 2*Math.max(Math.abs(dispX),Math.abs(dispY))/this.rad;
-            noSteps = Math.min(noSteps,4);
+            var noSteps = Math.min(2*Math.max(dispX,dispY)/bird.rad,4);
             for(i=0; i<noSteps;i++)
             {
-                bird.x += bird.dispX/noSteps;
-                bird.y += bird.dispY/noSteps;
-                isCollide =collisionCheck(bird);
+                bird.x += dispX/noSteps;
+                bird.y += dispY/noSteps;
+                isCollide = collisionCheck(bird);
                 if(isCollide)
-                {        
+                {
+
                     dispX = bird.velocityX*event.delta/1000;
                     dispY = bird.velocityY*event.delta/1000;
                 }
@@ -2029,16 +2032,18 @@ var RocketShip = (function(){
         }
         else
         {
-            bird.x += bird.dispX;
-            bird.y += bird.dispY;
+            bird.x += dispX;
+            bird.y += dispY;
             isCollide = collisionCheck(bird);
         }
+        //console.log(dispX+" "+dispY);
         return isCollide;
     }
     
     function collisionCheck(bird)
     {
-        if(Math.abs(bird.x-catzRocket.catzRocketContainer.x)<200 && Math.abs(bird.y-catzRocket.catzRocketContainer.y)<150)
+        if(Math.abs(bird.x-catzRocket.catzRocketContainer.x)<200 
+                && Math.abs(bird.y-catzRocket.catzRocketContainer.y)<150)
         {
             var minOverlapNorm = 0;
             var minOverlapDist=Infinity;
@@ -2053,14 +2058,14 @@ var RocketShip = (function(){
                 {
                     return false;
                 }
-                if(bird.rad-projC+Math.max(proj1,proj2)<minOverlapDist)
+                if(bird.rad-projC+Math.max(proj1,proj2)<Math.abs(minOverlapDist))
                 {
                     minOverlapDist= bird.rad-projC+Math.max(proj1,proj2);
                     minOverlapNorm = i;
                 }
-                if(bird.rad-Math.min(proj1,proj2)+projC<minOverlapDist)
+                if(bird.rad-Math.min(proj1,proj2)+projC<Math.abs(minOverlapDist))
                 {
-                    minOverlapDist=bird.rad-Math.min(proj1,proj2)+projC;
+                    minOverlapDist=-bird.rad+Math.min(proj1,proj2)-projC;
                     minOverlapNorm = i;
                 }
             }
@@ -2100,10 +2105,14 @@ var RocketShip = (function(){
             {
                 return false;
             }
-            else if(bird.rad-projC+projMax<minOverlapDist
-                    || bird.rad-projMin+projC<minOverlapDist)
+            else if(bird.rad-projC+projMax<Math.abs(minOverlapDist))
             {
-                minOverlapDist = Math.min(bird.rad-projC+projMax,bird.rad-projMin+projC);
+                minOverlapDist = bird.rad-projC+projMax;
+                collisionResolve(bird,normX,normY,minOverlapDist);                
+            }
+            else if( bird.rad-projMin+projC<Math.abs(minOverlapDist))
+            {
+                minOverlapDist = -bird.rad+projMin-projC;
                 collisionResolve(bird,normX,normY,minOverlapDist);                
             }
             else
@@ -2147,7 +2156,7 @@ var RocketShip = (function(){
                 return false;
             }
         }
-        if(catzRocket.invincibilityCounter<=0)
+        if(catzRocket.invincibilityCounter<=0 && godMode ===false)
         {
             if(!catzRocket.isWounded)
             {
@@ -2168,18 +2177,20 @@ var RocketShip = (function(){
     return x > 0 ? 1 : -1;
 }
     
-    function collisionResolve(bird,normX,normY,normDist)
+     function collisionResolve(bird,normX,normY,normDist)
     { 
-        bird.x-=normX*normDist;
-        bird.y-=normY*normDist;
-//        normX=normX*sign(normDist);
-//        normY=normY*sign(normDist);
-//        var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
-//        bird.velocityX+=reflect*normX;
-//        bird.velocityY+=reflect*normY;
-//                  console.log("resolved at velx:"+bird.velocityX+" vely:"+bird.velocityY 
-//                +" normDist: "+normDist+ " normX:"+normX+" normY:"+normY);
+        bird.x+=normX*normDist;
+        bird.y+=normY*normDist;
+        normX=normX*sign(normDist);
+        normY=normY*sign(normDist);
+        lastResolveNorm[0]=normX;
+        lastResolveNorm[1]=normY;
+        reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
+        bird.velocityX+=reflect*normX;
+        bird.velocityY+=reflect*normY;
+        catzRocket.catzVelocity-=reflect*normY/250;
     }
+   
     function drawCollisionModels()
     {
         polygonLine.graphics = new createjs.Graphics();
@@ -2217,6 +2228,15 @@ var RocketShip = (function(){
             }
             polygonLine.graphics.endStroke();
         } 
+            polygonLine.graphics.setStrokeStyle(2,2);
+            polygonLine.graphics.beginStroke("pink");
+            polygonLine.graphics.moveTo(
+                    catzRocket.catzRocketContainer.x,
+                    catzRocket.catzRocketContainer.y);
+            polygonLine.graphics.lineTo(
+                    catzRocket.catzRocketContainer.x+lastResolveNorm[0]*100,
+                    catzRocket.catzRocketContainer.y+lastResolveNorm[1]*100);
+            polygonLine.graphics.endStroke();
     }
     
     function getHit()
