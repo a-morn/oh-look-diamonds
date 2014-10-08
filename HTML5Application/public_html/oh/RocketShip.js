@@ -7,7 +7,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = false,
+    godMode = true,
     catzBounds,
     lastResolveNorm = [1,0],
     polygonVertices,
@@ -904,11 +904,11 @@ var RocketShip = (function(){
         ];
         //noseLen=sqrt(width^2+nose^2)
         polygonLine = new createjs.Shape();
-        attackBird = new AttackBird(3);
-        attackBird2 = new AttackBird(5);
-        attackBird3 = new AttackBird(6);
-        
-        attackBirdCont.addChild(attackBird,attackBird2,attackBird3);
+        for (i=2; i<6; i++)
+        {
+            attackBird = new AttackBird(i);
+            attackBirdCont.addChild(attackBird);
+        }
         collisionCheckDebug.addChild(polygonLine);
         
         catzRocket.rocketSound = createjs.Sound.play("rocketSound");
@@ -1593,7 +1593,7 @@ var RocketShip = (function(){
               arrayLength = arrayLength - 1;
               i = i - 1;
             }                   
-            var isOverlap = overlapCheckCircle(kid.x,kid.y,25);
+            var isOverlap = overlapCheckCircle(kid.x,kid.y,40);
             if(isOverlap)
             {
                 diCont.removeChildAt(i);
@@ -1944,8 +1944,17 @@ var RocketShip = (function(){
     {
         var s = Math.sin(catzRocket.catzRocketContainer.rotation*Math.PI/180);
         var c = Math.cos(catzRocket.catzRocketContainer.rotation*Math.PI/180);
-        var x = catzRocket.catzRocketContainer.x-10*c-13*s;
-        var y = catzRocket.catzRocketContainer.y+13*c-10*s;
+        if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy ||
+                catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
+        {
+            var x = catzRocket.catzRocketContainer.x+85*c-13*s;
+            var y = catzRocket.catzRocketContainer.y+13*c+85*s;
+        }
+        else
+        {
+            var x = catzRocket.catzRocketContainer.x-10*c-13*s;
+            var y = catzRocket.catzRocketContainer.y+13*c-10*s;
+        }
         var h = (newBounds.height/2);
         var w = (newBounds.width/2);
         polygonVertices[0].x=x-w*c-h*s;
