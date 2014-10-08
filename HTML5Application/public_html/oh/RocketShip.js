@@ -1688,8 +1688,7 @@ var RocketShip = (function(){
         for (var i = 0; i < arrayLength; i++) {
             var kid = attackBirdCont.children[i];
             kid.update(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y,event);
-            var colTrue = collisionCheck(kid);
-            catzCollisionCheck(kid);
+            var colTrue = moveAndCollisionCheck(kid,event);
             if(colTrue)
             {
                 kid.alpha=0.5;
@@ -2007,35 +2006,42 @@ var RocketShip = (function(){
         
     }
     
-    function moveAndCollisionCheck(bird)
-    {
-        collisionCheck(this);
-        if(bird.dispX>this.rad/2 || bird.dispY>this.rad/2 )
+    function moveAndCollisionCheck(bird,event)
+    {   
+        isCollide = collisionCheck(bird);    
+        var dispX = bird.velocityX*event.delta/1000;
+        var dispY = bird.velocityY*event.delta/1000;
+        if(Math.abs(dispX)>bird.rad/2 || Math.abs(dispY)>bird.rad/2)
         {
-            var noSteps = Math.min(2*Math.max(bird.dispX,bird.dispY)/this.rad,4);
+            var noSteps = 2*Math.max(Math.abs(dispX),Math.abs(dispY))/this.rad;
+            noSteps = Math.min(noSteps,4);
             for(i=0; i<noSteps;i++)
             {
-                this.x += bird.dispX/noSteps;
-                this.y += bird.dispY/noSteps;
-                isCollide = collisionCheck(this);
+                bird.x += bird.dispX/noSteps;
+                bird.y += bird.dispY/noSteps;
+                isCollide =collisionCheck(bird);
                 if(isCollide)
-                {
-                    return;
+                {        
+                    dispX = bird.velocityX*event.delta/1000;
+                    dispY = bird.velocityY*event.delta/1000;
                 }
             }
         }
         else
         {
-            this.x += bird.dispX;
-            this.y += bird.dispY;
-            collisionCheck(this);
+            bird.x += bird.dispX;
+            bird.y += bird.dispY;
+            isCollide = collisionCheck(bird);
         }
+        return isCollide;
     }
     
     function collisionCheck(bird)
     {
-        if(Math.abs(kid.x-catzRocketContainer.x)<200 && Math.abs(kid.y-catzRocketContainer.y)<150)
+        if(Math.abs(bird.x-catzRocket.catzRocketContainer.x)<200 && Math.abs(bird.y-catzRocket.catzRocketContainer.y)<150)
         {
+            var minOverlapNorm = 0;
+            var minOverlapDist=Infinity;
             for(var i=0; i<norm.length;i++)
             {
                 var proj1 = norm[i].x*polygonVertices[norm[i].vert1].x+
@@ -2047,9 +2053,19 @@ var RocketShip = (function(){
                 {
                     return false;
                 }
+                if(bird.rad-projC+Math.max(proj1,proj2)<minOverlapDist)
+                {
+                    minOverlapDist= bird.rad-projC+Math.max(proj1,proj2);
+                    minOverlapNorm = i;
+                }
+                if(bird.rad-Math.min(proj1,proj2)+projC<minOverlapDist)
+                {
+                    minOverlapDist=bird.rad-Math.min(proj1,proj2)+projC;
+                    minOverlapNorm = i;
+                }
             }
             closestVertex=0;
-            minDist=inf;
+            minDist=Infinity;
             for(var i=0; i<polygonVertices.length;i++)
             {
                 var dist = Math.pow((polygonVertices[i].x-bird.x),2)
@@ -2084,7 +2100,16 @@ var RocketShip = (function(){
             {
                 return false;
             }
-            collisionResolve();
+            else if(bird.rad-projC+projMax<minOverlapDist
+                    || bird.rad-projMin+projC<minOverlapDist)
+            {
+                minOverlapDist = Math.min(bird.rad-projC+projMax,bird.rad-projMin+projC);
+                collisionResolve(bird,normX,normY,minOverlapDist);                
+            }
+            else
+            {
+                collisionResolve(bird,norm[minOverlapNorm].x,norm[minOverlapNorm].y,minOverlapDist);                
+            }
             return true;
         }
         else{return false;}
@@ -2145,7 +2170,15 @@ var RocketShip = (function(){
     
     function collisionResolve(bird,normX,normY,normDist)
     { 
-        
+        bird.x-=normX*normDist;
+        bird.y-=normY*normDist;
+//        normX=normX*sign(normDist);
+//        normY=normY*sign(normDist);
+//        var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
+//        bird.velocityX+=reflect*normX;
+//        bird.velocityY+=reflect*normY;
+//                  console.log("resolved at velx:"+bird.velocityX+" vely:"+bird.velocityY 
+//                +" normDist: "+normDist+ " normX:"+normX+" normY:"+normY);
     }
     function drawCollisionModels()
     {
@@ -2184,15 +2217,6 @@ var RocketShip = (function(){
             }
             polygonLine.graphics.endStroke();
         } 
-        for (var i = 0; i < attackBirdCont.children.length; i++) {
-            var kid = attackBirdCont.children[i];
-            polygonLine.graphics.setStrokeStyle(2,2);
-            polygonLine.graphics.beginStroke("pink");
-            polygonLine.graphics.moveTo(kid.x,kid.y);
-            polygonLine.graphics.lineTo(kid.x+kid.distX,kid.y+kid.distY);
-            polygonLine.graphics.endStroke();
-            console.log(kid.x+" "+kid.distX+" "+kid.y+" "+kid.distY);
-        }
     }
     
     function getHit()

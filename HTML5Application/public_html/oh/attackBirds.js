@@ -12,8 +12,6 @@ AttackBird.prototype.velocityX = 0;
 AttackBird.prototype.velocityY = 0;
 AttackBird.prototype.acceleration = 3;
 AttackBird.prototype.rad = 25;
-AttackBird.prototype.dispX =0;
-AttackBird.prototype.dispY =0;
 
 //constructor
 AttackBird.prototype.initialize = function (acc,collider) 
@@ -28,19 +26,11 @@ AttackBird.prototype.update = function (rocketX, rocketY, event)
 {
    var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
-    this.velocityX += (this.acceleration-this.efX)*event.delta*(rocketX-this.x)/(1000);
-    this.velocityY += (this.acceleration-this.efY)*event.delta*(rocketY-this.y)/(1000);
+    this.velocityX += this.acceleration*event.delta*(rocketX-this.x)/(1000);
+    this.velocityY += this.acceleration*event.delta*(rocketY-this.y)/(1000);
     if(speed2>maxSpeed2)
     {
         this.velocityX=this.velocityX*maxSpeed2/speed2;
         this.velocityY= this.velocityY*maxSpeed2/speed2;      
     }
-    this.dispX=this.velocityX*event.delta/1000;
-    this.dispY=this.velocityY*event.delta/1000;
-}
-
-AttackBird.prototype.updateCurrentDist = function (x,y) 
-{
-    AttackBird.prototype.distX=x;
-    AttackBird.prototype.distY=y;
 }
