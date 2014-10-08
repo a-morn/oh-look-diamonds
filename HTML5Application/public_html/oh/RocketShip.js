@@ -2275,7 +2275,7 @@ var RocketShip = (function(){
         else if (catzRocket.catzRocketContainer.y < -1000)
         {
             house.gotoHouseViewFromBelow(gameStats, catzRocket);               
-        }
+        }        
         catzRocket.catzRocketContainer.x = 300;
         catzRocket.catzRocketContainer.y = 200;
         heightOffset=0;
@@ -2292,8 +2292,7 @@ var RocketShip = (function(){
         var instance = createjs.Sound.play("catzRocketCrash");
         instance.volume=0.5;
         onTrack=false;
-        //shold check for hoboActive here
-        hideSnake();
+        //shold check for hoboActive here        
         createjs.Tween.get(house.houseView)
                 .wait(200)
                 .to({x:-50, y:20},50)
@@ -2307,7 +2306,7 @@ var RocketShip = (function(){
         createjs.Tween.get(house.wick)
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
-            .call(house.activateWick(gameStats, gotoGameView));
+            .call((function(){house.activateWick(gameStats, gotoGameView);}));
         house.catz.x = 100;
         house.catz.y = 160;
         createjs.Tween.get(house.catz)
@@ -2317,7 +2316,7 @@ var RocketShip = (function(){
                 .to({x:130, y:100, rotation:10},250)
                 .to({x:70, y:80, rotation:-10},250)
                 .to({x:100, y:60, rotation:0},250);
-        stage.update();
+        stage.update();        
     }
     return rocketShip;
 }());

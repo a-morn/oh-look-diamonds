@@ -254,16 +254,17 @@ var House = (function(){
     };
     
     house.gotoHouseViewFromAbove = function(gameStats, catzRocket)
-    {
+    {        
         house.gotoHouseView(gameStats);
         house.crashRocket.alpha=1;
         house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;
+        
         createjs.Tween.get(house.crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)
-                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
+                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);        
     };
     
     house.gotoHouseViewFromBelow = function(gameStats, catzRocket)
