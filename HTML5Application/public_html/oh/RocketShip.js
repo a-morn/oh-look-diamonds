@@ -996,7 +996,6 @@ var RocketShip = (function(){
                 updateFrenzy(event);
                 updatecatzRocket(event);
                 updateVertices();
-                drawCollisionModels();
                 updateDirector(event);
                 updateFg(event);
                 updateDiamonds(event);
@@ -1007,7 +1006,7 @@ var RocketShip = (function(){
                 updateWorldContainer();
                 updateThunderClouds();
                 updateAttackBird(event);
-
+                drawCollisionModels();
             }
             debugText.text = 
                 "rotation "+catzRocket.catzRocketContainer.rotation
@@ -1994,58 +1993,101 @@ var RocketShip = (function(){
         catzNorm[1].y =(catzVertices[2].x-catzVertices[1].x)/catzBounds.width;
     }
     
-    function collisionCheck(bird)
+    function collisionCheckBbirds()
     {
-        var closestVertex=0;
-        var minDist=Infinity;
-        for(var i=0; i<polygonVertices.length;i++)
+        var arrayLength = attackBirdCont.children.length;   
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = attackBirdCont.children[i];
+            collisionCheck(kid);
+        }
+    }
+    
+    function catzMoveAndCollisionCheck()
+    {
+        
+    }
+    
+    function moveAndCollisionCheck(bird)
+    {
+        collisionCheck(this);
+        if(bird.dispX>this.rad/2 || bird.dispY>this.rad/2 )
         {
-            var dist = Math.pow((polygonVertices[i].x-bird.x),2)+Math.pow((polygonVertices[i].x-bird.x),2);
-            if(dist<minDist)
+            var noSteps = Math.min(2*Math.max(bird.dispX,bird.dispY)/this.rad,4);
+            for(i=0; i<noSteps;i++)
             {
-                closestVertex=i;
-                minDist=dist;
+                this.x += bird.dispX/noSteps;
+                this.y += bird.dispY/noSteps;
+                isCollide = collisionCheck(this);
+                if(isCollide)
+                {
+                    return;
+                }
             }
         }
-        var x= bird.x-polygonVertices[closestVertex].x;
-        var y= bird.y-polygonVertices[closestVertex].y;
-        var normX = x/Math.sqrt(y*y+x*x);
-        var normY = y/Math.sqrt(y*y+x*x);
-        proj1 = normX*polygonVertices[closestVertex].x+
-                normY*polygonVertices[closestVertex].y;
-        projC = normX*bird.x+normY*bird.y;
-        if(Math.abs(projC-proj1)<bird.rad)
+        else
         {
-            
-            collisionResolve(bird,normX,normY,projC-proj1);
-            return true;
+            this.x += bird.dispX;
+            this.y += bird.dispY;
+            collisionCheck(this);
         }
-        var closestNorm=0;
-        var maxNormDist=-Infinity;
-        for(var i=0; i<norm.length;i++)
+    }
+    
+    function collisionCheck(bird)
+    {
+        if(Math.abs(kid.x-catzRocketContainer.x)<200 && Math.abs(kid.y-catzRocketContainer.y)<150)
         {
-            var proj1 = norm[i].x*polygonVertices[norm[i].vert1].x+
-                    norm[i].y*polygonVertices[norm[i].vert1].y;
-            var proj2 = norm[i].x*polygonVertices[norm[i].vert2].x+
-                    norm[i].y*polygonVertices[norm[i].vert2].y;
-            var projC = norm[i].x*bird.x+norm[i].y*bird.y;
-            if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
+            for(var i=0; i<norm.length;i++)
+            {
+                var proj1 = norm[i].x*polygonVertices[norm[i].vert1].x+
+                        norm[i].y*polygonVertices[norm[i].vert1].y;
+                var proj2 = norm[i].x*polygonVertices[norm[i].vert2].x+
+                        norm[i].y*polygonVertices[norm[i].vert2].y;
+                var projC = norm[i].x*bird.x+norm[i].y*bird.y;
+                if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
+                {
+                    return false;
+                }
+            }
+            closestVertex=0;
+            minDist=inf;
+            for(var i=0; i<polygonVertices.length;i++)
+            {
+                var dist = Math.pow((polygonVertices[i].x-bird.x),2)
+                        +Math.pow((polygonVertices[i].y-bird.y),2);
+                if(dist<minDist)
+                {
+                    closestVertex=i;
+                    minDist=dist;
+                }
+            }
+            var x= bird.x-polygonVertices[closestVertex].x;
+            var y= bird.y-polygonVertices[closestVertex].y;
+            var normX = x/Math.sqrt(y*y+x*x);
+            var normY = y/Math.sqrt(y*y+x*x);
+            var projMin = Infinity;
+            var projMax = -Infinity;
+            for(var i=0; i<polygonVertices.length;i++)
+            {
+                var proj = normX*polygonVertices[i].x+
+                    normY*polygonVertices[i].y;
+                    if(proj<projMin)
+                    {
+                        projMin=proj;
+                    }
+                    if (proj>projMax)
+                    {
+                        projMax=proj;                    
+                    }
+            } 
+            projC = normX*bird.x+normY*bird.y;
+            if(projC-projMax>bird.rad || projMin-projC>bird.rad)
             {
                 return false;
             }
-            else if (projC-Math.max(proj1,proj2)>maxNormDist)
-            {
-                closestNorm=i;
-                maxNormDist =projC-Math.max(proj1,proj2);
-            }
-            else if (Math.min(proj1,proj2)-projC>maxNormDist)
-            {
-                closestNorm=i;
-                maxNormDist =Math.min(proj1,proj2)-projC;
-            }
+            collisionResolve();
+            return true;
         }
-        collisionResolve(bird,norm[closestNorm].x,norm[closestNorm].y,maxNormDist);
-        return true;
+        else{return false;}
     }
     
     //enklare, snabbare variant av kollisionhanteringen som kan användas vid tex diamanplockning
@@ -2103,25 +2145,8 @@ var RocketShip = (function(){
     
     function collisionResolve(bird,normX,normY,normDist)
     { 
-        normX=normX*sign(normDist);
-        normY=normY*sign(normDist);
-        rvY = catzRocket.catzVelocity-bird.velocityY;
-        velAlongNormal = rvY*(catzRocket.catzRocketContainer.y-bird.y) 
-                -bird.velocityX*(catzRocket.catzRocketContainer.x-bird.x);
-        if(velAlongNormal>0)
-        {
-            console.log("not resolved");
-            return;
-        }
-        var reflect = -2*(normX*bird.velocityX+normY*bird.velocityY);
-        bird.velocityX+=reflect*normX;
-        bird.velocityY+=reflect*normY;
-        catzRocket.catzVelocity-=reflect*normY/200;
-        var speed = Math.sqrt(bird.velocityX*bird.velocityX+bird.velocityY*bird.velocityY);
-        bird.x+=bird.velocityX*normDist/speed;
-        bird.y+=bird.velocityY*normDist/speed;
-}
-    
+        
+    }
     function drawCollisionModels()
     {
         polygonLine.graphics = new createjs.Graphics();
@@ -2159,6 +2184,15 @@ var RocketShip = (function(){
             }
             polygonLine.graphics.endStroke();
         } 
+        for (var i = 0; i < attackBirdCont.children.length; i++) {
+            var kid = attackBirdCont.children[i];
+            polygonLine.graphics.setStrokeStyle(2,2);
+            polygonLine.graphics.beginStroke("pink");
+            polygonLine.graphics.moveTo(kid.x,kid.y);
+            polygonLine.graphics.lineTo(kid.x+kid.distX,kid.y+kid.distY);
+            polygonLine.graphics.endStroke();
+            console.log(kid.x+" "+kid.distX+" "+kid.y+" "+kid.distY);
+        }
     }
     
     function getHit()
