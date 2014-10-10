@@ -27,7 +27,8 @@ var CatzRocket = (function(){
         SlammerReady : 8,
         Slammer : 9,
         Frenzy : 10,
-        FrenzyUploop : 11
+        FrenzyUploop : 11,
+        FellOffRocket : 12
     },
     catzState: 0};
     catzRocket.Init = function()

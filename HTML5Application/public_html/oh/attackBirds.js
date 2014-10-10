@@ -29,8 +29,12 @@ AttackBird.prototype.update = function (rocketX, rocketY, event)
 {
    var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
-    this.velocityX += this.acceleration*event.delta*(rocketX-this.x)/(1000);
-    this.velocityY += this.acceleration*event.delta*(rocketY-this.y)/(1000);
+    var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
+    var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+    this.velocityX+=aX;
+    this.velocityY += aY;
+    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
+
     if(speed2>maxSpeed2)
     {
         this.velocityX=this.velocityX*maxSpeed2/speed2;

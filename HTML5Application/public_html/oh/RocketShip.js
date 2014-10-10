@@ -618,7 +618,8 @@ var RocketShip = (function(){
                 },
                 "no shake": {"speed": 1, "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
                 "frenzy ready": {"speed": 1, "frames": [29, 30]},
-                "flying": {"speed": 0.5, "frames": [31, 32]}
+                "flying": {"speed": 0.5, "frames": [31, 32]},
+                "slipping": {"speed": 1, "frames": [32]}
             }
         };
            
@@ -1116,9 +1117,9 @@ var RocketShip = (function(){
                         catzRocket.catzState=catzRocket.catzStateEnum.Frenzy;
                     }
                     catzRocket.catz.gotoAndPlay("frenzy");
+                    catzRocket.isWounded=false;
                     hideSnake();
                     catzRocket.frenzyTimer=0;
-                    catzRocket.rocket.alpha=0;
                     catzRocket.frenzyReady=false;
                     smoke.alpha = 1;
                     smoke.rotation = catzRocket.catzRocketContainer.rotation+270;
@@ -1136,7 +1137,9 @@ var RocketShip = (function(){
             if (catzRocket.frenzyCount>100)
             {
                 catzRocket.catz.gotoAndPlay("frenzy ready");
+                catzRocket.rocket.alpha=0;
                 catzRocket.frenzyReady=true;
+                catzRocket.isWounded=false;
                 catzRocket.frenzyTimer= 0;
             }
             catzRocket.frenzyTimer+=event.delta;
@@ -1165,7 +1168,20 @@ var RocketShip = (function(){
             {
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
-        }   
+        } 
+        if(catzRocket.catzState === catzRocket.catzStateEnum.FellOffRocket)
+        {
+            catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
+            if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
+            {
+                catzRocket.catzVelocity = catzRocket.limitVelocity;
+            }
+            heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
+            {
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
+            }        
+        }
         if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)   
         {
             catzRocket.catzVelocity += (1/2)*(grav+wind)*event.delta/1000;
@@ -1292,11 +1308,13 @@ var RocketShip = (function(){
                 Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*100
                 +heightOffset;
         }
-        if(catzRocket.isWounded)
+        if(catzRocket.isWounded && 
+                !createjs.Tween.hasActiveTweens(catzRocket.catz))
         {
             catzRocket.catz.x=-50;
         }
-        else
+        else if (!catzRocket.isWounded && 
+                !createjs.Tween.hasActiveTweens(catzRocket.catz))
         {
             catzRocket.catz.x=0;
         }
@@ -1909,6 +1927,7 @@ var RocketShip = (function(){
         if(catzRocket.isWounded)
         {
             catzRocket.isWounded=false;
+            catzRocket.catz.x=0;
         }
         if(mousedown)
         {
@@ -2158,7 +2177,14 @@ var RocketShip = (function(){
                 &&catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
         {
             if(!catzRocket.isWounded)
-            {                catzRocket.isWounded=true;
+            {                
+                catzRocket.isWounded=true;
+                catzRocket.catz.gotoAndPlay("slipping");
+                createjs.Tween.removeAllTweens(catzRocket.catz);
+                createjs.Tween.get(catzRocket.catz)
+                        .to({y:10, x:-25},100)
+                        .to({x:-50,y:0},150)
+                        .call(catzRocket.catz.gotoAndPlay,["no shake"]);
                 catzRocket.invincibilityCounter=1000;
             }
             else{ getHit();}
@@ -2177,16 +2203,19 @@ var RocketShip = (function(){
     
      function collisionResolve(bird,normX,normY,normDist)
     { 
-        bird.x+=normX*normDist*2;
-        bird.y+=normY*normDist*2;
-        normX=normX*sign(normDist);
-        normY=normY*sign(normDist);
-        lastResolveNorm[0]=normX;
-        lastResolveNorm[1]=normY;
-        reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
-        bird.velocityX+=reflect*normX;
-        bird.velocityY+=reflect*normY;
-        catzRocket.catzVelocity-=reflect*normY/250;
+        if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
+        {
+            bird.x+=normX*normDist*2;
+            bird.y+=normY*normDist*2;
+            normX=normX*sign(normDist);
+            normY=normY*sign(normDist);
+            lastResolveNorm[0]=normX;
+            lastResolveNorm[1]=normY;
+            reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
+            bird.velocityX+=reflect*normX;
+            bird.velocityY+=reflect*normY;
+            catzRocket.catzVelocity-=reflect*normY/250;
+        }
     }
    
     function drawCollisionModels()
@@ -2240,10 +2269,11 @@ var RocketShip = (function(){
     function getHit()
     {
         hit = true;
-        //catzRocket.catzVelocity =Math.min(catzRocket.catzVelocity+20,catzRocket.limitVelocity); 
         catzEndLoop();
         stage.removeAllEventListeners();
         catzRocket.catz.gotoAndPlay("flying");
+        hideSnake();
+        catzRocket.catzState=catzRocket.catzStateEnum.FellOffRocket;       
         createjs.Tween.removeAllTweens(catzRocket.rocket);
         createjs.Tween.get(catzRocket.rocket).to({x:800},800);
     }
@@ -2289,6 +2319,7 @@ var RocketShip = (function(){
         catzRocket.rocket.alpha=1;
         lightningCont.removeAllChildren();
         directorState=directorStateEnum.Normal;
+        catzRocket.isWounded=false;
         noWind();
         catzRocket.silouette.alpha=0;
         catzRocket.catz.alpha = 1;
