@@ -7,7 +7,8 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = true,
+    godMode = false,
+    debugMode = false,
     catzBounds,
     lastResolveNorm = [1,0],
     polygonVertices,
@@ -142,7 +143,7 @@ var RocketShip = (function(){
         stage.addChild(progressBar);
 
         manifest = [                    
-                    {id: "enemybirds", src: "assets/new assets/sprites/enemy birds.png"},
+                    {id: "enemybirds", src: "assets/new assets/sprites/newBirds.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
                     {id: "rocketSilouette", src: "assets/new assets/img/catzRocketSilouette.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
@@ -157,7 +158,8 @@ var RocketShip = (function(){
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
-                    {id:"rocket", src:"assets/new assets/sprites/catzAllanimationsNewColors.png"},
+                    {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
+                    {id:"rocket", src:"assets/new assets/img/rocket.png"},
                     {id:"flame", src:"assets/new assets/sprites/newFlame.png"},
                     {id:"wind", src:"assets/new assets/sprites/wind.png"},
                     {id:"star", src:"assets/new assets/img/star.png"},
@@ -348,33 +350,38 @@ var RocketShip = (function(){
             "framerate":24,
             "images":[queue.getResult("cat")],
             "frames":[
-                [0, 0, 128, 256, 0, -183, -148],
-                [128, 0, 128, 256, 0, -183, -148],
-                [256, 0, 128, 256, 0, -183, -148],
-                [384, 0, 128, 256, 0, -183, -148],
-                [512, 0, 128, 256, 0, -183, -148],
-                [640, 0, 128, 256, 0, -183, -148],
-                [768, 0, 128, 256, 0, -183, -148],
-                [896, 0, 128, 256, 0, -183, -148],
-                [1024, 0, 128, 256, 0, -183, -148],
-                [1152, 0, 128, 256, 0, -183, -148],
-                [1280, 0, 128, 256, 0, -183, -148],
-                [1408, 0, 128, 256, 0, -183, -148],
-                [1536, 0, 128, 256, 0, -183, -148],
-                [1664, 0, 128, 256, 0, -183, -148],
-                [1792, 0, 128, 256, 0, -183, -148],
-                [0, 256, 128, 256, 0, -183, -148],
-                [128, 256, 128, 256, 0, -183, -148],
-                [256, 256, 128, 256, 0, -183, -148]
+                [0, 0, 256, 256, 0, 128, 128],
+                [256, 0, 256, 256, 0, 128, 128],
+                [512, 0, 256, 256, 0, 128, 128],
+                [768, 0, 256, 256, 0, 128, 128],
+                [1024, 0, 256, 256, 0, 128, 128],
+                [1280, 0, 256, 256, 0, 128, 128],
+                [1536, 0, 256, 256, 0, 128, 128],
+                [0, 256, 256, 256, 0, 128, 128],
+                [256, 256, 256, 256, 0, 128, 128],
+                [512, 256, 256, 256, 0, 128, 128],
+                [768, 256, 256, 256, 0, 128, 128],
+                [1024, 256, 256, 256, 0, 128, 128],
+                [1280, 256, 256, 256, 0, 128, 128],
+                [1536, 256, 256, 256, 0, 128, 128],
+                [0, 512, 256, 256, 0, 128, 128],
+                [256, 512, 256, 256, 0, 128, 128],
+                [512, 512, 256, 256, 0, 128, 128],
+                [768, 512, 256, 256, 0, 128, 128],
+                [1024, 512, 256, 256, 0, 128, 128],
+                [1280, 512, 256, 256, 0, 128, 128],
+                [1536, 512, 256, 256, 0, 128, 128]
             ],
-            "animations":{"cycle": [0,17],"still":[0]}
+            "animations":{
+                "flying": {"speed": 1, "frames": [19, 20]},
+                    "cycle": [0,17],"still":[0]}
         };
         catSheet = new createjs.SpriteSheet(catData);
         house.catz = new createjs.Sprite(catSheet,"cycle");
         //cat.x = 235;
         //cat.y = 190;
-        house.catz.y=60;
-        house.catz.x=100;
+        house.catz.y=270;
+        house.catz.x=360;
         house.catz.scaleX =0.8;
         house.catz.scaleY =0.8;
         
@@ -567,54 +574,57 @@ var RocketShip = (function(){
         
         var rocketData = {
             "framerate":24,
-            "images":[queue.getResult("rocket")],
+            "images":[queue.getResult("rocketCatz")],
             "frames":[
-                [738, 444, 245, 124, 0, -274, -199],
-                [980, 568, 245, 124, 0, -274, -199],
-                [735, 568, 245, 124, 0, -274, -199],
-                [490, 568, 245, 124, 0, -274, -199],
-                [245, 568, 245, 124, 0, -274, -199],
-                [0, 568, 245, 124, 0, -274, -199],
-                [1719, 444, 245, 124, 0, -274, -199],
-                [1474, 444, 245, 124, 0, -274, -199],
-                [1229, 444, 245, 124, 0, -274, -199],
-                [1225, 568, 245, 124, 0, -274, -199],
-                [945, 310, 246, 125, 0, -274, -199],
-                [1191, 310, 246, 125, 0, -274, -199],
-                [246, 444, 246, 124, 0, -274, -199],
-                [492, 444, 246, 124, 0, -274, -199],
-                [699, 310, 246, 125, 0, -274, -199],
-                [1437, 310, 246, 125, 0, -274, -199],
-                [0, 444, 246, 124, 0, -274, -199],
-                [1683, 310, 246, 124, 0, -274, -199],
-                [983, 444, 246, 124, 0, -274, -199],
-                [453, 310, 246, 125, 0, -274, -199],
-                [511, 0, 516, 156, 0, -274, -199],
-                [0, 0, 511, 160, 0, -274, -199],
-                [1394, 160, 506, 142, 0, -274, -199],
-                [906, 160, 488, 145, 0, -274, -199],
-                [443, 160, 463, 150, 0, -274, -199],
-                [1027, 0, 408, 154, 0, -274, -199],
-                [0, 160, 443, 150, 0, -274, -199],
-                [0, 310, 453, 134, 0, -274, -199],
-                [1435, 0, 447, 154, 0, -274, -199],    
-                [1470, 568, 245, 118, 0, -276, -199],
-                [1715, 568, 245, 116, 0, -275, -203]
+                [540, 444, 176, 103, 0, -282, -200],
+                [895, 444, 178, 103, 0, -280, -200],
+                [716, 444, 179, 103, 0, -279, -200],
+                [181, 547, 181, 103, 0, -277, -200],
+                [0, 547, 181, 103, 0, -277, -200],
+                [1790, 444, 179, 103, 0, -279, -200],
+                [1609, 444, 181, 103, 0, -277, -200],
+                [1429, 444, 180, 103, 0, -278, -200],
+                [1250, 444, 179, 103, 0, -279, -200],
+                [1073, 444, 177, 103, 0, -281, -200],
+                [1124, 310, 176, 104, 0, -283, -199],
+                [362, 547, 178, 103, 0, -281, -203],
+                [1479, 310, 179, 104, 0, -280, -199],
+                [359, 444, 181, 103, 0, -278, -203],
+                [1658, 310, 181, 104, 0, -278, -199],
+                [0, 444, 178, 103, 0, -281, -203],
+                [943, 310, 181, 104, 0, -278, -199],
+                [178, 444, 181, 103, 0, -278, -203],
+                [1300, 310, 179, 104, 0, -280, -199],
+                [1839, 310, 178, 103, 0, -281, -203],
+                [511, 0, 516, 156, 0, -281, -203],
+                [0, 0, 511, 160, 0, -281, -203],
+                [1394, 160, 506, 142, 0, -281, -203],
+                [906, 160, 488, 145, 0, -281, -203],
+                [0, 160, 463, 150, 0, -281, -203],
+                [1027, 0, 408, 154, 0, -281, -203],
+                [463, 160, 443, 150, 0, -281, -203],
+                [0, 310, 453, 134, 0, -281, -203],
+                [1435, 0, 447, 154, 0, -281, -203],
+                [453, 310, 245, 118, 0, -276, -199],
+                [698, 310, 245, 116, 0, -275, -203],
+                [540, 547, 169, 101, 0, -278, -175],
+                [709, 547, 175, 79, 0, -272, -206]
             ],
             "animations":{
-                "no shake": {"frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], "speed": 1},
-                "frenzy ready": {"frames": [29, 30], "speed": 1},
+                "frenzy": {"speed": 1, "frames": [20, 21, 22, 23, 24, 25, 26, 27, 28]},
                 "shake": {
-                    "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-                    "speed": 1
+                    "speed": 1,
+                    "frames": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
                 },
-                "frenzy": {"frames": [20, 21, 22, 23, 24, 25, 26, 27, 28], "speed": 1}
+                "no shake": {"speed": 1, "frames": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]},
+                "frenzy ready": {"speed": 1, "frames": [29, 30]},
+                "flying": {"speed": 0.5, "frames": [31, 32]}
             }
         };
            
         
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        catzRocket.catzRocket = new createjs.Sprite(spriteSheet, "no shake");
+        catzRocket.catz = new createjs.Sprite(spriteSheet, "no shake");
         
         rocketData = {
             "framerate":24,
@@ -680,12 +690,18 @@ var RocketShip = (function(){
                 
         catzRocket.catzRocketContainer.x = 260;
         catzRocket.catzRocketContainer.y = 200;
-        catzRocket.catzRocket.scaleX = 0.4;
-        catzRocket.catzRocket.scaleY = 0.4;
+        catzRocket.catz.scaleX = 0.4;
+        catzRocket.catz.scaleY = 0.4;
         catzRocket.catzRocketContainer.regY = 100;
         catzRocket.catzRocketContainer.regX = 150;
-        catzRocket.catzRocket.currentFrame = 0;              
-        catzRocket.catzRocketContainer.addChild(catzRocket.catzRocket,catzRocket.silouette);
+        catzRocket.catz.currentFrame = 0;  
+        
+        catzRocket.rocket = new createjs.Bitmap(queue.getResult("rocket"));
+        catzRocket.rocket.scaleX = 0.25;
+        catzRocket.rocket.scaleY = 0.25;
+        catzRocket.rocket.regX = -430;
+        catzRocket.rocket.regY = -320;
+        catzRocket.catzRocketContainer.addChild(catzRocket.rocket,catzRocket.catz,catzRocket.silouette);
         catzBounds = catzRocket.catzRocketContainer.getTransformedBounds();
         
         rocketSnake.x=0;
@@ -816,27 +832,36 @@ var RocketShip = (function(){
              images: [queue.getResult("enemybirds")],
             "framerate":10,
             "frames":[
-                [0, 0, 256, 256, 0, 128, 128],
-                [256, 0, 256, 256, 0, 128, 128],
-                [512, 0, 256, 256, 0, 128, 128],
-                [768, 0, 256, 256, 0, 128, 128],
-                [1024, 0, 256, 256, 0, 128, 128],
-                [1280, 0, 256, 256, 0, 128, 128],
-                [1536, 0, 256, 256, 0, 128, 128],
-                [0, 256, 256, 256, 0, 128, 128],
-                [256, 256, 256, 256, 0, 128, 128],
-                [512, 256, 256, 256, 0, 128, 128],
-                [768, 256, 256, 256, 0, 128, 128],
-                [1024, 256, 256, 256, 0, 128, 128],
-                [1280, 256, 256, 256, 0, 128, 128],
-                [1536, 256, 256, 256, 0, 128, 128]
+                [0, 0, 512, 512, 0, 155,170],
+                [512, 0, 512, 512, 0, 155,170],
+                [1024, 0, 512, 512, 0, 155,170],
+                [1536, 0, 512, 512, 0, 155,170],
+                [2048, 0, 512, 512, 0, 155,170],
+                [2560, 0, 512, 512, 0, 155,170],
+                [3072, 0, 512, 512, 0, 155,170],
+                [0, 512, 512, 512, 0, 155,170],
+                [512, 512, 512, 512, 0, 155,170],
+                [1024, 512, 512, 512, 0, 155,170],
+                [1536, 512, 512, 512, 0, 155,170],
+                [2048, 512, 512, 512, 0, 155,170],
+                [2560, 512, 512, 512, 0, 155,170],
+                [3072, 512, 512, 512, 0, 155,170],
+                [0, 1024, 512, 512, 0, 155,170],
+                [512, 1024, 512, 512, 0, 155,170],
+                [1024, 1024, 512, 512, 0, 155,170],
+                [1536, 1024, 512, 512, 0, 155,170],
+                [2048, 1024, 512, 512, 0, 155,170],
+                [2560, 1024, 512, 512, 0, 155,170],
+                [3072, 1024, 512, 512, 0, 155,170]
             ],
             "animations":{
-                "bat": {"frames": [0, 1, 2, 3], "speed": 1},
-                "seagull": {"frames": [6, 7, 8, 9], "speed": 1},
-                "goose": {"frames": [10, 11, 12], "speed": 1},
-                "eagle strike": {"frames": [5], "speed": 1},
-                "eagle soar": {"frames": [4], "speed": 1}
+                "chicken": {"speed": 1, "frames": [20]},
+                "falcon": {"speed": 1, "frames": [12, 13, 14, 15]},
+                "crow": {"speed": 1, "frames": [0, 1, 2, 3]},
+                "bat": {"speed": 1, "frames": [4, 5, 6, 7]},
+                "duck": {"speed": 1, "frames": [8, 9, 10, 11]},
+                "seagull": {"speed": 1, "frames": [18, 19]},
+                "glasses": {"speed": 1, "frames": [16, 17]}
             }
         };
         
@@ -904,12 +929,15 @@ var RocketShip = (function(){
         ];
         //noseLen=sqrt(width^2+nose^2)
         polygonLine = new createjs.Shape();
+        collisionCheckDebug.addChild(polygonLine);
+        
+        var anim = ["falcon","crow","bat","duck","seagull","glasses"];
         for (i=2; i<6; i++)
         {
-            attackBird = new AttackBird(i);
+            attackBird = new AttackBird(i,seagullSheet,anim[i-1]);
             attackBirdCont.addChild(attackBird);
+            collisionCheckDebug.addChild(attackBird.shape);
         }
-        collisionCheckDebug.addChild(polygonLine);
         
         catzRocket.rocketSound = createjs.Sound.play("rocketSound");
         catzRocket.rocketSound.volume = 0.1;
@@ -933,6 +961,11 @@ var RocketShip = (function(){
     function gotoGameView()
     {
         hideSnake();
+        if(debugMode===false)
+        {
+            collisionCheckDebug.alpha=0;
+            debugText.alpha=0;
+        }
         stage.removeChild(house.houseView);
         stage.addChild(gameView, windCont, text, diamondShardCounter,debugText);
         //createjs.Ticker.removeAllEventListeners();  
@@ -1002,8 +1035,6 @@ var RocketShip = (function(){
                 updateFg(event);
                 updateDiamonds(event);
                 updateClouds(event);
-                updateGoose();
-                updateSeagulls(event);
                 updateRocketSnake();
                 updateWorldContainer();
                 updateThunderClouds();
@@ -1049,7 +1080,8 @@ var RocketShip = (function(){
             if(catzRocket.frenzyTimer>1500)
             {
                 catzRocket.catzState=catzRocket.catzStateEnum.Normal;
-                catzRocket.catzRocket.gotoAndPlay("no shake");
+                catzRocket.catz.gotoAndPlay("no shake");
+                catzRocket.rocket.alpha=1;
                 catzRocket.frenzyCount=0;
                 catzRocket.frenzyTimer=0;
                 smoke.alpha = 1;
@@ -1083,9 +1115,10 @@ var RocketShip = (function(){
                     {
                         catzRocket.catzState=catzRocket.catzStateEnum.Frenzy;
                     }
-                    catzRocket.catzRocket.gotoAndPlay("frenzy");
+                    catzRocket.catz.gotoAndPlay("frenzy");
                     hideSnake();
                     catzRocket.frenzyTimer=0;
+                    catzRocket.rocket.alpha=0;
                     catzRocket.frenzyReady=false;
                     smoke.alpha = 1;
                     smoke.rotation = catzRocket.catzRocketContainer.rotation+270;
@@ -1102,7 +1135,7 @@ var RocketShip = (function(){
         {
             if (catzRocket.frenzyCount>100)
             {
-                catzRocket.catzRocket.gotoAndPlay("frenzy ready");
+                catzRocket.catz.gotoAndPlay("frenzy ready");
                 catzRocket.frenzyReady=true;
                 catzRocket.frenzyTimer= 0;
             }
@@ -1124,7 +1157,7 @@ var RocketShip = (function(){
             {
                 catzRocket.catzVelocity = catzRocket.limitVelocity;
                 catzRocket.catzState = catzRocket.catzStateEnum.TerminalVelocity;
-                catzRocket.catzRocket.gotoAndPlay("shake");
+                catzRocket.catz.gotoAndPlay("shake");
             }
             heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
             loopTimer = 0;
@@ -1190,7 +1223,7 @@ var RocketShip = (function(){
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             catzRocket.catzVelocity = catzRocket.limitVelocity;
             catzRocket.catzState = catzRocket.catzStateEnum.TerminalVelocity;
-            catzRocket.catzRocket.gotoAndPlay("shake");
+            catzRocket.catz.gotoAndPlay("shake");
             hideSnake();
         }
         if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
@@ -1230,7 +1263,7 @@ var RocketShip = (function(){
         {
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             catzRocket.catzState = catzRocket.catzStateEnum.Normal;
-            catzRocket.catzRocket.gotoAndPlay("no shake");
+            catzRocket.catz.gotoAndPlay("no shake");
             hideSnake();
             heightOffset-=110*Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI);
             catzRocket.catzVelocity =-20;            
@@ -1258,6 +1291,14 @@ var RocketShip = (function(){
             catzRocket.catzRocketContainer.y = 200+
                 Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*100
                 +heightOffset;
+        }
+        if(catzRocket.isWounded)
+        {
+            catzRocket.catz.x=-50;
+        }
+        else
+        {
+            catzRocket.catz.x=0;
         }
         if(catzRocket.catzRocketContainer.y > 450 || catzRocket.catzRocketContainer.y < -1000)
         {            
@@ -1691,6 +1732,7 @@ var RocketShip = (function(){
             var kid = attackBirdCont.children[i];
             kid.update(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y,event);
             var colTrue = moveAndCollisionCheck(kid,event);
+            kid.updateCircle();
             catzCollisionCheck(kid);
             if(colTrue)
             {
@@ -1712,55 +1754,6 @@ var RocketShip = (function(){
             else
             {
                 kid.alpha=1;
-            }
-        }   
-    }
-
-    function updateGoose()
-    {
-        var arrayLength = gooseCont.children.length;   
-        for (var i = 0; i < arrayLength; i++) {
-            var kid = gooseCont.children[i];
-            kid.x = kid.x - sgSpeed;    
-            if (kid.x <= -100)
-            {
-              gooseCont.removeChildAt(i);
-              arrayLength = arrayLength - 1;
-              i = i - 1;
-            }
-            if((catzRocket.catzRocketContainer.x-catzBounds.width)<kid.x && catzRocket.catzRocketContainer.x-20 > 
-            kid.x && (catzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
-            && catzRocket.catzRocketContainer.y > kid.y)
-            {
-                gooseCont.removeChild(kid);
-                var instance = createjs.Sound.play("birdcry");
-                instance.volume = 0.1;
-                getHit();
-            }
-        }   
-    }
-    
-    function updateSeagulls(event)
-    {
-        var arrayLength = sgCont.children.length;   
-        for (var i = 0; i < arrayLength; i++) {
-            var kid = sgCont.children[i];
-            kid.x = kid.x - diSpeed*event.delta;    
-            kid.y += Math.cos(kid.x/2);
-            if (kid.x <= -100)
-            {
-              sgCont.removeChildAt(i);
-              arrayLength = arrayLength - 1;
-              i = i - 1;
-            }
-            if((catzRocket.catzRocketContainer.x-catzBounds.width)<kid.x && catzRocket.catzRocketContainer.x > 
-            kid.x && (catzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
-            && catzRocket.catzRocketContainer.y > kid.y)
-            {
-                sgCont.removeChild(kid);
-                var instance = createjs.Sound.play("birdcry");
-                instance.volume = 0.1;
-                getHit();
             }
         }   
     }
@@ -1844,7 +1837,7 @@ var RocketShip = (function(){
             //rocketFlame.gotoAndPlay("ignite");
             if(!catzRocket.frenzyReady)
             {
-                catzRocket.catzRocket.gotoAndPlay("shake");                
+                catzRocket.catz.gotoAndPlay("shake");                
             }            
         }
         else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
@@ -1880,7 +1873,7 @@ var RocketShip = (function(){
             hideSnake();            
             if(!catzRocket.frenzyReady)
             {
-                catzRocket.catzRocket.gotoAndPlay("no shake");                
+                catzRocket.catz.gotoAndPlay("no shake");                
             }
         }
         else if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)
@@ -1924,7 +1917,7 @@ var RocketShip = (function(){
                 catzRocket.catzState = catzRocket.catzStateEnum.SecondUploop;
                 if(!catzRocket.frenzyReady)
                 {
-                    catzRocket.catzRocket.gotoAndPlay("shake");                    
+                    catzRocket.catz.gotoAndPlay("shake");                    
                 }
         }
         else
@@ -1932,7 +1925,7 @@ var RocketShip = (function(){
             catzRocket.catzState = catzRocket.catzStateEnum.Normal;
             if(!catzRocket.frenzyReady)
             {
-                catzRocket.catzRocket.gotoAndPlay("no shake");                    
+                catzRocket.catz.gotoAndPlay("no shake");                    
             }
             hideSnake();
             catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;            
@@ -2160,11 +2153,12 @@ var RocketShip = (function(){
                 return false;
             }
         }
-        if(catzRocket.invincibilityCounter<=0 && godMode ===false)
+        if(catzRocket.invincibilityCounter<=0 && godMode ===false
+                &&catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
+                &&catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
         {
             if(!catzRocket.isWounded)
-            {
-                catzRocket.isWounded=true;
+            {                catzRocket.isWounded=true;
                 catzRocket.invincibilityCounter=1000;
             }
             else{ getHit();}
@@ -2246,17 +2240,12 @@ var RocketShip = (function(){
     function getHit()
     {
         hit = true;
-        catzRocket.silouette.alpha=1;
-        catzRocket.catzRocket.alpha = 0;
-        catzRocket.catzVelocity =Math.min(catzRocket.catzVelocity+20,catzRocket.limitVelocity); 
+        //catzRocket.catzVelocity =Math.min(catzRocket.catzVelocity+20,catzRocket.limitVelocity); 
         catzEndLoop();
         stage.removeAllEventListeners();
-        leaves.alpha = 1;
-        leaves.rotation = 0;
-        leaves.x = catzRocket.catzRocketContainer.x-50;
-        leaves.y = catzRocket.catzRocketContainer.y-50;
-        leaves.gotoAndPlay("cycle");
-        leaves.addEventListener("animationend",function(){hideLeaves();});
+        catzRocket.catz.gotoAndPlay("flying");
+        createjs.Tween.removeAllTweens(catzRocket.rocket);
+        createjs.Tween.get(catzRocket.rocket).to({x:800},800);
     }
     
     function houseTick ()
@@ -2296,12 +2285,13 @@ var RocketShip = (function(){
     
     function crash()
     {
-        hit = false;
+        catzRocket.rocket.x=0;
+        catzRocket.rocket.alpha=1;
         lightningCont.removeAllChildren();
         directorState=directorStateEnum.Normal;
         noWind();
         catzRocket.silouette.alpha=0;
-        catzRocket.catzRocket.alpha = 1;
+        catzRocket.catz.alpha = 1;
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(house.houseView);
@@ -2315,14 +2305,15 @@ var RocketShip = (function(){
         house.wick.gotoAndPlay("still");
         createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
         createjs.Tween.removeAllTweens(house.houseView);
-        if(catzRocket.catzRocketContainer.y > 450)
+        if(hit===true)
         {            
-            house.gotoHouseViewFromAbove(gameStats, catzRocket);
+            house.gotoHouseViewWithoutRocket(gameStats, catzRocket);
         }
-        else if (catzRocket.catzRocketContainer.y < -1000)
+        else
         {
-            house.gotoHouseViewFromBelow(gameStats, catzRocket);               
-        }        
+            house.gotoHouseViewWithRocket(gameStats, catzRocket);               
+        }   
+        hit = false;
         catzRocket.catzRocketContainer.x = 300;
         catzRocket.catzRocketContainer.y = 200;
         heightOffset=0;
@@ -2331,7 +2322,7 @@ var RocketShip = (function(){
         catzRocket.frenzyReady=false;
         catzRocket.frenzyTimer=0;
         catzRocket.frenzyCount=0;
-        catzRocket.catzRocket.gotoAndPlay("no shake");
+        catzRocket.catz.gotoAndPlay("no shake");
         catzRocket.catzState = catzRocket.catzStateEnum.Normal;
         catzRocket.catzVelocity = 0;
         bg.y = -1200;
@@ -2354,15 +2345,6 @@ var RocketShip = (function(){
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
             .call((function(){house.activateWick(gameStats, gotoGameView);}));
-        house.catz.x = 100;
-        house.catz.y = 160;
-        createjs.Tween.get(house.catz)
-                .wait(800)
-                .to({x:130, y:140, rotation:10},250)
-                .to({x:70, y:120, rotation:-10},250)
-                .to({x:130, y:100, rotation:10},250)
-                .to({x:70, y:80, rotation:-10},250)
-                .to({x:100, y:60, rotation:0},250);
         stage.update();        
     }
     return rocketShip;

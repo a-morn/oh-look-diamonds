@@ -258,30 +258,51 @@ var House = (function(){
         createjs.Ticker.off("tick", gameListener);        
     };
     
-    house.gotoHouseViewFromAbove = function(gameStats, catzRocket)
+    house.gotoHouseViewWithRocket = function(gameStats, catzRocket)
     {        
         house.gotoHouseView(gameStats);
         house.crashRocket.alpha=1;
         house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
-        house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;
-        
+        house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;        
         createjs.Tween.get(house.crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)
-                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);        
+                .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn); 
+        house.catz.x = 360;
+        house.catz.y = 370;
+        createjs.Tween.get(house.catz)
+                .wait(800)
+                .to({x:390, y:350, rotation:10},250)
+                .to({x:330, y:330, rotation:-10},250)
+                .to({x:390, y:310, rotation:10},250)
+                .to({x:330, y:290, rotation:-10},250)
+                .to({x:360, y:270, rotation:0},250);
     };
     
-    house.gotoHouseViewFromBelow = function(gameStats, catzRocket)
+    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket)
     {
         house.gotoHouseView(gameStats);
+        house.catz.x=300-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
+        house.catz.y =370-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        house.catz.gotoAndPlay("flying");
+        house.catz.rotation=catzRocket.catzRocketContainer.rotation+90;
+        createjs.Tween.get(house.catz)
+                .to({x:300, y:370},200)
+                .call(house.catz.gotoAndPlay,["cycle"])
+                .wait(800)
+                .to({x:390, y:350, rotation:10},250)
+                .to({x:330, y:330, rotation:-10},250)
+                .to({x:390, y:310, rotation:10},250)
+                .to({x:330, y:290, rotation:-10},250)
+                .to({x:360, y:270, rotation:0},250);
         house.crashRocket.alpha=1;
-        house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
-        house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
-        house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;
+        house.crashRocket.x=315;
+        house.crashRocket.y=910;
+        house.crashRocket.rotation=-90;
         createjs.Tween.get(house.crashRocket)
-                .to({x:315, y:310},200)
-                .wait(1500)
+                .wait(1200)
+                .to({x:315, y:310},500)
                 .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
     };           
     
