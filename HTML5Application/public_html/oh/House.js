@@ -206,7 +206,7 @@ var House = (function(){
 //        {
 //            rocketSong.play();
 //        }
-        house.wick.x-=15;
+        house.wick.x=-225;
         house.wick.gotoAndPlay("cycle");
         house.wick.removeAllEventListeners();        
         house.wick.addEventListener("animationend",(function(){gotoGameView();}));
