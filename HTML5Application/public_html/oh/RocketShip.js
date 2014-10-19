@@ -1445,7 +1445,7 @@ var RocketShip = (function(){
                         .call(catzRocket.catz.gotoAndPlay,["no shake"]);
                 catzRocket.invincibilityCounter=1000;
             }
-            else{ catzRocket.getHit();}
+            else{ getHit();}
         }
         return true;
     }
