@@ -49,6 +49,8 @@ var CatzRocket = (function(){
         "miscSound",
         "frenzySound", 
         "catzScreamSound",
+        null,
+        null
     ],
     catzState: 0};
     catzRocket.Init = function()
@@ -58,13 +60,13 @@ var CatzRocket = (function(){
     
     catzRocket.changeState = function(state)
     {
-        this.catzState = state;
+        catzRocket.catzState = state;
         if(state!==catzRocket.catzStateEnum.SlammerReady)
         {
-            this.rocketSound.stop();
-            if(this.rocketSounds[state]!==null)
+            catzRocket.rocketSound.stop();
+            if(catzRocket.rocketSounds[state]!==null)
             {
-                this.rocketSound = createjs.Sound.play(this.rocketSounds[state]);
+                catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[state]);
             }
         }
         if(state===catzRocket.catzStateEnum.Normal
@@ -430,7 +432,6 @@ var CatzRocket = (function(){
     catzRocket.getHit = function()
     {
         catzRocket.isHit = true;
-        catzEndLoop();
         catzRocket.changeState(catzRocket.catzStateEnum.FellOffRocket);       
         createjs.Tween.removeAllTweens(catzRocket.rocket);
         createjs.Tween.get(catzRocket.rocket).to({x:800},800);

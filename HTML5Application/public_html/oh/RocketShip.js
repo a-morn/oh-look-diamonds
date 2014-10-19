@@ -7,13 +7,16 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = true,
+    godMode = false,
     debugMode = false,
     catzBounds,
     lastResolveNorm = [1,0],
+    polygonLine,
     polygonVertices,
     catzVertices,
-    polygonLine,
+    flameVertices,
+    flameNorm,
+    flameBounds,
     catzNorm,
     norm,
     newBounds,
@@ -334,7 +337,6 @@ var RocketShip = (function(){
         house.choice3.y = 80;
         house.choice3.text = "";
         house.choice3.Alpha = 0;
-        
         house.choices = [house.choice1, house.choice2,house.choice3];
         
         house.hoboCatSound1 = createjs.Sound.play("hoboCatSound1");
@@ -489,6 +491,23 @@ var RocketShip = (function(){
         windSheet = new createjs.SpriteSheet(windData);  
             
             
+        flameVertices  = [
+            {x:1,y:1},
+            {x:1,y:1},
+            {x:1,y:1}
+        ];
+        flameBounds = {
+            height: 25,
+            width : 50,
+            length: 0
+            
+        };
+        flameBounds.length = Math.sqrt(Math.pow(flameBounds.height/2,2)+Math.pow(flameBounds.width,2)); 
+        flameNorm = [
+            {x:1,y:1, vert1: 0, vert2: 2},
+            {x:1,y:1, vert1: 0, vert2: 1},
+            {x:1,y:1, vert1: 0, vert2: 1}
+        ];
         polygonVertices = [
             {x:1,y:1},
             {x:1,y:1},
@@ -1079,29 +1098,26 @@ var RocketShip = (function(){
         for (var i = 0; i < arrayLength; i++) {
             var kid = attackBirdCont.children[i];
             kid.update(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y,event);
-            var colTrue = moveAndCollisionCheck(kid,event);
+            moveAndCollisionCheck(kid,event);
             kid.updateCircle();
             catzCollisionCheck(kid);
-            if(colTrue)
+            if(flameCollisionCheck(kid))
             {
-                kid.alpha=0.5;
-//                var distx=(polygonVertices[3].x-kid.x);
-//                var disty=(polygonVertices[3].y-kid.y);
-//                if(distx*distx+disty*disty<100)
-//                {
-//                    attackBirdCont.removeChild(kid);
-//                    leaves.alpha=1;
-//                    leaves.x=kid.x;
-//                    leaves.y=kid.y;
-//                    leaves.gotoAndPlay("cycle");
-//                    leaves.addEventListener("animationend",function(){hideLeaves();});
-//                    newKid = new AttackBird(Math.random()*5+2);
-//                    attackBirdCont.addChild(newKid);
-//                }
+                kid.temperature+=event.delta; 
+                console.log(kid.temperature);
+                if(kid.temperature>200 && kid.state!=="grilled")
+                {
+                    console.log("grilled");
+                    kid.setGrilled();
+                }
             }
-            else
+            else if(kid.temperature>=0)
             {
-                kid.alpha=1;
+                kid.temperature-=event.delta; 
+                if(kid.temperature<0)
+                {
+                    kid.temperature=0;
+                }
             }
         }   
     }
@@ -1230,6 +1246,32 @@ var RocketShip = (function(){
         catzNorm[0].y =(catzVertices[1].x-catzVertices[0].x)/catzBounds.height;
         catzNorm[1].x =(catzVertices[1].y-catzVertices[2].y)/catzBounds.width;
         catzNorm[1].y =(catzVertices[2].x-catzVertices[1].x)/catzBounds.width;
+        
+        if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy ||
+                catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
+        {
+            var x = catzRocket.catzRocketContainer.x+55*c-13*s;
+            var y = catzRocket.catzRocketContainer.y+13*c+55*s;
+        }
+        else
+        {
+            var x = catzRocket.catzRocketContainer.x-40*c-13*s;
+            var y = catzRocket.catzRocketContainer.y+13*c-40*s;
+        }
+        var h = (flameBounds.height/2);
+        var w = (flameBounds.width);
+        flameVertices[0].x=x-h*s;
+        flameVertices[0].y=y+h*c;
+        flameVertices[1].x=x+h*s;
+        flameVertices[1].y=y-h*c;
+        flameVertices[2].x=x-w*c;
+        flameVertices[2].y=y-w*s;
+        flameNorm[0].x =(flameVertices[0].y-flameVertices[1].y)/flameBounds.height;
+        flameNorm[0].y =(flameVertices[1].x-flameVertices[0].x)/flameBounds.height;
+        flameNorm[1].x =-(flameVertices[0].y-flameVertices[2].y)/flameBounds.length;
+        flameNorm[1].y =-(flameVertices[2].x-flameVertices[0].x)/flameBounds.length;
+        flameNorm[2].x =(flameVertices[1].y-flameVertices[2].y)/flameBounds.length;
+        flameNorm[2].y =(flameVertices[2].x-flameVertices[1].x)/flameBounds.length;
     }
     
     function collisionCheckBbirds()
@@ -1403,9 +1445,34 @@ var RocketShip = (function(){
                         .call(catzRocket.catz.gotoAndPlay,["no shake"]);
                 catzRocket.invincibilityCounter=1000;
             }
-            else{ getHit();}
+            else{ catzRocket.getHit();}
         }
         return true;
+    }
+    
+    function flameCollisionCheck(bird)
+    {
+        if(1===catzRocket.rocketFlame.alpha)
+        {
+            for(var i=0; i<flameNorm.length;i++)
+            {
+                var proj1 = flameNorm[i].x*flameVertices[flameNorm[i].vert1].x+
+                        flameNorm[i].y*flameVertices[flameNorm[i].vert1].y;
+                var proj2 = flameNorm[i].x*flameVertices[flameNorm[i].vert2].x+
+                        flameNorm[i].y*flameVertices[flameNorm[i].vert2].y;
+                var projC = flameNorm[i].x*bird.x+flameNorm[i].y*bird.y;
+                if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     function sign(x) {
@@ -1471,15 +1538,31 @@ var RocketShip = (function(){
             }
             polygonLine.graphics.endStroke();
         } 
-            polygonLine.graphics.setStrokeStyle(2,2);
-            polygonLine.graphics.beginStroke("pink");
-            polygonLine.graphics.moveTo(
-                    catzRocket.catzRocketContainer.x,
-                    catzRocket.catzRocketContainer.y);
-            polygonLine.graphics.lineTo(
-                    catzRocket.catzRocketContainer.x+lastResolveNorm[0]*100,
-                    catzRocket.catzRocketContainer.y+lastResolveNorm[1]*100);
+        var colors = ["green","red","blue"];         
+        for (var i = 0; i <flameVertices.length ; i++) 
+        {
+            polygonLine.graphics.setStrokeStyle(2,1);
+            polygonLine.graphics.beginStroke("green");
+            polygonLine.graphics.moveTo(flameVertices[i].x,flameVertices[i].y);
+            if(i===flameVertices.length-1)
+            {
+                polygonLine.graphics.lineTo( flameVertices[0].x, flameVertices[0].y);
+            }
+            else
+            {
+                polygonLine.graphics.lineTo( flameVertices[i+1].x, flameVertices[i+1].y);
+            }
             polygonLine.graphics.endStroke();
+        } 
+        polygonLine.graphics.setStrokeStyle(2,2);
+        polygonLine.graphics.beginStroke("pink");
+        polygonLine.graphics.moveTo(
+                catzRocket.catzRocketContainer.x,
+                catzRocket.catzRocketContainer.y);
+        polygonLine.graphics.lineTo(
+                catzRocket.catzRocketContainer.x+lastResolveNorm[0]*100,
+                catzRocket.catzRocketContainer.y+lastResolveNorm[1]*100);
+        polygonLine.graphics.endStroke();
     }
     
     function getHit()

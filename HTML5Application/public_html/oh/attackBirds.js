@@ -13,6 +13,9 @@ AttackBird.prototype.velocityY = 0;
 AttackBird.prototype.acceleration = 3;
 AttackBird.prototype.rad = 25;
 AttackBird.prototype.shape = new createjs.Shape();
+AttackBird.prototype.cookingTimer = 0;
+AttackBird.prototype.temperature = 0;
+AttackBird.prototype.isGrilling = 0;
 
 //constructor
 AttackBird.prototype.initialize = function (acc,sheet,current) 
@@ -27,14 +30,21 @@ AttackBird.prototype.initialize = function (acc,sheet,current)
 
 AttackBird.prototype.update = function (rocketX, rocketY, event) 
 {
-   var maxSpeed2=100000;
+    var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
-    var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
-    var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+    if(this.state!=="grilled")
+    {
+        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
+        var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+    }
+    else
+    {
+        aX=0;
+        aY=200*this.acceleration*event.delta/1000;
+    }
     this.velocityX+=aX;
     this.velocityY += aY;
     //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
-
     if(speed2>maxSpeed2)
     {
         this.velocityX=this.velocityX*maxSpeed2/speed2;
@@ -46,4 +56,11 @@ AttackBird.prototype.updateCircle = function()
 {
     this.shape.x=this.x;
     this.shape.y=this.y;
+}
+
+AttackBird.prototype.setGrilled = function()
+{
+    this.velocityX = -10;
+    this.gotoAndPlay("chicken");
+    this.state = "grilled";
 }
