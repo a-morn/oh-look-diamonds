@@ -13,9 +13,7 @@ AttackBird.prototype.velocityY = 0;
 AttackBird.prototype.acceleration = 3;
 AttackBird.prototype.rad = 25;
 AttackBird.prototype.shape = new createjs.Shape();
-AttackBird.prototype.cookingTimer = 0;
 AttackBird.prototype.temperature = 0;
-AttackBird.prototype.isGrilling = 0;
 
 //constructor
 AttackBird.prototype.initialize = function (acc,sheet,current) 
