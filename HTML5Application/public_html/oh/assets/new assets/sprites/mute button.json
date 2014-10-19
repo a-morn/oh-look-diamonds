@@ -1,0 +1,9 @@
+{
+"framerate":24,
+"images":["mute%20button.png"],
+"frames":[
+    [0, 0, 64, 64, 0, -241, -139],
+    [64, 0, 64, 64, 0, -241, -139]
+],
+"animations":{}
+}

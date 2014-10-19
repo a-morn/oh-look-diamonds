@@ -71,6 +71,18 @@ spriteSheetData = (function()
                 ],
                 "animations":{"cycle": [0,49],"still":[0]}
             },
+            ssd.muteButton = {
+                "framerate":24,
+                "images":[queue.getResult("mute")],
+                "frames":[
+                    [0, 0, 64, 64, 0, 0,0],
+                    [64, 0, 64, 64, 0, 0, 0]
+                ],
+                "animations":{
+                    "mute":[0],
+                    "unmute":[1]
+                }
+            },
             ssd.dHouse= {
                 "framerate":24,
                 "images":[queue.getResult("diamondhouse")],

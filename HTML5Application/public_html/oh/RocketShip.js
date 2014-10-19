@@ -9,6 +9,7 @@ var RocketShip = (function(){
     canvas,
     godMode = false,
     debugMode = false,
+    muteButton,
     catzBounds,
     lastResolveNorm = [1,0],
     polygonLine,
@@ -183,7 +184,8 @@ var RocketShip = (function(){
                     {id:"miscSound", src:"assets/new assets/sound/misc.mp3"},
                     {id:"catzScreamSound", src:"assets/new assets/sound/catzScream.mp3"},
                     //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
-                    {id:"wick", src:"assets/new assets/sprites/wick.png"}
+                    {id:"wick", src:"assets/new assets/sprites/wick.png"},
+                    {id:"mute", src:"assets/new assets/sprites/mute button.png"}
                 ];
 
         queue = new createjs.LoadQueue(true);
@@ -207,7 +209,8 @@ var RocketShip = (function(){
         createHouseView();
         createGameView();
         stage.addChild(bg,starCont);
-        house.gotoHouseViewNormal(gameStats, stage, gameView,text, diamondShardCounter, gameListener, rocketSong, gotoGameView);
+        house.gotoHouseViewNormal(gameStats, stage, gameView,text, diamondShardCounter,
+            muteButton, gameListener, rocketSong, gotoGameView);
         houseListener = createjs.Ticker.on("tick", houseTick,this);
         stage.removeChild(progressBar);        
     }
@@ -248,6 +251,13 @@ var RocketShip = (function(){
     
     function createHouseView()
     {
+        muteData = spriteSheetData.muteButton;
+        mSheet = new createjs.SpriteSheet(muteData);
+        muteButton = new createjs.Sprite(mSheet,"mute");
+        muteButton.x = 745;
+        muteButton.y = 0;
+        muteButton.addEventListener("click",switchMute);
+        
         house.house = new createjs.Bitmap(queue.getResult("house"));   
         house.house.scaleX=0.8;
         house.house.scaleY=0.8;
@@ -353,7 +363,7 @@ var RocketShip = (function(){
         rocketSong.stop();                
         
         house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
-        house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3);
+        house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3,muteButton);
     }
        
    function createBG()
@@ -581,7 +591,7 @@ var RocketShip = (function(){
             debugText.alpha=0;
         }
         stage.removeChild(house.houseView);
-        stage.addChild(gameView, windCont, text, diamondShardCounter,debugText);
+        stage.addChild(gameView, windCont, text, diamondShardCounter, muteButton, debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -1104,10 +1114,8 @@ var RocketShip = (function(){
             if(flameCollisionCheck(kid))
             {
                 kid.temperature+=event.delta; 
-                console.log(kid.temperature);
                 if(kid.temperature>200 && kid.state!=="grilled")
                 {
-                    console.log("grilled");
                     kid.setGrilled();
                 }
             }
@@ -1120,6 +1128,20 @@ var RocketShip = (function(){
                 }
             }
         }   
+    }
+    
+    function switchMute()
+    {
+        if(createjs.Sound.getMute())
+        {
+            createjs.Sound.setMute(false);
+            muteButton.gotoAndPlay("mute");
+        }
+        else
+        {
+            createjs.Sound.setMute(true);
+            muteButton.gotoAndPlay("unmute");
+        }
     }
     
     function hideSmoke()

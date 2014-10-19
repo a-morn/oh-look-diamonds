@@ -209,7 +209,7 @@ var House = (function(){
         house.wick.x=-225;
         house.wick.gotoAndPlay("cycle");
         house.wick.removeAllEventListeners();        
-        house.wick.addEventListener("animationend",(function(){gotoGameView();}));
+        house.wick.addEventListener("animationend",gotoGameView);
         house.catzSpeach.text ="";
         house.hoboSpeach.text ="";
     };        
@@ -237,7 +237,7 @@ var House = (function(){
 
     };
     
-    house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, gameListener, rocketSong, gotoGameView)
+    house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, rocketSong, gotoGameView)
     {
         house.gotoHouseView(gameStats);
         house.wick.x=-210;
@@ -251,7 +251,7 @@ var House = (function(){
         house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
         
         stage.removeAllEventListeners();
-        stage.removeChild(gameView,text, diamondShardCounter);
+        stage.removeChild(gameView,text, diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();
         createjs.Ticker.setFPS(20);
