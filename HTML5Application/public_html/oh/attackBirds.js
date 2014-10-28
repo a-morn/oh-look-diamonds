@@ -30,35 +30,35 @@ AttackBird.prototype.update = function (rocketX, rocketY, event)
 {
     if(this.currentAnimation==="falcon")
     {
-        updateFalcon(rocketX, rocketY,event);
+        this.updateSeagull(rocketX, rocketY,event);
     }
     else
     {
-        updateSeagull(rocketX,rocketY,event);
+        this.updateSeagull(rocketX,rocketY,event);
     }
 }
 
 AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
 {
 
-    if(this.state==="rising")
+    if(this.state==="normal")
     {
-        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
-        var aY = this.acceleration*event.delta*(rocketY-300-this.y)/(1000);
-        if(rocketY-300-this.y>0)
+        var aX = this.acceleration*event.delta*(rocketX+500-this.x)/(1000);
+        var aY = this.acceleration*event.delta*(rocketY-500-this.y)/(1000);
+        if(this.y-rocketY-500>0)
         {
             this.state="attacking";
-            var aX =0;
-            var aY =0;
+            aX =0;
+            aY =0;
         }
     }
     else if(this.state==="attacking")
     {
-        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
-        var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
-        if(rocketY-100-this.y<0)
+        aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
+        aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+        if(this.y-rocketY-100<0)
         {
-            this.state="rising";
+            this.state="normal";
         }
         
     }

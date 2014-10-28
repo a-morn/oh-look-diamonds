@@ -3,6 +3,7 @@ var trackPartsJSON = {
             [ 
                 //horizontal line
                 [
+                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
                     {"x":50,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
                     {"x":100,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
                     {"x":150,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
