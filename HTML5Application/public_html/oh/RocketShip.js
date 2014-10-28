@@ -1,6 +1,7 @@
 var RocketShip = (function(){
     var 
     currentTrack = 0,
+    currentLevel = 0,
     catzRocket,
     house,                
     houseListener,
@@ -863,36 +864,39 @@ var RocketShip = (function(){
     function generateTrack()
     {
         var result = [];
+        var displacementX = 800;
+        var displacementY = catzRocket.catzRocketContainer.y;
+        if(tracksJSON[currentLevel].length===currentTrack)
+        {
+            return [];
+        }
         if(gameStats.Difficulty>=0)
         {
-            var xDisplacement=800;
-            var yDisplacement=catzRocket.catzRocketContainer.y;
-            for(j=0;j<tracksJSON[currentTrack].length;j++)
-            {                
-                var element1  = $.extend(true, [], trackPartsJSON[tracksJSON[currentTrack][j].difficulty][tracksJSON[currentTrack][j].number]);
-                for (i=0;i<element1.length;i++)
+            for(j=0;j<tracksJSON[currentLevel][currentTrack].length;j++)
+            {
+                var element = $.extend(true, [], trackPartsJSON[tracksJSON[currentLevel][currentTrack][j].difficulty][tracksJSON[currentLevel][currentTrack][j].number]);
+                for (i=0;i<element.length;i++)
                 {
-                    element1[i].x+=xDisplacement;
-                    element1[i].y+=yDisplacement;
-                    if(i===element1.length-1)
+                    element[i].x+=displacementX;
+                    element[i].y+=displacementY;
+                    if(i===element.length-1)
                     {
-                        xDisplacement = element1[i].x;
-                        yDisplacement = element1[i].y;
+                        displacementX = element[i].x;
+                        displacementY = element[i].y;
                     }
                 }
-                console.log(result);
-                console.log(element1);
-                result = result.concat(element1);
-                console.log(result);
+                result = result.concat(element);                
             }
-            //currentTrack+=1;
-            console.log(result);
+            currentTrack+=1;
+            
             return result;
         }
+        
         else if(gameStats.Difficulty===1)
         {
             
         }
+        
         else if(gameStats.Difficulty>1)
         {
             
