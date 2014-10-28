@@ -48,7 +48,7 @@ var tracksJSON = {
             [
                 ///looop w seagull
                 [
-                    {"x":	370	, "y":	-350	,type:"seagull","animation":"seagull","graphicType":"sprite"},
+                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"},
                     {"x":	0	, "y":	0	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	62.25701405	, "y":	-26.52635236	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	125.9907573	, "y":	-51.33121883	,type:"diamond","animation":"cycle","graphicType":"sprite"},
@@ -76,6 +76,29 @@ var tracksJSON = {
             ],
     "hard" : 
             [
-                
+                //falcon
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
+                ],
+                //crow
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird"},
+                ],
+                //bat
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird"},
+                ],
+                //duck
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                ],
+                //seagull
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"},
+                ],
+                //glasses
+                [
+                    {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird"},
+                ]
             ]
 };

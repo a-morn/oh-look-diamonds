@@ -7,7 +7,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = false,
+    godMode = true,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -555,14 +555,6 @@ var RocketShip = (function(){
         polygonLine = new createjs.Shape();
         collisionCheckDebug.addChild(polygonLine);
         
-        var anim = ["falcon","crow","bat","duck","seagull","glasses"];
-        for (i=0; i<6; i++)
-        {
-            attackBird = new AttackBird(i+2,seagullSheet,anim[i]);
-            attackBirdCont.addChild(attackBird);
-            collisionCheckDebug.addChild(attackBird.shape);
-        }
-        
         catzRocket.rocketSound = createjs.Sound.play("rocketSound");
         catzRocket.rocketSound.volume = 0.1;
         catzRocket.rocketSound.stop();
@@ -938,6 +930,10 @@ var RocketShip = (function(){
                         cont.addChild(sprite);
                         
                     }
+                    else if(track[i].graphicType==="attackBird")
+                    {
+                        spawnAttackBird(track[i].animation,5,track[i].x,track[i].y);
+                    }
                 }
             }
         }
@@ -1100,6 +1096,13 @@ var RocketShip = (function(){
         seagull.x = x;
         seagull.y = y;
         sgCont.addChild(seagull);
+    }
+    
+    function spawnAttackBird(type,acc,x,y)
+    {
+        var attackBird = new AttackBird(acc,seagullSheet,type);
+        attackBirdCont.addChild(attackBird);
+        collisionCheckDebug.addChild(attackBird.shape);
     }
     
     function updateAttackBird(event)
@@ -1460,7 +1463,6 @@ var RocketShip = (function(){
             {                
                 catzRocket.isWounded=true;
                 catzRocket.catz.gotoAndPlay("slipping");
-                createjs.Tween.removeAllTweens(catzRocket.catz);
                 createjs.Tween.get(catzRocket.catz)
                         .to({y:10, x:-25},100)
                         .to({x:-50,y:0},150)
