@@ -865,17 +865,27 @@ var RocketShip = (function(){
         var result = [];
         if(gameStats.Difficulty>=0)
         {
+            var xDisplacement=800;
+            var yDisplacement=catzRocket.catzRocketContainer.y;
             for(j=0;j<tracksJSON[currentTrack].length;j++)
-            {
+            {                
                 var element1  = $.extend(true, [], trackPartsJSON[tracksJSON[currentTrack][j].difficulty][tracksJSON[currentTrack][j].number]);
                 for (i=0;i<element1.length;i++)
                 {
-                    element1[i].x+=800;
-                    element1[i].y+=catzRocket.catzRocketContainer.y;
+                    element1[i].x+=xDisplacement;
+                    element1[i].y+=yDisplacement;
+                    if(i===element1.length-1)
+                    {
+                        xDisplacement = element1[i].x;
+                        yDisplacement = element1[i].y;
+                    }
                 }
-                result = element1;                
+                console.log(result);
+                console.log(element1);
+                result = result.concat(element1);
+                console.log(result);
             }
-            currentTrack+=1;
+            //currentTrack+=1;
             console.log(result);
             return result;
         }
