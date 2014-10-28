@@ -1,5 +1,6 @@
 var RocketShip = (function(){
     var 
+    currentTrack = 0,
     catzRocket,
     house,                
     houseListener,
@@ -861,23 +862,22 @@ var RocketShip = (function(){
     
     function generateTrack()
     {
+        var result = [];
         if(gameStats.Difficulty>=0)
         {
-            var rand = Math.floor(Math.random()*tracksJSON["easy"].length);
-            var element1  = $.extend(true, [], tracksJSON["easy"][0]);
-            for (i=0;i<element1.length;i++)
+            for(j=0;j<tracksJSON[currentTrack].length;j++)
             {
-                element1[i].x+=800;
-                element1[i].y+=catzRocket.catzRocketContainer.y;
+                var element1  = $.extend(true, [], trackPartsJSON[tracksJSON[currentTrack][j].difficulty][tracksJSON[currentTrack][j].number]);
+                for (i=0;i<element1.length;i++)
+                {
+                    element1[i].x+=800;
+                    element1[i].y+=catzRocket.catzRocketContainer.y;
+                }
+                result = element1;                
             }
-            rand = Math.floor(Math.random()*tracksJSON["easy"].length);
-            var element2 = $.extend(true,[],tracksJSON["easy"][2]);
-            for (i=0;i<element2.length;i++)
-            {
-                element2[i].x+=element1[element1.length-1].x;
-                element2[i].y+=element1[element1.length-1].y;
-            }
-            return element1.concat(element2);
+            currentTrack+=1;
+            console.log(result);
+            return result;
         }
         else if(gameStats.Difficulty===1)
         {
