@@ -42,7 +42,12 @@ var tracksJSON = {
                     {"x":	657.9293147	, "y":	-127.6224837	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	724.7446863	, "y":	-112.2939771	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	791.4098309	, "y":	-95.03864139	,type:"diamond","animation":"cycle","graphicType":"sprite"},
-                    {"x":	856.1211905	, "y":	-76.01061641	,type:"diamond","animation":"cycle","graphicType":"sprite"},]               
+                    {"x":	856.1211905	, "y":	-76.01061641	,type:"diamond","animation":"cycle","graphicType":"sprite"},] 
+                
+                //great diamond
+                [
+                    {"x":0,"y":0, "type": "greatDiamond","animation":"cycle","graphicType":"sprite"}
+                ]
             ],
     "medium" : 
             [

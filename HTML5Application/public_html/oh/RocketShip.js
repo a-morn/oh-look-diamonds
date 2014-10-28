@@ -41,6 +41,7 @@ var RocketShip = (function(){
     queue,
     mousedown,
     diamondSheet,
+    greatDiamondSheet,
     grav = 12,
     jump,           
     attackBirdCont = new createjs.Container(),
@@ -58,6 +59,7 @@ var RocketShip = (function(){
     sheetDict,
     containerDict = {
         "diamond" : diCont,
+        "greatDiamond" : diCont,
         "seagull" : sgCont,
         "goose" : gooseCont,
         "hawk" : hawkCont
@@ -145,6 +147,7 @@ var RocketShip = (function(){
         manifest = [                    
                     {id: "enemybirds", src: "assets/new assets/sprites/newBirds.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
+                    {id: "greatDiamond", src: "assets/new assets/sprites/newDiamond.png"}, 
                     {id: "rocketSilouette", src: "assets/new assets/img/catzRocketSilouette.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
                     {id: "diamondSound", src: "assets/diamondSound.mp3"},            
@@ -562,8 +565,10 @@ var RocketShip = (function(){
         diamondSound.volume = 0.2;
         diamondSound.stop();
         gameView = new createjs.Container();
+        greatDiamondSheet = new createjs.SpriteSheet(spriteSheetData.greatDiamond);
          sheetDict = {
         "diamond" : diamondSheet,
+        "greatDiamond" : greatDiamondSheet,
         "seagull" : seagullSheet,
         "goose" : seagullSheet,
         "hawk" : seagullSheet
