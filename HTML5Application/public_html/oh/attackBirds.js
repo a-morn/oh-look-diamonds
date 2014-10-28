@@ -28,6 +28,59 @@ AttackBird.prototype.initialize = function (acc,sheet,current)
 
 AttackBird.prototype.update = function (rocketX, rocketY, event) 
 {
+    if(this.currentAnimation==="falcon")
+    {
+        updateFalcon(rocketX, rocketY,event);
+    }
+    else
+    {
+        updateSeagull(rocketX,rocketY,event);
+    }
+}
+
+AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
+{
+
+    if(this.state==="rising")
+    {
+        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
+        var aY = this.acceleration*event.delta*(rocketY-300-this.y)/(1000);
+        if(rocketY-300-this.y>0)
+        {
+            this.state="attacking";
+            var aX =0;
+            var aY =0;
+        }
+    }
+    else if(this.state==="attacking")
+    {
+        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
+        var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+        if(rocketY-100-this.y<0)
+        {
+            this.state="rising";
+        }
+        
+    }
+    else if(this.state==="grilled")
+    {
+        aX=0;
+        aY=200*this.acceleration*event.delta/1000;
+    }
+    this.velocityX+=aX;
+    this.velocityY += aY;
+    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
+    var maxSpeed2=100000;
+    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
+    if(speed2>maxSpeed2)
+    {
+        this.velocityX=this.velocityX*maxSpeed2/speed2;
+        this.velocityY= this.velocityY*maxSpeed2/speed2;      
+    }
+}
+
+AttackBird.prototype.updateSeagull = function(rocketX, rocketY, event)
+{
     var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
     if(this.state!=="grilled")
