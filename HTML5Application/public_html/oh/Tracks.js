@@ -1,4 +1,25 @@
+
 var tracksJSON = 
-    [[{"difficulty":"easy", "name":"smallDiamond"}, {"difficulty":"easy", "number":2}],
-    [{"difficulty":"easy", "number":1}, {"difficulty":"easy", "number":1}]]
-;
+    [[
+        [{"difficulty":"easy", "name":"smallDiamond"}],
+        
+        [{"difficulty":"easy", "name":"horizontalLine"}],
+        
+        [{"difficulty":"easy", "name":"loop"}],
+        
+        [{"difficulty":"hard", "name":"seagull"}],
+        
+        [{"difficulty":"easy", "name":"loop"},
+            {"difficulty":"easy", "name":"downSlope"},
+            {"difficulty":"hard", "name":"falcon"}],
+        
+        [{"difficulty":"easy", "name":"horizontalLine"},
+            {"difficulty":"hard", "name":"duck"},
+            {"difficulty":"easy", "name":"downSlope"},
+            {"difficulty":"easy", "name":"horizontalLine"},
+            {"difficulty":"easy", "name":"horizontalLine"},
+            {"difficulty":"easy", "name":"horizontalLine"},
+            {"difficulty":"hard", "name":"crow"},
+            {"difficulty":"easy", "name":"greatDiamond"}
+        ]
+    ]];

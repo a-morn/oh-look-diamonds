@@ -171,7 +171,7 @@ var CatzRocket = (function(){
         }
         else if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
         {
-            catzRocket.catzVelocity -= (2.3*grav-wind)*event.delta/1000;          
+            catzRocket.catzVelocity -= (3.2*grav-wind)*event.delta/1000;          
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
             if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
@@ -319,7 +319,8 @@ var CatzRocket = (function(){
                 && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop
                 && catzRocket.frenzyCount>0)
         {
-            if (catzRocket.frenzyCount>100)
+            if (catzRocket.frenzyCount>100 && 
+                    catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
             {
                 catzRocket.catz.gotoAndPlay("frenzy ready");
                 catzRocket.rocket.alpha=0;

@@ -1,6 +1,7 @@
 var RocketShip = (function(){
     var 
     currentTrack = 0,
+    currentLevel = 0,
     catzRocket,
     house,                
     houseListener,
@@ -8,7 +9,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = true,
+    godMode = false,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -207,7 +208,6 @@ var RocketShip = (function(){
 
     function handleComplete()
     {
-        console.log(spriteSheetData);
         spriteSheetData.setValues(queue);
         createBG();
         createHouseView();
@@ -863,36 +863,38 @@ var RocketShip = (function(){
     function generateTrack()
     {
         var result = [];
+        var displacementX = 800;
+        var displacementY = catzRocket.catzRocketContainer.y;
+        if(tracksJSON[currentLevel].length===currentTrack)
+        {
+            currentTrack=0;
+        }
         if(gameStats.Difficulty>=0)
         {
-            var xDisplacement=800;
-            var yDisplacement=catzRocket.catzRocketContainer.y;
-            for(j=0;j<tracksJSON[currentTrack].length;j++)
-            {                
-                var element1  = $.extend(true, [], trackPartsJSON[tracksJSON[currentTrack][j].difficulty][tracksJSON[currentTrack][j].number]);
-                for (i=0;i<element1.length;i++)
+            for(j=0;j<tracksJSON[currentLevel][currentTrack].length;j++)
+            {
+                var element = $.extend(true, [], trackPartsJSON[tracksJSON[currentLevel][currentTrack][j].difficulty][tracksJSON[currentLevel][currentTrack][j].name]);
+                 for (i=0;i<element.length;i++)
                 {
-                    element1[i].x+=xDisplacement;
-                    element1[i].y+=yDisplacement;
-                    if(i===element1.length-1)
+                    element[i].x+=displacementX;
+                    element[i].y+=displacementY;
+                    if(i===element.length-1)
                     {
-                        xDisplacement = element1[i].x;
-                        yDisplacement = element1[i].y;
+                        displacementX = element[i].x;
+                        displacementY = element[i].y;
                     }
                 }
-                console.log(result);
-                console.log(element1);
-                result = result.concat(element1);
-                console.log(result);
+                result = result.concat(element);                
             }
-            //currentTrack+=1;
-            console.log(result);
+            currentTrack+=1;
             return result;
         }
+        
         else if(gameStats.Difficulty===1)
         {
             
         }
+        
         else if(gameStats.Difficulty>1)
         {
             
@@ -947,7 +949,8 @@ var RocketShip = (function(){
                     }
                     else if(track[i].graphicType==="attackBird")
                     {
-                        spawnAttackBird(track[i].animation,5,track[i].x,track[i].y);
+                        var acc=4+2*Math.random();
+                        spawnAttackBird(track[i].animation,acc,track[i].x,track[i].y);
                     }
                 }
             }
@@ -1027,7 +1030,7 @@ var RocketShip = (function(){
             {
                 diCont.removeChildAt(i);
                 gameStats.score += 1;
-                catzRocket.frenzyCount+=10;
+                catzRocket.frenzyCount+=7.5;
                 arrayLength = arrayLength - 1;
                 icon = i - 1;
                 diamondSound.play();
@@ -1115,6 +1118,7 @@ var RocketShip = (function(){
     
     function spawnAttackBird(type,acc,x,y)
     {
+        
         var attackBird = new AttackBird(acc,seagullSheet,type);
         attackBirdCont.addChild(attackBird);
         collisionCheckDebug.addChild(attackBird.shape);
@@ -1525,7 +1529,9 @@ var RocketShip = (function(){
     
      function collisionResolve(bird,normX,normY,normDist)
     { 
-        if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
+        if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
         {
             bird.x+=normX*normDist*2;
             bird.y+=normY*normDist*2;
@@ -1537,6 +1543,11 @@ var RocketShip = (function(){
             bird.velocityX+=reflect*normX;
             bird.velocityY+=reflect*normY;
             catzRocket.catzVelocity-=reflect*normY/250;
+        }
+        else if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy
+                || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
+        {
+            bird.setGrilled();
         }
     }
    
@@ -1647,9 +1658,13 @@ var RocketShip = (function(){
     
     function crash()
     {
+        currentTrack=0;
+        currentLevel=0;
         catzRocket.rocket.x=0;
         catzRocket.rocket.alpha=1;
         lightningCont.removeAllChildren();
+        attackBirdCont.removeAllChildren();
+        diCont.removeAllChildren();
         directorState=directorStateEnum.Normal;
         catzRocket.isWounded=false;
         noWind();

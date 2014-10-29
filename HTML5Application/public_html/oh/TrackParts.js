@@ -4,7 +4,6 @@ var trackPartsJSON = {
                 //horizontal line
                 "horizontalLine":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
                     {"x":50,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
                     {"x":100,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
                     {"x":150,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
@@ -52,6 +51,11 @@ var trackPartsJSON = {
                 "greatDiamond":
                 [
                     {"x":0,"y":0, "type": "greatDiamond","animation":"cycle","graphicType":"sprite"}
+                ],
+                
+                "smallDiamond":
+                [
+                    {"x":0,"y":0, "type": "diamond","animation":"cycle","graphicType":"sprite"}
                 ]
             },
     "medium" : 

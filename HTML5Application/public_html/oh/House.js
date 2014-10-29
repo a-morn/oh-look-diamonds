@@ -247,7 +247,14 @@ var House = (function(){
         {            
             house.wick.addEventListener("click",(function(){house.lightFuse(rocketSong, gotoGameView);}));
         }
-        
+        house.hobo.x=-180;
+        house.hobo.y=350;
+        createjs.Tween.get(house.hobo)
+                .to({x:-170, y:340, rotation:10},350)
+                .to({x:-160, y:330, rotation:-10},350)
+                .to({x:-130, y:310, rotation:10},350)
+                .to({x:-140, y:290, rotation:-10},350)
+                .to({x:-110, y:225, rotation:0},350);
         house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
         
         stage.removeAllEventListeners();
