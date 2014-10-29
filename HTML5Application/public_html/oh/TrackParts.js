@@ -1,7 +1,8 @@
 var trackPartsJSON = {
     "easy" : 
-            [ 
+            { 
                 //horizontal line
+                "horizontalLine":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
                     {"x":50,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
@@ -12,6 +13,7 @@ var trackPartsJSON = {
                     {"x":300,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"}
                 ],
                 //straight downslope
+                "downSlope":
                 [
                     {"x":0,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":50,"y":10,"type":"diamond","animation":"cycle","graphicType":"sprite"},
@@ -21,6 +23,7 @@ var trackPartsJSON = {
                     {"x":250,"y":50,"type":"diamond","animation":"cycle","graphicType":"sprite"}
                 ],
                 ///looop
+                "loop":
                 [
                     {"x":	62.25701405	, "y":	-26.52635236	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	125.9907573	, "y":	-51.33121883	,type:"diamond","animation":"cycle","graphicType":"sprite"},
@@ -46,13 +49,15 @@ var trackPartsJSON = {
                     {"x":	856.1211905	, "y":	-76.01061641	,type:"diamond","animation":"cycle","graphicType":"sprite"}] 
                                 ,
                 //great diamond
+                "greatDiamond":
                 [
                     {"x":0,"y":0, "type": "greatDiamond","animation":"cycle","graphicType":"sprite"}
                 ]
-            ],
+            },
     "medium" : 
-            [
+            {
                 ///looop w seagull
+                "seagullLoop":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"},
                     {"x":	0	, "y":	0	,type:"diamond","animation":"cycle","graphicType":"sprite"},
@@ -79,32 +84,32 @@ var trackPartsJSON = {
                     {"x":	791.4098309	, "y":	-95.03864139	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	856.1211905	, "y":	-76.01061641	,type:"diamond","animation":"cycle","graphicType":"sprite"},]     
                 
-            ],
+    },
     "hard" : 
-            [
-                //falcon
+            {
+                "falcon":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
                 ],
-                //crow
+                "crow":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird"},
                 ],
-                //bat
+                "bat":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird"},
                 ],
-                //duck
+                "duck":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"duck","graphicType":"attackBird"},
                 ],
-                //seagull
+                "seagull":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"},
                 ],
-                //glasses
+                "glasses":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird"},
                 ]
-            ]
+            }
 };
