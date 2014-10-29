@@ -7,20 +7,14 @@ var gameProgressionJSON = {"HoboCatz":
         "ConversationNumber": 1
         },
         
-        {"Conditions":[{"ConditionType": "Score", "Score": 4, "OperatorType": "LargerThan"}],        
+        {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+                {"CondtitionType": "State", "State": "HoboCatHouseBuilt", "On":false}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": 2
         },
-        
-        {"Conditions":[{"ConditionType": "Score", "Score": 4, "OperatorType": "LargerThan"}],
-        
-        "HasHappend":false,
-        "ShouldReoccur":false,
-        "Chance":1,
-        "ConversationNumber": 3
-        },
+
         
         {"Conditions":[{"ConditionType": "State", "State": "BuildOrphanage", "On":false},
             {"ConditionType": "State", "State": "OrphanageBuilt", "On":false},
@@ -30,7 +24,7 @@ var gameProgressionJSON = {"HoboCatz":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.2,
-        "ConversationNumber": 4
+        "ConversationNumber": 3
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -38,7 +32,7 @@ var gameProgressionJSON = {"HoboCatz":
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
-        "ConversationNumber": 5
+        "ConversationNumber": 4
         },
         
         {"Conditions":[{"ConditionType": "State", "State": "BuildRehab", "On":false},
@@ -49,7 +43,7 @@ var gameProgressionJSON = {"HoboCatz":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.2,
-        "ConversationNumber": 6
+        "ConversationNumber": 5
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -57,7 +51,7 @@ var gameProgressionJSON = {"HoboCatz":
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
-        "ConversationNumber": 7
+        "ConversationNumber": 6
         }
         
     ]
