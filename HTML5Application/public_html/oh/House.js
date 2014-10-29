@@ -201,11 +201,6 @@ var House = (function(){
     
     house.lightFuse = function(rocketSong, gotoGameView)
     {        
-        //if song hasn't started yet
-//        if(rocketSong.getPosition()<100)
-//        {
-//            rocketSong.play();
-//        }
         house.wick.x=-225;
         house.wick.gotoAndPlay("cycle");
         house.wick.removeAllEventListeners();        

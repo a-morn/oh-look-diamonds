@@ -182,7 +182,7 @@ var RocketShip = (function(){
                     {id:"diamondhouse", src:"assets/new assets/sprites/diamond house progression.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
-                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    {id:"palladiumAlloySong", src:"assets/new assets/sound/pallaydiumAlloySongShort.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
                     {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
@@ -372,7 +372,7 @@ var RocketShip = (function(){
         house.catzSound2.stop();
         
         rocketSong = createjs.Sound.play("palladiumAlloySong",{loop:-1});
-        
+        rocketSong.stop();
         house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
         house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3,muteButton);
     }
@@ -589,6 +589,11 @@ var RocketShip = (function(){
     
     function gotoGameView()
     {
+        //if song hasn't started yet
+        if(rocketSong.getPosition()<100)
+        {
+            rocketSong.play();
+        }
         catzRocket.hideSnake();
         if(debugMode===false)
         {
@@ -1649,14 +1654,6 @@ var RocketShip = (function(){
         {
             house.catzSpeach.alpha -= 0.015;
         }            
-                
-        if(house.wickExclamation.alpha > 0.8 && house.wickExclamation.alpha < 0.9)
-        {                       
-            if(rocketSong.getPosition()<100)
-            {
-                rocketSong.play();
-            }
-        }
         
         house.hoboExclamation.alpha = house.hoboActive;                
         
