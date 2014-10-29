@@ -161,6 +161,14 @@ var RocketShip = (function(){
                     {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
+                    {id:"klonk1", src:"assets/new assets/sound/klonk1.mp3"},
+                    {id:"klonk2", src:"assets/new assets/sound/klonk2.mp3"},
+                    {id:"klonk3", src:"assets/new assets/sound/klonk3.mp3"},
+                    {id:"klonk4", src:"assets/new assets/sound/klonk4.mp3"},
+                    {id:"grilled", src:"assets/new assets/sound/grilled.mp3"},
+                    {id:"squawk1", src:"assets/new assets/sound/squawk1.mp3"},
+                    {id:"squawk2", src:"assets/new assets/sound/squawk2.mp3"},
+                    {id:"squawk3", src:"assets/new assets/sound/squawk3.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
@@ -174,7 +182,7 @@ var RocketShip = (function(){
                     {id:"diamondhouse", src:"assets/new assets/sprites/diamond house progression.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
-                    //{id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
+                    {id:"palladiumAlloySong", src:"assets/new assets/sound/palladium alloy.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
                     {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
@@ -363,8 +371,7 @@ var RocketShip = (function(){
         house.catzSound2 = createjs.Sound.play("catzSound2");
         house.catzSound2.stop();
         
-        rocketSong = createjs.Sound.play("palladiumAlloySong");
-        rocketSong.stop();                
+        rocketSong = createjs.Sound.play("palladiumAlloySong",{loop:-1});
         
         house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
         house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3,muteButton);
@@ -1543,6 +1550,15 @@ var RocketShip = (function(){
             bird.velocityX+=reflect*normX;
             bird.velocityY+=reflect*normY;
             catzRocket.catzVelocity-=reflect*normY/250;
+            
+            var rand = Math.floor(2*Math.random()+3);
+            var name = "klonk"+rand;
+            var instance = createjs.Sound.play(name);
+            instance.volume=0.15;
+            rand = Math.floor(3*Math.random()+1);
+            name = "squawk"+rand;
+            var instance = createjs.Sound.play(name);
+            instance.volume=0.15;
         }
         else if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy
                 || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)

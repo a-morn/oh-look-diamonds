@@ -114,4 +114,6 @@ AttackBird.prototype.setGrilled = function()
     this.velocityX = -10;
     this.gotoAndPlay("chicken");
     this.state = "grilled";
+    var instance = createjs.Sound.play("grilled");
+    instance.volume=1;
 }

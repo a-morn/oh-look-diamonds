@@ -67,6 +67,7 @@ var CatzRocket = (function(){
             if(catzRocket.rocketSounds[state]!==null)
             {
                 catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[state]);
+                catzRocket.rocketSound.volume = 0.5;
             }
         }
         if(state===catzRocket.catzStateEnum.Normal
