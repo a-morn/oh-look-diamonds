@@ -371,7 +371,7 @@ var RocketShip = (function(){
         house.catzSound2 = createjs.Sound.play("catzSound2");
         house.catzSound2.stop();
         
-        rocketSong = createjs.Sound.play("palladiumAlloySong",{loop:-1});
+        rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
         house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
         house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3,muteButton);
@@ -592,7 +592,7 @@ var RocketShip = (function(){
         //if song hasn't started yet
         if(rocketSong.getPosition()<100)
         {
-            rocketSong.play();
+            rocketSong.play({loop:-1});
         }
         catzRocket.hideSnake();
         if(debugMode===false)
