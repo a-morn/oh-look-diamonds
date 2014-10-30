@@ -46,6 +46,7 @@ var RocketShip = (function(){
     greatDiamondSheet,
     grav = 12,
     jump,           
+    parallaxCont = new createjs.Container(),
     attackBirdCont = new createjs.Container(),
     collisionCheckDebug = new createjs.Container(),
     lightningCont = new createjs.Container(),
@@ -69,6 +70,7 @@ var RocketShip = (function(){
     diSpeed = 25,    
     cloudSpeed = 25,
     fgSpeed = 14,
+    parallaxSpeed = 0.2,
     sgSpeed =25,
     crashed = false,
     bg,
@@ -155,6 +157,7 @@ var RocketShip = (function(){
                     {id: "diamondSound", src: "assets/diamondSound.mp3"},            
                     {id: "diamondShardCounter", src: "assets/new assets/img/DiamondIcon.png"},                    
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
+                    {id:"bgParallax", src:"assets/new assets/img/background parallax.png"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
                     {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
@@ -402,6 +405,15 @@ var RocketShip = (function(){
         diCont.addChild(diamond);
         diCont.x = 0;
         diCont.y = 0;
+        
+        var bgParallax = new createjs.Bitmap(queue.getResult("bgParallax"));
+        bgParallax.x=0;
+        bgParallax.y=-200;
+        
+        var bgParallax2 = new createjs.Bitmap(queue.getResult("bgParallax"));
+        bgParallax2.x=2463;
+        bgParallax2.y=-200;
+        parallaxCont.addChild(bgParallax,bgParallax2);
 
         var fgGround1 = new createjs.Bitmap(queue.getResult("fgGround"));
         //fgGround.scaleX=0.3;
@@ -582,7 +594,7 @@ var RocketShip = (function(){
         "hawk" : seagullSheet
         };
         
-        gameView.addChild(bg,starCont,catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
+        gameView.addChild(bg,starCont,parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
             exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
              cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
     }
@@ -641,6 +653,7 @@ var RocketShip = (function(){
         cloudSpeed = (12.5+12.5* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
         fgSpeed = (7+7* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
         sgSpeed = (6+6* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
+        parallaxSpeed = (0.3+0.3* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
         if(!event.paused)
         {                
             if(catzRocket.invincibilityCounter>0)
@@ -664,6 +677,7 @@ var RocketShip = (function(){
             updateVertices();
             updateDirector(event);
             updateFg(event);
+            updateParallax(event);
             updateDiamonds(event);
             updateClouds(event);
             updateWorldContainer();
@@ -705,6 +719,19 @@ var RocketShip = (function(){
           }
     }
 
+    function updateParallax(event)
+    {
+        var arrayLength = parallaxCont.children.length;    
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = parallaxCont.children[i];        
+            if (kid.x <= -2463)
+            {
+              kid.x = kid.x + 2*2463;
+            }
+            kid.x = kid.x - parallaxSpeed*event.delta/10; 
+        }                
+    }
+    
     function updateFg(event)
     {
         if(Math.random()>0.98)
