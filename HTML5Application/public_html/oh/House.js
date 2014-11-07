@@ -6,6 +6,7 @@ var House = (function(){
         hobo: null,
         catz: null,
         dialogID: 0,
+        cricketsSound: null,
         wick: null,
         diamondHouse: null,
         hoboSpeach: null,
@@ -31,6 +32,7 @@ var House = (function(){
     };
     house.gotoHouseView = function(gameStats)
     {
+        house.cricketsSound = createjs.Sound.play("crickets",{loop:true});
         var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
         for(i=0;i<hoboCatzProgression.length;i++)
         {                        

@@ -168,6 +168,7 @@ var RocketShip = (function(){
                     {id:"klonk2", src:"assets/new assets/sound/klonk2.mp3"},
                     {id:"klonk3", src:"assets/new assets/sound/klonk3.mp3"},
                     {id:"klonk4", src:"assets/new assets/sound/klonk4.mp3"},
+                    {id:"crickets", src:"assets/new assets/sound/crickets.mp3"},
                     {id:"grilled", src:"assets/new assets/sound/grilled.mp3"},
                     {id:"squawk1", src:"assets/new assets/sound/squawk1.mp3"},
                     {id:"squawk2", src:"assets/new assets/sound/squawk2.mp3"},
@@ -601,6 +602,7 @@ var RocketShip = (function(){
     
     function gotoGameView()
     {
+        house.cricketsSound.stop();
         //if song hasn't started yet
         if(rocketSong.getPosition()<100)
         {
@@ -1528,6 +1530,11 @@ var RocketShip = (function(){
                 catzRocket.invincibilityCounter=1000;
             }
             else{ getHit();}
+            if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
+            {
+                setTimeout(function() {createjs.Ticker.setPaused(false);},325);
+                createjs.Ticker.setPaused(true);
+            }
         }
         return true;
     }
