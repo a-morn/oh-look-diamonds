@@ -174,6 +174,8 @@ var RocketShip = (function(){
                     {id:"squawk2", src:"assets/new assets/sound/squawk2.mp3"},
                     {id:"squawk3", src:"assets/new assets/sound/squawk3.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
+                    {id:"mouseHobo", src:"assets/new assets/img/mouseover hobo.png"},
+                    {id:"mouseRocket", src:"assets/new assets/img/mouseover rocket.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
                     {id:"rocket", src:"assets/new assets/img/rocket.png"},
@@ -225,6 +227,7 @@ var RocketShip = (function(){
         createHouseView();
         createGameView();
         stage.addChild(bg,starCont);
+        stage.enableMouseOver();
         house.gotoHouseViewNormal(gameStats, stage, gameView,text, diamondShardCounter,
             muteButton, gameListener, rocketSong, gotoGameView);
         houseListener = createjs.Ticker.on("tick", houseTick,this);
@@ -303,6 +306,20 @@ var RocketShip = (function(){
         house.diamondHouse.y=310;
         house.diamondHouse.rotation = 12;
         
+        house.mouseHobo = new createjs.Bitmap(queue.getResult("mouseHobo"));
+        house.mouseHobo.scaleX=0.5;
+        house.mouseHobo.scaleY=0.5;  
+        house.mouseHobo.x=110;
+        house.mouseHobo.y=316;
+        house.mouseHobo.alpha=0;
+        
+        house.mouseRocket = new createjs.Bitmap(queue.getResult("mouseRocket"));
+        house.mouseRocket.scaleX=1;
+        house.mouseRocket.scaleY=1;  
+        house.mouseRocket.x=207;
+        house.mouseRocket.y=338;
+        house.mouseRocket.alpha=0;
+        
         
         catData = spriteSheetData.cat;
         catSheet = new createjs.SpriteSheet(catData);
@@ -321,6 +338,12 @@ var RocketShip = (function(){
         house.wick.x=-210;
         house.wick.scaleX=1.5;
         house.wick.scaleY=1.5;
+        
+        house.wickLight = new createjs.Shape();
+        house.wickLight.graphics.beginFill("#ffcc00").dc(0,0,1.5);
+        house.wickLight.x = 174;
+        house.wickLight.y = 319;
+        house.wickLight.alpha = 0;
         
         house.hoboSpeach = new createjs.Text("0", "16px Courier New", "#ffffcc"); 
         house.hoboSpeach.x = 10;             
@@ -377,8 +400,11 @@ var RocketShip = (function(){
         
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
-        house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
-        house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, house.choice2, house.choice3,muteButton);
+        house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, 
+            house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
+            house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
+            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
+            house.wickLight);
     }
        
    function createBG()
@@ -1689,7 +1715,10 @@ var RocketShip = (function(){
             house.catzSpeach.alpha -= 0.015;
         }            
         
-        house.hoboExclamation.alpha = house.hoboActive;                
+        if(!house.hoboActive)
+        {
+            house.hoboExclamation.alpha=0;  
+        }
         
         if(house.wickActive && house.wickExclamation.alpha <1)
         {

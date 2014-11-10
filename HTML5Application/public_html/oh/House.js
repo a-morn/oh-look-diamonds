@@ -4,10 +4,13 @@ var House = (function(){
         houseView: null,        
         crashRocket: null,
         hobo: null,
+        mouseHobo: null,
+        mouseRocket: null,
         catz: null,
         dialogID: 0,
         cricketsSound: null,
         wick: null,
+        wickLight: null,
         diamondHouse: null,
         hoboSpeach: null,
         catzSpeach: null,
@@ -186,7 +189,8 @@ var House = (function(){
                 house.wickActive = true;
                 house.hoboActive = false;
                 house.wick.addEventListener("click",(function(){house.lightFuse(gameStats,gotoGameView);}));                                
-                
+                house.wick.addEventListener("mouseover", house.highlightRocket);
+                house.wick.addEventListener("mouseout", house.downlightRocket);
                 //To shift to idle speach. Should be implemented smarter.
                 house.updateHouse(gameStats);
             }
@@ -203,13 +207,45 @@ var House = (function(){
     
     house.lightFuse = function(rocketSong, gotoGameView)
     {        
+        house.mouseRocket.alpha = 0;
+        house.wickLight.alpha = 0;
         house.wick.x=-225;
         house.wick.gotoAndPlay("cycle");
         house.wick.removeAllEventListeners();        
         house.wick.addEventListener("animationend",gotoGameView);
         house.catzSpeach.text ="";
         house.hoboSpeach.text ="";
-    };        
+    };    
+    
+    house.highlightHobo = function()
+    {
+        house.mouseHobo.alpha = 1;
+        if(house.hoboActive)
+        {
+            house.hoboExclamation.alpha=1;
+        }
+    };
+    
+    house.downlightHobo = function()
+    {
+        house.mouseHobo.alpha = 0;
+        if(house.hoboActive)
+        {
+            house.hoboExclamation.alpha=0.5;
+        }
+    };
+    
+    house.highlightRocket = function()
+    {
+        house.mouseRocket.alpha = 1;
+        house.wickLight.alpha = 0.7;
+    };
+    
+    house.downlightRocket = function()
+    {
+        house.mouseRocket.alpha = 0;
+        house.wickLight.alpha = 0;
+    };
     
     house.updateHouse = function(gameStats)
     {
@@ -234,8 +270,21 @@ var House = (function(){
 
     };
     
+    house.addHoboEvents = function(gameStats, text, gotoGameView)
+    {
+        if(house.hoboActive)
+        {
+            house.hoboExclamation.alpha=0.5;
+        }
+        house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
+        house.hobo.addEventListener("mouseover", house.highlightHobo);
+        house.hobo.addEventListener("mouseout", house.downlightHobo);
+    }
+    
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, rocketSong, gotoGameView)
     {
+        
+        house.hoboExclamation.alpha=0;
         house.gotoHouseView(gameStats);
         house.wick.x=-210;
         house.wick.removeAllEventListeners();
@@ -243,18 +292,20 @@ var House = (function(){
         if(house.wickActive)
         {            
             house.wick.addEventListener("click",(function(){house.lightFuse(rocketSong, gotoGameView);}));
+            house.wick.addEventListener("mouseover", house.highlightRocket);
+            house.wick.addEventListener("mouseout", house.downlightRocket);
         }
         house.hobo.x=-180;
         house.hobo.y=350;
-        createjs.Tween.get(house.hobo)
+    createjs.Tween.get(house.hobo)
                 .to({x:-170, y:340, rotation:10},350)
                 .to({x:-160, y:330, rotation:-10},350)
                 .to({x:-130, y:310, rotation:10},350)
                 .to({x:-140, y:290, rotation:-10},350)
-                .to({x:-110, y:225, rotation:0},350);
-        house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
-        
+                .to({x:-110, y:225, rotation:0},350)
+                .call(house.addHoboEvents,[gameStats, text, gotoGameView]);
         stage.removeAllEventListeners();
+
         stage.removeChild(gameView,text, diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();
@@ -314,6 +365,8 @@ var House = (function(){
     {
         house.wickActive = true;
         house.wick.addEventListener("click",(function(){house.lightFuse(gameStats, gotoGameView);}));    
+        house.wick.addEventListener("mouseover", house.highlightRocket);
+        house.wick.addEventListener("mouseout", house.downlightRocket);
     };
     
     return house;
