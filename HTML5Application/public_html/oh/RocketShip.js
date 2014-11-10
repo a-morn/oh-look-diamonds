@@ -157,6 +157,7 @@ var RocketShip = (function(){
                     {id: "diamondSound", src: "assets/diamondSound.mp3"},            
                     {id: "diamondShardCounter", src: "assets/new assets/img/DiamondIcon.png"},                    
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
+                    {id:"ohlookdiamonds", src:"assets/new assets/img/ohlookdiamonds.png"},                    
                     {id:"bgParallax", src:"assets/new assets/img/background parallax.png"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
@@ -289,6 +290,22 @@ var RocketShip = (function(){
         house.hobo.scaleX=0.8;
         house.hobo.scaleY=0.8;        
         
+        house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
+        house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
+        house.oh.x=100;
+        house.oh.y=-1450;
+        house.oh.alpha=0;
+        house.look = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
+        house.look.x=350;
+        house.look.y=-1450;
+        house.look.sourceRect = new createjs.Rectangle(227,0,400,160);
+        house.look.alpha=0;;
+        house.diamonds = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
+        house.diamonds.sourceRect = new createjs.Rectangle(0,176,620,160);
+        house.diamonds.x=100;
+        house.diamonds.y=-1273;
+        house.diamonds.alpha=0;
+        
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
         house.crashRocket.regY=83;
@@ -400,11 +417,52 @@ var RocketShip = (function(){
         
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
+        house.houseView.y=1500;
+        bg.addEventListener("click",showOh);
         house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, 
             house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
-            house.wickLight);
+            house.wickLight,house.oh, house.look, house.diamonds);
+    }
+    
+    function showOh()
+    {
+        bg.removeAllEventListeners();
+        bg.addEventListener("click",showLook);
+        createjs.Tween.get(house.oh).to({alpha:1},3000);
+    }
+    
+    function showLook()
+    {
+        bg.removeAllEventListeners();
+        bg.addEventListener("click",showDiamonds);
+        createjs.Tween.get(house.look).to({alpha:1},3000);
+    }
+    
+    function showDiamonds()
+    {
+        bg.removeAllEventListeners();
+        bg.addEventListener("click",goDown);
+        createjs.Tween.get(house.diamonds).to({alpha:1},3000);
+    }
+    
+    function goDown()
+    {
+        bg.removeAllEventListeners();
+        createjs.Tween.get(house.houseView).to({y:0},4000,createjs.Ease.quadInOut);
+        createjs.Tween.get(house.hobo)
+            .wait(7000)
+            .to({x:-270, y:270, rotation:0},300)
+            .to({x:-260, y:270, rotation:-5},300)
+            .to({x:-230, y:270, rotation:0},300)
+            .to({x:-200, y:270, rotation:-5},300)
+            .to({x:-170, y:270, rotation:0},300)
+            .to({x:-160, y:270, rotation:-5},300)
+            .to({x:-130, y:260, rotation:0},300)
+            .to({x:-140, y:260, rotation:-5},300)
+            .to({x:-110, y:225, rotation:0},300)
+            .call(house.addHoboEvents,[gameStats, text, gotoGameView]);
     }
        
    function createBG()

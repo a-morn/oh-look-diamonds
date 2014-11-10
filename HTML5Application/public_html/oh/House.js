@@ -10,6 +10,9 @@ var House = (function(){
         dialogID: 0,
         cricketsSound: null,
         wick: null,
+        oh: null,
+        look: null,
+        diamonds: null,
         wickLight: null,
         diamondHouse: null,
         hoboSpeach: null,
@@ -186,13 +189,16 @@ var House = (function(){
             if(dialog.dialog[house.dialogID].End)
             {
                 //This doesn't work right as activateWick is called from gotoHouseView
+                house.wick.addEventListener("click",(function(){house.lightFuse(gameStats, gotoGameView);})); 
                 house.wickActive = true;
                 house.hoboActive = false;
-                createjs.Tween.removeAllTweens(house.wickExclamation);
-                createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
-                house.wick.addEventListener("click",(function(){house.lightFuse(gameStats,gotoGameView);}));                                
-                house.wick.addEventListener("mouseover", house.highlightRocket);
-                house.wick.addEventListener("mouseout", house.downlightRocket);
+                if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
+                    createjs.Tween.removeAllTweens(house.wickExclamation);
+                    createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
+                }
+                createjs.Tween.removeAllTweens(house.wick);
+                createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
+                        .call(house.activateWick);
                 //To shift to idle speach. Should be implemented smarter.
                 house.updateHouse(gameStats);
             }
@@ -288,24 +294,18 @@ var House = (function(){
         
         house.hoboExclamation.alpha=0;
         house.gotoHouseView(gameStats);
-        house.wick.x=-210;
+        house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
         if(house.wickActive)
-        {            
+        {
+            house.wick.x=-210;
             house.wick.addEventListener("click",(function(){house.lightFuse(rocketSong, gotoGameView);}));
             house.wick.addEventListener("mouseover", house.highlightRocket);
             house.wick.addEventListener("mouseout", house.downlightRocket);
         }
-        house.hobo.x=-180;
-        house.hobo.y=350;
-    createjs.Tween.get(house.hobo)
-                .to({x:-170, y:340, rotation:10},350)
-                .to({x:-160, y:330, rotation:-10},350)
-                .to({x:-130, y:310, rotation:10},350)
-                .to({x:-140, y:290, rotation:-10},350)
-                .to({x:-110, y:225, rotation:0},350)
-                .call(house.addHoboEvents,[gameStats, text, gotoGameView]);
+        house.hobo.x=-300;
+        house.hobo.y=270;
         stage.removeAllEventListeners();
 
         stage.removeChild(gameView,text, diamondShardCounter,muteButton);
@@ -364,9 +364,7 @@ var House = (function(){
     };           
     
     house.activateWick = function(gameStats, gotoGameView)
-    {
-        house.wickActive = true;
-        house.wick.addEventListener("click",(function(){house.lightFuse(gameStats, gotoGameView);}));    
+    {   
         house.wick.addEventListener("mouseover", house.highlightRocket);
         house.wick.addEventListener("mouseout", house.downlightRocket);
     };
