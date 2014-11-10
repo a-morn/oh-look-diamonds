@@ -188,6 +188,8 @@ var House = (function(){
                 //This doesn't work right as activateWick is called from gotoHouseView
                 house.wickActive = true;
                 house.hoboActive = false;
+                createjs.Tween.removeAllTweens(house.wickExclamation);
+                createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
                 house.wick.addEventListener("click",(function(){house.lightFuse(gameStats,gotoGameView);}));                                
                 house.wick.addEventListener("mouseover", house.highlightRocket);
                 house.wick.addEventListener("mouseout", house.downlightRocket);

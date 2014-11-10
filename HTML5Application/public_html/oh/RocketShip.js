@@ -345,43 +345,43 @@ var RocketShip = (function(){
         house.wickLight.y = 319;
         house.wickLight.alpha = 0;
         
-        house.hoboSpeach = new createjs.Text("0", "16px Courier New", "#ffffcc"); 
+        house.hoboSpeach = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
         house.hoboSpeach.x = 10;             
         house.hoboSpeach.y = 240;
         house.hoboSpeach.text = "";
         house.hoboSpeach.alpha= 0;
         
-        house.hoboExclamation = new createjs.Text("0", "18px Courier New", "#ffcc00"); 
+        house.hoboExclamation = new createjs.Text("0", "18px Fauna One", "#ffcc00"); 
         house.hoboExclamation.x = 115;             
         house.hoboExclamation.y = 280;
         house.hoboExclamation.text = "!";
         house.hoboExclamation.alpha= 0;
         
-        house.catzSpeach = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
+        house.catzSpeach = new createjs.Text("0", "12px Fauna One", "#ffffcc"); 
         house.catzSpeach.x = 350;             
         house.catzSpeach.y = 180;
         house.catzSpeach.text = "";
         house.catzSpeach.Alpha = 0;
         
-        house.wickExclamation = new createjs.Text("0", "10px Courier New", "#ffcc00"); 
+        house.wickExclamation = new createjs.Text("0", "10px Fauna One", "#ffcc00"); 
         house.wickExclamation.x = 185;             
-        house.wickExclamation.y = 310;
-        house.wickExclamation.text = "<-- Fire up the rocket";
+        house.wickExclamation.y = 313;
+        house.wickExclamation.text = "<--------- Fire up the rocket";
         house.wickExclamation.alpha= 0;
         
-        house.choice1 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        house.choice1 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
         house.choice1.x = 0;             
         house.choice1.y = 40;
         house.choice1.text = "";
         house.choice1.Alpha = 0;
         
-        house.choice2 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        house.choice2 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
         house.choice2.x = 0;             
         house.choice2.y = 60;
         house.choice2.text = "";
         house.choice2.Alpha = 0;
         
-        house.choice3 = new createjs.Text("", "20px Courier New", "#ffcc00"); 
+        house.choice3 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
         house.choice3.x = 0;             
         house.choice3.y = 80;
         house.choice3.text = "";
@@ -457,7 +457,7 @@ var RocketShip = (function(){
         diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
         diamondShardCounter.scaleY= 0.8;
         diamondShardCounter.scaleX= 0.8;        
-        text = new createjs.Text("0", "20px Courier New", "white"); 
+        text = new createjs.Text("0", "20px Fauna One", "white"); 
         text.x = 60;             
         text.y = 25;
         
@@ -1718,11 +1718,6 @@ var RocketShip = (function(){
         if(!house.hoboActive)
         {
             house.hoboExclamation.alpha=0;  
-        }
-        
-        if(house.wickActive && house.wickExclamation.alpha <1)
-        {
-            house.wickExclamation.alpha += 0.01;
         }
         
         debugText.text =                 
