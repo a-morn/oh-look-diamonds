@@ -13,6 +13,7 @@ var House = (function(){
         oh: null,
         look: null,
         diamonds: null,
+        lookingAtStarsButton: null,
         wickLight: null,
         diamondHouse: null,
         hoboSpeach: null,
@@ -297,6 +298,7 @@ var House = (function(){
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
+        stage.removeAllEventListeners();
         if(house.wickActive)
         {
             house.wick.x=-210;
@@ -306,8 +308,6 @@ var House = (function(){
         }
         house.hobo.x=-300;
         house.hobo.y=270;
-        stage.removeAllEventListeners();
-
         stage.removeChild(gameView,text, diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();

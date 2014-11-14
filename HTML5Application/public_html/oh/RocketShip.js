@@ -24,6 +24,7 @@ var RocketShip = (function(){
     norm,
     newBounds,
     catzBounds,
+    squawkSound,
     debugText,
     gameView,    
     gameListener,    
@@ -165,6 +166,7 @@ var RocketShip = (function(){
                     {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
+                    {id:"wind", src:"assets/new assets/sound/wind.mp3"},
                     {id:"klonk1", src:"assets/new assets/sound/klonk1.mp3"},
                     {id:"klonk2", src:"assets/new assets/sound/klonk2.mp3"},
                     {id:"klonk3", src:"assets/new assets/sound/klonk3.mp3"},
@@ -202,7 +204,9 @@ var RocketShip = (function(){
                     {id:"frenzySound", src:"assets/new assets/sound/frenzy.mp3"},
                     {id:"emeregencyBoostSound", src:"assets/new assets/sound/emergencyBoost.mp3"},
                     {id:"miscSound", src:"assets/new assets/sound/misc.mp3"},
-                    {id:"catzScreamSound", src:"assets/new assets/sound/catzScream.mp3"},
+                    {id:"catzScream1", src:"assets/new assets/sound/catzScream.mp3"},
+                    {id:"catzScream2", src:"assets/new assets/sound/cat_meow_wounded_1.mp3"},
+                    {id:"catzScream3", src:"assets/new assets/sound/cat_meow_wounded_2.mp3"},
                     //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"},
                     {id:"mute", src:"assets/new assets/sprites/mute button.png"}
@@ -267,6 +271,7 @@ var RocketShip = (function(){
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
                 + "HoboDialogNo: " + house.hoboDialogNumber                        
+                + "bg.y: " + bg.y                        
     }
     
     function createHouseView()
@@ -337,6 +342,12 @@ var RocketShip = (function(){
         house.mouseRocket.y=338;
         house.mouseRocket.alpha=0;
         
+//        house.lookingAtStarsButton = new createjs.Shape();
+//        house.lookingAtStarsButton.graphics.f("black").dr(0,0,760,50);
+//        house.lookingAtStarsButton.alpha=0.01;
+//        house.lookingAtStarsButton.addEventListener("mouseover",shiftUp);
+//        house.lookingAtStarsButton.addEventListener("mouseout",shiftDown);
+//        house.lookingAtStarsButton.addEventListener("click",goUp);
         
         catData = spriteSheetData.cat;
         catSheet = new createjs.SpriteSheet(catData);
@@ -418,12 +429,14 @@ var RocketShip = (function(){
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
         house.houseView.y=1500;
+        bg.y=0;
+        starCont.y=1000;
         bg.addEventListener("click",showOh);
-        house.houseView.addChild(bg,starCont,house.diamondHouse,house.catz,house.house, 
+        house.houseView.addChild(house.diamondHouse,house.catz,house.house, 
             house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
-            house.wickLight,house.oh, house.look, house.diamonds);
+            house.wickLight,house.oh, house.look, house.diamonds, house.lookingAtStarsButton);
     }
     
     function showOh()
@@ -451,6 +464,8 @@ var RocketShip = (function(){
     {
         bg.removeAllEventListeners();
         createjs.Tween.get(house.houseView).to({y:0},4000,createjs.Ease.quadInOut);
+        createjs.Tween.get(bg).to({y:-1200},4000,createjs.Ease.quadInOut);
+        createjs.Tween.get(starCont).to({y:0},4000,createjs.Ease.quadInOut);
         createjs.Tween.get(house.hobo)
             .wait(7000)
             .to({x:-270, y:270, rotation:0},300)
@@ -463,6 +478,39 @@ var RocketShip = (function(){
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
             .call(house.addHoboEvents,[gameStats, text, gotoGameView]);
+    }
+    
+    function shiftUp()
+    {
+//        house.houseView = 20;
+//        bg = -1180;
+//        starCont = 20;
+    }
+    
+    function shiftDown()
+    {
+//        house.houseView = 0;
+//        bg = -1200;
+//        starCont = 0;        
+    }
+    
+    function goDownAgain()
+    {
+//        bg.removeAllEventListeners();
+//        createjs.Tween.get(house.houseView).to({y:0},4000,createjs.Ease.quadInOut);
+//        createjs.Tween.get(bg).to({y:-1200},4000,createjs.Ease.quadInOut);
+//        createjs.Tween.get(starCont).to({y:0},4000,createjs.Ease.quadInOut);
+    }
+    
+        function goUp()
+    {
+//        createjs.Tween.removeAllTweens(house.houseView);
+//        createjs.Tween.removeAllTweens(bg);
+//        createjs.Tween.removeAllTweens(starCont);
+//        createjs.Tween.get(house.houseView).to({y:1500},2000,createjs.Ease.quadInOut);
+//        createjs.Tween.get(bg).to({y:0},2000,createjs.Ease.quadInOut);
+//        createjs.Tween.get(starCont).to({y:1000},2000,createjs.Ease.quadInOut);
+//        bg.addEventListener("click",goDownAgain);
     }
        
    function createBG()
@@ -669,6 +717,10 @@ var RocketShip = (function(){
         diamondSound = createjs.Sound.play("diamondSound");
         diamondSound.volume = 0.2;
         diamondSound.stop();
+        
+        squawkSound = createjs.Sound.play(name);
+        squawkSound.volume=0.15;
+        squawkSound.stop();
         gameView = new createjs.Container();
         greatDiamondSheet = new createjs.SpriteSheet(spriteSheetData.greatDiamond);
          sheetDict = {
@@ -679,7 +731,7 @@ var RocketShip = (function(){
         "hawk" : seagullSheet
         };
         
-        gameView.addChild(bg,starCont,parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
+        gameView.addChild(parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
             exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
              cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
     }
@@ -719,7 +771,7 @@ var RocketShip = (function(){
             star = new createjs.Bitmap(queue.getResult("star"));
             delay = Math.random()*2000;
             star.x = Math.random()*800;
-            star.y= Math.random()*900-450;
+            star.y= Math.random()*1450-1000;
             createjs.Tween.get(star,{loop:true})
                     .wait(delay)
                     .to({alpha:0},1000)
@@ -1606,6 +1658,8 @@ var RocketShip = (function(){
             if(!catzRocket.isWounded)
             {                
                 catzRocket.isWounded=true;
+                var instance = createjs.Sound.play("catzScream2");
+                instance.volume = 0.5;
                 catzRocket.catz.gotoAndPlay("slipping");
                 createjs.Tween.get(catzRocket.catz)
                         .to({y:10, x:-25},100)
@@ -1616,7 +1670,7 @@ var RocketShip = (function(){
             else{ getHit();}
             if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
             {
-                setTimeout(function() {createjs.Ticker.setPaused(false);},325);
+                setTimeout(function() {createjs.Ticker.setPaused(false);},125);
                 createjs.Ticker.setPaused(true);
             }
         }
@@ -1678,10 +1732,13 @@ var RocketShip = (function(){
             var name = "klonk"+rand;
             var instance = createjs.Sound.play(name);
             instance.volume=0.15;
-            rand = Math.floor(3*Math.random()+1);
-            name = "squawk"+rand;
-            var instance = createjs.Sound.play(name);
-            instance.volume=0.15;
+            if(squawkSound.playState !== createjs.Sound.PLAY_SUCCEEDED)
+            {
+                rand = Math.floor(3*Math.random()+1);
+                name = "squawk"+rand;
+                squawkSound = createjs.Sound.play(name);
+                squawkSound.volume=0.15;
+            }
         }
         else if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy
                 || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
