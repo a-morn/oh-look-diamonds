@@ -13,6 +13,7 @@ var House = (function(){
         oh: null,
         look: null,
         diamonds: null,
+        diCont : null,
         lookingAtStarsButton: null,
         wickLight: null,
         diamondHouse: null,

@@ -56,6 +56,7 @@ var RocketShip = (function(){
     hawkCont = new createjs.Container(),
     diCont = new createjs.Container(),
     fgCont = new createjs.Container(),
+    fgTopCont = new createjs.Container(),
     starCont = new createjs.Container(),
     cloudCont = new createjs.Container(),
     thunderCont = new createjs.Container(),
@@ -177,6 +178,7 @@ var RocketShip = (function(){
                     {id:"squawk2", src:"assets/new assets/sound/squawk2.mp3"},
                     {id:"squawk3", src:"assets/new assets/sound/squawk3.mp3"},
                     {id:"fgGround", src:"assets/new assets/img/fgGround.png"},
+                    {id:"fgGroundTop", src:"assets/new assets/img/fgGroundTop.png"},
                     {id:"mouseHobo", src:"assets/new assets/img/mouseover hobo.png"},
                     {id:"mouseRocket", src:"assets/new assets/img/mouseover rocket.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
@@ -312,6 +314,26 @@ var RocketShip = (function(){
         house.diamonds.y=-1273;
         house.diamonds.alpha=0;
         
+        house.diCont = new createjs.Container();
+        var diamondData = spriteSheetData.diamond;
+        diamondSheet = new createjs.SpriteSheet(diamondData);
+        var positions = [
+            {x:775,y:-1070},
+            {x:350,y:-1300},
+            {x:130,y:-1100},
+            {x:700,y:-1250},
+            {x:500,y:-1050}];
+        for(var i=0; i<positions.length;i++)
+        {
+            var diamond = new createjs.Sprite(diamondSheet,"cycle");
+            diamond.x=positions[i].x;
+            diamond.y=positions[i].y;
+            diamond.scaleX=0.8;
+            diamond.scaleY=0.8;
+            house.diCont.addChild(diamond);
+        }
+        house.diCont.alpha=0;
+
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
         house.crashRocket.regY=83;
@@ -437,7 +459,7 @@ var RocketShip = (function(){
             house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
-            house.wickLight,house.oh, house.look, house.diamonds, house.lookingAtStarsButton);
+            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton);
     }
     
     function showOh()
@@ -459,6 +481,7 @@ var RocketShip = (function(){
         bg.removeAllEventListeners();
         bg.addEventListener("click",goDown);
         createjs.Tween.get(house.diamonds).to({alpha:1},3000);
+        createjs.Tween.get(house.diCont).to({alpha:1},3000);
     }
     
     function goDown()
@@ -558,8 +581,20 @@ var RocketShip = (function(){
         //fgGround.scaleX=0.3;
         //fgGround.scaleY=0.3;
         fgGround2.x = 2000;
-        fgGround2.y = 300;                       
-        fgCont.addChild(fgGround1, fgGround2);    
+        fgGround2.y = 300;    
+        var fgGroundTop1 = new createjs.Bitmap(queue.getResult("fgGroundTop"));
+        //fgGround.scaleX=0.3;
+        //fgGround.scaleY=0.3;
+        fgGroundTop1.x = 0;
+        fgGroundTop1.y = -830;                       
+        var fgGroundTop2 = new createjs.Bitmap(queue.getResult("fgGroundTop"));
+        //fgGround.scaleX=0.3;
+        //fgGround.scaleY=0.3;
+        fgGroundTop2.x = 2000;
+        fgGroundTop2.y = -830; 
+        fgCont.addChild(fgGround1, fgGround2);  
+        fgTopCont.addChild(fgGroundTop1,fgGroundTop2); 
+        
 
         diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
         diamondShardCounter.scaleY= 0.8;
@@ -734,7 +769,7 @@ var RocketShip = (function(){
         
         gameView.addChild(parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
             exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
-             cloudCont,lightningCont,thunderCont,fgCont,leaves, collisionCheckDebug);
+             cloudCont,lightningCont,thunderCont,fgCont, fgTopCont,leaves, collisionCheckDebug);
     }
     
     function gotoGameView()
@@ -816,6 +851,7 @@ var RocketShip = (function(){
             updateVertices();
             updateDirector(event);
             updateFg(event);
+            updateFgTop(event);
             updateParallax(event);
             updateDiamonds(event);
             updateClouds(event);
@@ -914,6 +950,19 @@ var RocketShip = (function(){
         {
            leaves.x-= fgSpeed*event.delta/20;  
         }
+    }
+    
+    function updateFgTop(event)
+    {
+        var arrayLength = fgTopCont.children.length;    
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = fgTopCont.children[i];        
+            if (kid.x <= -3200)
+            {
+              kid.x = kid.x + 4000;
+            }
+            kid.x = kid.x - fgSpeed*event.delta/10; 
+        }   
     }
     
     function hideLeaves()
