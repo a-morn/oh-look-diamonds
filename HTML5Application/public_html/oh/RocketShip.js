@@ -209,6 +209,7 @@ var RocketShip = (function(){
                     {id:"catzScream3", src:"assets/new assets/sound/cat_meow_wounded_2.mp3"},
                     //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"},
+                    {id:"wickSound", src:"assets/new assets/sound/wick.mp3"},
                     {id:"mute", src:"assets/new assets/sprites/mute button.png"}
                 ];
 

@@ -39,7 +39,8 @@ var House = (function(){
     };
     house.gotoHouseView = function(gameStats)
     {
-        house.cricketsSound = createjs.Sound.play("crickets",{loop:true});
+        house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
+        house.cricketsSound.volume=0.1;
         var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
         for(i=0;i<hoboCatzProgression.length;i++)
         {                        
@@ -216,6 +217,7 @@ var House = (function(){
     
     house.lightFuse = function(rocketSong, gotoGameView)
     {        
+        createjs.Sound.play("wickSound");
         house.mouseRocket.alpha = 0;
         house.wickLight.alpha = 0;
         house.wick.x=-225;
