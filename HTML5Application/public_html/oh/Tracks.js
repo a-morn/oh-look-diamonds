@@ -1,7 +1,8 @@
 
 var tracksJSON = 
     [[
-        [{"difficulty":"easy", "name":"smallDiamond"}],
+        [{"difficulty":"easy", "name":"smallDiamond"},
+        {"difficulty":"hard", "name":"quadDucks"}],
         
         [{"difficulty":"easy", "name":"horizontalLine"}],
         

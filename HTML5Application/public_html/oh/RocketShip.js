@@ -1348,6 +1348,10 @@ var RocketShip = (function(){
         var attackBird = new AttackBird(acc,seagullSheet,type);
         attackBird.x = x;
         attackBird.y = y;
+        if(type==="duck")
+        {
+            attackBird.scaleX=-attackBird.scaleX;
+        }
         attackBirdCont.addChild(attackBird);
         collisionCheckDebug.addChild(attackBird.shape);
     }

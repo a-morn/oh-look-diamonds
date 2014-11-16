@@ -93,7 +93,7 @@ var trackPartsJSON = {
             {
                 "falcon":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird", "acc": 6},
+                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird", "acc": 8},
                 ],
                 "crow":
                 [
@@ -105,7 +105,19 @@ var trackPartsJSON = {
                 ],
                 "duck":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9},
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9},
+                ],
+                "dualDucks":
+                [
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9},
+                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9}
+                ],
+                "quadDucks":
+                [
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
+                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
+                    {"x":0, "y":200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
+                    {"x":0, "y":400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8}
                 ],
                 "seagull":
                 [
