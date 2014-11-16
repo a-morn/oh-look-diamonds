@@ -30,7 +30,7 @@ AttackBird.prototype.update = function (rocketX, rocketY, event)
 {
     if(this.currentAnimation==="falcon")
     {
-        this.updateSeagull(rocketX, rocketY,event);
+        this.updateFalcon(rocketX, rocketY,event);
     }
     else
     {
@@ -45,7 +45,7 @@ AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
     {
         var aX = this.acceleration*event.delta*(rocketX+500-this.x)/(1000);
         var aY = this.acceleration*event.delta*(rocketY-500-this.y)/(1000);
-        if(this.y-rocketY-500>0)
+        if(this.y-rocketY-200>0)
         {
             this.state="attacking";
             aX =0;
@@ -59,6 +59,16 @@ AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
         if(this.y-rocketY-100<0)
         {
             this.state="normal";
+        }
+        
+    }
+    else if(this.state==="soaring")
+    {
+        aX = this.acceleration*event.delta*(this.velocityX/2)/(1000);
+        aY = this.acceleration*event.delta*(this.velocityY/2)/(1000);
+        if(this.velocityX*this.velocityX+this.velocityY*this.velocityY<100)
+        {
+            this.state="attacking";
         }
         
     }

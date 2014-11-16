@@ -1176,8 +1176,7 @@ var RocketShip = (function(){
                     }
                     else if(track[i].graphicType==="attackBird")
                     {
-                        var acc=4+2*Math.random();
-                        spawnAttackBird(track[i].animation,acc,track[i].x,track[i].y);
+                        spawnAttackBird(track[i].animation,track[i].acc,track[i].x,track[i].y);
                     }
                 }
             }
@@ -1347,6 +1346,8 @@ var RocketShip = (function(){
     {
         
         var attackBird = new AttackBird(acc,seagullSheet,type);
+        attackBird.x = x;
+        attackBird.y = y;
         attackBirdCont.addChild(attackBird);
         collisionCheckDebug.addChild(attackBird.shape);
     }
@@ -1921,11 +1922,11 @@ var RocketShip = (function(){
         createjs.Tween.removeAllTweens(house.houseView);
         if(catzRocket.isHit)
         {            
-            house.gotoHouseViewWithoutRocket(gameStats, catzRocket);
+            house.gotoHouseViewWithoutRocket(gameStats, catzRocket, gotoGameView);
         }
         else
         {
-            house.gotoHouseViewWithRocket(gameStats, catzRocket);               
+            house.gotoHouseViewWithRocket(gameStats, catzRocket, gotoGameView);               
         }   
         catzRocket.isHit = false;
         catzRocket.isCrashed = false;
@@ -1959,7 +1960,7 @@ var RocketShip = (function(){
         createjs.Tween.get(house.wick)
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
-            .call((function(){house.activateWick(gameStats, gotoGameView);}));
+            .call((function(){house.activateWick(gotoGameView);}));
         stage.update();        
     }
     return rocketShip;

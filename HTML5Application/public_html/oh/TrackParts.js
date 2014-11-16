@@ -93,27 +93,27 @@ var trackPartsJSON = {
             {
                 "falcon":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"falcon","graphicType":"attackBird", "acc": 6},
                 ],
                 "crow":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird", "acc": 5},
                 ],
                 "bat":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird", "acc": 5},
                 ],
                 "duck":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9},
                 ],
                 "seagull":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird","acc": 3},
                 ],
                 "glasses":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird"},
+                    {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird","acc": 8},
                 ]
             }
 };

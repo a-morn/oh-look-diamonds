@@ -186,37 +186,38 @@ var House = (function(){
             {                                
                 if(!dialog.dialog[house.dialogID].End)
                 {
+                    console.log(dialog.dialog[house.dialogID].NextID);
                     house.dialogID = dialog.dialog[house.dialogID].NextID;                
                 }
-            }
-            if(dialog.dialog[house.dialogID].End)
-            {
-                //This doesn't work right as activateWick is called from gotoHouseView
-                house.wick.addEventListener("click",(function(){house.lightFuse(gameStats, gotoGameView);})); 
-                house.wickActive = true;
-                house.hoboActive = false;
-                if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
-                    createjs.Tween.removeAllTweens(house.wickExclamation);
-                    createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
+                else
+                {
+                    console.log("end");
+                    house.wickActive = true;
+                    house.hoboActive = false;
+                    if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
+                        createjs.Tween.removeAllTweens(house.wickExclamation);
+                        createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
+                    }
+                    createjs.Tween.removeAllTweens(house.wick);
+                    createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
+                            .call(function () {house.activateWick(gotoGameView)});
+                    //To shift to idle speach. Should be implemented smarter.
+                    house.updateHouse(gameStats);
+                    house.dialogID+=100;
                 }
-                createjs.Tween.removeAllTweens(house.wick);
-                createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
-                        .call(house.activateWick);
-                //To shift to idle speach. Should be implemented smarter.
-                house.updateHouse(gameStats);
             }
         }
         
         else
         {
-            house.hoboSpeach.text = dialog.idle.What;
+            house.hoboSpeach.text = dialog.idle.what;
             house.hoboSpeach.alpha = 1;            
         }
         
         
     };
     
-    house.lightFuse = function(rocketSong, gotoGameView)
+    house.lightFuse = function(gotoGameView)
     {        
         createjs.Sound.play("wickSound");
         house.mouseRocket.alpha = 0;
@@ -291,9 +292,9 @@ var House = (function(){
         house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
         house.hobo.addEventListener("mouseover", house.highlightHobo);
         house.hobo.addEventListener("mouseout", house.downlightHobo);
-    }
+    };
     
-    house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, rocketSong, gotoGameView)
+    house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {
         
         house.hoboExclamation.alpha=0;
@@ -305,7 +306,7 @@ var House = (function(){
         if(house.wickActive)
         {
             house.wick.x=-210;
-            house.wick.addEventListener("click",(function(){house.lightFuse(rocketSong, gotoGameView);}));
+            house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
             house.wick.addEventListener("mouseover", house.highlightRocket);
             house.wick.addEventListener("mouseout", house.downlightRocket);
         }
@@ -318,8 +319,9 @@ var House = (function(){
         createjs.Ticker.off("tick", gameListener);        
     };
     
-    house.gotoHouseViewWithRocket = function(gameStats, catzRocket)
+    house.gotoHouseViewWithRocket = function(gameStats, catzRocket, gotoGameView)
     {        
+        
         house.gotoHouseView(gameStats);
         house.crashRocket.alpha=1;
         house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
@@ -337,10 +339,11 @@ var House = (function(){
                 .to({x:330, y:330, rotation:-10},250)
                 .to({x:390, y:310, rotation:10},250)
                 .to({x:330, y:290, rotation:-10},250)
-                .to({x:360, y:270, rotation:0},250);
-    };
+                .to({x:360, y:270, rotation:0},250)
+                ;
+    };    
     
-    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket)
+    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket, gotoGameView)
     {
         house.gotoHouseView(gameStats);
         house.catz.x=300-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
@@ -366,8 +369,9 @@ var House = (function(){
                 .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
     };           
     
-    house.activateWick = function(gameStats, gotoGameView)
+    house.activateWick = function(gotoGameView)
     {   
+        house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
         house.wick.addEventListener("mouseover", house.highlightRocket);
         house.wick.addEventListener("mouseout", house.downlightRocket);
     };

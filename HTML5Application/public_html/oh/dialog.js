@@ -1,9 +1,9 @@
 var dialogJSON = {"HoboCatz": 
 [   
     {"dialog":[
-        {"Who": "Hobo-Cat", "What": "good evening", "Sound": "HoboCatSound1", "Choice" :false, "NextID":1, "End":false},
+        {"Who": "Hobo-Cat", "What": "Good evening", "Sound": "HoboCatSound1", "Choice" :false, "NextID":1, "End":false},
         {"Who": "Catz", "What": "meow", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
-        {"Who": "Hobo-Cat", "What": "whatcha lookin' at\n\
+        {"Who": "Hobo-Cat", "What": "Whatcha lookin' at\n\
 there, kitten?", "Sound": "hoboCatSound2", "Choice" :false, "NextID":3, "End":false},
         {"Who":"Catz", "What": "diamonds!", "Sound":"catzSound1", "Choice" :false, "NextID":4, "End":false},
         {"Who": "Hobo-Cat", "What": "Heh, kitten what you got\n\
@@ -12,7 +12,7 @@ big balls of gas and fire", "Sound": "hoboCatSound1", "Choice" :false, "NextID":
             ], "idle":{"what":"cough"}},
 
     {"dialog":[
-        {"Who": "Hobo-Cat", "What": "well I be damned - a diamond!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":1, "End":false},
+        {"Who": "Hobo-Cat", "What": "Well I be damned - a diamond!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":1, "End":false},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
         {"Who": "Hobo-Cat", "What": "for me? \n\
 much obliged, kitten!\n\
