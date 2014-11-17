@@ -186,13 +186,11 @@ var House = (function(){
             {                                
                 if(!dialog.dialog[house.dialogID].End)
                 {
-                    console.log(dialog.dialog[house.dialogID].NextID);
                     house.dialogID = dialog.dialog[house.dialogID].NextID;                
                 }
                 else
                 {
-                    console.log("end");
-                    house.wickActive = true;
+                      house.wickActive = true;
                     house.hoboActive = false;
                     if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
                         createjs.Tween.removeAllTweens(house.wickExclamation);

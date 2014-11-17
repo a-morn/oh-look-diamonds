@@ -3,7 +3,9 @@ var RocketShip = (function(){
     currentTrack = 0,
     currentLevel = 0,
     catzRocket,
-    house,                
+    house,     
+    hud,
+    hudPointer,
     houseListener,
     onTrack=false,                
     cloudIsIn = new Array(),
@@ -166,6 +168,8 @@ var RocketShip = (function(){
                     {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
                     {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
+                    {id:"hud", src:"assets/new assets/img/HUD.png"},                                        
+                    {id:"hudPointer", src:"assets/new assets/img/HUDpointer.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"wind", src:"assets/new assets/sound/wind.mp3"},
                     {id:"klonk1", src:"assets/new assets/sound/klonk1.mp3"},
@@ -599,9 +603,9 @@ var RocketShip = (function(){
         diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
         diamondShardCounter.scaleY= 0.8;
         diamondShardCounter.scaleX= 0.8;        
-        text = new createjs.Text("0", "20px Fauna One", "white"); 
-        text.x = 60;             
-        text.y = 25;
+        text = new createjs.Text("0", "22px Courier New", "white"); 
+        text.x = 608;             
+        text.y = 422;
         
         var rocketData = spriteSheetData.rocket;
            
@@ -678,6 +682,15 @@ var RocketShip = (function(){
         exitSmoke.scaleY = 0.5;
         exitSmoke.regX = 200;
         exitSmoke.regY = 200;
+        
+        hud = new createjs.Bitmap(queue.getResult("hud"));
+        hudPointer = new createjs.Bitmap(queue.getResult("hudPointer"));
+        hudPointer.regX=191;
+        hudPointer.regY=54;
+        hud.x=380;
+        hud.y=345;
+        hudPointer.x=550+191;
+        hudPointer.y=350+54;
         
         var leavesData = spriteSheetData.leaves;
         var leavesSheet = new createjs.SpriteSheet(leavesData);
@@ -787,7 +800,7 @@ var RocketShip = (function(){
             debugText.alpha=0;
         }
         stage.removeChild(house.houseView);
-        stage.addChild(gameView, windCont, text, diamondShardCounter, muteButton, debugText);
+        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, text,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -834,7 +847,26 @@ var RocketShip = (function(){
             {
                 catzRocket.invincibilityCounter-=event.delta;
             }
-            text.text = gameStats.score;            
+            if(gameStats.score<10)
+            {
+                text.text="000"+gameStats.score;
+            }
+            else if(gameStats.score<100)
+            {
+                text.text="00"+gameStats.score;
+            }
+            else if(gameStats.score<1000)
+            {
+                text.text="0"+gameStats.score;
+            }
+            else if(gameStats.score<10000)
+            {
+                text.text=gameStats.score;
+            }
+            else
+            {
+                text.text="alot";
+            }
             if(catzRocket.diamondFrenzyCharge>0)
             {
                 catzRocket.diamondFrenzyCharge -= event.delta/2000;
@@ -854,6 +886,7 @@ var RocketShip = (function(){
             updateFgTop(event);
             updateParallax(event);
             updateDiamonds(event);
+            updatePointer();
             updateClouds(event);
             updateWorldContainer();
             updateThunderClouds();
@@ -1237,6 +1270,11 @@ var RocketShip = (function(){
             directorState = 0;
             directorTimer=0;
         }
+    }
+    
+    function updatePointer()
+    {
+        hudPointer.rotation = Math.min(catzRocket.frenzyCount*1.5-45,100);
     }
 
     function updateDiamonds(event)
@@ -1912,7 +1950,7 @@ var RocketShip = (function(){
         catzRocket.silouette.alpha=0;
         catzRocket.catz.alpha = 1;
         stage.removeAllEventListeners();
-        stage.removeChild(gameView);
+        stage.removeChild(gameView,hud,hudPointer);
         stage.addChild(house.houseView);
         stage.update();
         house.wickExclamation.alpha= 0;
