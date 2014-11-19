@@ -64,6 +64,7 @@ AttackBird.prototype.updateDuck = function(rocketX,rocketY,event)
     else if(this.state==="grilled")
     {
         aY=200*this.acceleration*event.delta/1000;
+        this.rotation = Math.atan(this.velocityY/600)*360/3.14;
     }
     this.velocityY += aY;
     //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
@@ -95,6 +96,7 @@ AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
     {
         aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);
         aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);
+        this.rotation = Math.atan(aY/60)*270/3.14;
         if(this.y-(rocketY)>0)
         {
             this.rotation=-30;
@@ -119,6 +121,7 @@ AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event)
     {
         aX=0;
         aY=200*this.acceleration*event.delta/1000;
+        this.rotation = Math.atan(this.velocityY/600)*360/3.14;  
     }
     this.velocityX+=aX;
     this.velocityY += aY;
@@ -145,6 +148,7 @@ AttackBird.prototype.updateSeagull = function(rocketX, rocketY, event)
     {
         aX=0;
         aY=200*this.acceleration*event.delta/1000;
+        this.rotation = Math.atan(this.velocityY/600)*360/3.14;
     }
     this.velocityX+=aX;
     this.velocityY += aY;

@@ -8,7 +8,8 @@ var CatzRocket = (function(){
     isWounded: false,
     isHit : false,
     isCrashed : false,
-    flameColor : "#99ccff",    
+    flameColor : "#99ccff",
+    glass: null,
     heightOffset: 0,
     frenzyCount: 0,
     frenzyTimer: 0,
@@ -281,6 +282,7 @@ var CatzRocket = (function(){
             {
                 catzRocket.changeState(catzRocket.catzStateEnum.Normal);
                 catzRocket.catz.gotoAndPlay("no shake");
+                catzRocket.glass.gotoAndPlay("still");
                 catzRocket.rocket.alpha=1;
                 catzRocket.frenzyCount=0;
                 catzRocket.frenzyTimer=0;
@@ -310,6 +312,7 @@ var CatzRocket = (function(){
                     {
                         catzRocket.changeState(catzRocket.catzStateEnum.Frenzy);
                     }
+                    catzRocket.glass.gotoAndPlay("frenzy");
                     catzRocket.isWounded=false;
                     catzRocket.frenzyTimer=0;
                     catzRocket.frenzyReady=false;

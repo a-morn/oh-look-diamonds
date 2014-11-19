@@ -6,6 +6,7 @@ var RocketShip = (function(){
     house,     
     hud,
     hudPointer,
+    hudGlass,
     houseListener,
     onTrack=false,                
     cloudIsIn = new Array(),
@@ -173,6 +174,7 @@ var RocketShip = (function(){
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
                     {id:"hud", src:"assets/new assets/img/HUD.png"},                                        
                     {id:"hudPointer", src:"assets/new assets/img/HUDpointer.png"},                                        
+                    {id:"hudGlass", src:"assets/new assets/sprites/hudGlass.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"wind", src:"assets/new assets/sound/wind.mp3"},
                     {id:"klonk1", src:"assets/new assets/sound/klonk1.mp3"},
@@ -576,7 +578,7 @@ var RocketShip = (function(){
         bgParallax.y=-200;
         
         var bgParallax2 = new createjs.Bitmap(queue.getResult("bgParallax"));
-        bgParallax2.x=2463;
+        bgParallax2.x=2460;
         bgParallax2.y=-200;
         parallaxCont.addChild(bgParallax,bgParallax2);
 
@@ -639,6 +641,7 @@ var RocketShip = (function(){
         catzRocket.catzRocketContainer.y = 200;
         catzRocket.catz.scaleX = 0.4;
         catzRocket.catz.scaleY = 0.4;
+        catzRocket.catz.y = 5;
         catzRocket.catzRocketContainer.regY = 100;
         catzRocket.catzRocketContainer.regX = 150;
         catzRocket.catz.currentFrame = 0;  
@@ -688,11 +691,18 @@ var RocketShip = (function(){
         exitSmoke.regY = 200;
         
         hud = new createjs.Bitmap(queue.getResult("hud"));
+        var glassData = spriteSheetData.hudGlass;
+        var glassSheet = new createjs.SpriteSheet(glassData);
+        catzRocket.glass = new createjs.Sprite(glassSheet, "still");
         hudPointer = new createjs.Bitmap(queue.getResult("hudPointer"));
         hudPointer.regX=191;
         hudPointer.regY=54;
-        hud.x=380;
+        hud.x=550;
         hud.y=345;
+        catzRocket.glass.scaleX=0.85;
+        catzRocket.glass.scaleY=0.85;
+        catzRocket.glass.x=533;
+        catzRocket.glass.y=341;
         hudPointer.x=550+191;
         hudPointer.y=350+54;
         
@@ -806,7 +816,7 @@ var RocketShip = (function(){
             debugText.alpha=0;
         }
         stage.removeChild(house.houseView);
-        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, text,debugText);
+        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, text,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -938,9 +948,9 @@ var RocketShip = (function(){
         var arrayLength = parallaxCont.children.length;    
         for (var i = 0; i < arrayLength; i++) {
             var kid = parallaxCont.children[i];        
-            if (kid.x <= -2463)
+            if (kid.x <= -2460)
             {
-              kid.x = kid.x + 2*2463;
+              kid.x = 2460;
             }
             kid.x = kid.x - parallaxSpeed*event.delta/10; 
         }                
@@ -1280,7 +1290,7 @@ var RocketShip = (function(){
     
     function updatePointer(event)
     {
-        hudPointer.rotation += (Math.min(catzRocket.frenzyCount*1.5-45,100)
+        hudPointer.rotation += (Math.min(catzRocket.frenzyCount*1.4-30,100)
                 -hudPointer.rotation)*event.delta/500;
     }
 
@@ -1778,7 +1788,7 @@ var RocketShip = (function(){
                 catzRocket.catz.gotoAndPlay("slipping");
                 createjs.Tween.get(catzRocket.catz)
                         .to({y:10, x:-25},100)
-                        .to({x:-50,y:0},150)
+                        .to({x:-50,y:5},150)
                         .call(catzRocket.catz.gotoAndPlay,["no shake"]);
                 catzRocket.invincibilityCounter=1000;
             }
@@ -1971,8 +1981,9 @@ var RocketShip = (function(){
         noWind();
         catzRocket.silouette.alpha=0;
         catzRocket.catz.alpha = 1;
+        catzRocket.glass.gotoAndPlay("still");
         stage.removeAllEventListeners();
-        stage.removeChild(gameView,hud,hudPointer);
+        stage.removeChild(gameView,hud,hudPointer, catzRocket.glass);
         stage.addChild(house.houseView);
         stage.update();
         house.wickExclamation.alpha= 0;
