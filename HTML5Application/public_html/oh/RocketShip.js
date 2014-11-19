@@ -47,6 +47,7 @@ var RocketShip = (function(){
     mousedown,
     diamondSheet,
     greatDiamondSheet,
+    mediumDiamondSheet,
     grav = 12,
     jump,           
     parallaxCont = new createjs.Container(),
@@ -66,6 +67,7 @@ var RocketShip = (function(){
     sheetDict,
     containerDict = {
         "diamond" : diCont,
+        "mediumDiamond" : diCont,
         "greatDiamond" : diCont,
         "seagull" : sgCont,
         "goose" : gooseCont,
@@ -155,6 +157,7 @@ var RocketShip = (function(){
         manifest = [                    
                     {id: "enemybirds", src: "assets/new assets/sprites/newBirds.png"},
                     {id: "diamond", src: "assets/new assets/sprites/newDiamond3.png"}, 
+                    {id: "mediumDiamond", src: "assets/new assets/sprites/newDiamond2.png"}, 
                     {id: "greatDiamond", src: "assets/new assets/sprites/newDiamond.png"}, 
                     {id: "rocketSilouette", src: "assets/new assets/img/catzRocketSilouette.png"}, 
                     {id: "meow", src: "assets/meow.mp3"},                    
@@ -322,18 +325,19 @@ var RocketShip = (function(){
         var diamondData = spriteSheetData.diamond;
         diamondSheet = new createjs.SpriteSheet(diamondData);
         var positions = [
-            {x:775,y:-1070},
-            {x:350,y:-1300},
-            {x:130,y:-1100},
-            {x:700,y:-1250},
-            {x:500,y:-1050}];
+            {x:775,y:-1070, frame: 0, scale: 0.8},
+            {x:350,y:-1300, frame: 5, scale: 0.5},
+            {x:130,y:-1100,frame: 10, scale: 0.6},
+            {x:700,y:-1250,frame: 15, scale: 0.4},
+            {x:500,y:-1130, frame: 20, scale: 0.7}];
         for(var i=0; i<positions.length;i++)
         {
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
             diamond.x=positions[i].x;
             diamond.y=positions[i].y;
-            diamond.scaleX=0.8;
-            diamond.scaleY=0.8;
+            diamond.currentAnimationFrame = positions[i].frame;
+            diamond.scaleX=positions[i].scale;
+            diamond.scaleY=positions[i].scale;
             house.diCont.addChild(diamond);
         }
         house.diCont.alpha=0;
@@ -772,8 +776,10 @@ var RocketShip = (function(){
         squawkSound.stop();
         gameView = new createjs.Container();
         greatDiamondSheet = new createjs.SpriteSheet(spriteSheetData.greatDiamond);
+        mediumDiamondSheet = new createjs.SpriteSheet(spriteSheetData.mediumDiamond);
          sheetDict = {
         "diamond" : diamondSheet,
+        "mediumDiamond" : mediumDiamondSheet,
         "greatDiamond" : greatDiamondSheet,
         "seagull" : seagullSheet,
         "goose" : seagullSheet,
@@ -886,7 +892,7 @@ var RocketShip = (function(){
             updateFgTop(event);
             updateParallax(event);
             updateDiamonds(event);
-            updatePointer();
+            updatePointer(event);
             updateClouds(event);
             updateWorldContainer();
             updateThunderClouds();
@@ -1272,9 +1278,10 @@ var RocketShip = (function(){
         }
     }
     
-    function updatePointer()
+    function updatePointer(event)
     {
-        hudPointer.rotation = Math.min(catzRocket.frenzyCount*1.5-45,100);
+        hudPointer.rotation += (Math.min(catzRocket.frenzyCount*1.5-45,100)
+                -hudPointer.rotation)*event.delta/500;
     }
 
     function updateDiamonds(event)
@@ -1292,13 +1299,28 @@ var RocketShip = (function(){
             var isOverlap = overlapCheckCircle(kid.x,kid.y,40);
             if(isOverlap)
             {
-                diCont.removeChildAt(i);
-                gameStats.score += 1;
-                catzRocket.frenzyCount+=7.5;
-                arrayLength = arrayLength - 1;
-                icon = i - 1;
+                if(kid.currentAnimation==="cycle")
+                {
+                    gameStats.score += 1;
+                    catzRocket.frenzyCount+=7.5;
+                    arrayLength = arrayLength - 1;
+                }
+                else if(kid.currentAnimation==="mediumCycle")
+                {
+                    gameStats.score += 10;
+                    catzRocket.frenzyCount+=15.5;
+                    arrayLength = arrayLength - 1;
+                }
+                else if(kid.currentAnimation==="greatCycle")
+                {
+                    gameStats.score += 100;
+                    catzRocket.frenzyCount+=50.5;
+                    arrayLength = arrayLength - 1;
+                }
+
                 diamondSound.play();
                 catzRocket.diamondFrenzyCharge +=1;
+                diCont.removeChildAt(i);
             }
         }   
     }

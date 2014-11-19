@@ -50,7 +50,12 @@ var trackPartsJSON = {
                 //great diamond
                 "greatDiamond":
                 [
-                    {"x":0,"y":0, "type": "greatDiamond","animation":"cycle","graphicType":"sprite"}
+                    {"x":0,"y":0, "type": "greatDiamond","animation":"greatCycle","graphicType":"sprite"}
+                ],
+                
+                "mediumDiamond":
+                [
+                    {"x":0,"y":0, "type": "mediumDiamond","animation":"mediumCycle","graphicType":"sprite"}
                 ],
                 
                 "smallDiamond":
