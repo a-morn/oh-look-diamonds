@@ -1,0 +1,12 @@
+dark: 1f1f1f
+light purple: 907a91
+dark purple: 330033
+bright red: cc0000
+orange: cc3300
+yellow: ffcc00
+dark green: 006666
+light green: 33cc66
+light blue: 99ccff
+dark blue: 0099ff
+eggshell white: ffffcc
+light grey: cccccc
