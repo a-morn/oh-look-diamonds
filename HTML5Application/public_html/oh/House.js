@@ -16,7 +16,11 @@ var House = (function(){
         diCont : null,
         lookingAtStarsButton: null,
         wickLight: null,
-        diamondHouse: null,
+        hoboCatHouse: null,
+        rehab: null,
+        orphanage: null,        
+        diamondHouseCont: null,
+        diamondHouseArray: [],
         hoboSpeach: null,
         catzSpeach: null,
         hoboCatSound1: null,
@@ -51,11 +55,12 @@ var House = (function(){
             {                                                
                 for(j=0; j<hoboCatzProgression[i].Conditions.length; j++)       
                 {
-                    if(hoboCatzProgression[i].Conditions[j].ConditionType === "Score")
+                    var condition = hoboCatzProgression[i].Conditions[j];
+                    if(condition.ConditionType === "Score")
                     {                                        
-                        if(hoboCatzProgression[i].Conditions[j].OperatorType === "LargerThan")
+                        if(condition.OperatorType === "LargerThan")
                         {                        
-                            if(gameStats.score>hoboCatzProgression[i].Conditions[j].Score)
+                            if(gameStats.score>condition.Score)
                             {
                                 //pass                                
                             }
@@ -64,9 +69,9 @@ var House = (function(){
                                 break conditionLoop;
                             }
                         }
-                        else if(hoboCatzProgression[i].Conditions[j].OperatorType === "LessThan")
+                        else if(condition.OperatorType === "LessThan")
                         {                        
-                            if(gameStats.score<hoboCatzProgression[i].Conditions[j].Score)
+                            if(gameStats.score<condition.Score)
                             {
                                 //pass
                             }
@@ -77,10 +82,25 @@ var House = (function(){
                             }
                         }
                     }
-                    else if(hoboCatzProgression[i].Conditions[j].ConditionType === "State")
+                    else if(condition.ConditionType === "buildingState")
                     {                        
-                        if(gameStats[hoboCatzProgression[i].Conditions[j].State] === hoboCatzProgression[i].Conditions[j].On)
+                        console.log(condition.building);
+                        console.log(condition.state);
+                        console.log(condition.on);
+                        if(gameStats[condition.building][condition.state] === condition.on)
                         {                            
+                            //pass
+                        }
+                        else
+                        {
+                            break conditionLoop;
+                        }
+                    }
+                    
+                    else if (condition.ConditionType === "state")
+                    {
+                        if(gameStats[condition.state] === condition.on)
+                        {
                             //pass
                         }
                         else
@@ -106,23 +126,44 @@ var House = (function(){
     
     house.hoboDialog = function(gameStats, text, gotoGameView)
     {     
-        var dialog = dialogJSON.HoboCatz[house.hoboDialogNumber];                   
+        var dialog = dialogJSON.HoboCatz[house.hoboDialogNumber];   
+        console.log(gameStats);
         if(dialog.dialog[house.dialogID])
         {            
             if(dialog.dialog[house.dialogID].Triggers)
             {
                 for(i =0; i<dialog.dialog[house.dialogID].Triggers.length; i++)
                 {
-                    if(dialog.dialog[house.dialogID].Triggers[i].Stat === "score")
+                    var value =dialog.dialog[house.dialogID].Triggers[i].Value;
+                    var stat = dialog.dialog[house.dialogID].Triggers[i].Stat;
+                    if(stat === "score")
                     {
-                        gameStats.score += dialog.dialog[house.dialogID].Triggers[i].Value;
+                        gameStats.score += value;
                         //Should be a "cash-withdrawn"-animation triggered here
                         text.text = gameStats.score;
+                    }
+                    else if (stat=== "kills")
+                    {
+                        gameStats.kills += value;
+                    }
+                    else if (stat === "isBuilding") {
+                        gameStats[value].isBuilding = true;
+                        gameStats.CurrentlyBuilding = true;
+                    }
+                    
+                    else if (stat === "built")
+                    {
+                        gameStats[value].isBuilding = false;
+                        gameStats[value].built = true;
+                        gameStats[value].builtOnRound = gameStats.currentRound;
+                        gameStats.CurrentlyBuilding = false;
+                        //SET ALPHA = 1 HERE                        
+                        house.diamondHouseArray[value].alpha = 1;
                     }
                     else
                     {
                         gameStats[dialog.dialog[house.dialogID].Triggers[i].Stat]= dialog.dialog[house.dialogID].Triggers[i].Value;                                
-                    }
+                    }                    
                 }
             }
             
@@ -259,26 +300,7 @@ var House = (function(){
     };
     
     house.updateHouse = function(gameStats)
-    {
-        var numberOfHouses = gameStats.HoboCatHouseBuilt + gameStats.OrphanageBuilt +
-                gameStats.RehabBuilt;        
-        if(numberOfHouses===1)
-        {
-            house.diamondHouse.alpha=1;
-            house.diamondHouse.gotoAndPlay("first");
-        }
-        else if(numberOfHouses===2){
-            house.diamondHouse.alpha=1;
-            house.diamondHouse.gotoAndPlay("second");
-        }
-        else if(numberOfHouses===3){
-            house.diamondHouse.alpha=1;            
-            house.diamondHouse.gotoAndPlay("third");            
-        }
-        else{
-            house.diamondHouse.alpha=0;
-        }
-
+    {        
     };
     
     house.addHoboEvents = function(gameStats, text, gotoGameView)

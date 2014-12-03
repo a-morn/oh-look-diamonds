@@ -8,7 +8,7 @@ var gameProgressionJSON = {"HoboCatz":
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-                {"CondtitionType": "State", "State": "HoboCatHouseBuilt", "On":false}],        
+                {"CondtitionType": "buildingState", "state": "built", "building": "HoboCatHouse", "on":false}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
@@ -16,10 +16,9 @@ var gameProgressionJSON = {"HoboCatz":
         },
 
         
-        {"Conditions":[{"ConditionType": "State", "State": "BuildOrphanage", "On":false},
-            {"ConditionType": "State", "State": "OrphanageBuilt", "On":false},
-            {"ConditionType": "State", "State": "CurrentlyBuilding", "On":false},
-            {"ConditionType": "State", "State": "HoboCatHouseBuilt", "On":true}],
+        {"Conditions":[{"ConditionType": "buildingState", "building":"Orphanage","state": "isBuilding", "on":false},           
+            {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false},
+            {"ConditionType": "buildingState", "state": "built", "building":"HoboCatHouse", "on":true}],
         
         "HasHappend":false,
         "ShouldReoccur":true,
@@ -28,17 +27,17 @@ var gameProgressionJSON = {"HoboCatz":
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-            {"ConditionType": "State", "State": "BuildOrphanage", "On":true}],        
+            {"ConditionType": "buildingState", "state": "isBuilding", "building":"Orphanage", "on":true}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": 4
         },
         
-        {"Conditions":[{"ConditionType": "State", "State": "BuildRehab", "On":false},
-            {"ConditionType": "State", "State": "RehabBuilt", "On":false},
-            {"ConditionType": "State", "State": "CurrentlyBuilding", "On":false},
-            {"ConditionType": "State", "State": "HoboCatHouseBuilt", "On":true}],
+        {"Conditions":[{"ConditionType": "buildingState", "state": "isBuilding", "building":"Rehab", "on":false},
+            {"ConditionType": "buildingState", "state": "built", "building":"Rehab", "on":false},
+            {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false},
+            {"ConditionType": "buildingState", "state": "built", "building":"HoboCatHouse", "on":true}],
         
         "HasHappend":false,
         "ShouldReoccur":true,
@@ -47,12 +46,13 @@ var gameProgressionJSON = {"HoboCatz":
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-            {"ConditionType": "State", "State": "BuildRehab", "On":true}],        
+            {"ConditionType": "buildingState", "state": "isBuilding","building":"Rehab", "on":true}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": 6
         }
+                
         
     ]
 };

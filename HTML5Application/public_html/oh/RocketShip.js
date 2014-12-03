@@ -97,12 +97,12 @@ var RocketShip = (function(){
     diamondSound,    
     gameStats = {
         score : 0,
-        HoboCatHouseBuilt : false,
-        BuildOrphanage : false,
-        OrphanageBuilt : false,
+        kills : 0,
+        currentRound: 0,
         CurrentlyBuilding: false,
-        BuildRehab: false,
-        RehabBuilt: false,
+        HoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
+        Orphanage : {built : false, isBuilding : false, builtOnRound : null},       
+        Rehab: {built : false, isBuilding : false, builtOnRound : null},        
         Difficulty : 0
         }
     ;
@@ -355,11 +355,31 @@ var RocketShip = (function(){
         
         dHouseData = spriteSheetData.dHouse;
         dSheet = new createjs.SpriteSheet(dHouseData);
-        house.diamondHouse = new createjs.Sprite(dSheet,"first");
-        house.diamondHouse.alpha=0;
-        house.diamondHouse.x=450;
-        house.diamondHouse.y=310;
-        house.diamondHouse.rotation = 12;
+        
+        house.diamondHouseCont = new createjs.Container();
+        house.hoboCatHouse = new createjs.Sprite(dSheet,"first");
+        house.hoboCatHouse.alpha=0;
+        house.hoboCatHouse.x=450;
+        house.hoboCatHouse.y=310;
+        house.hoboCatHouse.rotation = 12;
+        house.diamondHouseCont.addChild(house.hoboCatHouse);
+        house.diamondHouseArray["HoboCatHouse"] = house.hoboCatHouse;
+        
+        house.rehab = new createjs.Sprite(dSheet,"first");
+        house.rehab.alpha=0;
+        house.rehab.x=470;
+        house.rehab.y=310;
+        house.rehab.rotation = 12;
+        house.diamondHouseCont.addChild(house.rehab);
+        house.diamondHouseArray["Rehab"] = house.rehab;
+        
+        house.orphanage = new createjs.Sprite(dSheet,"first");
+        house.orphanage.alpha=0;
+        house.orphanage.x=500;
+        house.orphanage.y=310;
+        house.orphanage.rotation = 12;
+        house.diamondHouseCont.addChild(house.orphanage);
+        house.diamondHouseArray["Orphanage"] = house.orphanage;
         
         house.mouseHobo = new createjs.Bitmap(queue.getResult("mouseHobo"));
         house.mouseHobo.scaleX=0.5;
@@ -465,7 +485,7 @@ var RocketShip = (function(){
         bg.y=0;
         starCont.y=1000;
         bg.addEventListener("click",showOh);
-        house.houseView.addChild(house.diamondHouse,house.catz,house.house, 
+        house.houseView.addChild(house.diamondHouseCont,house.catz,house.house, 
             house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
@@ -803,6 +823,7 @@ var RocketShip = (function(){
     
     function gotoGameView()
     {
+        gameStats.currentRound += 1;
         house.cricketsSound.stop();
         //if song hasn't started yet
         if(rocketSong.getPosition()<100)
@@ -883,6 +904,10 @@ var RocketShip = (function(){
             {
                 text.text="alot";
             }
+            
+            text.text += "\n\
+kills=" + gameStats.kills;
+            
             if(catzRocket.diamondFrenzyCharge>0)
             {
                 catzRocket.diamondFrenzyCharge -= event.delta/2000;
@@ -1441,6 +1466,7 @@ var RocketShip = (function(){
                 if(kid.temperature>200 && kid.state!=="grilled")
                 {
                     kid.setGrilled();
+                    gameStats.kills +=1;
                 }
             }
             else if(kid.temperature>=0)
@@ -1869,6 +1895,7 @@ var RocketShip = (function(){
                 || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
         {
             bird.setGrilled();
+            gameStats.kills +=1;
         }
     }
    
