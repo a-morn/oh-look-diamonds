@@ -87,25 +87,31 @@ spriteSheetData = (function()
             },
             ssd.dHouse= {
                 "framerate":24,
-                "images":[queue.getResult("diamondhouse")],
+                    "images":[queue.getResult("diamondhouse")],
                 "frames":[
-                    [0, 0, 128, 128, 0, 0, 0],
-                    [128, 0, 128, 128, 0, 0, 0],
-                    [256, 0, 128, 128, 0, 0, 0],
-                    [384, 0, 128, 128, 0, 0, 0],
-                    [512, 0, 128, 128, 0, 0, 0],
-                    [640, 0, 128, 128, 0, 0, 0],
-                    [768, 0, 128, 128, 0, 0, 0]
+                    [0, 0, 128, 64, 0, 0, 0],
+                    [128, 0, 128, 64, 0, 0, 0],
+                    [256, 0, 128, 64, 0, 0, 0],
+                    [384, 0, 128, 64, 0, 0, 0],
+                    [512, 0, 128, 64, 0, 0, 0],
+                    [640, 0, 128, 64, 0, 0, 0],
+                    [768, 0, 128, 64, 0, 0, 0],
+                    [896, 0, 128, 64, 0, 0, 0],
+                    [1024, 0, 128, 64, 0, 0, 0],
+                    [1152, 0, 128, 64, 0, 0, 0]
                 ],
                 "animations":{
-                    "first": [0],
-                    "second": [1],
-                    "third": [2],
-                    "fourth": [3],
-                    "fifth": [4],
-                    "sixth": [5],
-                    "seventh": [6]
-                    }
+                    "catnip treatment facility": {"frames": [4], "speed": 1},
+                    "hoboHouse": {"frames": [0], "speed": 1},
+                    "hospital": {"frames": [5], "speed": 1},
+                    "university": {"frames": [8], "speed": 1},
+                    "rocket university": {"frames": [9], "speed": 1},
+                    "youth centre": {"frames": [2], "speed": 1},
+                    "summer camp": {"frames": [3], "speed": 1},
+                    "orphanage": {"frames": [1], "speed": 1},
+                    "phychiatric wing": {"frames": [6], "speed": 1},
+                    "monastery": {"frames": [7], "speed": 1}
+                }
             };
             ssd.cat = {
                 "framerate":24,
