@@ -14,15 +14,15 @@
     [1152, 0, 128, 64, 0, 0, 0]
 ],
 "animations":{
-    "catnip treatment facility": {"frames": [4], "speed": 1},
+    "youth centre": {"frames": [2], "speed": 1},
+    "monastery": {"frames": [7], "speed": 1},
+    "phychiatric wing": {"frames": [6], "speed": 1},
+    "orphanage": {"frames": [1], "speed": 1},
     "hoboHouse": {"frames": [0], "speed": 1},
-    "hospital": {"frames": [5], "speed": 1},
     "university": {"frames": [8], "speed": 1},
     "rocket university": {"frames": [9], "speed": 1},
-    "youth centre": {"frames": [2], "speed": 1},
     "summer camp": {"frames": [3], "speed": 1},
-    "orphanage": {"frames": [1], "speed": 1},
-    "phychiatric wing": {"frames": [6], "speed": 1},
-    "monastery": {"frames": [7], "speed": 1}
+    "catnip treatment facility": {"frames": [4], "speed": 1},
+    "hospital": {"frames": [5], "speed": 1}
 }
 }

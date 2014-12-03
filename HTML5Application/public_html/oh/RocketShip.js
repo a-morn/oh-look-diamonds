@@ -190,6 +190,10 @@ var RocketShip = (function(){
                     {id:"fgGroundTop", src:"assets/new assets/img/fgGroundTop.png"},
                     {id:"mouseHobo", src:"assets/new assets/img/mouseover hobo.png"},
                     {id:"mouseRocket", src:"assets/new assets/img/mouseover rocket.png"},
+                    {id:"mouseTimmy", src:"assets/new assets/img/mouseover timmy.png"},
+                    {id:"mousePriest", src:"assets/new assets/img/mouseover priest.png"},
+                    {id:"mouseCatparty", src:"assets/new assets/img/mouseover cat party.png"},
+                    {id:"supportingCharacter", src:"assets/new assets/sprites/supporting characters.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
                     {id:"rocket", src:"assets/new assets/img/rocket.png"},
@@ -610,8 +614,8 @@ var RocketShip = (function(){
         diamondShardCounter.scaleY= 0.8;
         diamondShardCounter.scaleX= 0.8;        
         text = new createjs.Text("0", "22px Courier New", "white"); 
-        text.x = 608;             
-        text.y = 422;
+        text.x = 608+108;             
+        text.y = 422-17;
         
         var rocketData = spriteSheetData.rocket;
            
@@ -697,8 +701,8 @@ var RocketShip = (function(){
         hudPointer = new createjs.Bitmap(queue.getResult("hudPointer"));
         hudPointer.regX=191;
         hudPointer.regY=54;
-        hud.x=550;
-        hud.y=345;
+        hud.x=550+107;
+        hud.y=345+2;
         catzRocket.glass.scaleX=0.85;
         catzRocket.glass.scaleY=0.85;
         catzRocket.glass.x=533;
