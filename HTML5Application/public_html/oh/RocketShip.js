@@ -100,9 +100,9 @@ var RocketShip = (function(){
         kills : 0,
         currentRound: 0,
         CurrentlyBuilding: false,
-        HoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
-        Orphanage : {built : false, isBuilding : false, builtOnRound : null},       
-        Rehab: {built : false, isBuilding : false, builtOnRound : null},        
+        hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
+        orphanage : {built : false, isBuilding : false, builtOnRound : null},       
+        rehab: {built : false, isBuilding : false, builtOnRound : null},        
         Difficulty : 0
         }
     ;
@@ -361,29 +361,37 @@ var RocketShip = (function(){
         dSheet = new createjs.SpriteSheet(dHouseData);
         
         house.diamondHouseCont = new createjs.Container();
-        house.hoboCatHouse = new createjs.Sprite(dSheet,"first");
+        house.hoboCatHouse = new createjs.Sprite(dSheet,"hoboHouse");
         house.hoboCatHouse.alpha=0;
-        house.hoboCatHouse.x=450;
-        house.hoboCatHouse.y=310;
-        house.hoboCatHouse.rotation = 12;
+        house.hoboCatHouse.x=430;
+        house.hoboCatHouse.y=375;
+        house.hoboCatHouse.rotation = 5;
         house.diamondHouseCont.addChild(house.hoboCatHouse);
-        house.diamondHouseArray["HoboCatHouse"] = house.hoboCatHouse;
+        house.diamondHouseArray["hoboCatHouse"] = house.hoboCatHouse;
         
-        house.rehab = new createjs.Sprite(dSheet,"first");
+        house.rehab = new createjs.Sprite(dSheet,"catnip treatment facility");
         house.rehab.alpha=0;
-        house.rehab.x=470;
-        house.rehab.y=310;
+        house.rehab.x=455;
+        house.rehab.y=360;
         house.rehab.rotation = 12;
         house.diamondHouseCont.addChild(house.rehab);
-        house.diamondHouseArray["Rehab"] = house.rehab;
+        house.diamondHouseArray["rehab"] = house.rehab;
         
-        house.orphanage = new createjs.Sprite(dSheet,"first");
+        house.orphanage = new createjs.Sprite(dSheet,"orphanage");
         house.orphanage.alpha=0;
         house.orphanage.x=500;
-        house.orphanage.y=310;
+        house.orphanage.y=380;
         house.orphanage.rotation = 12;
         house.diamondHouseCont.addChild(house.orphanage);
-        house.diamondHouseArray["Orphanage"] = house.orphanage;
+        house.diamondHouseArray["orphanage"] = house.orphanage;
+        
+        house.university = new createjs.Sprite(dSheet,"university");
+        house.university.alpha=0;
+        house.university.x=550;
+        house.university.y=357;
+        house.university.rotation = 16;
+        house.diamondHouseCont.addChild(house.university);
+        house.diamondHouseArray["university"] = house.university;
         
         house.mouseHobo = new createjs.Bitmap(queue.getResult("mouseHobo"));
         house.mouseHobo.scaleX=0.5;
