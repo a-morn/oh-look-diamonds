@@ -1,4 +1,4 @@
-var dialogJSON = {"HoboCatz": 
+var dialogJSON = {"hoboCat": 
 [   
     {"dialog":[
         {"Who": "Hobo-Cat", "What": "Good evening", "Sound": "HoboCatSound1", "Choice" :false, "NextID":1, "End":false},
@@ -65,6 +65,25 @@ for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text
 {"dialog":[
         {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":false, "NextID":1,"Triggers":[{Stat:"built", Value: "rehab"},{Stat:"BuildRehab", Value: false}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]},
         {"End":true}
+    ], "idle":{"what":"hum hum"}},
+
+//7
+{"dialog":[
+        {"Who": "Hobo-Cat", "What": "kittens need schoolin'\n\
+but tuition fees at \n\
+Cat King Collage\n\
+are too high for most.", "Sound": "HoboCatSound1", "Choice" :false, "NextID": 1, "End":false},
+        {"Who": "Hobo-Cat", "What": "why don't we\n\
+found a university.\n\
+funny hats and \n\
+titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"klol", "ChoiceID":4}], "End":false},
+        {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
+        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "university"}], "End":false},
+        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
+        {"End":true}
     ], "idle":{"what":"hum hum"}}
-]
+],
+"timmy": [{"dialog":[{"Who": "Timmy", "What": "lol", "Choice": false, "NextID":1, "End":false},
+                    {"Who": "Catz", "What": "lol", "Choice":false, "NextID":2, "End":true}], "idle":{"what":"can haz some more?"}}]
 };

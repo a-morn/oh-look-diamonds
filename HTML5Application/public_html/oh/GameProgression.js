@@ -1,6 +1,6 @@
-var gameProgressionJSON = {"HoboCatz": 
+var gameProgressionJSON = {"hoboCat": 
     [
-        {"Conditions":[{"ConditionType": "Score","Score": 0, "OperatorType": "LargerThan"}],        
+        {"Conditions":[{"ConditionType": "Score","Score": 12, "OperatorType": "LargerThan"}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
@@ -51,8 +51,24 @@ var gameProgressionJSON = {"HoboCatz":
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": 6
-        }
-                
+        },
         
+        {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":false},
+            {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":false},
+            {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false}],        
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":1,
+        "ConversationNumber": 7
+        }
+    ],
+    "timmy": [
+        {"Conditions":[{"ConditionType": "Score", "Score": 1, "OperatorType": "LargerThan"}],
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":1,
+        "ConversationNumber": 0
+    }
     ]
 };
