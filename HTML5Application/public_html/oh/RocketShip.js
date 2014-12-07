@@ -59,6 +59,7 @@ var RocketShip = (function(){
     gooseCont = new createjs.Container(),
     hawkCont = new createjs.Container(),
     diCont = new createjs.Container(),
+    scatterDiamondsCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     fgTopCont = new createjs.Container(),
     starCont = new createjs.Container(),
@@ -839,9 +840,10 @@ var RocketShip = (function(){
         "hawk" : seagullSheet
         };
         
-        gameView.addChild(parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,sgCont, hawkCont, gooseCont, attackBirdCont,diCont,
+        gameView.addChild(parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,
+            sgCont, hawkCont, gooseCont, attackBirdCont,scatterDiamondsCont, diCont,
             exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
-             cloudCont,lightningCont,thunderCont,fgCont, fgTopCont,leaves, collisionCheckDebug);
+            cloudCont,lightningCont,thunderCont,fgCont, fgTopCont,leaves, collisionCheckDebug);
     }
     
     function gotoGameView()
@@ -950,6 +952,7 @@ kills=" + gameStats.kills;
             updateFgTop(event);
             updateParallax(event);
             updateDiamonds(event);
+            updateScatterDiamonds(event);
             updatePointer(event);
             updateClouds(event);
             updateWorldContainer();
@@ -1343,7 +1346,7 @@ kills=" + gameStats.kills;
     }
 
     function updateDiamonds(event)
-    {      
+    {
         var arrayLength = diCont.children.length;
         for (var i = 0; i < arrayLength; i++) {
             var kid = diCont.children[i];
@@ -1379,6 +1382,40 @@ kills=" + gameStats.kills;
                 diamondSound.play();
                 catzRocket.diamondFrenzyCharge +=1;
                 diCont.removeChildAt(i);
+            }
+        }   
+    }
+    
+    function updateScatterDiamonds(event)
+    {
+        if(Math.random()>0.8)
+        {
+            var diamond = new createjs.Sprite(diamondSheet,"cycle");
+            diamond.x=800;
+            diamond.y=Math.pow(35*Math.random(),2)-1000;
+            diamond.scaleX=0.6;
+            diamond.scaleY=0.6;
+            scatterDiamondsCont.addChild(diamond);
+        }
+        var arrayLength = scatterDiamondsCont.children.length;
+        for (var i = 0; i < arrayLength; i++) {
+            var kid = scatterDiamondsCont.children[i];
+            kid.x = kid.x - diSpeed*event.delta;    
+            if (kid.x <= -100)
+            {
+              scatterDiamondsCont.removeChildAt(i);
+              arrayLength = arrayLength - 1;
+              i = i - 1;
+            }                   
+            var isOverlap = overlapCheckCircle(kid.x,kid.y,40);
+            if(isOverlap)
+            {
+                gameStats.score += 1;
+                catzRocket.frenzyCount+=7.5;
+                arrayLength = arrayLength - 1;
+                diamondSound.play();
+                catzRocket.diamondFrenzyCharge +=1;
+                scatterDiamondsCont.removeChildAt(i);
             }
         }   
     }
