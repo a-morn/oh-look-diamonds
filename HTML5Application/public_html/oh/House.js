@@ -4,10 +4,13 @@ var House = (function(){
         houseView: null,        
         crashRocket: null,
         hobo: null,
+        timmy: null,
         mouseHobo: null,
         mouseRocket: null,
         catz: null,
-        dialogID: 0,
+        hoboDialogID:0,
+        timmyDialogID:0,
+        characterdialogID: [],
         cricketsSound: null,
         wick: null,
         oh: null,
@@ -22,7 +25,7 @@ var House = (function(){
         university: null,
         diamondHouseCont: null,
         diamondHouseArray: [],
-        hoboSpeach: null,
+        characterSpeach: null,
         catzSpeach: null,
         hoboCatSound1: null,
         hoboCatSound2: null,
@@ -30,9 +33,13 @@ var House = (function(){
         catzSound2: null,
         wickActive:false,
         hoboActive:true,
+        timmyActive:false,
+        characterActive: {},
         wickExclamation: null,
         hoboExclamation: null,
         hoboDialogNumber:0,
+        timmyDialogNumber:0,
+        characterDialogNumber: {},
         choice1: null,
         choice2: null,
         choice3: null,
@@ -42,21 +49,52 @@ var House = (function(){
     house.Init = function()
     {        
         house.houseView = new createjs.Container();
+        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive};
+        house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber};
+        house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID};
     };
     house.gotoHouseView = function(gameStats)
     {
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
-        house.cricketsSound.volume=0.1;
-        var hoboCatzProgression = gameProgressionJSON.HoboCatz;           
-        for(i=0;i<hoboCatzProgression.length;i++)
+        house.cricketsSound.volume=0.1;        
+        var hobDiaNo = house.progressionCheck(gameProgressionJSON.hoboCat, gameStats);
+        
+        console.log(hobDiaNo);
+        
+        if(hobDiaNo !== -1) {
+            house.hobo.alpha = 1;
+            house.characterDialogNumber.hoboCat = hobDiaNo;           
+            house.hoboActive = true;
+            house.timmy.alpha = 0;
+            house.characterdialogID["hoboCat"] = 0;
+        } 
+        else {
+            console.log("timyyTime");
+            var timmyDiaNo = house.progressionCheck(gameProgressionJSON.timmy, gameStats);
+            console.log(timmyDiaNo);
+            if(timmyDiaNo !== -1) {
+                house.timmy.alpha = 1;
+                house.characterDialogNumber.timmy = timmyDiaNo;
+                house.timmyActive = true;
+                house.hobo.alpha = 0;
+                house.characterdialogID["timmy"] = 0;
+                console.log("f?");
+            }            
+        }
+        
+        house.updateHouse(gameStats);
+    };
+    
+    house.progressionCheck = function(catProgression, gameStats) {
+        for(i=0;i<catProgression.length;i++)
         {                        
         conditionLoop:
-            if(!hoboCatzProgression[i].HasHappend || hoboCatzProgression[i].ShouldReoccur && 
-                hoboCatzProgression[i].Chance>Math.random())
+            if(!catProgression[i].HasHappend || catProgression[i].ShouldReoccur && 
+                catProgression[i].Chance>Math.random())
             {                                                
-                for(j=0; j<hoboCatzProgression[i].Conditions.length; j++)       
+                for(j=0; j<catProgression[i].Conditions.length; j++)       
                 {
-                    var condition = hoboCatzProgression[i].Conditions[j];
+                    var condition = catProgression[i].Conditions[j];
                     if(condition.ConditionType === "Score")
                     {                                        
                         if(condition.OperatorType === "LargerThan")
@@ -85,9 +123,6 @@ var House = (function(){
                     }
                     else if(condition.ConditionType === "buildingState")
                     {                        
-                        console.log(condition.building);
-                        console.log(condition.state);
-                        console.log(condition.on);
                         if(gameStats[condition.building][condition.state] === condition.on)
                         {                            
                             //pass
@@ -110,33 +145,31 @@ var House = (function(){
                         }
                     }
                     //If all conditions have been passed                    
-                    if(j===hoboCatzProgression[i].Conditions.length-1)
-                    {                        
-                        house.hoboDialogNumber = hoboCatzProgression[i].ConversationNumber;
-                        house.hoboActive = true;
-                        house.wickActive = false;
-                        house.dialogID = 0;
-                        hoboCatzProgression[i].HasHappend = "yes";
-                        return;
+                    if(j===catProgression[i].Conditions.length-1)
+                    {                                                
+                        house.wickActive = false;                        
+                        catProgression[i].HasHappend = "yes";
+                        return catProgression[i].ConversationNumber;
                     }
                 }
             }
-        }  
-        house.updateHouse(gameStats);
+        }
+        return -1;
     };
     
-    house.hoboDialog = function(gameStats, text, gotoGameView)
+    house.characterDialog = function(gameStats, text, gotoGameView, character)
     {     
-        var dialog = dialogJSON.HoboCatz[house.hoboDialogNumber];   
-        console.log(gameStats);
-        if(dialog.dialog[house.dialogID])
+        var dialog = dialogJSON[character][house.characterDialogNumber[character]];   
+        console.log(house.characterdialogID[character]);
+        console.log(house.characterDialogNumber[character]);
+        if(dialog.dialog[house.characterdialogID[character]])
         {            
-            if(dialog.dialog[house.dialogID].Triggers)
+            if(dialog.dialog[house.characterdialogID[character]].Triggers)
             {
-                for(i =0; i<dialog.dialog[house.dialogID].Triggers.length; i++)
+                for(i =0; i<dialog.dialog[house.characterdialogID[character]].Triggers.length; i++)
                 {
-                    var value =dialog.dialog[house.dialogID].Triggers[i].Value;
-                    var stat = dialog.dialog[house.dialogID].Triggers[i].Stat;
+                    var value =dialog.dialog[house.characterdialogID[character]].Triggers[i].Value;
+                    var stat = dialog.dialog[house.characterdialogID[character]].Triggers[i].Stat;
                     if(stat === "score")
                     {
                         gameStats.score += value;
@@ -163,62 +196,105 @@ var House = (function(){
                     }
                     else
                     {
-                        gameStats[dialog.dialog[house.dialogID].Triggers[i].Stat]= dialog.dialog[house.dialogID].Triggers[i].Value;                                
+                        gameStats[dialog.dialog[house.characterdialogID[character]].Triggers[i].Stat]= dialog.dialog[house.characterdialogID[character]].Triggers[i].Value;                                
                     }                    
                 }
             }
             
-            if (dialog.dialog[house.dialogID].Who === "Catz")
+            if (dialog.dialog[house.characterdialogID[character]].Who === "Catz")
             {
-                house.catzSpeach.text = dialog.dialog[house.dialogID].What;            
+                house.catzSpeach.text = dialog.dialog[house.characterdialogID[character]].What;            
                 house.catzSpeach.alpha = 1;
                 house.catzSound1.play();
             }
-            else if (dialog.dialog[house.dialogID].Who === "Hobo-Cat")
+            else if (dialog.dialog[house.characterdialogID[character]].Who === "Hobo-Cat")
             {
-                house.hoboSpeach.text = dialog.dialog[house.dialogID].What;
-                house.hoboSpeach.alpha = 1;
+                house.characterSpeach.text = dialog.dialog[house.characterdialogID[character]].What;
+                house.characterSpeach.alpha = 1;
                 house.hoboCatSound1.play();  
             }                             
             
-            if(dialog.dialog[house.dialogID].Choice)
-            {                                
-                for (var i=0;i<dialog.dialog[house.dialogID].Choices.length;i++)
+            else if (dialog.dialog[house.characterdialogID[character]].Who === "Timmy")
+            {
+                house.characterSpeach.text = dialog.dialog[house.characterdialogID[character]].What;
+                house.characterSpeach.alpha = 1;
+                //Should be timmy sound
+                house.hoboCatSound1.play();  
+            }                             
+            
+            if(dialog.dialog[house.characterdialogID[character]].Choice)
+            {                                                
+                for (var i=0;i<dialog.dialog[house.characterdialogID[character]].Choices.length;i++)
                 {           
-                    
-                    if(i===0)
+                    //THis needs fixin
+                    if(i===0 && character === "hoboCat")
                     {
-                        house.choices[i].text=dialog.dialog[house.dialogID].Choices[i].text;
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[character]].Choices[i].text;
                         house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.dialogID].Choices[i].ChoiceID;                                                                                
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[character]].Choices[i].ChoiceID;                                                                                
 
                         house.choices[i].addEventListener("click",
                             function()
                             {                             
-                                house.dialogID = house.choiceIDs[0];                                                                                                
+                                house.characterdialogID["hoboCat"] = house.choiceIDs[0];                                                                                                
 
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
                                 house.choice3.alpha = 0;
-                                house.hoboDialog(gameStats, text);
+                                house.characterDialog(gameStats, text, gotoGameView, gotoGameView,"hoboCat");
                             });                        
                     }
                     
-                    if(i===1)
+                    if(i===1 && character === "hoboCat")
                     {
-                        house.choices[i].text=dialog.dialog[house.dialogID].Choices[i].text;
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[character]].Choices[i].text;
                         house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.dialogID].Choices[i].ChoiceID;                                                                                
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[character]].Choices[i].ChoiceID;                                                                                
 
                         house.choices[i].addEventListener("click",
                             function()
                             {                             
-                                house.dialogID = house.choiceIDs[1];                                                                                                
+                                house.characterdialogID["hoboCat"] = house.choiceIDs[1];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;                                
+                                house.characterDialog(gameStats, text, gotoGameView, "hoboCat");
+                            });                        
+                    }
+                    if(i===0 && character === "timmy")
+                    {
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[character]].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[character]].Choices[i].ChoiceID;                                                                                
+
+                        house.choices[i].addEventListener("click",
+                            function()
+                            {                             
+                                house.characterdialogID["timmy"] = house.choiceIDs[0];                                                                                                
 
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
                                 house.choice3.alpha = 0;
-                                house.hoboDialog(gameStats, text);
+                                house.characterDialog(gameStats, text,gotoGameView, "timmy");
+                            });                        
+                    }
+                    
+                    if(i===1 && character ==="timmy")
+                    {
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[character]].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[character]].Choices[i].ChoiceID;                                                                                
+
+                        house.choices[i].addEventListener("click",
+                            function()
+                            {                             
+                                house.characterdialogID[that.character] = house.choiceIDs[1];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;                                
+                                house.characterDialog(gameStats, text, gotoGameView, "timmy");
                             });                        
                     }
                     
@@ -226,14 +302,15 @@ var House = (function(){
             }
             else
             {                                
-                if(!dialog.dialog[house.dialogID].End)
+                if(!dialog.dialog[house.characterdialogID[character]].End)
                 {
-                    house.dialogID = dialog.dialog[house.dialogID].NextID;                
+                    house.characterdialogID[character] = dialog.dialog[house.characterdialogID[character]].NextID;                
                 }
                 else
                 {
                       house.wickActive = true;
-                    house.hoboActive = false;
+                    house.characterActive[character] = false;
+                    
                     if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
                         createjs.Tween.removeAllTweens(house.wickExclamation);
                         createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
@@ -243,15 +320,15 @@ var House = (function(){
                             .call(function () {house.activateWick(gotoGameView)});
                     //To shift to idle speach. Should be implemented smarter.
                     house.updateHouse(gameStats);
-                    house.dialogID+=100;
+                    house.characterdialogID[character]+=100;
                 }
             }
         }
         
         else
         {
-            house.hoboSpeach.text = dialog.idle.what;
-            house.hoboSpeach.alpha = 1;            
+            house.characterSpeach.text = dialog.idle.what;
+            house.characterSpeach.alpha = 1;            
         }
         
         
@@ -267,7 +344,7 @@ var House = (function(){
         house.wick.removeAllEventListeners();        
         house.wick.addEventListener("animationend",gotoGameView);
         house.catzSpeach.text ="";
-        house.hoboSpeach.text ="";
+        house.characterSpeach.text ="";
     };    
     
     house.highlightHobo = function()
@@ -304,15 +381,19 @@ var House = (function(){
     {        
     };
     
-    house.addHoboEvents = function(gameStats, text, gotoGameView)
+    house.addCharacterEvents = function(gameStats, text, gotoGameView)
     {
         if(house.hoboActive)
         {
             house.hoboExclamation.alpha=0.5;
         }
-        house.hobo.addEventListener("click",(function(){house.hoboDialog(gameStats, text, gotoGameView);}));
+        house.hobo.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView, "hoboCat");}));
         house.hobo.addEventListener("mouseover", house.highlightHobo);
         house.hobo.addEventListener("mouseout", house.downlightHobo);
+        
+        house.timmy.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView, "timmy");}));
+        house.timmy.addEventListener("mouseover", house.highlightTimmy);
+        house.timmy.addEventListener("mouseout", house.downlightTimmy);
     };
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, gotoGameView)

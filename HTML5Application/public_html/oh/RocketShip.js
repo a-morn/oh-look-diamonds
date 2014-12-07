@@ -103,6 +103,7 @@ var RocketShip = (function(){
         hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
         orphanage : {built : false, isBuilding : false, builtOnRound : null},       
         rehab: {built : false, isBuilding : false, builtOnRound : null},        
+        university: {built : false, isBuilding : false, builtOnRound : null},
         Difficulty : 0
         }
     ;
@@ -201,7 +202,7 @@ var RocketShip = (function(){
                     {id:"wind", src:"assets/new assets/sprites/wind.png"},
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
-                    {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},
+                    {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},                   
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
                     {id:"diamondhouse", src:"assets/new assets/sprites/diamond house progression.png"},
                     {id:"leaves", src:"assets/new assets/sprites/leaves.png"},
@@ -258,9 +259,9 @@ var RocketShip = (function(){
     function houseTick()
     {
         stage.update();
-        if(house.hoboSpeach.alpha > 0)
+        if(house.characterSpeach.alpha > 0)
         {
-            house.hoboSpeach.alpha -= 0.015;
+            house.characterSpeach.alpha -= 0.015;
         }
         
         if(house.catzSpeach.alpha > 0)
@@ -303,6 +304,7 @@ var RocketShip = (function(){
         house.house.scaleX=0.8;
         house.house.scaleY=0.8;
         house.house.y=-20;
+        
         var hoboData= spriteSheetData.hobo;
         sheet = new createjs.SpriteSheet(hoboData);
         house.hobo  = new createjs.Sprite(sheet,"cycle");
@@ -310,6 +312,15 @@ var RocketShip = (function(){
         house.hobo.y=225;
         house.hobo.scaleX=0.8;
         house.hobo.scaleY=0.8;        
+        
+        var timmyData= spriteSheetData.supportingCharacter;
+        sheet = new createjs.SpriteSheet(timmyData);
+        house.timmy= new createjs.Sprite(sheet,"timmy");
+        house.timmy.x=110;
+        house.timmy.y=345;
+        house.timmy.scaleX=0.8;
+        house.timmy.scaleY=0.8;
+        house.timmy.alpha = 0;
         
         house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
         house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
@@ -438,11 +449,11 @@ var RocketShip = (function(){
         house.wickLight.y = 319;
         house.wickLight.alpha = 0;
         
-        house.hoboSpeach = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
-        house.hoboSpeach.x = 10;             
-        house.hoboSpeach.y = 240;
-        house.hoboSpeach.text = "";
-        house.hoboSpeach.alpha= 0;
+        house.characterSpeach = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
+        house.characterSpeach.x = 10;             
+        house.characterSpeach.y = 240;
+        house.characterSpeach.text = "";
+        house.characterSpeach.alpha= 0;
         
         house.hoboExclamation = new createjs.Text("0", "18px Fauna One", "#ffcc00"); 
         house.hoboExclamation.x = 115;             
@@ -498,8 +509,8 @@ var RocketShip = (function(){
         starCont.y=1000;
         bg.addEventListener("click",showOh);
         house.houseView.addChild(house.diamondHouseCont,house.catz,house.house, 
-            house.hobo,house.wick, house.crashRocket, house.hoboExclamation, 
-            house.wickExclamation, house.catzSpeach, house.hoboSpeach, house.choice1, 
+            house.hobo,house.timmy, house.wick, house.crashRocket, house.hoboExclamation, 
+            house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
             house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton);
     }
@@ -543,7 +554,7 @@ var RocketShip = (function(){
             .to({x:-130, y:260, rotation:0},300)
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
-            .call(house.addHoboEvents,[gameStats, text, gotoGameView]);
+            .call(house.addCharacterEvents,[gameStats, text, gotoGameView]);
     }
     
     function shiftUp()
@@ -1984,9 +1995,9 @@ kills=" + gameStats.kills;
     function houseTick ()
     {
         stage.update();
-        if(house.hoboSpeach.alpha > 0)
+        if(house.characterSpeach.alpha > 0)
         {
-            house.hoboSpeach.alpha -= 0.015;
+            house.characterSpeach.alpha -= 0.015;
         }
         
         if(house.catzSpeach.alpha > 0)
