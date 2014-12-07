@@ -2,6 +2,7 @@ var RocketShip = (function(){
     var 
     currentTrack = 0,
     currentLevel = 0,
+    currentDisplacement = 0,
     catzRocket,
     house,     
     hud,
@@ -1180,7 +1181,7 @@ kills=" + gameStats.kills;
     {
         var result = [];
         var displacementX = 800;
-        var displacementY = catzRocket.catzRocketContainer.y;
+        var displacementY = currentDisplacement;
         if(tracksJSON[currentLevel].length===currentTrack)
         {
             currentTrack=0;
@@ -1202,6 +1203,7 @@ kills=" + gameStats.kills;
                 }
                 result = result.concat(element);                
             }
+            currentDisplacement+=result[result.length-1].y;
             currentTrack+=1;
             return result;
         }
