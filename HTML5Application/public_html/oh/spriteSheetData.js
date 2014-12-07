@@ -89,28 +89,28 @@ spriteSheetData = (function()
                 "framerate":24,
                     "images":[queue.getResult("diamondhouse")],
                 "frames":[
-                    [0, 0, 128, 64, 0, 0, 0],
-                    [128, 0, 128, 64, 0, 0, 0],
-                    [256, 0, 128, 64, 0, 0, 0],
-                    [384, 0, 128, 64, 0, 0, 0],
-                    [512, 0, 128, 64, 0, 0, 0],
-                    [640, 0, 128, 64, 0, 0, 0],
-                    [768, 0, 128, 64, 0, 0, 0],
-                    [896, 0, 128, 64, 0, 0, 0],
-                    [1024, 0, 128, 64, 0, 0, 0],
-                    [1152, 0, 128, 64, 0, 0, 0]
+                    [0, 0, 128, 128, 0, 0, 0],
+                    [128, 0, 128, 128, 0, 0, 0],
+                    [256, 0, 128, 128, 0, 0, 0],
+                    [384, 0, 128, 128, 0, 0, 0],
+                    [512, 0, 128, 128, 0, 0, 0],
+                    [640, 0, 128, 128, 0, 0, 0],
+                    [768, 0, 128, 128, 0, 0, 0],
+                    [896, 0, 128, 128, 0, 0, 0],
+                    [1024, 0, 128, 128, 0, 0, 0],
+                    [1152, 0, 128, 128, 0, 0, 0]
                 ],
                 "animations":{
-                    "catnip treatment facility": {"frames": [4], "speed": 1},
-                    "hoboHouse": {"frames": [0], "speed": 1},
-                    "hospital": {"frames": [5], "speed": 1},
-                    "university": {"frames": [8], "speed": 1},
-                    "rocket university": {"frames": [9], "speed": 1},
-                    "youth centre": {"frames": [2], "speed": 1},
-                    "summer camp": {"frames": [3], "speed": 1},
-                    "orphanage": {"frames": [1], "speed": 1},
-                    "phychiatric wing": {"frames": [6], "speed": 1},
-                    "monastery": {"frames": [7], "speed": 1}
+                    "rocket university": {"speed": 1, "frames": [9]},
+                    "youth centre": {"speed": 1, "frames": [2]},
+                    "hoboHouse": {"speed": 1, "frames": [0]},
+                    "monastery": {"speed": 1, "frames": [7]},
+                    "phychiatric wing": {"speed": 1, "frames": [6]},
+                    "catnip treatment facility": {"speed": 1, "frames": [4]},
+                    "university": {"speed": 1, "frames": [8]},
+                    "orphanage": {"speed": 1, "frames": [1]},
+                    "hospital": {"speed": 1, "frames": [5]},
+                    "summer camp": {"speed": 1, "frames": [3]}
                 }
             };
             ssd.cat = {
