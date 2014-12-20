@@ -483,8 +483,8 @@ var RocketShip = (function(){
         house.choice2.Alpha = 0;
         
         house.choice3 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
-        house.choice3.x = 0;             
-        house.choice3.y = 80;
+        house.choice3.x = 350;             
+        house.choice3.y = 180;
         house.choice3.text = "";
         house.choice3.Alpha = 0;
         house.choices = [house.choice1, house.choice2,house.choice3];
