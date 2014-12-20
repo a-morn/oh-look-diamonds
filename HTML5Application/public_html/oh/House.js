@@ -383,6 +383,7 @@ var House = (function(){
     
     house.addCharacterEvents = function(gameStats, text, gotoGameView)
     {
+        house.diCont.removeAllChildren();
         if(house.hoboActive)
         {
             house.hoboExclamation.alpha=0.5;

@@ -343,23 +343,18 @@ var RocketShip = (function(){
         house.diCont = new createjs.Container();
         var diamondData = spriteSheetData.diamond;
         diamondSheet = new createjs.SpriteSheet(diamondData);
-        var positions = [
-            {x:775,y:-1070, frame: 0, scale: 0.8},
-            {x:350,y:-1300, frame: 5, scale: 0.5},
-            {x:130,y:-1100,frame: 10, scale: 0.6},
-            {x:700,y:-1250,frame: 15, scale: 0.4},
-            {x:500,y:-1130, frame: 20, scale: 0.7}];
+        var positions = diamondConstellation;
         for(var i=0; i<positions.length;i++)
         {
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
-            diamond.x=positions[i].x;
-            diamond.y=positions[i].y;
+            diamond.x=positions[i].x+5;
+            diamond.y=positions[i].y-1495;
             diamond.currentAnimationFrame = positions[i].frame;
             diamond.scaleX=positions[i].scale;
             diamond.scaleY=positions[i].scale;
             house.diCont.addChild(diamond);
         }
-        house.diCont.alpha=0;
+        //house.diCont.alpha=0;
 
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
