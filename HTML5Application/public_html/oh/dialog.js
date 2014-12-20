@@ -30,7 +30,7 @@ I'll go ahead and build myself a house", "Sound": "HoboCatSound1", "Choice" :fal
 {"dialog":[
         {"Who": "Hobo-Cat", "What": "Say there's plenty of\n\
 stray kitties in Katholm.\n\
-Why don't we build 'em a home?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}]},
+Why don't we build 'em a home?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"k lol", "ChoiceID":3}]},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
         {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5, "End":false},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":4, "Triggers":[{Stat:"isBuiding", Value: "orphanage"}], "End":false},
@@ -53,7 +53,7 @@ of mine back in Katholm.", "Sound": "HoboCatSound1", "Choice" :false, "NextID": 
         {"Who": "Hobo-Cat", "What": "They're still\n\
 stuck in the hole I've dug myself out of.\n\
 Why don't we build a place\n\
-for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"klol", "ChoiceID":4}], "End":false},
+for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"k lol", "ChoiceID":4}], "End":false},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
         {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "rehab"}], "End":false},
@@ -76,7 +76,7 @@ are too high for most.", "Sound": "HoboCatSound1", "Choice" :false, "NextID": 1,
         {"Who": "Hobo-Cat", "What": "why don't we\n\
 found a university.\n\
 funny hats and \n\
-titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"klol", "ChoiceID":4}], "End":false},
+titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"k lol", "ChoiceID":4}], "End":false},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
         {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "university"}], "End":false},

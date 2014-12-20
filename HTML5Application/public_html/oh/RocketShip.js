@@ -471,14 +471,14 @@ var RocketShip = (function(){
         house.wickExclamation.alpha= 0;
         
         house.choice1 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
-        house.choice1.x = 0;             
-        house.choice1.y = 40;
+        house.choice1.x = 350;             
+        house.choice1.y = 150;
         house.choice1.text = "";
         house.choice1.Alpha = 0;
         
         house.choice2 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
-        house.choice2.x = 0;             
-        house.choice2.y = 60;
+        house.choice2.x = 350;             
+        house.choice2.y = 120;
         house.choice2.text = "";
         house.choice2.Alpha = 0;
         
