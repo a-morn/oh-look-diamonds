@@ -931,9 +931,6 @@ var RocketShip = (function(){
                 text.text="alot";
             }
             
-            text.text += "\n\
-kills=" + gameStats.kills;
-            
             if(catzRocket.diamondFrenzyCharge>0)
             {
                 catzRocket.diamondFrenzyCharge -= event.delta/2000;
@@ -2067,7 +2064,7 @@ kills=" + gameStats.kills;
         catzRocket.catz.alpha = 1;
         catzRocket.glass.gotoAndPlay("still");
         stage.removeAllEventListeners();
-        stage.removeChild(gameView,hud,hudPointer, catzRocket.glass);
+        stage.removeChild(gameView);
         stage.addChild(house.houseView);
         stage.update();
         house.wickExclamation.alpha= 0;
