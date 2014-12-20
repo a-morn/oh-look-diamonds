@@ -978,7 +978,9 @@ kills=" + gameStats.kills;
                 + "\nFrenzy: " + catzRocket.frenzyCount
                 + "\nFrenzyTimer: " + catzRocket.frenzyTimer
                 + "\nfrenzyReady: " + catzRocket.frenzyReady
-                + "\nHoboDialogNo: " + house.hoboDialogNumber;
+                + "\nHoboDialogNo: " + house.hoboDialogNumber
+                +"\n\ncurrentDisplacement: "+currentDisplacement;
+        
         
             stage.update(event); 
         }
@@ -1206,7 +1208,8 @@ kills=" + gameStats.kills;
                 {
                     element[i].x+=displacementX;
                     element[i].y+=displacementY;
-                    if(i===element.length-1)
+                    console.log("currentElement"+element[i].y);
+                    if(i===element.length-1 && element[i].graphicType!=="attackBird")
                     {
                         displacementX = element[i].x;
                         displacementY = element[i].y;
@@ -1214,19 +1217,10 @@ kills=" + gameStats.kills;
                 }
                 result = result.concat(element);                
             }
-            currentDisplacement+=result[result.length-1].y;
+            currentDisplacement=result[result.length-1].y;
+            console.log("currentDisplacement "+currentDisplacement);
             currentTrack+=1;
             return result;
-        }
-        
-        else if(gameStats.Difficulty===1)
-        {
-            
-        }
-        
-        else if(gameStats.Difficulty>1)
-        {
-            
         }
     }
     
@@ -1278,7 +1272,7 @@ kills=" + gameStats.kills;
                     }
                     else if(track[i].graphicType==="attackBird")
                     {
-                        spawnAttackBird(track[i].animation,track[i].acc,track[i].x,track[i].y);
+                        spawnAttackBird(track[i].animation,track[i].acc,track[i].x,track[i].y+catzRocket.catzRocketContainer.y);
                     }
                 }
             }
@@ -2060,6 +2054,7 @@ kills=" + gameStats.kills;
     {
         currentTrack=0;
         currentLevel=0;
+        currentDisplacement =0;
         catzRocket.rocket.x=0;
         catzRocket.rocket.alpha=1;
         lightningCont.removeAllChildren();
