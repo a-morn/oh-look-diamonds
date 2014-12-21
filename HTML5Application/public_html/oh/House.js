@@ -174,7 +174,26 @@ var House = (function(){
                     {
                         gameStats.score += value;
                         //Should be a "cash-withdrawn"-animation triggered here
-                        text.text = gameStats.score;
+                        if(gameStats.score<10)
+                        {
+                            text.text="000"+gameStats.score;
+                        }
+                        else if(gameStats.score<100)
+                        {
+                            text.text="00"+gameStats.score;
+                        }
+                        else if(gameStats.score<1000)
+                        {
+                            text.text="0"+gameStats.score;
+                        }
+                        else if(gameStats.score<10000)
+                        {
+                            text.text=gameStats.score;
+                        }
+                        else
+                        {
+                            text.text="alot";
+                        }
                     }
                     else if (stat=== "kills")
                     {
