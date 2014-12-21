@@ -10,3 +10,9 @@ a:link {
 a:visited {
     color: #ffffcc;
 }
+
+@media (max-width: 480px) {
+    canvas {
+        width: 100%;
+    }
+}

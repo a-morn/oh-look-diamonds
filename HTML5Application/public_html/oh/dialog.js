@@ -16,33 +16,30 @@ big balls of gas and fire", "Sound": "hoboCatSound1", "Choice" :false, "NextID":
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
         {"Who": "Hobo-Cat", "What": "For me? \n\
 Much obliged, kitten!\n\
-I'll go ahead and build myself a house", "Sound": "HoboCatSound1", "Choice" :false, "NextID":3, "End":false, "Triggers": [{Stat:"score", Value: -1}]},
-                {"End":true}
+I'll go ahead and build myself a house", "Sound": "HoboCatSound1", "Choice" :false, "NextID":3, "End":true, "Triggers": [{Stat:"score", Value: -1}]}                
     ], "idle":{"what":"cough"}},
     
     {"dialog":[
         {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", 
             "Choice" :false, "NextID":1, "Triggers":[{Stat:"built", 
-                    Value: "hoboCatHouse"}, {Stat:"score", Value: -19}], "End":false},        
-        {"End":true}
+                    Value: "hoboCatHouse"}, {Stat:"score", Value: -19}], "End":true}                
     ], "idle":{"what":"hum hum"}},
 
 {"dialog":[
         {"Who": "Hobo-Cat", "What": "Say there's plenty of\n\
 stray kitties in Katholm.\n\
-Why don't we build 'em a home?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"k lol", "ChoiceID":3}]},
+Why don't we build 'em a home?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}]},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
-        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5, "End":false},
-        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":4, "Triggers":[{Stat:"isBuiding", Value: "orphanage"}], "End":false},
-        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5,"End":false},
-        {"End":true}
+        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5, "End":true},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":4, "Triggers":[{Stat:"isBuiding", Value: "orphanage"},
+            {Stat:"CurrentlyBuilding", Value: true}], "End":false},
+        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5,"End":true}        
     ], "idle":{"what":"hum hum"}},
 
 
 {"dialog":[
-        {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "NextID":1,"End":false, 
-            "Triggers":[{Stat:"built", Value: "orphanage"}, {Stat:"score", Value: -20}]},
-        {"End":true}
+        {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "NextID":1,"End":true, 
+            "Triggers":[{Stat:"built", Value: "orphanage"}, {Stat:"score", Value: -20}]}        
     ], "idle":{"what":"hum hum"}}
 
 ,
@@ -53,12 +50,12 @@ of mine back in Katholm.", "Sound": "HoboCatSound1", "Choice" :false, "NextID": 
         {"Who": "Hobo-Cat", "What": "They're still\n\
 stuck in the hole I've dug myself out of.\n\
 Why don't we build a place\n\
-for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"k lol", "ChoiceID":4}], "End":false},
+for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"klol", "ChoiceID":4}], "End":false},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
-        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
-        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "rehab"}], "End":false},
-        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
-        {"End":true}
+        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "rehab"},
+            {Stat:"CurrentlyBuilding", Value: true}], "End":false},
+        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true}
     ], "idle":{"what":"hum hum"}},
 
 
@@ -76,14 +73,26 @@ are too high for most.", "Sound": "HoboCatSound1", "Choice" :false, "NextID": 1,
         {"Who": "Hobo-Cat", "What": "why don't we\n\
 found a university.\n\
 funny hats and \n\
-titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"k lol", "ChoiceID":4}], "End":false},
+titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"nopez", "ChoiceID":2},{"text":"klol", "ChoiceID":4}], "End":false},
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
-        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
+        {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "university"}], "End":false},
-        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":false},
-        {"End":true}
+        {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true}        
     ], "idle":{"what":"hum hum"}}
 ],
-"timmy": [{"dialog":[{"Who": "Timmy", "What": "lol", "Choice": false, "NextID":1, "End":false},
-                    {"Who": "Catz", "What": "lol", "Choice":false, "NextID":2, "End":true}], "idle":{"what":"can haz some more?"}}]
+"timmy": [
+    //0
+    {"dialog":[{"Who": "Timmy", "What": "can haz summer camp?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{Stat:"summerCamp", Value: true}], "End":false},
+                {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"can haz some more?"}},
+    //1
+    {"dialog":[{"Who": "Timmy", "What": "can haz youth center?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{Stat:"youthCenter", Value: true}], "End":false},
+                {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"can haz some more?"}}]
 };

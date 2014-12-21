@@ -64,11 +64,21 @@ var gameProgressionJSON = {"hoboCat":
         }
     ],
     "timmy": [
-        {"Conditions":[{"ConditionType": "Score", "Score": 1, "OperatorType": "LargerThan"}],
+    {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":10}],
         "HasHappend":false,
-        "ShouldReoccur":false,
-        "Chance":1,
+        "ShouldReoccur":true,
+        "Chance":0.2,
         "ConversationNumber": 0
+    },
+    {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":10}],            
+        "HasHappend":false,
+        "ShouldReoccur":true,
+        "Chance":0.2,
+        "ConversationNumber": 1
     }
     ]
 };

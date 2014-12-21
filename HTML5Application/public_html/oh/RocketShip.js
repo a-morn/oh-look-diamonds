@@ -150,6 +150,10 @@ var RocketShip = (function(){
         stage                       = new createjs.Stage(canvas);
         stage.mouseEventsEnabled    = true;
         
+        if ('ontouchstart' in document.documentElement) {
+            createjs.Touch.enable(stage);           
+        } 
+        
         progressBar = new createjs.Shape();         
         
         progressBar.graphics.beginFill("#907a91").drawRect(0,0,100,20);         
@@ -862,13 +866,14 @@ var RocketShip = (function(){
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
-        createjs.Ticker.setFPS(30);            
+        createjs.Ticker.setFPS(30);                    
+        
         stage.addEventListener("stagemousedown", catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
         catzRocket.catzVelocity=-20;
         createjs.Ticker.setPaused(false);      
-        stage.update();
+        stage.update();        
     }
     
     function setStars()
