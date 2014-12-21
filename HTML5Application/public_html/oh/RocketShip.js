@@ -1376,7 +1376,23 @@ var RocketShip = (function(){
     
     function updateScatterDiamonds(event)
     {
-        if(Math.random()>0.8)
+        if(currentTrack<2)
+        {
+            var thres = 0.95;
+        }
+        else if(currentTrack<4)
+        {
+            thres = 0.90;
+        }
+        else if(currentTrack<6)
+        {
+            thres = 0.8;
+        }
+        else
+        {
+            thres = 0.7;
+        }
+        if(Math.random()>thres)
         {
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
             diamond.x=800;
