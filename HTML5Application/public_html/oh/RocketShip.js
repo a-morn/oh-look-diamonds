@@ -215,9 +215,7 @@ var RocketShip = (function(){
                     {id:"cat", src:"assets/new assets/sprites/lookingAtDiamondsSilouette.png"},
                     {id:"palladiumAlloySong", src:"assets/new assets/sound/pallaydiumAlloySongShort.mp3"},
                     {id:"hoboCatSound1", src:"assets/new assets/sound/catz 1.mp3"},
-                    {id:"hoboCatSound2", src:"assets/new assets/sound/catz 2.mp3"},
                     {id:"catzSound1", src:"assets/new assets/sound/catz 3.mp3"},
-                    {id:"catzSound2", src:"assets/new assets/sound/catz 4.mp3"},
                     {id:"uploopSound", src:"assets/new assets/sound/uploop.mp3"},
                     {id:"downloopSound", src:"assets/new assets/sound/downloop.mp3"},
                     {id:"secondUploopSound", src:"assets/new assets/sound/secondUploop.mp3"},
@@ -226,9 +224,7 @@ var RocketShip = (function(){
                     {id:"frenzySound", src:"assets/new assets/sound/frenzy.mp3"},
                     {id:"emeregencyBoostSound", src:"assets/new assets/sound/emergencyBoost.mp3"},
                     {id:"miscSound", src:"assets/new assets/sound/misc.mp3"},
-                    {id:"catzScream1", src:"assets/new assets/sound/catzScream.mp3"},
                     {id:"catzScream2", src:"assets/new assets/sound/cat_meow_wounded_1.mp3"},
-                    {id:"catzScream3", src:"assets/new assets/sound/cat_meow_wounded_2.mp3"},
                     //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
                     {id:"wick", src:"assets/new assets/sprites/wick.png"},
                     {id:"wickSound", src:"assets/new assets/sound/wick.mp3"},
@@ -315,9 +311,9 @@ var RocketShip = (function(){
         sheet = new createjs.SpriteSheet(hoboData);
         house.hobo  = new createjs.Sprite(sheet,"cycle");
         house.hobo.x=-110;
-        house.hobo.y=225;
-        house.hobo.scaleX=0.8;
-        house.hobo.scaleY=0.8;        
+        house.hobo.y=225;  
+        house.hobo.regX = -210;
+        house.hobo.regY = -180;
         
         var timmyData= spriteSheetData.supportingCharacter;
         sheet = new createjs.SpriteSheet(timmyData);
@@ -495,8 +491,6 @@ var RocketShip = (function(){
         
         house.hoboCatSound1 = createjs.Sound.play("hoboCatSound1");
         house.hoboCatSound1.stop();
-        house.hoboCatSound2 = createjs.Sound.play("hoboCatSound2");
-        house.hoboCatSound2.stop();
         
         house.catzSound1 = createjs.Sound.play("catzSound1");
         house.catzSound1.stop();
@@ -667,12 +661,10 @@ var RocketShip = (function(){
         var spriteSheet = new createjs.SpriteSheet(rocketData);    
         catzRocket.rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
         catzRocket.rocketFlame.alpha=0;
-        catzRocket.rocketFlame.scaleX = 0.4;
-        catzRocket.rocketFlame.scaleY = 0.4;
         catzRocket.rocketFlame.x=190;
         catzRocket.rocketFlame.y=200;
-        catzRocket.rocketFlame.regY = 265;
-        catzRocket.rocketFlame.regX = 390;
+        catzRocket.rocketFlame.regY = -37;
+        catzRocket.rocketFlame.regX = 40;
         
         catzRocket.silouette = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         catzRocket.silouette.scaleX = 0.25;
@@ -683,8 +675,6 @@ var RocketShip = (function(){
                 
         catzRocket.catzRocketContainer.x = 260;
         catzRocket.catzRocketContainer.y = 200;
-        catzRocket.catz.scaleX = 0.4;
-        catzRocket.catz.scaleY = 0.4;
         catzRocket.catz.y = 5;
         catzRocket.catzRocketContainer.regY = 100;
         catzRocket.catzRocketContainer.regX = 150;
@@ -722,16 +712,12 @@ var RocketShip = (function(){
         var smokeSheet = new createjs.SpriteSheet(smokeData);
         smoke = new createjs.Sprite(smokeSheet,"jump");
         smoke.alpha=0;
-        smoke.scaleX = 0.5;
-        smoke.scaleY = 0.5;
-        smoke.regX = 200;
+        smoke.regX = 150;
         smoke.regY = 350;
         
         exitSmoke = new createjs.Sprite(smokeSheet,"right");
         exitSmoke.alpha=0;
-        exitSmoke.scaleX = 0.5;
-        exitSmoke.scaleY = 0.5;
-        exitSmoke.regX = 200;
+        exitSmoke.regX = 150;
         exitSmoke.regY = 200;
         
         hud = new createjs.Bitmap(queue.getResult("hud"));
@@ -754,8 +740,6 @@ var RocketShip = (function(){
         var leavesSheet = new createjs.SpriteSheet(leavesData);
         leaves = new createjs.Sprite(leavesSheet,"cycle");
         leaves.alpha=0;
-        leaves.scaleX = 0.5;
-        leaves.scaleY = 0.5;
         
         var seagullData = spriteSheetData.enemybirds;
         seagullSheet = new createjs.SpriteSheet(seagullData);
@@ -1258,11 +1242,6 @@ var RocketShip = (function(){
                         var sprite = new createjs.Sprite(sheet,track[i].animation);
                         sprite.x = track[i].x; 
                         sprite.y = track[i].y;
-                        if(track[i].type ==="diamond")
-                        {
-                            sprite.scaleX=0.8;
-                            sprite.scaleY=0.8;
-                        }
                         var cont = containerDict[track[i].type];
                         cont.addChild(sprite);
                         
@@ -1402,8 +1381,8 @@ var RocketShip = (function(){
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
             diamond.x=800;
             diamond.y=Math.pow(35*Math.random(),2)-1000;
-            diamond.scaleX=0.6;
-            diamond.scaleY=0.6;
+            diamond.scaleX=0.75;
+            diamond.scaleY=0.75;
             scatterDiamondsCont.addChild(diamond);
         }
         var arrayLength = scatterDiamondsCont.children.length;
