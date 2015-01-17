@@ -6,16 +6,23 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            $(document).ready(function(){
+                $("#aboutInner").hide();
+                $("#hideshow").click(function(){
+                    $("#aboutInner").toggle();
+                });              
+            });
+        </script>
     </head>
-    <body>                    
+    <body>        
             <br>
             <br>
             <br>
             <br>
             <br>
+            <button id="hideshow">About</button>        
+        <div id="aboutInner">
             <br>
             <p>
             Oh.Look.Diamonds            
@@ -37,6 +44,7 @@ and open the template in the editor.
                 <a href="jquery.com">jQuery</a>
                 <br>                     
                 [Other tools and libaries]            
-            </p>         
+            </p>      
+        </div>
     </body>
 </html>
