@@ -103,7 +103,7 @@ var RocketShip = (function(){
         currentRound: 0,
         CurrentlyBuilding: false,
         hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
-        orphanage : {built : false, isBuilding : false, builtOnRound : null},       
+        orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false},       
         rehab: {built : false, isBuilding : false, builtOnRound : null},        
         university: {built : false, isBuilding : false, builtOnRound : null},
         Difficulty : 0
@@ -388,8 +388,8 @@ var RocketShip = (function(){
         house.orphanage = new createjs.Sprite(dSheet,"orphanage");
         house.orphanage.alpha=0;
         house.orphanage.x=500;
-        house.orphanage.y=380;
-        house.orphanage.rotation = 12;
+        house.orphanage.y=382;
+        house.orphanage.rotation = 15;
         house.diamondHouseCont.addChild(house.orphanage);
         house.diamondHouseArray["orphanage"] = house.orphanage;
         
@@ -1121,7 +1121,6 @@ var RocketShip = (function(){
     
     function spawnThunderCloud(xPos,yPos)
     {
-        console.log("thundercloud spawned");
         var cloudtype = Math.floor(Math.random()*5+1);
         cloudtype = "cloud"+cloudtype.toString();
         var scale = Math.random()*0.3+0.3;
@@ -1189,7 +1188,6 @@ var RocketShip = (function(){
                 {
                     element[i].x+=displacementX;
                     element[i].y+=displacementY;
-                    console.log("currentElement"+element[i].y);
                     if(i===element.length-1 && element[i].graphicType!=="attackBird")
                     {
                         displacementX = element[i].x;
@@ -1199,7 +1197,6 @@ var RocketShip = (function(){
                 result = result.concat(element);                
             }
             currentDisplacement=result[result.length-1].y;
-            console.log("currentDisplacement "+currentDisplacement);
             currentTrack+=1;
             return result;
         }
@@ -1730,7 +1727,7 @@ var RocketShip = (function(){
             bird.y += dispY;
             isCollide = collisionCheck(bird);
         }
-        //console.log(dispX+" "+dispY);
+
         return isCollide;
     }
     
