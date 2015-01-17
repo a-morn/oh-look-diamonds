@@ -17,6 +17,7 @@ var gameProgressionJSON = {"hoboCat":
 
         
         {"Conditions":[{"ConditionType": "buildingState", "building":"orphanage","state": "isBuilding", "on":false},           
+            {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":false},
             {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false},
             {"ConditionType": "buildingState", "state": "built", "building":"hoboCatHouse", "on":true}],
         
@@ -66,18 +67,21 @@ var gameProgressionJSON = {"hoboCat":
     "timmy": [
     {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
-            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":10}],
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":6},
+            {"ConditionType": "buildingState", "state": "youthCenter", "building":"orphanage", "on":true},
+            {"ConditionType": "buildingState", "state": "summerCamp", "building":"orphanage","on":false}],
         "HasHappend":false,
         "ShouldReoccur":true,
-        "Chance":0.2,
+        "Chance":1,//0.2,
         "ConversationNumber": 0
     },
     {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
-            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":10}],            
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"orphanage", "on":1},
+            {"ConditionType": "buildingState", "state": "youthCenter", "building":"orphanage", "on":false}],            
         "HasHappend":false,
         "ShouldReoccur":true,
-        "Chance":0.2,
+        "Chance":1,//0.2,
         "ConversationNumber": 1
     }
     ]

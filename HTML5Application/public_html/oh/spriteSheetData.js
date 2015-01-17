@@ -102,7 +102,7 @@ spriteSheetData = (function()
                 ],
                 "animations":{
                     "rocket university": {"speed": 1, "frames": [9]},
-                    "youth centre": {"speed": 1, "frames": [2]},
+                    "youthCenter": {"speed": 1, "frames": [2]},
                     "hoboHouse": {"speed": 1, "frames": [0]},
                     "monastery": {"speed": 1, "frames": [7]},
                     "phychiatric wing": {"speed": 1, "frames": [6]},
@@ -110,7 +110,7 @@ spriteSheetData = (function()
                     "university": {"speed": 1, "frames": [8]},
                     "orphanage": {"speed": 1, "frames": [1]},
                     "hospital": {"speed": 1, "frames": [5]},
-                    "summer camp": {"speed": 1, "frames": [3]}
+                    "summerCamp": {"speed": 1, "frames": [3]}
                 }
             };
             ssd.cat = {

@@ -69,21 +69,22 @@ var House = (function(){
             house.timmy.alpha = 0;
             house.characterdialogID["hoboCat"] = 0;
         } 
-        else {
-            console.log("timyyTime");
+        else {  
+            console.log("check timmy");
             var timmyDiaNo = house.progressionCheck("timmy", gameStats);
-            console.log(timmyDiaNo);
             if(timmyDiaNo !== -1) {
+                console.log("timyyTime");
                 house.currentCharacter = "timmy";
                 house.timmy.alpha = 1;
                 house.characterDialogNumber.timmy = timmyDiaNo;
                 house.timmyActive = true;
                 house.hobo.alpha = 0;
                 house.characterdialogID["timmy"] = 0;
-                console.log("f?");
                 house.hoboExclamation.alpha=0.5;
             }
             else {
+                house.timmy.alpha = 0;
+                house.hobo.alpha = 1;
                 house.currentCharacter = "hoboCat";
             }
         }
@@ -92,6 +93,7 @@ var House = (function(){
     };
     
     house.progressionCheck = function(cat, gameStats) {
+        console.log(gameStats);
         var catProgression = gameProgressionJSON[cat];
         for(i=0;i<catProgression.length;i++)
         {                        
@@ -129,8 +131,16 @@ var House = (function(){
                         }
                     }
                     else if(condition.ConditionType === "buildingState")
-                    {                        
-                        if(gameStats[condition.building][condition.state] === condition.on)
+                    {                     
+                        if(condition.state === "builtOnRound") {
+                            if(gameStats[condition.building][condition.state] + condition.on <gameStats.currentRound) {
+                           //pass     
+                            }
+                           else {
+                               break conditionLoop;
+                           }
+                        }
+                        else if(gameStats[condition.building][condition.state] === condition.on)
                         {                            
                             //pass
                         }
@@ -177,6 +187,7 @@ var House = (function(){
                 {
                     var value =dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Value;
                     var stat = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat;
+                    console.log(stat);
                     if(stat === "score")
                     {
                         gameStats.score += value;
@@ -188,6 +199,7 @@ var House = (function(){
                         gameStats.kills += value;
                     }
                     else if (stat === "isBuilding") {
+                        console.log("=isbuildng");
                         gameStats[value].isBuilding = true;
                         gameStats.CurrentlyBuilding = true;
                     }
@@ -201,9 +213,19 @@ var House = (function(){
                         //SET ALPHA = 1 HERE                        
                         house.diamondHouseArray[value].alpha = 1;
                     }
+                    
+                    else if (stat === "addOn")
+                    {
+                        var building = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Building;
+                        console.log(building);
+                        console.log(value);
+                        house.diamondHouseArray[building].gotoAndPlay(value);
+                        console.log(building);
+                        gameStats[building][value]= true;
+                    }
                     else
                     {
-                        gameStats[dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat]= dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Value;                                
+                        gameStats[dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat]= value;                                
                     }                    
                 }
             }
