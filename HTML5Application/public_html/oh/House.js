@@ -70,10 +70,8 @@ var House = (function(){
             house.characterdialogID["hoboCat"] = 0;
         } 
         else {  
-            console.log("check timmy");
             var timmyDiaNo = house.progressionCheck("timmy", gameStats);
             if(timmyDiaNo !== -1) {
-                console.log("timyyTime");
                 house.currentCharacter = "timmy";
                 house.timmy.alpha = 1;
                 house.characterDialogNumber.timmy = timmyDiaNo;
@@ -93,7 +91,6 @@ var House = (function(){
     };
     
     house.progressionCheck = function(cat, gameStats) {
-        console.log(gameStats);
         var catProgression = gameProgressionJSON[cat];
         for(i=0;i<catProgression.length;i++)
         {                        
@@ -187,38 +184,37 @@ var House = (function(){
                 {
                     var value =dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Value;
                     var stat = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat;
-                    console.log(stat);
+                    
                     if(stat === "score")
                     {
                         gameStats.score += value;
                         //Should be a "cash-withdrawn"-animation triggered here
                         if(gameStats.score<10)
-            {
-                text.text="000"+gameStats.score;
-            }
-            else if(gameStats.score<100)
-            {
-                text.text="00"+gameStats.score;
-            }
-            else if(gameStats.score<1000)
-            {
-                text.text="0"+gameStats.score;
-            }
-            else if(gameStats.score<10000)
-            {
-                text.text=gameStats.score;
-            }
-            else
-            {
-                text.text="alot";
-            }                        
+                        {
+                            text.text="000"+gameStats.score;
+                        }
+                        else if(gameStats.score<100)
+                        {
+                            text.text="00"+gameStats.score;
+                        }
+                        else if(gameStats.score<1000)
+                        {
+                            text.text="0"+gameStats.score;
+                        }
+                        else if(gameStats.score<10000)
+                        {
+                            text.text=gameStats.score;
+                        }
+                        else
+                        {
+                            text.text="alot";
+                        }                        
                     }
                     else if (stat=== "kills")
                     {
                         gameStats.kills += value;
                     }
                     else if (stat === "isBuilding") {
-                        console.log("=isbuildng");
                         gameStats[value].isBuilding = true;
                         gameStats.CurrentlyBuilding = true;
                     }
@@ -236,10 +232,7 @@ var House = (function(){
                     else if (stat === "addOn")
                     {
                         var building = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Building;
-                        console.log(building);
-                        console.log(value);
                         house.diamondHouseArray[building].gotoAndPlay(value);
-                        console.log(building);
                         gameStats[building][value]= true;
                     }
                     else
