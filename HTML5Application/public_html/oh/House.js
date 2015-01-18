@@ -398,6 +398,7 @@ var House = (function(){
         if(house.characterActive[house.currentCharacter])
         {
             house.hoboExclamation.alpha=1;
+            house.mouseHobo.alpha = 1;
         }
     };
     

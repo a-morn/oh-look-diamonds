@@ -2,7 +2,8 @@
 var tracksJSON = 
     [[
         //level 1
-        [{"difficulty":"easy", "name":"smallDiamond"}],
+        [
+            {"difficulty":"easy", "name":"smallDiamond"}],
         
         //level 2
         [
@@ -10,6 +11,7 @@ var tracksJSON =
         {"difficulty":"easy", "name":"horizontalLine"},
         {"difficulty":"easy", "name":"downSlope"},
         {"difficulty":"easy", "name":"horizontalLine"},
+        {"difficulty":"hard", "name":"thunder"}
         ],
         
         //level 3
@@ -17,7 +19,8 @@ var tracksJSON =
             {"difficulty":"hard", "name":"dualDucks"},
             {"difficulty":"easy", "name":"horizontalLine"},
             {"difficulty":"easy", "name":"upSlope"},
-            {"difficulty":"easy", "name":"loop"}
+            {"difficulty":"easy", "name":"loop"},
+            {"difficulty":"hard", "name":"thunder"}
         ],
         
         //level 4
@@ -26,13 +29,17 @@ var tracksJSON =
             {"difficulty":"easy", "name":"sineCurve"},
             {"difficulty":"easy", "name":"mediumDiamond"},
             {"difficulty":"easy", "name":"sineCurve"},
-            {"difficulty":"easy", "name":"mediumDiamond"}],
+            {"difficulty":"easy", "name":"mediumDiamond"},
+            {"difficulty":"hard", "name":"thunder"}],
         
         //level 5 
-        [{"difficulty":"hard", "name":"dualCrows"},
+        [
+            
+            {"difficulty":"hard", "name":"dualCrows"},
             {"difficulty":"easy", "name":"loop"},
         {"difficulty":"easy", "name":"horizontalLine"},
-        {"difficulty":"easy", "name":"loop"}],
+        {"difficulty":"easy", "name":"loop"},
+    {"difficulty":"hard", "name":"thunder"},],
         
         //level 6 
         [
@@ -46,6 +53,7 @@ var tracksJSON =
         
         //level 7
         [
+            {"difficulty":"hard", "name":"thunder"},
             {"difficulty":"hard", "name":"tripleBats"},
             {"difficulty":"easy", "name":"downParable"},
             {"difficulty":"easy", "name":"cloud"},
@@ -66,6 +74,7 @@ var tracksJSON =
         
         //level 9 
         [   
+            {"difficulty":"hard", "name":"thunder"},
             {"difficulty":"hard", "name":"glasses"},
             {"difficulty":"easy", "name":"sineCurve"},
             {"difficulty":"easy", "name":"sineCurve"},

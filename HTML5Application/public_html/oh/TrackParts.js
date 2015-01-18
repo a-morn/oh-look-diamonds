@@ -255,6 +255,10 @@ var trackPartsJSON = {
                 "glasses":
                 [
                     {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird","acc": 11}
+                ],
+                "thunder":
+                [
+                    {"x":0, "y":0,type:"thunderCloud","animation":"null","graphicType":"thunderCloud"}
                 ]
             }
 };
