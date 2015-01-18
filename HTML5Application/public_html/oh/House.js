@@ -179,9 +179,9 @@ var House = (function(){
         if(dialog.dialog[house.characterdialogID[house.currentCharacter]])
         {
             if(dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers)
-            {
+            {                
                 for(i =0; i<dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers.length; i++)
-                {
+                {                    
                     var value =dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Value;
                     var stat = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat;
                     
@@ -282,7 +282,9 @@ var House = (function(){
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
                                 house.choice3.alpha = 0;
-                                house.characterDialog(gameStats, text, gotoGameView, gotoGameView);
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
+                                house.characterDialog(gameStats, text, gotoGameView);
                             });                        
                     }
                     
@@ -299,8 +301,10 @@ var House = (function(){
 
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;                                
-                                house.characterDialog(gameStats, text, gotoGameView);
+                                house.choice3.alpha = 0;                             
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
+                                house.characterDialog(gameStats, text, gotoGameView);                                
                             });                        
                     }
                     if(i===0 && house.currentCharacter === "timmy")
@@ -317,7 +321,9 @@ var House = (function(){
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
                                 house.choice3.alpha = 0;
-                                house.characterDialog(gameStats, text,gotoGameView);
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
+                                house.characterDialog(gameStats, text,gotoGameView);                                
                             });                        
                     }
                     
@@ -334,7 +340,9 @@ var House = (function(){
 
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;                                
+                                house.choice3.alpha = 0;                             
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
                                 house.characterDialog(gameStats, text, gotoGameView);
                             });                        
                     }

@@ -61,7 +61,7 @@ for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text
 
 //6
 {"dialog":[
-        {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":true, "NextID":1,"Triggers":[{Stat:"built", Value: "rehab"},{Stat:"BuildRehab", Value: false}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]}        
+        {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":true, "NextID":1,"Triggers":[{Stat:"built", Value: "rehab"}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]}        
     ], "idle":{"what":"hum hum"}},
 
 //7
@@ -78,21 +78,33 @@ titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"
         {"Who": "Hobo-Cat", "What": "Alrighty then :/", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"isBuilding", Value: "university"}], "End":false},
         {"Who": "Hobo-Cat", "What": "Great!", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true}        
+    ], "idle":{"what":"hum hum"}},
+//8
+{"dialog":[
+        {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":true, "NextID":1,"Triggers":[{Stat:"built", Value: "university"}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]}        
     ], "idle":{"what":"hum hum"}}
 ],
 "timmy": [
+   
     //0
-    {"dialog":[{"Who": "Timmy", "What": "can haz summer camp?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
+    {"dialog":[{"Who": "Timmy", "What": "can haz youth center for stray kitties?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage", Value: "youthCenter"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Timmy", "What": ":D", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"can haz some more?"}},
+    //1
+    {"dialog":[{"Who": "Timmy", "What": "can haz summer camp for stray kitties?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
                 {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage",Value: "summerCamp"}, {Stat:"score", Value: -20}], "End":false},
                 {"Who": "Timmy", "What": ":D", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"can haz some more?"}},
-    //1
-    {"dialog":[{"Who": "Timmy", "What": "can haz youth center?", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":1},{"text":"klol", "ChoiceID":3}], "NextID":1, "End":false},
+    //2
+    {"dialog":[{"Who": "Timmy", "What": "i can be rocketeer too?", "Choice":true, "Choices":[{"text":"there can be only one", "ChoiceID":1},{"text":"i'll teach you all I know", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage", Value: "youthCenter"}, {Stat:"score", Value: -20}], "End":false},
-                {"Who": "Timmy", "What": ":D", "Choice":false, "NextID":10, "End":true}],                 
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"university",Value: "rocketUniversity"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Timmy", "What": "i'll enroll to the Catz University Rocketeer Program asap", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"can haz some more?"}}]
 };
