@@ -321,8 +321,8 @@ var RocketShip = (function(){
         var timmyData= spriteSheetData.supportingCharacter;
         sheet = new createjs.SpriteSheet(timmyData);
         house.timmy= new createjs.Sprite(sheet,"timmy");
-        house.timmy.x=110;
-        house.timmy.y=345;
+        house.timmy.x=83;
+        house.timmy.y=362;
         house.timmy.scaleX=0.8;
         house.timmy.scaleY=0.8;
         house.timmy.alpha = 0;
@@ -2055,12 +2055,24 @@ var RocketShip = (function(){
         stage.update();
         if(house.characterSpeach.alpha > 0)
         {
-            house.characterSpeach.alpha -= 0.015;
+            if(house.characterSpeach.alpha > 0.5) {
+                house.characterSpeach.alpha -= 0.005;
+            }
+            else
+            {
+                house.characterSpeach.alpha -= 0.03;
+            }
         }
         
         if(house.catzSpeach.alpha > 0)
         {
-            house.catzSpeach.alpha -= 0.015;
+            if(house.catzSpeach.alpha >0.5){
+                house.catzSpeach.alpha -= 0.005;
+            }
+            else {
+                house.catzSpeach.alpha -= 0.03;
+            }
+            
         }            
         
         if(!house.hoboActive)
