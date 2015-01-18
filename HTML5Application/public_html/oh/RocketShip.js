@@ -324,6 +324,15 @@ var RocketShip = (function(){
         house.timmy.scaleY=0.8;
         house.timmy.alpha = 0;
         
+        var priestData= spriteSheetData.supportingCharacter;
+        sheet = new createjs.SpriteSheet(priestData);
+        house.priest= new createjs.Sprite(sheet,"priest");
+        house.priest.x=52;
+        house.priest.y=330;
+        house.priest.scaleX=0.8;
+        house.priest.scaleY=0.8;
+        house.priest.alpha = 0;
+        
         house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
         house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
         house.oh.x=100;
@@ -504,7 +513,7 @@ var RocketShip = (function(){
         starCont.y=1000;
         bg.addEventListener("click",showOh);
         house.houseView.addChild(house.diamondHouseCont,house.catz,house.house, 
-            house.hobo,house.timmy, house.wick, house.crashRocket, house.hoboExclamation, 
+            house.hobo,house.timmy, house.priest, house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
             house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton);

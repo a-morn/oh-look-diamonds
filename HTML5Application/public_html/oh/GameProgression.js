@@ -101,5 +101,15 @@ var gameProgressionJSON = {"hoboCat":
         "Chance":0.3,
         "ConversationNumber": 2
         }
+    ],
+    "priest": [
+        {"Conditions":[
+            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"university", "on":5}],
+        "HasHappend":false,
+        "ShouldReoccur":true,
+        "Chance":0.3,
+        "ConversationNumber": 0
+        }
     ]
 };

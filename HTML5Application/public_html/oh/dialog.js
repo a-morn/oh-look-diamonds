@@ -106,5 +106,25 @@ titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"
                 {"Who": "Timmy", "What": ":'/", "Choice":false, "NextID":10, "End":true},
                 {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"university",Value: "rocketUniversity"}, {Stat:"score", Value: -20}], "End":false},
                 {"Who": "Timmy", "What": "i'll enroll to the Catz University Rocketeer Program asap", "Choice":false, "NextID":10, "End":true}],                 
-            "idle":{"what":"can haz some more?"}}]
+            "idle":{"what":"can haz some more?"}}],
+
+"priest": [
+   
+    //0
+    {"dialog":[{"Who": "Priest", "What": "I see you have a home for\n\
+cats a stray from the flock.", "Choice":false, "NextID":1, "End":false},
+                {"Who": "Priest", "What": "When they turned to katnip\n\
+they turned away from the cat God.", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Catz", "What": "meow?", "Choice":false, "NextID":3, "End":false},
+                {"Who": "Priest", "What": "With the help of my congregation\n\
+we can lead them back to the\n\
+rightous path.", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":4},{"text":"klol", "ChoiceID":6}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Priest", "What": "may the Cat God forgive you", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":7, "Triggers":[{"Stat":"addOn", "Building":"rehab", Value: "monastery"}, {Stat:"score", Value: 20}], "End":false},
+                {"Who": "Priest", "What": "Excellent! Please take this\n\
+small gift as a token\n\
+of the Lords apprication.", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"blessings upon ye, child of the cat God"}}]
 };
+
