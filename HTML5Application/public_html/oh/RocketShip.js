@@ -13,8 +13,8 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = false,
-    debugMode = false,
+    godMode = true,
+    debugMode = true,
     muteButton,
     catzBounds,
     lastResolveNorm = [1,0],
@@ -1769,6 +1769,7 @@ var RocketShip = (function(){
     
     function collisionCheck(bird)
     {
+        var groundLevel=430;
         if(Math.abs(bird.x-catzRocket.catzRocketContainer.x)<200 
                 && Math.abs(bird.y-catzRocket.catzRocketContainer.y)<150)
         {
@@ -1783,7 +1784,15 @@ var RocketShip = (function(){
                 var projC = norm[i].x*bird.x+norm[i].y*bird.y;
                 if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
                 {
-                    return false;
+                    if(bird.y<groundLevel)
+                    {
+                        return false;                       
+                    }
+                    else
+                    {
+                        console.log("ground");
+                        collisionResolve(bird,0,-1,bird.y-groundLevel,true); 
+                    }                  
                 }
                 if(bird.rad-projC+Math.max(proj1,proj2)<Math.abs(minOverlapDist))
                 {
@@ -1830,21 +1839,29 @@ var RocketShip = (function(){
             projC = normX*bird.x+normY*bird.y;
             if(projC-projMax>bird.rad || projMin-projC>bird.rad)
             {
-                return false;
+                if(bird.y<groundLevel)
+                {
+                    return false;                       
+                }
+                else
+                {
+                    console.log("ground");
+                    collisionResolve(bird,0,-1,bird.y-groundLevel,true); 
+                }
             }
             else if(bird.rad-projC+projMax<Math.abs(minOverlapDist))
             {
                 minOverlapDist = bird.rad-projC+projMax;
-                collisionResolve(bird,normX,normY,minOverlapDist);                
+                collisionResolve(bird,normX,normY,minOverlapDist,false);                
             }
             else if( bird.rad-projMin+projC<Math.abs(minOverlapDist))
             {
                 minOverlapDist = -bird.rad+projMin-projC;
-                collisionResolve(bird,normX,normY,minOverlapDist);                
+                collisionResolve(bird,normX,normY,minOverlapDist,false);                
             }
             else
             {
-                collisionResolve(bird,norm[minOverlapNorm].x,norm[minOverlapNorm].y,minOverlapDist);                
+                collisionResolve(bird,norm[minOverlapNorm].x,norm[minOverlapNorm].y,minOverlapDist,false);                
             }
             return true;
         }
@@ -1943,11 +1960,11 @@ var RocketShip = (function(){
     return x > 0 ? 1 : -1;
 }
     
-     function collisionResolve(bird,normX,normY,normDist)
+     function collisionResolve(bird,normX,normY,normDist,isGround)
     { 
-        if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket
+        if(isGround || (catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket
                 && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
-                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop))
         {
             bird.x+=normX*normDist*2;
             bird.y+=normY*normDist*2;
@@ -1958,12 +1975,15 @@ var RocketShip = (function(){
             reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
             bird.velocityX+=reflect*normX;
             bird.velocityY+=reflect*normY;
-            catzRocket.catzVelocity-=reflect*normY/250;
-            
-            var rand = Math.floor(2*Math.random()+3);
-            var name = "klonk"+rand;
-            var instance = createjs.Sound.play(name);
-            instance.volume=0.15;
+            if(isGround)
+            {
+                catzRocket.catzVelocity-=reflect*normY/250;
+                var rand = Math.floor(2*Math.random()+3);
+                var name = "klonk"+rand;
+                var instance = createjs.Sound.play(name);
+                instance.volume=0.15;
+            }
+
             if(squawkSound.playState !== createjs.Sound.PLAY_SUCCEEDED)
             {
                 rand = Math.floor(3*Math.random()+1);
