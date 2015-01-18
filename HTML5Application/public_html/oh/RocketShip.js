@@ -13,8 +13,8 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = false,
-    debugMode = false,
+    godMode = true,
+    debugMode = true,
     muteButton,
     catzBounds,
     lastResolveNorm = [1,0],
@@ -74,7 +74,8 @@ var RocketShip = (function(){
         "greatDiamond" : diCont,
         "seagull" : sgCont,
         "goose" : gooseCont,
-        "hawk" : hawkCont
+        "hawk" : hawkCont,
+        "thunderCloud" : thunderCont
     },
     diSpeed = 25,    
     cloudSpeed = 25,
@@ -188,6 +189,8 @@ var RocketShip = (function(){
                     {id:"klonk2", src:"assets/new assets/sound/klonk2.mp3"},
                     {id:"klonk3", src:"assets/new assets/sound/klonk3.mp3"},
                     {id:"klonk4", src:"assets/new assets/sound/klonk4.mp3"},
+                    {id:"lightningBolt", src:"assets/new assets/sound/lightning_bolt.mp3"},
+                    {id:"thunder", src:"assets/new assets/sound/thunder.mp3"},
                     {id:"crickets", src:"assets/new assets/sound/crickets.mp3"},
                     {id:"grilled", src:"assets/new assets/sound/grilled.mp3"},
                     {id:"squawk1", src:"assets/new assets/sound/squawk1.mp3"},
@@ -356,8 +359,8 @@ var RocketShip = (function(){
         for(var i=0; i<positions.length;i++)
         {
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
-            diamond.x=positions[i].x+5;
-            diamond.y=positions[i].y-1495;
+            diamond.x=positions[i].x;
+            diamond.y=positions[i].y-1500;
             diamond.currentAnimationFrame = positions[i].frame;
             diamond.scaleX=positions[i].scale;
             diamond.scaleY=positions[i].scale;
@@ -1130,10 +1133,11 @@ var RocketShip = (function(){
     
     function spawnThunderCloud(xPos,yPos)
     {
+        createjs.Sound.play("thunder");
         var cloudtype = Math.floor(Math.random()*5+1);
         cloudtype = "cloud"+cloudtype.toString();
         var scale = Math.random()*0.3+0.3;
-        var cloud = new createjs.Bitmap(queue.getResult(cloudtype));
+        var cloud = new ThunderCloud(queue.getResult(cloudtype));
         cloud.scaleX = scale;
         cloud.scaleY = scale;
         cloud.x = xPos;
@@ -1157,24 +1161,58 @@ var RocketShip = (function(){
               i = i - 1;
             }
             var rect = kid.getBounds();
-            if(catzRocket.isHit ===false && catzRocket.catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocket.catzRocketContainer.x > 
-                    kid.x && catzRocket.catzRocketContainer.y < (kid.y+rect.height*kid.scaleY+100)
+            if(kid.hasFired===false && catzRocket.isHit ===false && catzRocket.catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && catzRocket.catzRocketContainer.x > 
+                    kid.x && catzRocket.catzRocketContainer.y < (kid.y+rect.height*kid.scaleY+200)
                     && catzRocket.catzRocketContainer.y > kid.y+50)
             {
+                kid.hasFired =true;
+                var birdHit=false;
+                var spotX=0;
+                var spotY=0;
+                for (var i = 0; i < attackBirdCont.children.length; i++) 
+                {
+                    var bird = attackBirdCont.children[i];
+                    if(bird.x<(kid.x+rect.width*kid.scaleX+50) 
+                        && bird.x > kid.x-100 
+                        && bird.y < catzRocket.catzRocketContainer.y
+                        && bird.y > kid.y+50)
+                    {
+                        birdHit=true;
+                        bird.setGrilled();
+                        break;
+                        spotX = bird.x;
+                        spotY = bird.y;
+                    }
+                }
+                if(!birdHit)
+                {
+                    if(!godMode)
+                    {
+                        getHit();
+                    }
+                    spotX = catzRocket.catzRocketContainer.x;
+                    spotY = catzRocket.catzRocketContainer.y;
+                }
                 var lightning= new createjs.Shape();
-                lightning.graphics.setStrokeStyle(15,1);
+                lightning.graphics.setStrokeStyle(3,1);
                 lightning.graphics.beginStroke(lightningColor);
                 lightning.graphics.moveTo(kid.x,kid.y);
-                lightning.graphics.lineTo(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y);
-                lightning.graphics.endStroke();
-                lightning.graphics.setStrokeStyle(12,1);
-                lightning.graphics.beginStroke(lightningColor);
-                lightning.graphics.moveTo(catzRocket.catzRocketContainer.x,catzRocket.catzRocketContainer.y);
-                lightning.graphics.lineTo(Math.random()*300+100,500);
+                lightning.graphics.lineTo(kid.x+(spotX-kid.x)/3+50,kid.y+(spotY-kid.y)/3);
+                lightning.graphics.lineTo(kid.x+(spotX-kid.x)*2/3-50,kid.y+(spotY-kid.y)*2/3);
+                lightning.graphics.lineTo(spotX,spotY);
                 lightning.graphics.endStroke();
                 lightningCont.addChild(lightning);
                 createjs.Tween.get(lightning).to({alpha:0},300);
-                getHit();
+                createjs.Sound.play("lightningBolt");
+                createjs.Tween.get(gameView)
+                .to({x:-50, y:20},50)
+                .to({x:50, y:-40},50)
+                .to({x:-50, y:50},50)
+                .to({x:20, y:-20},50)
+                .to({x:-10, y:10},50)
+                .to({x:10, y:-10},50)
+                .to({x:0, y:0},50);
+                console.log("lightning");
             }
         }
     }
@@ -1233,13 +1271,9 @@ var RocketShip = (function(){
                 track = generateTrack();
                 for (i=0; i<track.length;i++)
                 {
-                    if (track[i].graphicType==="bitmap")
+                    if (track[i].graphicType==="thunderCloud")
                     {
-                        var bitmap = new createjs.Bitmap(queue.getResult(track[i].type));
-                        var cont = containerDict[track[i].type];
-                        bitmap.x = track[i].x;
-                        bitmap.y = track[i].y;
-                        cont.addChild(bitmap);
+                        spawnThunderCloud(track[i].x,track[i].y-200);
                     }
                     else if(track[i].graphicType==="sprite")
                     {
@@ -1617,16 +1651,18 @@ var RocketShip = (function(){
         if(catzRocket.catzState===catzRocket.catzStateEnum.Frenzy ||
                 catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
         {
-            var x = catzRocket.catzRocketContainer.x+85*c-13*s;
-            var y = catzRocket.catzRocketContainer.y+13*c+85*s;
+            var x = catzRocket.catzRocketContainer.x+70*c-13*s;
+            var y = catzRocket.catzRocketContainer.y+13*c+70*s;
+            var h = (newBounds.height/2)+5;
+            var w = (newBounds.width/2)+10;
         }
         else
         {
             var x = catzRocket.catzRocketContainer.x-10*c-13*s;
             var y = catzRocket.catzRocketContainer.y+13*c-10*s;
+            var h = (newBounds.height/2);
+            var w = (newBounds.width/2);
         }
-        var h = (newBounds.height/2);
-        var w = (newBounds.width/2);
         polygonVertices[0].x=x-w*c-h*s;
         polygonVertices[0].y=y+h*c-w*s;
         polygonVertices[1].x=x-w*c+h*s;
@@ -1742,6 +1778,7 @@ var RocketShip = (function(){
     
     function collisionCheck(bird)
     {
+        var groundLevel=430;
         if(Math.abs(bird.x-catzRocket.catzRocketContainer.x)<200 
                 && Math.abs(bird.y-catzRocket.catzRocketContainer.y)<150)
         {
@@ -1756,7 +1793,15 @@ var RocketShip = (function(){
                 var projC = norm[i].x*bird.x+norm[i].y*bird.y;
                 if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)
                 {
-                    return false;
+                    if(bird.y<groundLevel)
+                    {
+                        return false;                       
+                    }
+                    else
+                    {
+                        console.log("ground");
+                        collisionResolve(bird,0,-1,bird.y-groundLevel,true); 
+                    }                  
                 }
                 if(bird.rad-projC+Math.max(proj1,proj2)<Math.abs(minOverlapDist))
                 {
@@ -1803,21 +1848,29 @@ var RocketShip = (function(){
             projC = normX*bird.x+normY*bird.y;
             if(projC-projMax>bird.rad || projMin-projC>bird.rad)
             {
-                return false;
+                if(bird.y<groundLevel)
+                {
+                    return false;                       
+                }
+                else
+                {
+                    console.log("ground");
+                    collisionResolve(bird,0,-1,bird.y-groundLevel,true); 
+                }
             }
             else if(bird.rad-projC+projMax<Math.abs(minOverlapDist))
             {
                 minOverlapDist = bird.rad-projC+projMax;
-                collisionResolve(bird,normX,normY,minOverlapDist);                
+                collisionResolve(bird,normX,normY,minOverlapDist,false);                
             }
             else if( bird.rad-projMin+projC<Math.abs(minOverlapDist))
             {
                 minOverlapDist = -bird.rad+projMin-projC;
-                collisionResolve(bird,normX,normY,minOverlapDist);                
+                collisionResolve(bird,normX,normY,minOverlapDist,false);                
             }
             else
             {
-                collisionResolve(bird,norm[minOverlapNorm].x,norm[minOverlapNorm].y,minOverlapDist);                
+                collisionResolve(bird,norm[minOverlapNorm].x,norm[minOverlapNorm].y,minOverlapDist,false);                
             }
             return true;
         }
@@ -1916,11 +1969,11 @@ var RocketShip = (function(){
     return x > 0 ? 1 : -1;
 }
     
-     function collisionResolve(bird,normX,normY,normDist)
+     function collisionResolve(bird,normX,normY,normDist,isGround)
     { 
-        if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket
+        if(isGround || (catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket
                 && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
-                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop))
         {
             bird.x+=normX*normDist*2;
             bird.y+=normY*normDist*2;
@@ -1931,12 +1984,15 @@ var RocketShip = (function(){
             reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
             bird.velocityX+=reflect*normX;
             bird.velocityY+=reflect*normY;
-            catzRocket.catzVelocity-=reflect*normY/250;
-            
-            var rand = Math.floor(2*Math.random()+3);
-            var name = "klonk"+rand;
-            var instance = createjs.Sound.play(name);
-            instance.volume=0.15;
+            if(isGround)
+            {
+                catzRocket.catzVelocity-=reflect*normY/250;
+                var rand = Math.floor(2*Math.random()+3);
+                var name = "klonk"+rand;
+                var instance = createjs.Sound.play(name);
+                instance.volume=0.15;
+            }
+
             if(squawkSound.playState !== createjs.Sound.PLAY_SUCCEEDED)
             {
                 rand = Math.floor(3*Math.random()+1);
