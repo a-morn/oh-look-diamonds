@@ -5,12 +5,14 @@ var House = (function(){
         crashRocket: null,
         hobo: null,
         timmy: null,
+        priest: null,
         currentCharacter: "hoboCat",
         mouseHobo: null,
         mouseRocket: null,
         catz: null,
         hoboDialogID:0,
         timmyDialogID:0,
+        priestDialogID:0,
         characterdialogID: [],
         cricketsSound: null,
         wick: null,
@@ -35,11 +37,13 @@ var House = (function(){
         wickActive:false,
         hoboActive:true,
         timmyActive:false,
+        priestActive:false,
         characterActive: {},
         wickExclamation: null,
         hoboExclamation: null,
         hoboDialogNumber:0,
         timmyDialogNumber:0,
+        priestDialogNumber:0,
         characterDialogNumber: {},
         choice1: null,
         choice2: null,
@@ -50,12 +54,16 @@ var House = (function(){
     house.Init = function()
     {        
         house.houseView = new createjs.Container();
-        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive};
-        house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber};
-        house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID};
+        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};
+        house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber, "priest":house.priestDialogNumber};
+        house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID, "priest" : house.priestDialogID};
     };
     house.gotoHouseView = function(gameStats)
     {
+        house.hobo.alpha = 0;
+        house.timmy.alpha = 0;
+        house.priest.alpha = 0;
+        
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
         house.cricketsSound.volume=0.1;        
         var hobDiaNo = house.progressionCheck("hoboCat", gameStats);                
@@ -65,8 +73,7 @@ var House = (function(){
             house.hobo.alpha = 1;
             house.characterDialogNumber.hoboCat = hobDiaNo;           
             house.hoboActive = true;
-            house.hoboExclamation.alpha=0.5;
-            house.timmy.alpha = 0;
+            house.hoboExclamation.alpha=0.5;            
             house.characterdialogID["hoboCat"] = 0;
         } 
         else {  
@@ -75,15 +82,25 @@ var House = (function(){
                 house.currentCharacter = "timmy";
                 house.timmy.alpha = 1;
                 house.characterDialogNumber.timmy = timmyDiaNo;
-                house.timmyActive = true;
-                house.hobo.alpha = 0;
+                house.timmyActive = true;                
                 house.characterdialogID["timmy"] = 0;
                 house.hoboExclamation.alpha=0.5;
             }
             else {
-                house.timmy.alpha = 0;
-                house.hobo.alpha = 1;
-                house.currentCharacter = "hoboCat";
+                var priestDiaNo = house.progressionCheck("priest", gameStats);
+                if(priestDiaNo !== -1) {
+                    house.currentCharacter = "priest";
+                    house.priest.alpha = 1;
+                    house.characterDialogNumber.priest= priestDiaNo;
+                    house.priestActive = true;
+                    house.characterdialogID["priest"] = 0;
+                    house.hoboExclamation.alpha=0.5;
+                }
+                
+                else {
+                    house.hobo.alpha = 1;
+                    house.currentCharacter = "hoboCat";
+                }
             }
         }
         
@@ -261,7 +278,15 @@ var House = (function(){
                 house.characterSpeach.alpha = 1;
                 //Should be timmy sound
                 house.hoboCatSound1.play();  
-            }                             
+            }     
+            
+            else if (dialog.dialog[house.characterdialogID[house.currentCharacter]].Who === "Priest")
+            {
+                house.characterSpeach.text = dialog.dialog[house.characterdialogID[house.currentCharacter]].What;
+                house.characterSpeach.alpha = 1;
+                //Should be priest sound
+                house.hoboCatSound1.play();  
+            }
             
             if(dialog.dialog[house.characterdialogID[house.currentCharacter]].Choice)
             {                                                
@@ -307,6 +332,7 @@ var House = (function(){
                                 house.characterDialog(gameStats, text, gotoGameView);                                
                             });                        
                     }
+                    
                     if(i===0 && house.currentCharacter === "timmy")
                     {
                         house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
@@ -336,7 +362,47 @@ var House = (function(){
                         house.choices[i].addEventListener("click",
                             function()
                             {                             
-                                house.characterdialogID[house.currentCharacter] = house.choiceIDs[1];                                                                                                
+                                house.characterdialogID["timmy"] = house.choiceIDs[1];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;                             
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
+                                house.characterDialog(gameStats, text, gotoGameView);
+                            });                        
+                    }
+                    
+                    if(i===0 && house.currentCharacter === "priest")
+                    {
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
+
+                        house.choices[i].addEventListener("click",
+                            function()
+                            {                             
+                                house.characterdialogID["priest"] = house.choiceIDs[0];                                                                                                
+
+                                house.choice1.alpha = 0;
+                                house.choice2.alpha = 0;
+                                house.choice3.alpha = 0;
+                                house.choices[0].removeAllEventListeners();
+                                house.choices[1].removeAllEventListeners();
+                                house.characterDialog(gameStats, text,gotoGameView);                                
+                            });                        
+                    }
+                    
+                    if(i===1 && house.currentCharacter ==="priest")
+                    {
+                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
+                        house.choices[i].alpha = 1;
+                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
+
+                        house.choices[i].addEventListener("click",
+                            function()
+                            {                             
+                                house.characterdialogID["priest"] = house.choiceIDs[1];                                                                                                
 
                                 house.choice1.alpha = 0;
                                 house.choice2.alpha = 0;
@@ -450,6 +516,10 @@ var House = (function(){
         house.timmy.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView);}));
         house.timmy.addEventListener("mouseover", house.highlightHobo);
         house.timmy.addEventListener("mouseout", house.downlightHobo);
+        
+        house.priest.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView);}));
+        house.priest.addEventListener("mouseover", house.highlightHobo);
+        house.priest.addEventListener("mouseout", house.downlightHobo);
     };
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, gotoGameView)
