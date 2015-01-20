@@ -8,6 +8,9 @@ var House = (function(){
         priest: null,
         currentCharacter: "hoboCat",
         mouseHobo: null,
+        mouseTimmy: null,
+        mousePriest :null,
+        mouseChar: {},
         mouseRocket: null,
         catz: null,
         hoboDialogID:0,
@@ -54,7 +57,7 @@ var House = (function(){
     house.Init = function()
     {        
         house.houseView = new createjs.Container();
-        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};
+        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};        
         house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber, "priest":house.priestDialogNumber};
         house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID, "priest" : house.priestDialogID};
     };
@@ -471,14 +474,14 @@ var House = (function(){
     {                       
         if(house.characterActive[house.currentCharacter])
         {
-            house.hoboExclamation.alpha=1;
-            house.mouseHobo.alpha = 1;
+            house.hoboExclamation.alpha = 1;
+            house.mouseChar[house.currentCharacter].alpha = 1;
         }
     };
     
     house.downlightHobo = function()
     {
-        house.mouseHobo.alpha = 0;
+        house.mouseChar[house.currentCharacter].alpha = 0;
         
         if(house.characterActive[house.currentCharacter])
         {

@@ -14,7 +14,7 @@ var RocketShip = (function(){
     rocketShip={},
     canvas,
     godMode = true,
-    debugMode = true,
+    debugMode = false,
     muteButton,
     catzBounds,
     lastResolveNorm = [1,0],
@@ -105,7 +105,7 @@ var RocketShip = (function(){
         CurrentlyBuilding: false,
         hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
         orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false},       
-        rehab: {built : false, isBuilding : false, builtOnRound : null},        
+        rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false},        
         university: {built : false, isBuilding : false, builtOnRound : null},
         Difficulty : 0
         }
@@ -293,7 +293,7 @@ var RocketShip = (function(){
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
                 + "HoboDialogNo: " + house.hoboDialogNumber                        
-                + "bg.y: " + bg.y                        
+                + "bg.y: " + bg.y;
     }
     
     function createHouseView()
@@ -420,6 +420,22 @@ var RocketShip = (function(){
         house.mouseHobo.y=316;
         house.mouseHobo.alpha=0;
         
+        house.mouseTimmy = new createjs.Bitmap(queue.getResult("mouseTimmy"));
+        house.mouseTimmy.scaleX=0.5;
+        house.mouseTimmy.scaleY=0.5;  
+        house.mouseTimmy.x=85;
+        house.mouseTimmy.y=360;
+        house.mouseTimmy.alpha=0;
+        
+        house.mousePriest = new createjs.Bitmap(queue.getResult("mousePriest"));
+        house.mousePriest.scaleX=0.5;
+        house.mousePriest.scaleY=0.5;  
+        house.mousePriest.x=53;
+        house.mousePriest.y=330;
+        house.mousePriest.alpha=0;
+        
+        house.mouseChar = {"hoboCat":house.mouseHobo, "timmy":house.mouseTimmy, "priest" : house.mousePriest};
+        
         house.mouseRocket = new createjs.Bitmap(queue.getResult("mouseRocket"));
         house.mouseRocket.scaleX=1;
         house.mouseRocket.scaleY=1;  
@@ -518,7 +534,7 @@ var RocketShip = (function(){
         house.houseView.addChild(house.diamondHouseCont,house.catz,house.house, 
             house.hobo,house.timmy, house.priest, house.wick, house.crashRocket, house.hoboExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
-            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseRocket,
+            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, house.mousePriest, house.mouseRocket,
             house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton);
     }
     
