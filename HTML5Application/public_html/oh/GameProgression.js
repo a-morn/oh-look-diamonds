@@ -55,13 +55,23 @@ var gameProgressionJSON = {"hoboCat":
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "built", "building":"university", "on":false},
+                {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
             {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false}],        
         "HasHappend":false,
-        "ShouldReoccur":false,
+        "ShouldReoccur":true,
         "Chance":0.2,
         "ConversationNumber": 7
+        },
+        
+        {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built", "building":"university", "on":false},
+            {"ConditionType": "buildingState", "state": "isBuilding","building":"university", "on":true}],        
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":1,
+        "ConversationNumber": 8
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},

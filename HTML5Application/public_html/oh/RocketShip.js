@@ -43,7 +43,7 @@ var RocketShip = (function(){
     lightningColor = "#99ccff",       
     seagullSheet,
     bg,        
-    text,     
+    diamondCounterText,     
     diamondShardCounter,
     queue,
     mousedown,
@@ -99,14 +99,14 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,    
     gameStats = {
-        score : 0,
+        score : 150,
         kills : 0,
         currentRound: 0,
         CurrentlyBuilding: false,
         hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
         orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false},       
         rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false},        
-        university: {built : false, isBuilding : false, builtOnRound : null},
+        university: {built : false, isBuilding : false, builtOnRound : null, rocketUniversity:null},
         Difficulty : 0
         }
     ;
@@ -255,7 +255,7 @@ var RocketShip = (function(){
         createGameView();
         stage.addChild(bg,starCont);
         stage.enableMouseOver();
-        house.gotoHouseViewNormal(gameStats, stage, gameView,text, diamondShardCounter,
+        house.gotoHouseViewNormal(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
             muteButton, gameListener, rocketSong, gotoGameView);
         houseListener = createjs.Ticker.on("tick", houseTick,this);
         stage.removeChild(progressBar);        
@@ -577,7 +577,7 @@ var RocketShip = (function(){
             .to({x:-130, y:260, rotation:0},300)
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
-            .call(house.addCharacterEvents,[gameStats, text, gotoGameView]);
+            .call(house.addCharacterEvents,[gameStats, diamondCounterText, gotoGameView]);
     }
     
     function shiftUp()
@@ -675,9 +675,9 @@ var RocketShip = (function(){
         diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
         diamondShardCounter.scaleY= 0.8;
         diamondShardCounter.scaleX= 0.8;        
-        text = new createjs.Text("0", "22px Courier New", "white"); 
-        text.x = 608+108;             
-        text.y = 422-17;
+        diamondCounterText = new createjs.Text("0", "22px Courier New", "white"); 
+        diamondCounterText.x = 608+108;             
+        diamondCounterText.y = 422-17;
         
         var rocketData = spriteSheetData.rocket;
            
@@ -874,7 +874,7 @@ var RocketShip = (function(){
             debugText.alpha=0;
         }
         stage.removeChild(house.houseView);
-        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, text,debugText);
+        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, diamondCounterText,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);  
@@ -924,23 +924,23 @@ var RocketShip = (function(){
             }
             if(gameStats.score<10)
             {
-                text.text="000"+gameStats.score;
+                diamondCounterText.text="000"+gameStats.score;
             }
             else if(gameStats.score<100)
             {
-                text.text="00"+gameStats.score;
+                diamondCounterText.text="00"+gameStats.score;
             }
             else if(gameStats.score<1000)
             {
-                text.text="0"+gameStats.score;
+                diamondCounterText.text="0"+gameStats.score;
             }
             else if(gameStats.score<10000)
             {
-                text.text=gameStats.score;
+                diamondCounterText.text=gameStats.score;
             }
             else
             {
-                text.text="alot";
+                diamondCounterText.text="alot";
             }
             
             if(catzRocket.diamondFrenzyCharge>0)
@@ -2163,11 +2163,11 @@ var RocketShip = (function(){
         createjs.Tween.removeAllTweens(house.houseView);
         if(catzRocket.isHit)
         {            
-            house.gotoHouseViewWithoutRocket(gameStats, catzRocket, gotoGameView);
+            house.gotoHouseViewWithoutRocket(gameStats, catzRocket, gotoGameView, diamondCounterText);
         }
         else
         {
-            house.gotoHouseViewWithRocket(gameStats, catzRocket, gotoGameView);               
+            house.gotoHouseViewWithRocket(gameStats, catzRocket, gotoGameView, diamondCounterText);               
         }   
         catzRocket.isHit = false;
         catzRocket.isCrashed = false;

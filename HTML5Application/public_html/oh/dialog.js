@@ -103,7 +103,13 @@ at the hospital.", "Choice":true, "Choices":[{"text":"there can be only one", "C
                 {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"rehab",Value: "phychiatricWing"}, {Stat:"score", Value: -20}], "End":false},
                 {"Who": "Hobo-Cat", "What": "a new wing has been added", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"gonna take a stroll in \n\
-that fancy new garden"}}
+that fancy new garden"}},
+        
+//11
+{"dialog":[{"Who": "Hobo-Cat", "What": "can't make rent", "Choice":false, "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false}
+                ],                 
+            "idle":{"what":"harsh times"}}
 ],
 "timmy": [
    
