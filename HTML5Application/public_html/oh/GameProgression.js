@@ -55,21 +55,44 @@ var gameProgressionJSON = {"hoboCat":
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "built", "building":"university", "on":false},
+                {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
             {"ConditionType": "state", "state": "CurrentlyBuilding", "on":false}],        
         "HasHappend":false,
-        "ShouldReoccur":false,
+        "ShouldReoccur":true,
         "Chance":0.2,
         "ConversationNumber": 7
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built", "building":"university", "on":false},
             {"ConditionType": "buildingState", "state": "isBuilding","building":"university", "on":true}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": 8
+        },
+        
+        {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built","building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"rehab", "on":2},
+            {"ConditionType": "buildingState", "state": "hospital", "building":"rehab", "on":false}],        
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":0.3,
+        "ConversationNumber": 9
+        },
+        
+        {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
+            {"ConditionType": "buildingState", "state": "built","building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "builtOnRound", "building":"rehab", "on":4},
+            {"ConditionType": "buildingState", "state": "phychiatricWing", "building":"rehab", "on":false},
+            {"ConditionType": "buildingState", "state": "hopspital", "building":"rehab", "on":true}],        
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":0.3,
+        "ConversationNumber": 10
         }
     ],
     "timmy": [
@@ -104,7 +127,9 @@ var gameProgressionJSON = {"hoboCat":
     ],
     "priest": [
         {"Conditions":[
-            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},
+            {"ConditionType": "buildingState", "state": "built", "building":"rehab", "on":true},            
+            {"ConditionType": "buildingState", "state": "hospital", "building":"rehab", "on":false},
+            {"ConditionType": "buildingState", "state": "monastery", "building":"rehab", "on":false},
             {"ConditionType": "buildingState", "state": "builtOnRound", "building":"university", "on":5}],
         "HasHappend":false,
         "ShouldReoccur":true,

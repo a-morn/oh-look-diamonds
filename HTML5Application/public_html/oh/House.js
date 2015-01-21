@@ -8,6 +8,9 @@ var House = (function(){
         priest: null,
         currentCharacter: "hoboCat",
         mouseHobo: null,
+        mouseTimmy: null,
+        mousePriest :null,
+        mouseChar: {},
         mouseRocket: null,
         catz: null,
         hoboDialogID:0,
@@ -28,6 +31,8 @@ var House = (function(){
         university: null,
         diamondHouseCont: null,
         diamondHouseArray: [],
+        houseInfoCont: null,
+        houseInfo : {},
         characterSpeach: null,
         catzSpeach: null,
         hoboCatSound1: null,
@@ -49,24 +54,33 @@ var House = (function(){
         choice2: null,
         choice3: null,
         choices:[],
-        choiceIDs:[]
+        choiceIDs:[],
+        gameStats : null,
+        startGameStats : null
     };
     house.Init = function()
     {        
         house.houseView = new createjs.Container();
-        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};
+        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};        
         house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber, "priest":house.priestDialogNumber};
         house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID, "priest" : house.priestDialogID};
     };
-    house.gotoHouseView = function(gameStats)
+    house.gotoHouseView = function(gameStats, diamondCounterText)
     {
+        house.gameStats = gameStats;
+        house.startGameStats = $.extend( true, {}, gameStats );
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
         house.priest.alpha = 0;
         
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
-        house.cricketsSound.volume=0.1;        
-        var hobDiaNo = house.progressionCheck("hoboCat", gameStats);                
+        house.cricketsSound.volume=0.1;
+        
+        var hobDiaNo = house.UpKeep(gameStats, diamondCounterText);
+        //If not fail upkeep, check for other dialog
+        if(hobDiaNo === -1) {
+                var hobDiaNo = house.progressionCheck("hoboCat", gameStats);                
+        }
         
         if(hobDiaNo !== -1) {
             house.currentCharacter = "hoboCat";
@@ -76,6 +90,7 @@ var House = (function(){
             house.hoboExclamation.alpha=0.5;            
             house.characterdialogID["hoboCat"] = 0;
         } 
+        //If no hobo dialog, check for timmy dialog
         else {  
             var timmyDiaNo = house.progressionCheck("timmy", gameStats);
             if(timmyDiaNo !== -1) {
@@ -86,6 +101,7 @@ var House = (function(){
                 house.characterdialogID["timmy"] = 0;
                 house.hoboExclamation.alpha=0.5;
             }
+            //If no timmy dialog, cehck for priest dialog
             else {
                 var priestDiaNo = house.progressionCheck("priest", gameStats);
                 if(priestDiaNo !== -1) {
@@ -190,7 +206,7 @@ var House = (function(){
         return -1;
     };
     
-    house.characterDialog = function(gameStats, text, gotoGameView)
+    house.characterDialog = function(gameStats, diamondCounterText, gotoGameView)
     {             
         var dialog = dialogJSON[house.currentCharacter][house.characterDialogNumber[house.currentCharacter]];           
         if(dialog.dialog[house.characterdialogID[house.currentCharacter]])
@@ -204,28 +220,7 @@ var House = (function(){
                     
                     if(stat === "score")
                     {
-                        gameStats.score += value;
-                        //Should be a "cash-withdrawn"-animation triggered here
-                        if(gameStats.score<10)
-                        {
-                            text.text="000"+gameStats.score;
-                        }
-                        else if(gameStats.score<100)
-                        {
-                            text.text="00"+gameStats.score;
-                        }
-                        else if(gameStats.score<1000)
-                        {
-                            text.text="0"+gameStats.score;
-                        }
-                        else if(gameStats.score<10000)
-                        {
-                            text.text=gameStats.score;
-                        }
-                        else
-                        {
-                            text.text="alot";
-                        }                        
+                        house.SetScore(value, gameStats, diamondCounterText);                        
                     }
                     else if (stat=== "kills")
                     {
@@ -309,7 +304,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text, gotoGameView);
+                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -329,7 +324,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text, gotoGameView);                                
+                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);                                
                             });                        
                     }
                     
@@ -349,7 +344,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text,gotoGameView);                                
+                                house.characterDialog(gameStats, diamondCounterText,gotoGameView);                                
                             });                        
                     }
                     
@@ -369,7 +364,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text, gotoGameView);
+                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -389,7 +384,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text,gotoGameView);                                
+                                house.characterDialog(gameStats, diamondCounterText,gotoGameView);                                
                             });                        
                     }
                     
@@ -409,7 +404,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, text, gotoGameView);
+                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -471,14 +466,14 @@ var House = (function(){
     {                       
         if(house.characterActive[house.currentCharacter])
         {
-            house.hoboExclamation.alpha=1;
-            house.mouseHobo.alpha = 1;
+            house.hoboExclamation.alpha = 1;
+            house.mouseChar[house.currentCharacter].alpha = 1;
         }
     };
     
     house.downlightHobo = function()
     {
-        house.mouseHobo.alpha = 0;
+        house.mouseChar[house.currentCharacter].alpha = 0;
         
         if(house.characterActive[house.currentCharacter])
         {
@@ -506,26 +501,37 @@ var House = (function(){
     {               
     };
     
-    house.addCharacterEvents = function(gameStats, text, gotoGameView)
+    house.addCharacterEvents = function(gameStats, diamondCounterText, gotoGameView)
     {        
         house.hoboExclamation.alpha=0.5;
-        house.hobo.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView);}));
+        house.hobo.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
         house.hobo.addEventListener("mouseover", house.highlightHobo);
         house.hobo.addEventListener("mouseout", house.downlightHobo);
         
-        house.timmy.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView);}));
+        house.timmy.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
         house.timmy.addEventListener("mouseover", house.highlightHobo);
         house.timmy.addEventListener("mouseout", house.downlightHobo);
         
-        house.priest.addEventListener("click",(function(){house.characterDialog(gameStats, text, gotoGameView);}));
+        house.priest.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
         house.priest.addEventListener("mouseover", house.highlightHobo);
         house.priest.addEventListener("mouseout", house.downlightHobo);
     };
     
-    house.gotoHouseViewNormal = function(gameStats, stage, gameView,text, diamondShardCounter, muteButton, gameListener, gotoGameView)
+    house.addHouseEvents = function()
+    {                
+        house.rehab.addEventListener("mouseover",(function(){house.houseInfo("rehab");}));
+        house.orphanage.addEventListener("mouseover",(function(){house.houseInfo("orphanage");}));
+        house.university.addEventListener("mouseover",(function(){house.houseInfo("university");}));
+    };
+    
+    house.houseInfo = function(houseName){
+        house.houseInfo[houseName].alpha = 1;
+    }
+    
+    house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
         house.hoboExclamation.alpha=0;
-        house.gotoHouseView(gameStats);
+        house.gotoHouseView(gameStats, diamondCounterText);
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
@@ -539,17 +545,17 @@ var House = (function(){
         }
         house.hobo.x=-300;
         house.hobo.y=270;
-        stage.removeChild(gameView,text, diamondShardCounter,muteButton);
+        stage.removeChild(gameView,diamondCounterText, diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();
         createjs.Ticker.setFPS(20);
         createjs.Ticker.off("tick", gameListener);        
     };
     
-    house.gotoHouseViewWithRocket = function(gameStats, catzRocket, gotoGameView)
+    house.gotoHouseViewWithRocket = function(gameStats, catzRocket, gotoGameView, diamondCounterText)
     {        
         
-        house.gotoHouseView(gameStats);
+        house.gotoHouseView(gameStats, diamondCounterText);
         house.crashRocket.alpha=1;
         house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
@@ -570,9 +576,9 @@ var House = (function(){
                 ;
     };    
     
-    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket, gotoGameView)
+    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket, gotoGameView, diamondCounterText)
     {
-        house.gotoHouseView(gameStats);
+        house.gotoHouseView(gameStats, diamondCounterText);
         house.catz.x=300-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.catz.y =370-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.catz.gotoAndPlay("flying");
@@ -598,9 +604,140 @@ var House = (function(){
     
     house.activateWick = function(gotoGameView)
     {   
-        house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
+        house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView); house.calculateApproval();}));
         house.wick.addEventListener("mouseover", house.highlightRocket);
-        house.wick.addEventListener("mouseout", house.downlightRocket);
+        house.wick.addEventListener("mouseout", house.downlightRocket);                
+    };
+    
+    house.UpKeep = function (gameStats, diamondCounterText){
+        var sum = 0;
+        sum =
+            gameStats.hoboCatHouse.built * 1 +
+            gameStats.orphanage.built * gameStats.orphanage.slots * 3 +  gameStats.orphanage.youthCenter * 5 + gameStats.orphanage.summerCamp * 5  +
+            gameStats.rehab.built * gameStats.rehab.slots * 5 + gameStats.rehab.hospital * 10 + gameStats.rehab.phychiatricWing *5 + gameStats.rehab.monastery * (-5) +
+            gameStats.university.built * gameStats.university.slots * 15 + gameStats.university.rocketUniversity * 30;
+        if(gameStats.score < sum) {
+            house.SetScore(-gameStats.score, gameStats, diamondCounterText);
+            gameStats.score = 0;
+            if(true) {
+                return 11;
+            }            
+        }
+        else {
+            house.SetScore(-sum, gameStats, diamondCounterText);
+            return -1;
+        }
+    };
+    
+    house.SetScore = function (value, gameStats, diamondCounterText){
+        gameStats.score += value;
+        //Should be a "cash-withdrawn"-animation triggered here
+        if(gameStats.score<10)
+        {
+            diamondCounterText.text="000"+gameStats.score;
+        }
+        else if(gameStats.score<100)
+        {
+            diamondCounterText.text="00"+gameStats.score;
+        }
+        else if(gameStats.score<1000)
+        {
+            diamondCounterText.text="0"+gameStats.score;
+        }
+        else if(gameStats.score<10000)
+        {
+            diamondCounterText.text=gameStats.score;
+        }
+        else
+        {
+            diamondCounterText.text="alot";
+        }                        
+    };
+    
+    house.calculateApproval = function () {
+        var deltaOrph = house.startGameStats.orphanage.slots - house.gameStats.orphanage.slots;
+        var deltaRehab = house.startGameStats.rehab.slots - house.gameStats.rehab.slots;
+        var deltaUni = house.startGameStats.university.slots - house.gameStats.university.slots;
+        
+        if(deltaOrph>0)
+        {
+            house.gameStats.kittens.approvalRating += 5 * deltaOrph;
+            house.gameStats.villagers.approvalRating -= 1 * deltaOrph;
+            house.gameStats.catParty.approvalRating -= 3 * deltaOrph;
+        }
+        else if (deltaOrph < 0)
+        {
+            house.gameStats.kittens.approvalRating -= 4 * deltaOrph;
+            house.gameStats.villagers.approvalRating +=1 * deltaOrph;
+            if(deltaOrph <= -10){
+                house.gameStats.catParty.approvalRating +=1 * deltaOrph;
+            }
+            else {
+                house.gameStats.catParty.approvalRating +=3 * deltaOrph;
+            }                        
+        }
+        
+        if(deltaRehab>0)
+        {
+            house.gameStats.kittens.approvalRating += 2 * deltaRehab;
+            if(house.gameStats.rehab.hospital) {
+                house.gameStats.villagers.approvalRating += 5 * deltaRehab;
+                house.gameStats.catParty.approvalRating -= 2 * deltaRehab;
+            }
+            else {
+                house.gameStats.villagers.approvalRating -= 2 * deltaRehab;
+                house.gameStats.catParty.approvalRating -= 5 * deltaRehab;
+            }            
+        }
+        
+        else if (deltaRehab < 0)
+        {
+            house.gameStats.kittens.approvalRating -= 2 * deltaRehab;
+            if(house.gameStats.rehab.hospital) {
+                if(deltaRehab <= -10){
+                    house.gameStats.catParty.approvalRating += 3 * deltaRehab;
+                }
+                else {
+                    house.gameStats.catParty.approvalRating += 1 * deltaRehab;
+                }                        
+                house.gameStats.villagers.approvalRating -= 5 * deltaRehab;                
+            }
+            else {
+                house.gameStats.villagers.approvalRating += 1 * deltaRehab;
+                if(deltaRehab <= -10){
+                    house.gameStats.catParty.approvalRating += 5 * deltaRehab;
+                }
+                else {
+                    house.gameStats.catParty.approvalRating += 2 * deltaRehab;
+                }                                        
+            }            
+        }
+        
+        if(deltaUni>0)
+        {            
+            house.gameStats.villagers.approvalRating += 5 * deltaUni;
+            if(house.gameStats.university.rocketUniversity) {
+                house.gameStats.kittens.approvalRating += 10 * deltaUni;                
+                house.gameStats.catParty.approvalRating -= 5 * deltaUni;
+            }
+            else {
+                house.gameStats.kittens.approvalRating += 5 * deltaUni;
+                house.gameStats.catParty.approvalRating -= 3 * deltaUni;
+            }            
+        }
+        
+        else if (deltaUni < 0)
+        {
+            house.gameStats.villagers.approvalRating -= 5 * deltaUni;
+            if(house.gameStats.university.rocketUniversity) {
+                house.gameStats.kittens.approvalRating -= 20 * deltaUni;
+                house.gameStats.catParty.approvalRating += 2 * deltaUni;
+            }
+            else {
+                house.gameStats.kittens.approvalRating += 10 * deltaUni;
+                house.gameStats.catParty.approvalRating += 1 * deltaUni;
+            }            
+        }                
     };
     
     return house;

@@ -82,7 +82,34 @@ titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"
 //8
 {"dialog":[
         {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", "ID":0, "Choice" :false, "End":true, "NextID":1,"Triggers":[{Stat:"built", Value: "university"}, {Stat:"score", Value: -20}, {Stat:"CurrentlyBuilding", Value: false}]}        
-    ], "idle":{"what":"hum hum"}}
+    ], "idle":{"what":"hum hum"}},
+
+//9
+{"dialog":[{"Who": "Hobo-Cat", "What": "let's make the catnip rehab center\n\
+a full blown hospital!", "Choice":true, "Choices":[{"text":"meow...", "ChoiceID":1},{"text":"meow!", "ChoiceID":3}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Hobo-Cat", "What": ":'/", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"rehab",Value: "hospital"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Hobo-Cat", "What": "medical care for all cats!", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"i feel better already"}},
+
+//10
+{"dialog":[{"Who": "Hobo-Cat", "What": "we should add better\n\
+support for care for\n\
+the mentally ill \n\
+at the hospital.", "Choice":true, "Choices":[{"text":"there can be only one", "ChoiceID":1},{"text":"i'll teach you all I know", "ChoiceID":3}], "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Hobo-Cat", "What": ":'/", "Choice":false, "NextID":10, "End":true},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"rehab",Value: "phychiatricWing"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Hobo-Cat", "What": "a new wing has been added", "Choice":false, "NextID":10, "End":true}],                 
+            "idle":{"what":"gonna take a stroll in \n\
+that fancy new garden"}},
+        
+//11
+{"dialog":[{"Who": "Hobo-Cat", "What": "can't make rent", "Choice":false, "NextID":1, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false}
+                ],                 
+            "idle":{"what":"harsh times"}}
 ],
 "timmy": [
    
@@ -119,7 +146,7 @@ they turned away from the cat God.", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Priest", "What": "With the help of my congregation\n\
 we can lead them back to the\n\
 rightous path.", "Choice":true, "Choices":[{"text":"nopez", "ChoiceID":4},{"text":"klol", "ChoiceID":6}], "NextID":1, "End":false},
-                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
+                {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":5, "End":false},
                 {"Who": "Priest", "What": "may the Cat God forgive you", "Choice":false, "NextID":10, "End":true},
                 {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":7, "Triggers":[{"Stat":"addOn", "Building":"rehab", Value: "monastery"}, {Stat:"score", Value: 20}], "End":false},
                 {"Who": "Priest", "What": "Excellent! Please take this\n\

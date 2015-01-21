@@ -105,7 +105,7 @@ spriteSheetData = (function()
                     "youthCenter": {"speed": 1, "frames": [2]},
                     "hoboHouse": {"speed": 1, "frames": [0]},
                     "monastery": {"speed": 1, "frames": [7]},
-                    "phychiatric wing": {"speed": 1, "frames": [6]},
+                    "phychiatricWing": {"speed": 1, "frames": [6]},
                     "catnip treatment facility": {"speed": 1, "frames": [4]},
                     "university": {"speed": 1, "frames": [8]},
                     "orphanage": {"speed": 1, "frames": [1]},
