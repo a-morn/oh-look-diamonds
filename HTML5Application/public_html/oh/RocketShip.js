@@ -178,6 +178,9 @@ var RocketShip = (function(){
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
                     {id:"ohlookdiamonds", src:"assets/new assets/img/ohlookdiamonds.png"},                    
                     {id:"bgParallax", src:"assets/new assets/img/background parallax.png"},                    
+                    {id:"bgParallax 3", src:"assets/new assets/img/background parallax 4.png"},                    
+                    {id:"bgParallax 2", src:"assets/new assets/img/background parallax 3.png"},                    
+                    {id:"onlookers", src:"assets/new assets/sprites/onlookers.png"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
                     {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
@@ -1058,7 +1061,8 @@ var RocketShip = (function(){
                 + "\nFrenzyTimer: " + catzRocket.frenzyTimer
                 + "\nfrenzyReady: " + catzRocket.frenzyReady
                 + "\nHoboDialogNo: " + house.hoboDialogNumber
-                +"\n\ncurrentDisplacement: "+currentDisplacement;
+                +"\n\ncurrentDisplacement: "+currentDisplacement
+                +"\n\currentLevel"+currentLevel;
         
         
             stage.update(event); 
