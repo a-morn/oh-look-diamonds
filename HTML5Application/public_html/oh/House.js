@@ -31,6 +31,8 @@ var House = (function(){
         university: null,
         diamondHouseCont: null,
         diamondHouseArray: [],
+        houseInfoCont: null,
+        houseInfo : {},
         characterSpeach: null,
         catzSpeach: null,
         hoboCatSound1: null,
@@ -52,7 +54,9 @@ var House = (function(){
         choice2: null,
         choice3: null,
         choices:[],
-        choiceIDs:[]
+        choiceIDs:[],
+        gameStats : null,
+        startGameStats : null
     };
     house.Init = function()
     {        
@@ -63,6 +67,8 @@ var House = (function(){
     };
     house.gotoHouseView = function(gameStats, diamondCounterText)
     {
+        house.gameStats = gameStats;
+        house.startGameStats = $.extend( true, {}, gameStats );
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
         house.priest.alpha = 0;
@@ -511,6 +517,17 @@ var House = (function(){
         house.priest.addEventListener("mouseout", house.downlightHobo);
     };
     
+    house.addHouseEvents = function()
+    {                
+        house.rehab.addEventListener("mouseover",(function(){house.houseInfo("rehab");}));
+        house.orphanage.addEventListener("mouseover",(function(){house.houseInfo("orphanage");}));
+        house.university.addEventListener("mouseover",(function(){house.houseInfo("university");}));
+    };
+    
+    house.houseInfo = function(houseName){
+        house.houseInfo[houseName].alpha = 1;
+    }
+    
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
         house.hoboExclamation.alpha=0;
@@ -587,18 +604,18 @@ var House = (function(){
     
     house.activateWick = function(gotoGameView)
     {   
-        house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
+        house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView); house.calculateApproval();}));
         house.wick.addEventListener("mouseover", house.highlightRocket);
-        house.wick.addEventListener("mouseout", house.downlightRocket);
+        house.wick.addEventListener("mouseout", house.downlightRocket);                
     };
     
     house.UpKeep = function (gameStats, diamondCounterText){
         var sum = 0;
         sum =
             gameStats.hoboCatHouse.built * 1 +
-            gameStats.orphanage.built * 5 + gameStats.orphanage.youthCenter * 5 + gameStats.orphanage.summerCamp +
-            gameStats.rehab.built * 5 + gameStats.rehab.hospital * 10 + gameStats.rehab.phychiatricWing *5 + gameStats.rehab.monastery * (-5) +
-            gameStats.university.built * 5 + gameStats.university.rocketUniversity *20;
+            gameStats.orphanage.built * gameStats.orphanage.slots * 3 +  gameStats.orphanage.youthCenter * 5 + gameStats.orphanage.summerCamp * 5  +
+            gameStats.rehab.built * gameStats.rehab.slots * 5 + gameStats.rehab.hospital * 10 + gameStats.rehab.phychiatricWing *5 + gameStats.rehab.monastery * (-5) +
+            gameStats.university.built * gameStats.university.slots * 15 + gameStats.university.rocketUniversity * 30;
         if(gameStats.score < sum) {
             house.SetScore(-gameStats.score, gameStats, diamondCounterText);
             gameStats.score = 0;
@@ -635,6 +652,92 @@ var House = (function(){
         {
             diamondCounterText.text="alot";
         }                        
+    };
+    
+    house.calculateApproval = function () {
+        var deltaOrph = house.startGameStats.orphanage.slots - house.gameStats.orphanage.slots;
+        var deltaRehab = house.startGameStats.rehab.slots - house.gameStats.rehab.slots;
+        var deltaUni = house.startGameStats.university.slots - house.gameStats.university.slots;
+        
+        if(deltaOrph>0)
+        {
+            house.gameStats.kittens.approvalRating += 5 * deltaOrph;
+            house.gameStats.villagers.approvalRating -= 1 * deltaOrph;
+            house.gameStats.catParty.approvalRating -= 3 * deltaOrph;
+        }
+        else if (deltaOrph < 0)
+        {
+            house.gameStats.kittens.approvalRating -= 4 * deltaOrph;
+            house.gameStats.villagers.approvalRating +=1 * deltaOrph;
+            if(deltaOrph <= -10){
+                house.gameStats.catParty.approvalRating +=1 * deltaOrph;
+            }
+            else {
+                house.gameStats.catParty.approvalRating +=3 * deltaOrph;
+            }                        
+        }
+        
+        if(deltaRehab>0)
+        {
+            house.gameStats.kittens.approvalRating += 2 * deltaRehab;
+            if(house.gameStats.rehab.hospital) {
+                house.gameStats.villagers.approvalRating += 5 * deltaRehab;
+                house.gameStats.catParty.approvalRating -= 2 * deltaRehab;
+            }
+            else {
+                house.gameStats.villagers.approvalRating -= 2 * deltaRehab;
+                house.gameStats.catParty.approvalRating -= 5 * deltaRehab;
+            }            
+        }
+        
+        else if (deltaRehab < 0)
+        {
+            house.gameStats.kittens.approvalRating -= 2 * deltaRehab;
+            if(house.gameStats.rehab.hospital) {
+                if(deltaRehab <= -10){
+                    house.gameStats.catParty.approvalRating += 3 * deltaRehab;
+                }
+                else {
+                    house.gameStats.catParty.approvalRating += 1 * deltaRehab;
+                }                        
+                house.gameStats.villagers.approvalRating -= 5 * deltaRehab;                
+            }
+            else {
+                house.gameStats.villagers.approvalRating += 1 * deltaRehab;
+                if(deltaRehab <= -10){
+                    house.gameStats.catParty.approvalRating += 5 * deltaRehab;
+                }
+                else {
+                    house.gameStats.catParty.approvalRating += 2 * deltaRehab;
+                }                                        
+            }            
+        }
+        
+        if(deltaUni>0)
+        {            
+            house.gameStats.villagers.approvalRating += 5 * deltaUni;
+            if(house.gameStats.university.rocketUniversity) {
+                house.gameStats.kittens.approvalRating += 10 * deltaUni;                
+                house.gameStats.catParty.approvalRating -= 5 * deltaUni;
+            }
+            else {
+                house.gameStats.kittens.approvalRating += 5 * deltaUni;
+                house.gameStats.catParty.approvalRating -= 3 * deltaUni;
+            }            
+        }
+        
+        else if (deltaUni < 0)
+        {
+            house.gameStats.villagers.approvalRating -= 5 * deltaUni;
+            if(house.gameStats.university.rocketUniversity) {
+                house.gameStats.kittens.approvalRating -= 20 * deltaUni;
+                house.gameStats.catParty.approvalRating += 2 * deltaUni;
+            }
+            else {
+                house.gameStats.kittens.approvalRating += 10 * deltaUni;
+                house.gameStats.catParty.approvalRating += 1 * deltaUni;
+            }            
+        }                
     };
     
     return house;
