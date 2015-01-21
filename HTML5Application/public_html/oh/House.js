@@ -56,7 +56,10 @@ var House = (function(){
         choices:[],
         choiceIDs:[],
         gameStats : null,
-        startGameStats : null
+        startGameStats : null,
+        rsText : null,
+        osText : null,
+        usText : null
     };
     house.Init = function()
     {        
@@ -67,6 +70,9 @@ var House = (function(){
     };
     house.gotoHouseView = function(gameStats, diamondCounterText)
     {
+        house.rsText.text = gameStats.rehab.slots;
+        house.osText.text = gameStats.orphanage.slots;
+        house.usText.text = gameStats.university.slots;
         house.gameStats = gameStats;
         house.startGameStats = $.extend( true, {}, gameStats );
         house.hobo.alpha = 0;

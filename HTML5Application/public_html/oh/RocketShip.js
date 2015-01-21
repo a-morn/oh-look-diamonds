@@ -418,18 +418,75 @@ var RocketShip = (function(){
         
         house.houseInfoCont = new createjs.Container();
                 
-        house.houseInfo["rehab"] = new createjs.Shape();
-        house.houseInfo["rehab"].graphics.beginFill("#ff0000").drawRect(0, 0, 100, 100);
-        house.houseInfo["rehab"].alpha = 0; 
+        house.houseInfo["rehab"] = new createjs.Container();
+        house.houseInfo["rehab"].x = 390;
+        house.houseInfo["rehab"].y = 270;
+        var rBox = new createjs.Shape();
+        rBox.graphics.beginFill("#ff0000").drawRect(0, 0, 100, 100);
+        var rxBox = new createjs.Shape();
+        rxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        rxBox.addEventListener("click",(function(){house.houseInfo["rehab"].alpha = 0;}));
+        
+        var rpBox = new createjs.Shape();
+        rpBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        rpBox.addEventListener("click",(function(){gameStats.rehab.slots += 1;house.rsText.text = gameStats.rehab.slots;}));
+        var rmBox = new createjs.Shape();
+        rmBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        rmBox.addEventListener("click",(function(){if(gameStats.rehab.slots>0)gameStats.rehab.slots -= 1; house.rsText.text = gameStats.rehab.slots;}));
+        house.rsText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
+        house.rsText.x = 30;             
+        house.rsText.y = 15;
+        house.rsText.text = gameStats.rehab.slots;
+        
+        house.houseInfo["rehab"].addChild(rBox, rxBox, rpBox, rmBox, house.rsText);
+        house.houseInfo["rehab"].alpha = 0;        
         house.houseInfoCont.addChild(house.houseInfo["rehab"]);
         
-        house.houseInfo["orphanage"] = new createjs.Shape();
-        house.houseInfo["orphanage"].graphics.beginFill("#00ff00").drawRect(100, 100, 100, 100);
+        house.houseInfo["orphanage"] = new createjs.Container();
+        house.houseInfo["orphanage"].x = 500;
+        house.houseInfo["orphanage"].y = 280;
+        var oBox = new createjs.Shape();
+        oBox.graphics.beginFill("#00ff00").drawRect(0, 0, 100, 100);
+        var oxBox = new createjs.Shape();
+        oxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        oxBox.addEventListener("click",(function(){house.houseInfo["orphanage"].alpha = 0;}));
+        
+        var opBox = new createjs.Shape();
+        opBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        opBox.addEventListener("click",(function(){gameStats.orphanage.slots += 1;house.osText.text = gameStats.orphanage.slots;}));
+        var omBox = new createjs.Shape();
+        omBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        omBox.addEventListener("click",(function(){if(gameStats.orphanage.slots>0)gameStats.orphanage.slots -= 1;house.osText.text = gameStats.orphanage.slots;}));
+        house.osText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
+        house.osText.x = 30;             
+        house.osText.y = 15;
+        house.osText.text = gameStats.orphanage.slots;
+        
+        house.houseInfo["orphanage"].addChild(oBox, oxBox, opBox, omBox, house.osText);
         house.houseInfo["orphanage"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["orphanage"]);
         
-        house.houseInfo["university"] = new createjs.Shape();
-        house.houseInfo["university"].graphics.beginFill("#0000ff").drawRect(200, 200, 100, 100);
+        house.houseInfo["university"] = new createjs.Container();
+        house.houseInfo["university"].x = 600;
+        house.houseInfo["university"].y = 330;
+        var uBox = new createjs.Shape();
+        uBox.graphics.beginFill("#0000ff").drawRect(0, 0, 100, 100);
+        var uxBox = new createjs.Shape();
+        uxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        uxBox.addEventListener("click",(function(){house.houseInfo["university"].alpha = 0;}));        
+        
+        var upBox = new createjs.Shape();
+        upBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        upBox.addEventListener("click",(function(){gameStats.university.slots += 1; house.usText.text = gameStats.university.slots;}));
+        var umBox = new createjs.Shape();
+        umBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        umBox.addEventListener("click",(function(){if(gameStats.university.slots>0)gameStats.university.slots -= 1; house.usText.text = gameStats.university.slots;}));
+        house.usText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
+        house.usText.x = 30;             
+        house.usText.y = 15;
+        
+        
+        house.houseInfo["university"].addChild(uBox, uxBox, upBox, umBox, house.usText);
         house.houseInfo["university"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["university"]);
         
@@ -2179,7 +2236,7 @@ var RocketShip = (function(){
             house.gotoHouseViewWithoutRocket(gameStats, catzRocket, gotoGameView, diamondCounterText);
         }
         else
-        {
+        {            
             house.gotoHouseViewWithRocket(gameStats, catzRocket, gotoGameView, diamondCounterText);               
         }   
         catzRocket.isHit = false;
