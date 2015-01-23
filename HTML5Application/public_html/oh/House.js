@@ -132,8 +132,7 @@ var House = (function(){
                         house.currentCharacter = "hoboCat";
                     }
                 }
-            }
-        }
+            }        
         
         house.updateHouse(gameStats);
     };

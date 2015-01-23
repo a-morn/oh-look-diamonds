@@ -4,7 +4,7 @@ var CatzRocket = (function(){
     silouette: null,
     invincibilityCounter:0,    
     hasFrenzy: false,
-    diamondFrenzyCharge: 0,
+    diamondFrenzyCharge: 2,
     isWounded: false,
     isHit : false,
     isCrashed : false,

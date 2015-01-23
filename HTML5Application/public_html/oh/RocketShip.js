@@ -13,7 +13,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = true,
+    godMode = false,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -99,7 +99,7 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,    
     gameStats = {
-        score : 150,
+        score : 0,
         kills : 0,
         bust : 0,
         currentRound: 0,
@@ -1036,18 +1036,28 @@ var RocketShip = (function(){
                 diamondCounterText.text="alot";
             }
             
-            if(catzRocket.diamondFrenzyCharge>0)
+            if(catzRocket.diamondFrenzyCharge>5)
             {
-                catzRocket.diamondFrenzyCharge -= event.delta/2000;
+                catzRocket.diamondFrenzyCharge -= event.delta/1000;
             }
-            if(catzRocket.diamondFrenzyCharge>3 && !catzRocket.hasFrenzy)
+            
+            if(catzRocket.diamondFrenzyCharge>10 && !catzRocket.hasFrenzy)
             {
-                catzRocket.hasFrenzy = true;                
+                catzRocket.hasFrenzy = true;                             
             }
-            else if(catzRocket.diamondFrenzyCharge<3 && catzRocket.hasFrenzy)
+            
+            if(catzRocket.diamondFrenzyCharge>10)
+            {                            
+                catzRocket.diamondFrenzyCharge -= event.delta/20;
+                console.log("LESS!");
+            }
+            
+            else if(catzRocket.diamondFrenzyCharge<10 && catzRocket.hasFrenzy)
             {
                 catzRocket.hasFrenzy = false;
             }
+            
+            console.log(catzRocket.diamondFrenzyCharge);
             catzRocket.update(grav,wind,event);
             updateVertices();
             updateDirector(event);
@@ -1463,8 +1473,9 @@ var RocketShip = (function(){
     
     function updatePointer(event)
     {
-        hudPointer.rotation += (Math.min(catzRocket.frenzyCount*1.4-30,100)
-                -hudPointer.rotation)*event.delta/500;
+        hudPointer.rotation = Math.min(-30 + catzRocket.diamondFrenzyCharge*135/10,105);
+                //(Math.min(catzRocket.frenzyCount*1.4-30,100)
+                //-hudPointer.rotation)*event.delta/500;
     }
 
     function updateDiamonds(event)
@@ -1704,25 +1715,28 @@ var RocketShip = (function(){
     
     function catzUp()
     {
-        mousedown = true;
-        if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
-        {
-            catzRocket.catzVelocity-=2;
-            catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
-        }
-        else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
-        {
-            catzRocket.catzVelocity-=2;
-            catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
-        }
-        else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
-        {
-           catzRocket.changeState(catzRocket.catzStateEnum.EmergencyBoost);
-        }
-        else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
-                && catzRocket.catzRocketContainer.rotation>-250)
-        {
-           catzRocket.changeState(catzRocket.catzStateEnum.Slammer);
+        if(catzRocket.diamondFrenzyCharge>0) {
+            mousedown = true;
+            if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
+            {
+                catzRocket.diamondFrenzyCharge -= 0.5;
+                catzRocket.catzVelocity-=2;
+                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
+            {
+                catzRocket.catzVelocity-=2;
+                catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
+            {
+               catzRocket.changeState(catzRocket.catzStateEnum.EmergencyBoost);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
+                    && catzRocket.catzRocketContainer.rotation>-250)
+            {
+               catzRocket.changeState(catzRocket.catzStateEnum.Slammer);
+            }
         }
     }
 
@@ -2227,7 +2241,8 @@ var RocketShip = (function(){
     };
     
     function crash()
-    {
+    {        
+        catzRocket.diamondFrenzyCharge = 2;
         currentTrack=0;
         currentLevel=0;
         currentDisplacement =0;
