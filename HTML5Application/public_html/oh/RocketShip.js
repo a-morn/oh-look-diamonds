@@ -101,6 +101,7 @@ var RocketShip = (function(){
     gameStats = {
         score : 150,
         kills : 0,
+        bust : 0,
         currentRound: 0,
         CurrentlyBuilding: false,
         hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
@@ -213,8 +214,7 @@ var RocketShip = (function(){
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
                     {id:"rocket", src:"assets/new assets/img/rocket.png"},
-                    {id:"flame", src:"assets/new assets/sprites/newFlame.png"},
-                    {id:"wind", src:"assets/new assets/sprites/wind.png"},
+                    {id:"flame", src:"assets/new assets/sprites/newFlame.png"},                    
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},                   
@@ -432,7 +432,7 @@ var RocketShip = (function(){
         
         var rpBox = new createjs.Shape();
         rpBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
-        rpBox.addEventListener("click",(function(){gameStats.rehab.slots += 1;house.rsText.text = gameStats.rehab.slots;}));
+        rpBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.rehab.slots += 1;house.rsText.text = gameStats.rehab.slots;}}));
         var rmBox = new createjs.Shape();
         rmBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
         rmBox.addEventListener("click",(function(){if(gameStats.rehab.slots>0)gameStats.rehab.slots -= 1; house.rsText.text = gameStats.rehab.slots;}));
@@ -441,7 +441,17 @@ var RocketShip = (function(){
         house.rsText.y = 15;
         house.rsText.text = gameStats.rehab.slots;
         
-        house.houseInfo["rehab"].addChild(rBox, rxBox, rpBox, rmBox, house.rsText);
+        house.addOnRehabText1 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.addOnRehabText1.x = 30;             
+        house.addOnRehabText1.y = 25;
+        house.addOnRehabText1.text = "";
+        
+        house.addOnRehabText2 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.addOnRehabText2.x = 30;             
+        house.addOnRehabText2.y = 35;
+        house.addOnRehabText2.text = "";
+        
+        house.houseInfo["rehab"].addChild(rBox, rxBox, rpBox, rmBox, house.rsText, house.addOnRehabText1, house.addOnRehabText2);
         house.houseInfo["rehab"].alpha = 0;        
         house.houseInfoCont.addChild(house.houseInfo["rehab"]);
         
@@ -456,7 +466,7 @@ var RocketShip = (function(){
         
         var opBox = new createjs.Shape();
         opBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
-        opBox.addEventListener("click",(function(){gameStats.orphanage.slots += 1;house.osText.text = gameStats.orphanage.slots;}));
+        opBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.orphanage.slots += 1;house.osText.text = gameStats.orphanage.slots;}}));
         var omBox = new createjs.Shape();
         omBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
         omBox.addEventListener("click",(function(){if(gameStats.orphanage.slots>0)gameStats.orphanage.slots -= 1;house.osText.text = gameStats.orphanage.slots;}));
@@ -465,7 +475,17 @@ var RocketShip = (function(){
         house.osText.y = 15;
         house.osText.text = gameStats.orphanage.slots;
         
-        house.houseInfo["orphanage"].addChild(oBox, oxBox, opBox, omBox, house.osText);
+        house.AddOnTextOrphanage1 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.AddOnTextOrphanage1.x = 30;             
+        house.AddOnTextOrphanage1.y = 25;
+        house.AddOnTextOrphanage1.text = "";
+        
+        house.AddOnTextOrphanage2 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.AddOnTextOrphanage2.x = 30;             
+        house.AddOnTextOrphanage2.y = 35;
+        house.AddOnTextOrphanage2.text = "";
+        
+        house.houseInfo["orphanage"].addChild(oBox, oxBox, opBox, omBox, house.osText, house.AddOnTextOrphanage1, house.AddOnTextOrphanage2);
         house.houseInfo["orphanage"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["orphanage"]);
         
@@ -480,7 +500,7 @@ var RocketShip = (function(){
         
         var upBox = new createjs.Shape();
         upBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
-        upBox.addEventListener("click",(function(){gameStats.university.slots += 1; house.usText.text = gameStats.university.slots;}));
+        upBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.university.slots += 1; house.usText.text = gameStats.university.slots;}}));
         var umBox = new createjs.Shape();
         umBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
         umBox.addEventListener("click",(function(){if(gameStats.university.slots>0)gameStats.university.slots -= 1; house.usText.text = gameStats.university.slots;}));
