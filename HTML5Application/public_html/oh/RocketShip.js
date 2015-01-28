@@ -88,6 +88,7 @@ var RocketShip = (function(){
     manifest,    
     rocketSong,
     loopTimer = 0,            
+    paused = false,
     directorStateEnum = {
         Normal : 0,
         Birds : 1,
@@ -97,7 +98,7 @@ var RocketShip = (function(){
     directorState=directorStateEnum.Normal,
     directorTimer=0,
     progressBar,    
-    diamondSound,    
+    diamondSound,        
     gameStats = {
         score : 0,
         kills : 0,
@@ -111,7 +112,13 @@ var RocketShip = (function(){
         villagers: {approvalRating : 0},
         kittens: {approvalRating : 0},
         catParty: {approvalRating : 0},
-        Difficulty : 0
+        Difficulty : 0,
+        hasBeenFirst: {
+            round : false,
+            frenzy : false,            
+            houseWithSlots : false,
+            bouncedCheck : false
+        },        
         }
     ;
     
@@ -475,15 +482,15 @@ var RocketShip = (function(){
         house.osText.y = 15;
         house.osText.text = gameStats.orphanage.slots;
         
-        house.AddOnTextOrphanage1 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.AddOnTextOrphanage1.x = 30;             
-        house.AddOnTextOrphanage1.y = 25;
-        house.AddOnTextOrphanage1.text = "";
+        house.addOnTextOrphanage1 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.addOnTextOrphanage1.x = 30;             
+        house.addOnTextOrphanage1.y = 25;
+        house.addOnTextOrphanage1.text = "";
         
-        house.AddOnTextOrphanage2 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.AddOnTextOrphanage2.x = 30;             
-        house.AddOnTextOrphanage2.y = 35;
-        house.AddOnTextOrphanage2.text = "";
+        house.addOnTextOrphanage2 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.addOnTextOrphanage2.x = 30;             
+        house.addOnTextOrphanage2.y = 35;
+        house.addOnTextOrphanage2.text = "";
         
         house.houseInfo["orphanage"].addChild(oBox, oxBox, opBox, omBox, house.osText, house.AddOnTextOrphanage1, house.AddOnTextOrphanage2);
         house.houseInfo["orphanage"].alpha = 0; 
@@ -568,13 +575,13 @@ var RocketShip = (function(){
         
         house.characterSpeach = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
         house.characterSpeach.x = 10;             
-        house.characterSpeach.y = 240;
+        house.characterSpeach.y = 230;
         house.characterSpeach.text = "";
         house.characterSpeach.alpha= 0;
         
-        house.hoboExclamation = new createjs.Text("0", "18px Fauna One", "#ffcc00"); 
-        house.hoboExclamation.x = 115;             
-        house.hoboExclamation.y = 280;
+        house.hoboExclamation = new createjs.Text("0", "38px Fauna One", "#ffcc00"); 
+        house.hoboExclamation.x = 114;             
+        house.hoboExclamation.y = 265;
         house.hoboExclamation.text = "!";
         house.hoboExclamation.alpha= 0;
         
@@ -584,11 +591,11 @@ var RocketShip = (function(){
         house.catzSpeach.text = "";
         house.catzSpeach.Alpha = 0;
         
-        house.wickExclamation = new createjs.Text("0", "10px Fauna One", "#ffcc00"); 
-        house.wickExclamation.x = 185;             
-        house.wickExclamation.y = 313;
-        house.wickExclamation.text = "<--------- Fire up the rocket";
-        house.wickExclamation.alpha= 0;
+        house.wickExclamation = new createjs.Text("0", "16px Fauna One", "#ffcc00"); 
+        house.wickExclamation.x = 193;             
+        house.wickExclamation.y = 305;
+        house.wickExclamation.text = "<---- Fire up the rocket";
+        house.wickExclamation.alpha = 0;
         
         house.choice1 = new createjs.Text("", "20px Fauna One", "#ffcc00"); 
         house.choice1.x = 350;             
@@ -977,8 +984,20 @@ var RocketShip = (function(){
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
         catzRocket.catzVelocity=-20;
-        createjs.Ticker.setPaused(false);      
-        stage.update();        
+        paused = false;      
+        
+        if(!gameStats.hasBeenFirst.round) {
+            setTimeout(function() { 
+                paused = true; 
+                alert(tutorialTexts.fuel); 
+                setTimeout(function() { 
+                    paused = false; 
+                }, 1000);
+            }, 1000);
+            gameStats.hasBeenFirst.round = true;
+        }
+        
+        stage.update();                
     }
     
     function setStars()
@@ -998,19 +1017,20 @@ var RocketShip = (function(){
     }
 
     function update(event)
-    { 
-        var mult=1;
-        if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
-        {
-            mult=2;
-        }
-        diSpeed = (0.4+0.4* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
-        cloudSpeed = (12.5+12.5* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
-        fgSpeed = (7+7* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
-        sgSpeed = (6+6* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
-        parallaxSpeed = (0.3+0.3* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
-        if(!event.paused)
-        {                
+    {         
+        if(!paused)
+        {                        
+            var mult=1;
+            if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy || catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
+            {
+                mult=2;
+            }
+            diSpeed = (0.4+0.4* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
+            cloudSpeed = (12.5+12.5* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
+            fgSpeed = (7+7* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
+            sgSpeed = (6+6* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;        
+            parallaxSpeed = (0.3+0.3* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                    
+            
             if(catzRocket.invincibilityCounter>0)
             {
                 catzRocket.invincibilityCounter-=event.delta;
@@ -1042,22 +1062,31 @@ var RocketShip = (function(){
             }
             
             if(catzRocket.diamondFrenzyCharge>10 && !catzRocket.hasFrenzy)
-            {
+            {                
+                if(!gameStats.hasBeenFirst.frenzy) {
+                setTimeout(function() { 
+                    paused = true; 
+                    alert(tutorialTexts.frenzy); 
+                    setTimeout(function() { 
+                        paused = false; 
+                    }, 500);
+                }, 500);
+                gameStats.hasBeenFirst.frenzy = true;
+            }
+                {}
                 catzRocket.hasFrenzy = true;                             
             }
             
             if(catzRocket.diamondFrenzyCharge>10)
             {                            
-                catzRocket.diamondFrenzyCharge -= event.delta/20;
-                console.log("LESS!");
+                catzRocket.diamondFrenzyCharge -= event.delta/20;                
             }
             
             else if(catzRocket.diamondFrenzyCharge<10 && catzRocket.hasFrenzy)
             {
                 catzRocket.hasFrenzy = false;
             }
-            
-            console.log(catzRocket.diamondFrenzyCharge);
+                        
             catzRocket.update(grav,wind,event);
             updateVertices();
             updateDirector(event);
@@ -2052,8 +2081,8 @@ var RocketShip = (function(){
             else{ getHit();}
             if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
             {
-                setTimeout(function() {createjs.Ticker.setPaused(false);},125);
-                createjs.Ticker.setPaused(true);
+                //setTimeout(function() {paused=false;},125);
+                //paused=true;                
             }
         }
         return true;
