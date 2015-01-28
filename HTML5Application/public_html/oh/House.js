@@ -247,6 +247,16 @@ var House = (function(){
                     
                     else if (stat === "built")
                     {
+                        if(!gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
+                            setTimeout(function() { 
+                                paused = true; 
+                                alert(tutorialTexts.houseWithSlots); 
+                                setTimeout(function() { 
+                                    paused = false; 
+                                }, 1000);
+                            }, 1000);
+                            gameStats.hasBeenFirst.houseWithSlots = true;
+                        }
                         gameStats[value].isBuilding = false;
                         gameStats[value].built = true;
                         gameStats[value].builtOnRound = gameStats.currentRound;
@@ -435,6 +445,7 @@ var House = (function(){
                 {
                     house.characterActive[house.currentCharacter] = false;
                     house.hoboExclamation.alpha=0;
+                    house.wickExclamation.alpha=1;
                     house.wickActive = true;
                     
                     
@@ -541,7 +552,7 @@ var House = (function(){
     
     house.houseInfo = function(houseName){
         house.houseInfo[houseName].alpha = 1;
-    }
+    };
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
@@ -787,15 +798,15 @@ var House = (function(){
         }
         
         if(house.gameStats.rehab.hospital){
-            house.addOnTextRehab1.text = "Hospital";
+            house.addOnRehabText1.text = "Hospital";
         }
         
         if(house.gameStats.rehab.monastery){
-            house.addOnTextRehab1.text = "Monastery";
+            house.addOnRehabText1.text = "Monastery";
         }
         
         if(house.gameStats.rehab.phychiatricWing){
-            house.addOnTextRehab2.text = "Phychiatric Wing";
+            house.addOnRehabText2.text = "Phychiatric Wing";
         }                
     };
     
