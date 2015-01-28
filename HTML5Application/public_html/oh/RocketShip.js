@@ -100,7 +100,7 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,        
     gameStats = {
-        score : 0,
+        score : 1000,
         kills : 0,
         bust : 0,
         currentRound: 0,
