@@ -1,8 +1,7 @@
-var tutorialTexts = {
+var TutorialTexts = {
     frenzy : "Diamond Frenzy tool tip:\n\
 If Catz gathers enough diamonds, Diamond Frenzy will be triggered.\n\
-In this state Catz is supercharged with diamond lust and can't be hurt by birds. \n\
-She still can be hit by lightning though!",
+In this state Catz is supercharged with diamond lust and can't be hurt by birds nor lightning.",
     fuel : "Fuel tool tip:\n\
 Each diamond gives Catz enough Diamond essence for two bursts with her rocket\n\
 \n\

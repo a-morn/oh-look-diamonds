@@ -5,18 +5,13 @@ var House = (function(){
         crashRocket: null,
         hobo: null,
         timmy: null,
-        priest: null,
-        currentCharacter: "hoboCat",
+        priest: null,        
         mouseHobo: null,
         mouseTimmy: null,
         mousePriest :null,
         mouseChar: {},
         mouseRocket: null,
-        catz: null,
-        hoboDialogID:0,
-        timmyDialogID:0,
-        priestDialogID:0,
-        characterdialogID: [],
+        catz: null,       
         cricketsSound: null,
         wick: null,
         oh: null,
@@ -38,51 +33,63 @@ var House = (function(){
         hoboCatSound1: null,
         hoboCatSound2: null,
         catzSound1: null,
-        catzSound2: null,
-        wickActive:false,
-        hoboActive:true,
-        timmyActive:false,
-        priestActive:false,
-        characterActive: {},
-        wickExclamation: null,
-        hoboExclamation: null,
-        hoboDialogNumber:0,
-        timmyDialogNumber:0,
-        priestDialogNumber:0,
-        characterDialogNumber: {},
-        choice1: null,
-        choice2: null,
-        choice3: null,
-        choices:[],
-        choiceIDs:[],
-        gameStats : null,
-        startGameStats : null,
+        catzSound2: null,                                      
         rsText : null,
         osText : null,
         usText : null,
         addOnTextOrphanage1 : null,
         addOnTextOrphanage2 : null,
         addOnRehabText1 : null,
-        addOnRehabText2 : null,
-        deltaOrph : 0,
-        deltaRehab : 0,
-        deltaUniversity : 0,
-        bust : 0
+        addOnRehabText2 : null,      
+        wickExclamation : null,
+        characterExclamation : null,
+        choiceIDs : [],
+        choices : [],
+        choice1 : null,
+        choice2 : null,
+        choice3 : null
     };
-    house.Init = function()
+    
+    var
+        tutorialTexts,
+        deltaUniversity = 0,
+        deltaOrph = 0,
+        deltaRehab = 0,   
+        startGameStats,                
+        priestDialogNumber = 0,
+        timmyDialogNumber = 0,
+        hoboDialogNumber = 0,
+        
+        characterDialogNumber = {},
+        gameStats,
+        characterActive = {},        
+        wickActive = false,
+        hoboActive = true,
+        timmyActive = false,
+        priestActive = false,
+        hoboDialogID = 0,
+        timmyDialogID = 0,
+        priestDialogID = 0,
+        characterdialogID =  [],
+        currentCharacter = "hoboCat";
+        
+    house.Init = function(aTutorialTexts)
     {        
+        tutorialTexts = aTutorialTexts;
         house.houseView = new createjs.Container();
-        house.characterActive = {"hoboCat":house.hoboActive, "timmy":house.timmyActive, "priest":house.priestActive};        
-        house.characterDialogNumber = {"hoboCat":house.hoboDialogNumber, "timmy":house.timmyDialogNumber, "priest":house.priestDialogNumber};
-        house.characterdialogID = {"hoboCat": house.hoboDialogID, "timmy" : house.timmyDialogID, "priest" : house.priestDialogID};
+        characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive};        
+        characterDialogNumber = {"hoboCat":hoboDialogNumber, "timmy":timmyDialogNumber, "priest":priestDialogNumber};
+        characterdialogID = {"hoboCat": hoboDialogID, "timmy" : timmyDialogID, "priest" : priestDialogID};
     };
-    house.gotoHouseView = function(gameStats, diamondCounterText)
+    
+    house.gotoHouseView = function(aGameStats, diamondCounterText)
     {        
+        gameStats = aGameStats; 
+        
         house.rsText.text = gameStats.rehab.slots;
         house.osText.text = gameStats.orphanage.slots;
-        house.usText.text = gameStats.university.slots;
-        house.gameStats = gameStats;        
-        house.startGameStats = $.extend( true, {}, gameStats );
+        house.usText.text = gameStats.university.slots;               
+        startGameStats = $.extend( true, {}, gameStats );
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
         house.priest.alpha = 0;
@@ -91,49 +98,47 @@ var House = (function(){
         house.cricketsSound.volume=0.1;        
         var hobDiaNo = house.UpKeep(diamondCounterText);
             //If not fail upkeep, check for other dialog
-            if(hobDiaNo === -1 && house.gameStats.bust === 0) {
+            if(hobDiaNo === -1 && gameStats.bust === 0) {
                     var hobDiaNo = house.progressionCheck("hoboCat", gameStats);                
             }
 
             if(hobDiaNo !== -1) {
-                house.currentCharacter = "hoboCat";
+                currentCharacter = "hoboCat";
                 house.hobo.alpha = 1;
-                house.characterDialogNumber.hoboCat = hobDiaNo;           
-                house.hoboActive = true;
-                house.hoboExclamation.alpha=0.5;            
-                house.characterdialogID["hoboCat"] = 0;
+                characterDialogNumber.hoboCat = hobDiaNo;           
+                hoboActive = true;
+                house.characterExclamation.alpha=0.5;            
+                characterdialogID["hoboCat"] = 0;
             } 
             //If no hobo dialog, check for timmy dialog
             else {  
                 var timmyDiaNo = house.progressionCheck("timmy", gameStats);
                 if(timmyDiaNo !== -1) {
-                    house.currentCharacter = "timmy";
+                    currentCharacter = "timmy";
                     house.timmy.alpha = 1;
-                    house.characterDialogNumber.timmy = timmyDiaNo;
-                    house.timmyActive = true;                
-                    house.characterdialogID["timmy"] = 0;
-                    house.hoboExclamation.alpha=0.5;
+                    characterDialogNumber.timmy = timmyDiaNo;
+                    timmyActive = true;                
+                    characterdialogID["timmy"] = 0;
+                    house.characterExclamation.alpha=0.5;
                 }
                 //If no timmy dialog, cehck for priest dialog
                 else {
                     var priestDiaNo = house.progressionCheck("priest", gameStats);
                     if(priestDiaNo !== -1) {
-                        house.currentCharacter = "priest";
+                        currentCharacter = "priest";
                         house.priest.alpha = 1;
-                        house.characterDialogNumber.priest= priestDiaNo;
-                        house.priestActive = true;
-                        house.characterdialogID["priest"] = 0;
-                        house.hoboExclamation.alpha=0.5;
+                        characterDialogNumber.priest= priestDiaNo;
+                        priestActive = true;
+                        characterdialogID["priest"] = 0;
+                        house.characterExclamation.alpha=0.5;
                     }
 
                     else {
                         house.hobo.alpha = 1;
-                        house.currentCharacter = "hoboCat";
+                        currentCharacter = "hoboCat";
                     }
                 }
-            }        
-        
-        house.updateHouse(gameStats);
+            }                        
     };
     
     house.progressionCheck = function(cat, gameStats) {
@@ -207,9 +212,9 @@ var House = (function(){
                     //If all conditions have been passed                    
                     if(j===catProgression[i].Conditions.length-1)
                     {       
-                        house.currentCharacter = cat;
-                        house.characterActive[house.currentCharacter] = true;
-                        house.wickActive = false;                        
+                        currentCharacter = cat;
+                        characterActive[currentCharacter] = true;
+                        wickActive = false;                        
                         catProgression[i].HasHappend = "yes";
                         return catProgression[i].ConversationNumber;
                     }
@@ -221,32 +226,32 @@ var House = (function(){
     
     house.characterDialog = function(diamondCounterText, gotoGameView)
     {             
-        var dialog = dialogJSON[house.currentCharacter][house.characterDialogNumber[house.currentCharacter]];           
-        if(dialog.dialog[house.characterdialogID[house.currentCharacter]])
+        var dialog = dialogJSON[currentCharacter][characterDialogNumber[currentCharacter]];           
+        if(dialog.dialog[characterdialogID[currentCharacter]])
         {
-            if(dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers)
+            if(dialog.dialog[characterdialogID[currentCharacter]].Triggers)
             {                
-                for(i =0; i<dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers.length; i++)
+                for(i =0; i<dialog.dialog[characterdialogID[currentCharacter]].Triggers.length; i++)
                 {                    
-                    var value =dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Value;
-                    var stat = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat;
+                    var value =dialog.dialog[characterdialogID[currentCharacter]].Triggers[i].Value;
+                    var stat = dialog.dialog[characterdialogID[currentCharacter]].Triggers[i].Stat;
                     
                     if(stat === "score")
                     {
-                        house.SetScore(value, house.gameStats, diamondCounterText);                        
+                        house.SetScore(value, gameStats, diamondCounterText);                        
                     }
                     else if (stat=== "kills")
                     {
-                        house.gameStats.kills += value;
+                        gameStats.kills += value;
                     }
                     else if (stat === "isBuilding") {
-                        house.gameStats[value].isBuilding = true;
-                        house.gameStats.CurrentlyBuilding = true;
+                        gameStats[value].isBuilding = true;
+                        gameStats.CurrentlyBuilding = true;
                     }
                     
                     else if (stat === "built")
                     {
-                        if(!house.gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
+                        if(!gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
                             setTimeout(function() { 
                                 paused = true; 
                                 alert(tutorialTexts.houseWithSlots); 
@@ -254,198 +259,90 @@ var House = (function(){
                                     paused = false; 
                                 }, 1000);
                             }, 1000);
-                            house.gameStats.hasBeenFirst.houseWithSlots = true;
+                            gameStats.hasBeenFirst.houseWithSlots = true;
                         }
-                        house.gameStats[value].isBuilding = false;
-                        house.gameStats[value].built = true;
-                        house.gameStats[value].builtOnRound = house.gameStats.currentRound;
-                        house.gameStats.CurrentlyBuilding = false;
+                        gameStats[value].isBuilding = false;
+                        gameStats[value].built = true;
+                        gameStats[value].builtOnRound = gameStats.currentRound;
+                        gameStats.CurrentlyBuilding = false;
                         //SET ALPHA = 1 HERE                        
                         house.diamondHouseArray[value].alpha = 1;
                     }
                     
                     else if (stat === "addOn")
                     {
-                        var building = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Building;
+                        var building = dialog.dialog[characterdialogID[currentCharacter]].Triggers[i].Building;
                         house.diamondHouseArray[building].gotoAndPlay(value);
-                        house.gameStats[building][value]= true;                        
+                        gameStats[building][value]= true;                        
                         house.UpdateAddOnStat();
                     }
                     else
                     {
-                        house.gameStats[dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat]= value;                                
+                        gameStats[dialog.dialog[characterdialogID[currentCharacter]].Triggers[i].Stat]= value;                                
                     }                    
                 }
             }
             
-            if (dialog.dialog[house.characterdialogID[house.currentCharacter]].Who === "Catz")
-            {
-                house.catzSpeach.text = dialog.dialog[house.characterdialogID[house.currentCharacter]].What;            
+            if (dialog.dialog[characterdialogID[currentCharacter]].Who === "Catz") {
+                house.catzSpeach.text = dialog.dialog[characterdialogID[currentCharacter]].What;            
                 house.catzSpeach.alpha = 1;
                 house.catzSound1.play();
             }
-            else if (dialog.dialog[house.characterdialogID[house.currentCharacter]].Who === "Hobo-Cat")
-            {
-                house.characterSpeach.text = dialog.dialog[house.characterdialogID[house.currentCharacter]].What;
+            else if (dialog.dialog[characterdialogID[currentCharacter]].Who === "Hobo-Cat") {
+                house.characterSpeach.text = dialog.dialog[characterdialogID[currentCharacter]].What;
                 house.characterSpeach.alpha = 1;
                 house.hoboCatSound1.play();  
             }                             
             
-            else if (dialog.dialog[house.characterdialogID[house.currentCharacter]].Who === "Timmy")
-            {
-                house.characterSpeach.text = dialog.dialog[house.characterdialogID[house.currentCharacter]].What;
+            else if (dialog.dialog[characterdialogID[currentCharacter]].Who === "Timmy") {
+                house.characterSpeach.text = dialog.dialog[characterdialogID[currentCharacter]].What;
                 house.characterSpeach.alpha = 1;
                 //Should be timmy sound
                 house.hoboCatSound1.play();  
             }     
             
-            else if (dialog.dialog[house.characterdialogID[house.currentCharacter]].Who === "Priest")
-            {
-                house.characterSpeach.text = dialog.dialog[house.characterdialogID[house.currentCharacter]].What;
+            else if (dialog.dialog[characterdialogID[currentCharacter]].Who === "Priest") {
+                house.characterSpeach.text = dialog.dialog[characterdialogID[currentCharacter]].What;
                 house.characterSpeach.alpha = 1;
                 //Should be priest sound
                 house.hoboCatSound1.play();  
             }
             
-            if(dialog.dialog[house.characterdialogID[house.currentCharacter]].Choice)
-            {                                                
-                for (var i=0;i<dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices.length;i++)
-                {           
-                    //THis needs fixin
-                    if(i===0 && house.currentCharacter === "hoboCat")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
+            if(dialog.dialog[characterdialogID[currentCharacter]].Choice) {                                                
+                function addClickHandler(i){
+                    house.choices[i].addEventListener("click",
+                        function()
+                        {                             
+                            characterdialogID[currentCharacter] = house.choiceIDs[i];                                                                                                
 
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID[house.currentCharacter] = house.choiceIDs[0];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText, gotoGameView);
-                            });                        
-                    }
-                    
-                    if(i===1 && house.currentCharacter === "hoboCat")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
-
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID["hoboCat"] = house.choiceIDs[1];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;                             
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText, gotoGameView);                                
-                            });                        
-                    }
-                    
-                    if(i===0 && house.currentCharacter === "timmy")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
-
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID["timmy"] = house.choiceIDs[0];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText,gotoGameView);                                
-                            });                        
-                    }
-                    
-                    if(i===1 && house.currentCharacter ==="timmy")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
-
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID["timmy"] = house.choiceIDs[1];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;                             
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText, gotoGameView);
-                            });                        
-                    }
-                    
-                    if(i===0 && house.currentCharacter === "priest")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
-
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID["priest"] = house.choiceIDs[0];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText,gotoGameView);                                
-                            });                        
-                    }
-                    
-                    if(i===1 && house.currentCharacter ==="priest")
-                    {
-                        house.choices[i].text=dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].text;
-                        house.choices[i].alpha = 1;
-                        house.choiceIDs[i] = dialog.dialog[house.characterdialogID[house.currentCharacter]].Choices[i].ChoiceID;                                                                                
-
-                        house.choices[i].addEventListener("click",
-                            function()
-                            {                             
-                                house.characterdialogID["priest"] = house.choiceIDs[1];                                                                                                
-
-                                house.choice1.alpha = 0;
-                                house.choice2.alpha = 0;
-                                house.choice3.alpha = 0;                             
-                                house.choices[0].removeAllEventListeners();
-                                house.choices[1].removeAllEventListeners();
-                                house.characterDialog(diamondCounterText, gotoGameView);
-                            });                        
-                    }
-                    
-                }                
+                            house.choice1.alpha = 0;
+                            house.choice2.alpha = 0;
+                            house.choice3.alpha = 0;
+                            house.choices[0].removeAllEventListeners();
+                            house.choices[1].removeAllEventListeners();
+                            house.characterDialog(diamondCounterText, gotoGameView);
+                    }); 
+                }
+                for (var i=0;i<dialog.dialog[characterdialogID[currentCharacter]].Choices.length;i++)
+                {                                                   
+                    house.choices[i].text=dialog.dialog[characterdialogID[currentCharacter]].Choices[i].text;
+                    house.choices[i].alpha = 1;
+                    house.choiceIDs[i] = dialog.dialog[characterdialogID[currentCharacter]].Choices[i].ChoiceID;      
+                    addClickHandler(i);                                           
+                }                                                                     
             }
             else
             {                     
-                if(!dialog.dialog[house.characterdialogID[house.currentCharacter]].End)
+                if(!dialog.dialog[characterdialogID[currentCharacter]].End)
                 {
-                    house.characterdialogID[house.currentCharacter] = dialog.dialog[house.characterdialogID[house.currentCharacter]].NextID;                
+                    characterdialogID[currentCharacter] = dialog.dialog[characterdialogID[currentCharacter]].NextID;                
                 }
                 else
                 {
-                    house.characterActive[house.currentCharacter] = false;
-                    house.hoboExclamation.alpha=0;
+                    characterActive[currentCharacter] = false;
+                    house.characterExclamation.alpha=0;
                     house.wickExclamation.alpha=1;
-                    house.wickActive = true;
+                    wickActive = true;
                     
                     
                     if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
@@ -456,8 +353,7 @@ var House = (function(){
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
                             .call(function () {house.activateWick(gotoGameView)});
                     //To shift to idle speach. Should be implemented smarter.
-                    house.updateHouse();
-                    house.characterdialogID[house.currentCharacter]+=100;                
+                    characterdialogID[currentCharacter]+=100;                
                 }                
             }
         }
@@ -473,7 +369,7 @@ var House = (function(){
     
     house.lightFuse = function(gotoGameView)
     {        
-        if(house.wickActive)
+        if(wickActive)
         {
             createjs.Sound.play("wickSound");
             house.mouseRocket.alpha = 0;
@@ -487,26 +383,26 @@ var House = (function(){
         }
     };    
     
-    house.highlightHobo = function()
+    house.highlightCharacter = function()
     {                       
-        if(house.characterActive[house.currentCharacter])
+        house.mouseChar[currentCharacter].alpha = 1;
+        if(characterActive[currentCharacter])
         {
-            house.hoboExclamation.alpha = 1;
-            house.mouseChar[house.currentCharacter].alpha = 1;
+            house.characterExclamation.alpha = 1;            
         }
     };
     
-    house.downlightHobo = function()
+    house.downlightCharacter = function()
     {
-        house.mouseChar[house.currentCharacter].alpha = 0;
+        house.mouseChar[currentCharacter].alpha = 0;
         
-        if(house.characterActive[house.currentCharacter])
+        if(characterActive[currentCharacter])
         {
-            house.hoboExclamation.alpha=0.5;
+            house.characterExclamation.alpha=0.5;
         }
         else
         {
-            house.hoboExclamation.alpha=0;
+            house.characterExclamation.alpha=0;
         }
     };
     
@@ -522,24 +418,50 @@ var House = (function(){
         house.wickLight.alpha = 0;
     };
     
-    house.updateHouse = function()
+    house.update = function()
     {               
+        if(house.characterSpeach.alpha > 0)
+        {
+            if(house.characterSpeach.alpha > 0.5) {
+                house.characterSpeach.alpha -= 0.005;
+            }
+            else
+            {
+                house.characterSpeach.alpha -= 0.03;
+            }
+        }
+        
+        if(house.catzSpeach.alpha > 0)
+        {
+            if(house.catzSpeach.alpha >0.5){
+                house.catzSpeach.alpha -= 0.005;
+            }
+            else {
+                house.catzSpeach.alpha -= 0.03;
+            }
+            
+        }            
+                
+        if(!hoboActive && !timmyActive && !priestActive)
+        {
+            house.characterExclamation.alpha=0;  
+        }
     };
     
     house.addCharacterEvents = function(diamondCounterText, gotoGameView)
     {        
-        house.hoboExclamation.alpha=0.5;
+        house.characterExclamation.alpha=0.5;
         house.hobo.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
-        house.hobo.addEventListener("mouseover", house.highlightHobo);
-        house.hobo.addEventListener("mouseout", house.downlightHobo);
+        house.hobo.addEventListener("mouseover", house.highlightCharacter);
+        house.hobo.addEventListener("mouseout", house.downlightCharacter);
         
         house.timmy.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
-        house.timmy.addEventListener("mouseover", house.highlightHobo);
-        house.timmy.addEventListener("mouseout", house.downlightHobo);
+        house.timmy.addEventListener("mouseover", house.highlightCharacter);
+        house.timmy.addEventListener("mouseout", house.downlightCharacter);
         
         house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
-        house.priest.addEventListener("mouseover", house.highlightHobo);
-        house.priest.addEventListener("mouseout", house.downlightHobo);
+        house.priest.addEventListener("mouseover", house.highlightCharacter);
+        house.priest.addEventListener("mouseout", house.downlightCharacter);
     };
     
     house.addHouseEvents = function()
@@ -555,13 +477,13 @@ var House = (function(){
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
-        house.hoboExclamation.alpha=0;
+        house.characterExclamation.alpha=0;
         house.gotoHouseView(gameStats, diamondCounterText);
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
         stage.removeAllEventListeners();
-        if(house.wickActive)
+        if(wickActive)
         {
             house.wick.x=-210;
             house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
@@ -635,32 +557,32 @@ var House = (function(){
     };
     
     house.UpKeep = function (diamondCounterText){        
-        if(house.gameStats.bust > 0){            
-            house.gameStats.bust -= 1;
+        if(gameStats.bust > 0){            
+            gameStats.bust -= 1;
         }
         
         var sum = 0;
         sum =
-            house.gameStats.hoboCatHouse.built * 1 +
-            house.gameStats.orphanage.built * house.gameStats.orphanage.slots * 3 +  house.gameStats.orphanage.youthCenter * 5 + house.gameStats.orphanage.summerCamp * 5  +
-            house.gameStats.rehab.built * house.gameStats.rehab.slots * 5 + house.gameStats.rehab.hospital * 10 + house.gameStats.rehab.phychiatricWing *5 + house.gameStats.rehab.monastery * (-5) +
-            house.gameStats.university.built * house.gameStats.university.slots * 15 + house.gameStats.university.rocketUniversity * 30;
+            gameStats.hoboCatHouse.built * 1 +
+            gameStats.orphanage.built * gameStats.orphanage.slots * 3 +  gameStats.orphanage.youthCenter * 5 + gameStats.orphanage.summerCamp * 5  +
+            gameStats.rehab.built * gameStats.rehab.slots * 5 + gameStats.rehab.hospital * 10 + gameStats.rehab.phychiatricWing *5 + gameStats.rehab.monastery * (-5) +
+            gameStats.university.built * gameStats.university.slots * 15 + gameStats.university.rocketUniversity * 30;
         
-        if(house.gameStats.score < sum) {
-            house.SetScore(-house.gameStats.score, house.gameStats, diamondCounterText);
-            house.gameStats.score = 0;
+        if(gameStats.score < sum) {
+            house.SetScore(-gameStats.score, gameStats, diamondCounterText);
+            gameStats.score = 0;
             
-            if(house.gameStats.score - sum>-10){               
-                house.gameStats.bust += 1;
-                house.gameStats.rehab.slots -= house.deltaRehab;
-                house.gameStats.orphanage.slots -= house.deltaOrph;
-                house.gameStats.university.slots -= house.deltaUniversity;
+            if(gameStats.score - sum>-10){               
+                gameStats.bust += 1;
+                gameStats.rehab.slots -= deltaRehab;
+                gameStats.orphanage.slots -= deltaOrph;
+                gameStats.university.slots -= deltaUniversity;
             }
             else{
-                house.gameStats.bust += 3;
-                house.gameStats.rehab.slots = 0;
-                house.gameStats.orphanage.slots = 0;
-                house.gameStats.university.slots = 0;
+                gameStats.bust += 3;
+                gameStats.rehab.slots = 0;
+                gameStats.orphanage.slots = 0;
+                gameStats.university.slots = 0;
             }
                     
             if(true) {
@@ -669,7 +591,7 @@ var House = (function(){
         }
         
         else {
-            house.SetScore(-sum, house.gameStats, diamondCounterText);
+            house.SetScore(-sum, gameStats, diamondCounterText);
             return -1;
         }
     };
@@ -700,109 +622,109 @@ var House = (function(){
     };
     
     house.calculateApproval = function () {
-        house.deltaOrph = house.startGameStats.orphanage.slots - house.gameStats.orphanage.slots;
-        house.deltaRehab = house.startGameStats.rehab.slots - house.gameStats.rehab.slots;
-        house.deltaUni = house.startGameStats.university.slots - house.gameStats.university.slots;
+        deltaOrph = startGameStats.orphanage.slots - gameStats.orphanage.slots;
+        deltaRehab = startGameStats.rehab.slots - gameStats.rehab.slots;
+        house.deltaUni = startGameStats.university.slots - gameStats.university.slots;
         
-        if(house.deltaOrph>0)
+        if(deltaOrph>0)
         {
-            house.gameStats.kittens.approvalRating += 5 * house.deltaOrph;
-            house.gameStats.villagers.approvalRating -= 1 * house.deltaOrph;
-            house.gameStats.catParty.approvalRating -= 3 * house.deltaOrph;
+            gameStats.kittens.approvalRating += 5 * deltaOrph;
+            gameStats.villagers.approvalRating -= 1 * deltaOrph;
+            gameStats.catParty.approvalRating -= 3 * deltaOrph;
         }
-        else if (house.deltaOrph < 0)
+        else if (deltaOrph < 0)
         {
-            house.gameStats.kittens.approvalRating -= 4 * house.deltaOrph;
-            house.gameStats.villagers.approvalRating +=1 * house.deltaOrph;
-            if(house.deltaOrph <= -10){
-                house.gameStats.catParty.approvalRating +=1 * house.deltaOrph;
+            gameStats.kittens.approvalRating -= 4 * deltaOrph;
+            gameStats.villagers.approvalRating +=1 * deltaOrph;
+            if(deltaOrph <= -10){
+                gameStats.catParty.approvalRating +=1 * deltaOrph;
             }
             else {
-                house.gameStats.catParty.approvalRating +=3 * house.deltaOrph;
+                gameStats.catParty.approvalRating +=3 * deltaOrph;
             }                        
         }
         
-        if(house.deltaRehab>0)
+        if(deltaRehab>0)
         {
-            house.gameStats.kittens.approvalRating += 2 * house.deltaRehab;
-            if(house.gameStats.rehab.hospital) {
-                house.gameStats.villagers.approvalRating += 5 * house.deltaRehab;
-                house.gameStats.catParty.approvalRating -= 2 * house.deltaRehab;
+            gameStats.kittens.approvalRating += 2 * deltaRehab;
+            if(gameStats.rehab.hospital) {
+                gameStats.villagers.approvalRating += 5 * deltaRehab;
+                gameStats.catParty.approvalRating -= 2 * deltaRehab;
             }
             else {
-                house.gameStats.villagers.approvalRating -= 2 * house.deltaRehab;
-                house.gameStats.catParty.approvalRating -= 5 * house.deltaRehab;
+                gameStats.villagers.approvalRating -= 2 * deltaRehab;
+                gameStats.catParty.approvalRating -= 5 * deltaRehab;
             }            
         }
         
-        else if (house.deltaRehab < 0)
+        else if (deltaRehab < 0)
         {
-            house.gameStats.kittens.approvalRating -= 2 * house.deltaRehab;
-            if(house.gameStats.rehab.hospital) {
-                if(house.deltaRehab <= -10){
-                    house.gameStats.catParty.approvalRating += 3 * house.deltaRehab;
+            gameStats.kittens.approvalRating -= 2 * deltaRehab;
+            if(gameStats.rehab.hospital) {
+                if(deltaRehab <= -10){
+                    gameStats.catParty.approvalRating += 3 * deltaRehab;
                 }
                 else {
-                    house.gameStats.catParty.approvalRating += 1 * house.deltaRehab;
+                    gameStats.catParty.approvalRating += 1 * deltaRehab;
                 }                        
-                house.gameStats.villagers.approvalRating -= 5 * house.deltaRehab;                
+                gameStats.villagers.approvalRating -= 5 * deltaRehab;                
             }
             else {
-                house.gameStats.villagers.approvalRating += 1 * house.deltaRehab;
-                if(house.deltaRehab <= -10){
-                    house.gameStats.catParty.approvalRating += 5 * house.deltaRehab;
+                gameStats.villagers.approvalRating += 1 * deltaRehab;
+                if(deltaRehab <= -10){
+                    gameStats.catParty.approvalRating += 5 * deltaRehab;
                 }
                 else {
-                    house.gameStats.catParty.approvalRating += 2 * house.deltaRehab;
+                    gameStats.catParty.approvalRating += 2 * deltaRehab;
                 }                                        
             }            
         }
         
         if(house.deltaUni>0)
         {            
-            house.gameStats.villagers.approvalRating += 5 * house.deltaUni;
-            if(house.gameStats.university.rocketUniversity) {
-                house.gameStats.kittens.approvalRating += 10 * house.deltaUni;                
-                house.gameStats.catParty.approvalRating -= 5 * house.deltaUni;
+            gameStats.villagers.approvalRating += 5 * house.deltaUni;
+            if(gameStats.university.rocketUniversity) {
+                gameStats.kittens.approvalRating += 10 * house.deltaUni;                
+                gameStats.catParty.approvalRating -= 5 * house.deltaUni;
             }
             else {
-                house.gameStats.kittens.approvalRating += 5 * house.deltaUni;
-                house.gameStats.catParty.approvalRating -= 3 * house.deltaUni;
+                gameStats.kittens.approvalRating += 5 * house.deltaUni;
+                gameStats.catParty.approvalRating -= 3 * house.deltaUni;
             }            
         }
         
         else if (house.deltaUni < 0)
         {
-            house.gameStats.villagers.approvalRating -= 5 * house.deltaUni;
-            if(house.gameStats.university.rocketUniversity) {
-                house.gameStats.kittens.approvalRating -= 20 * house.deltaUni;
-                house.gameStats.catParty.approvalRating += 2 * house.deltaUni;
+            gameStats.villagers.approvalRating -= 5 * house.deltaUni;
+            if(gameStats.university.rocketUniversity) {
+                gameStats.kittens.approvalRating -= 20 * house.deltaUni;
+                gameStats.catParty.approvalRating += 2 * house.deltaUni;
             }
             else {
-                house.gameStats.kittens.approvalRating += 10 * house.deltaUni;
-                house.gameStats.catParty.approvalRating += 1 * house.deltaUni;
+                gameStats.kittens.approvalRating += 10 * house.deltaUni;
+                gameStats.catParty.approvalRating += 1 * house.deltaUni;
             }            
         }                
     };
     
     house.UpdateAddOnStat = function () {        
-        if(house.gameStats.orphanage.summerCamp){            
+        if(gameStats.orphanage.summerCamp){            
             house.addOnTextOrphanage1.text = "Summer Camp";
         }
         
-        if(house.gameStats.orphanage.youthCenter){
+        if(gameStats.orphanage.youthCenter){
             house.addOnTextOrphanage2.text = "Youth Center";
         }
         
-        if(house.gameStats.rehab.hospital){
+        if(gameStats.rehab.hospital){
             house.addOnRehabText1.text = "Hospital";
         }
         
-        if(house.gameStats.rehab.monastery){
+        if(gameStats.rehab.monastery){
             house.addOnRehabText1.text = "Monastery";
         }
         
-        if(house.gameStats.rehab.phychiatricWing){
+        if(gameStats.rehab.phychiatricWing){
             house.addOnRehabText2.text = "Phychiatric Wing";
         }                
     };

@@ -5,5 +5,5 @@ function StartGame()
     var rocketShip = RocketShip;
 //    var house = new House();
 //    house.Init(rocketShip);    
-    rocketShip.Init();
+    rocketShip.Init(CatzRocket, House, SpriteSheetData, TutorialTexts, Tracks, TrackParts);
 }

@@ -3,6 +3,16 @@ body {
     background-color: #1f1f1f;
     color: #ffffcc;    
 }
+
+#mahCanvas, #hideShow{
+    display: block;
+    margin: 0 auto;    
+}
+
+#aboutOuter{
+    text-align: center;
+}
+
 a:link {
     color: #ffffcc;
 }
