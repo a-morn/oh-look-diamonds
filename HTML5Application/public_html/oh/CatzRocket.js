@@ -20,22 +20,7 @@ var CatzRocket = (function(){
     rocketSnake :  new createjs.Container(),
     SnakeLine : null, 
     catzVelocity: -2,
-    limitVelocity: 30,
-    catzStateEnum: {
-        Normal : 0,
-        Uploop : 1,
-        Downloop : 2,
-        SecondUploop : 3,
-        SecondDownloop : 4,
-        Slingshot : 5,
-        TerminalVelocity : 6,
-        EmergencyBoost : 7,
-        SlammerReady : 8,
-        Slammer : 9,
-        Frenzy : 10,
-        FrenzyUploop : 11,
-        FellOffRocket : 12
-    },
+    limitVelocity: 30,    
     rocketSounds : [
         null,
         "uploopSound",
@@ -52,6 +37,23 @@ var CatzRocket = (function(){
         "catzScream3"
     ],
     catzState: 0};
+
+    var catzStateEnum = {
+        Normal : 0,
+        Uploop : 1,
+        Downloop : 2,
+        SecondUploop : 3,
+        SecondDownloop : 4,
+        Slingshot : 5,
+        TerminalVelocity : 6,
+        EmergencyBoost : 7,
+        SlammerReady : 8,
+        Slammer : 9,
+        Frenzy : 10,
+        FrenzyUploop : 11,
+        FellOffRocket : 12
+    };
+    
     catzRocket.Init = function()
     {
         catzRocket.catzRocketContainer = new createjs.Container();
@@ -59,13 +61,13 @@ var CatzRocket = (function(){
     
     catzRocket.update = function(grav,wind,event)
     {      
-        if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)   
+        if(catzRocket.catzState === catzStateEnum.Normal)   
         {
             catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
             if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
             {
                 catzRocket.catzVelocity = catzRocket.limitVelocity;
-                catzRocket.changeState(catzRocket.catzStateEnum.TerminalVelocity);
+                catzRocket.changeState(catzStateEnum.TerminalVelocity);
             }
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
             if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
@@ -73,7 +75,7 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         } 
-        if(catzRocket.catzState === catzRocket.catzStateEnum.FellOffRocket)
+        if(catzRocket.catzState === catzStateEnum.FellOffRocket)
         {
             catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
             if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
@@ -86,7 +88,7 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }        
         }
-        if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)   
+        if(catzRocket.catzState === catzStateEnum.Frenzy)   
         {
             catzRocket.catzVelocity += (1/2)*(grav+wind)*event.delta/1000;
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
@@ -95,7 +97,7 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         }   
-        if(catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop)   
+        if(catzRocket.catzState === catzStateEnum.FrenzyUploop)   
         {
             catzRocket.catzVelocity -= (1/2)*(2.3*grav-wind)*event.delta/1000; 
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;            
@@ -104,22 +106,22 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }                        
         }   
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
+        else if (catzRocket.catzState === catzStateEnum.TerminalVelocity)
         {
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
             catzRocket.catzRocketContainer.rotation =-280;
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
+        else if (catzRocket.catzState === catzStateEnum.EmergencyBoost)
         {
             catzRocket.catzVelocity -= (10*grav-3.7*wind)*event.delta/1000; 
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
             catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
             if(catzRocket.catzRocketContainer.rotation<0)
             {
-                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
+                catzRocket.changeState(catzStateEnum.Uploop);
             }
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
+        else if (catzRocket.catzState === catzStateEnum.Uploop)
         {
             catzRocket.catzVelocity -= (3.2*grav-wind)*event.delta/1000;          
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
@@ -128,28 +130,28 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
             }
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.Downloop || 
-                catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady)
+        else if (catzRocket.catzState === catzStateEnum.Downloop || 
+                catzRocket.catzState === catzStateEnum.SlammerReady)
         {
             catzRocket.catzVelocity += ((2-8*Math.sin(catzRocket.catzRocketContainer.rotation))*
                 grav+6*wind)*event.delta/1000+0.4;
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.Slammer && catzRocket.catzRocketContainer.rotation<-250)
+        else if (catzRocket.catzState === catzStateEnum.Slammer && catzRocket.catzRocketContainer.rotation<-250)
         {
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             catzRocket.catzVelocity = catzRocket.limitVelocity;
-            catzRocket.changeState(catzRocket.catzStateEnum.TerminalVelocity);
+            catzRocket.changeState(catzStateEnum.TerminalVelocity);
         }
-        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzRocket.catzStateEnum.Uploop)
+        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzStateEnum.Uploop)
         {
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             tween = createjs.Tween.get(catzRocket.catzRocketContainer)
                 .to({rotation:-270},1000)
                 .to({rotation:-330},350)
                 .call(catzRocket.catzRelease);
-            catzRocket.changeState(catzRocket.catzStateEnum.Downloop);
+            catzRocket.changeState(catzStateEnum.Downloop);
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop)
+        else if (catzRocket.catzState === catzStateEnum.SecondUploop)
         {
             catzRocket.catzVelocity -= (5.5*grav-2*wind)*event.delta/1000;    
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;
@@ -158,7 +160,7 @@ var CatzRocket = (function(){
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;
             }
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondDownloop)
+        else if (catzRocket.catzState === catzStateEnum.SecondDownloop)
         {
             if(wind>=0)
             {
@@ -169,25 +171,25 @@ var CatzRocket = (function(){
                 catzRocket.heightOffset += (150+40*wind)*event.delta/1000;
             }
         }
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.Slingshot && catzRocket.catzRocketContainer.rotation <-400)
+        else if (catzRocket.catzState === catzStateEnum.Slingshot && catzRocket.catzRocketContainer.rotation <-400)
         {
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
-            catzRocket.changeState(catzRocket.catzStateEnum.Normal);
+            catzRocket.changeState(catzStateEnum.Normal);
             catzRocket.heightOffset-=110*Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI);
             catzRocket.catzVelocity =-20;            
         }
-        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop)
+        if (catzRocket.catzRocketContainer.rotation<-60 && catzRocket.catzState === catzStateEnum.SecondUploop)
         {
             catzRocket.heightOffset+=110*Math.sin((catzRocket.catzRocketContainer.rotation+110)/360*2*Math.PI);
-            catzRocket.changeState(catzRocket.catzStateEnum.SecondDownloop);
+            catzRocket.changeState(catzStateEnum.SecondDownloop);
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             tween = createjs.Tween.get(catzRocket.catzRocketContainer,{loop:true})
             .to({rotation:-270},500)
             .to({rotation:-420},500)
             .call(catzRocket.playSecondDownloopSound);
         }
-        if(catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop 
-                && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot)
+        if(catzRocket.catzState !== catzStateEnum.SecondDownloop 
+                && catzRocket.catzState !== catzStateEnum.Slingshot)
         {
             catzRocket.catzRocketContainer.x = 200+
                         Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
@@ -217,18 +219,18 @@ var CatzRocket = (function(){
         {            
             catzRocket.isCrashed = true;
         }
-        catzRocket.updateFrenzy(event);
-        catzRocket.updateRocketSnake();
+        updateFrenzy(event);
+        updateRocketSnake();
     };
     
-    catzRocket.updateFrenzy = function(event)
+    function updateFrenzy (event)
     {
-        if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy)
+        if (catzRocket.catzState===catzStateEnum.Frenzy)
         {
             catzRocket.frenzyTimer+=event.delta;
             if(catzRocket.frenzyTimer>1500)
             {
-                catzRocket.changeState(catzRocket.catzStateEnum.Normal);
+                catzRocket.changeState(catzStateEnum.Normal);
                 catzRocket.catz.gotoAndPlay("no shake");
                 catzRocket.glass.gotoAndPlay("still");
                 catzRocket.rocket.alpha=1;
@@ -242,23 +244,23 @@ var CatzRocket = (function(){
             catzRocket.frenzyTimer+=event.delta;
             if(catzRocket.frenzyTimer>500)
             {
-                if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)
+                if (catzRocket.catzState===catzStateEnum.SecondDownloop)
                 {
-                    catzRocket.changeState(catzRocket.catzStateEnum.Slingshot);
+                    catzRocket.changeState(catzStateEnum.Slingshot);
                 }
-                else if (catzRocket.catzState!==catzRocket.catzStateEnum.Downloop &&
-                        catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady &&
-                        catzRocket.catzState!==catzRocket.catzStateEnum.Slammer &&
-                        catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot)
+                else if (catzRocket.catzState!==catzStateEnum.Downloop &&
+                        catzRocket.catzState!==catzStateEnum.SlammerReady &&
+                        catzRocket.catzState!==catzStateEnum.Slammer &&
+                        catzRocket.catzState!==catzStateEnum.Slingshot)
                 {      
-                    if(catzRocket.catzState===catzRocket.catzStateEnum.Uploop
-                            || catzRocket.catzState===catzRocket.catzStateEnum.SecondUploop)
+                    if(catzRocket.catzState===catzStateEnum.Uploop
+                            || catzRocket.catzState===catzStateEnum.SecondUploop)
                     {
-                        catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
+                        catzRocket.changeState(catzStateEnum.FrenzyUploop);
                     }
                     else
                     {
-                        catzRocket.changeState(catzRocket.catzStateEnum.Frenzy);
+                        catzRocket.changeState(catzStateEnum.Frenzy);
                     }
                     catzRocket.glass.gotoAndPlay("frenzy");
                     catzRocket.isWounded=false;
@@ -267,12 +269,12 @@ var CatzRocket = (function(){
                 }
             }
         }
-        else if (catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy 
-                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop
+        else if (catzRocket.catzState!==catzStateEnum.Frenzy 
+                && catzRocket.catzState!==catzStateEnum.FrenzyUploop
                 && catzRocket.frenzyCount>0)
         {
             if (catzRocket.frenzyCount>100 && 
-                    catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
+                    catzRocket.catzState!==catzStateEnum.FellOffRocket)
             {
                 catzRocket.catz.gotoAndPlay("frenzy ready");
                 catzRocket.rocket.alpha=0;
@@ -289,7 +291,7 @@ var CatzRocket = (function(){
         }
     };
     
-    catzRocket.updateRocketSnake = function()
+    function updateRocketSnake()
     {
         var arrayLength = catzRocket.rocketSnake.children.length; 
         for (var i = arrayLength-1; i >0 ; i--) {
@@ -297,8 +299,8 @@ var CatzRocket = (function(){
             kid.x = catzRocket.rocketSnake.children[i-1].x-2*Math.cos(6.28*catzRocket.catzRocketContainer.rotation/360);
             kid.y = catzRocket.rocketSnake.children[i-1].y;
         }           
-        if(catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop 
-        && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot)
+        if(catzRocket.catzState !== catzStateEnum.SecondDownloop 
+        && catzRocket.catzState !== catzStateEnum.Slingshot)
         {
             catzRocket.rocketSnake.children[0].x = -60+
                 Math.cos((catzRocket.catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
@@ -333,7 +335,7 @@ var CatzRocket = (function(){
 
     };
     
-    catzRocket.showSnake = function()
+    function showSnake()
     {
         catzRocket.rocketSnake.children[0].x = -60+
             Math.cos((catzRocket.catzRocketContainer.rotation+101)/360*2*Math.PI)*176;
@@ -360,7 +362,7 @@ var CatzRocket = (function(){
     {
         catzRocket.rocketSound.stop();
         catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[
-            catzRocket.catzStateEnum.SecondDownloop]);
+            catzStateEnum.SecondDownloop]);
     }
     
     catzRocket.catzRelease = function()
@@ -370,14 +372,14 @@ var CatzRocket = (function(){
             catzRocket.isWounded=false;
             catzRocket.catz.x=0;
         }
-        if(catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady)
+        if(catzRocket.catzState!==catzStateEnum.SlammerReady)
         {
                 catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;
-                catzRocket.changeState(catzRocket.catzStateEnum.SecondUploop);
+                catzRocket.changeState(catzStateEnum.SecondUploop);
         }
         else
         {
-            catzRocket.changeState(catzRocket.catzStateEnum.Normal);
+            catzRocket.changeState(catzStateEnum.Normal);
             catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;            
         }        
     };
@@ -402,7 +404,7 @@ var CatzRocket = (function(){
             }
             else{                 
                 catzRocket.isHit = true;
-                catzRocket.changeState(catzRocket.catzStateEnum.FellOffRocket);      
+                catzRocket.changeState(catzStateEnum.FellOffRocket);      
                 return true;
             }            
         }    
@@ -415,25 +417,25 @@ var CatzRocket = (function(){
     {
         if(catzRocket.diamondFrenzyCharge>0) {
             mousedown = true;
-            if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
+            if(catzRocket.catzState === catzStateEnum.Normal)
             {
                 catzRocket.diamondFrenzyCharge -= 0.5;
                 catzRocket.catzVelocity-=2;
-                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
+                catzRocket.changeState(catzStateEnum.Uploop);
             }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
+            else if(catzRocket.catzState === catzStateEnum.Frenzy)
             {
                 catzRocket.catzVelocity-=2;
-                catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
+                catzRocket.changeState(catzStateEnum.FrenzyUploop);
             }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
+            else if(catzRocket.catzState === catzStateEnum.TerminalVelocity)
             {
-               catzRocket.changeState(catzRocket.catzStateEnum.EmergencyBoost);
+               catzRocket.changeState(catzStateEnum.EmergencyBoost);
             }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
+            else if(catzRocket.catzState === catzStateEnum.SlammerReady 
                     && catzRocket.catzRocketContainer.rotation>-250)
             {
-               catzRocket.changeState(catzRocket.catzStateEnum.Slammer);
+               catzRocket.changeState(catzStateEnum.Slammer);
             }
         }
     };
@@ -441,8 +443,8 @@ var CatzRocket = (function(){
     catzRocket.changeState = function(state)
     {
         catzRocket.catzState = state;
-        if(state!==catzRocket.catzStateEnum.SlammerReady && 
-                state!==catzRocket.catzStateEnum.FrenzyUploop)
+        if(state!==catzStateEnum.SlammerReady && 
+                state!==catzStateEnum.FrenzyUploop)
         {
             catzRocket.rocketSound.stop();
             if(catzRocket.rocketSounds[state]!==null)
@@ -451,11 +453,11 @@ var CatzRocket = (function(){
                 catzRocket.rocketSound.volume = 0.5;
             }
         }
-        if(state===catzRocket.catzStateEnum.Normal
-            || state===catzRocket.catzStateEnum.TerminalVelocity)
+        if(state===catzStateEnum.Normal
+            || state===catzStateEnum.TerminalVelocity)
         {
             catzRocket.hideSnake();
-            if(!catzRocket.frenzyReady && state===catzRocket.catzStateEnum.Normal)
+            if(!catzRocket.frenzyReady && state===catzStateEnum.Normal)
             {
                 catzRocket.catz.gotoAndPlay("no shake");
             }
@@ -464,20 +466,20 @@ var CatzRocket = (function(){
                 catzRocket.catz.gotoAndPlay("shake");
             }
         }
-        else if(state!==catzRocket.catzStateEnum.FellOffRocket 
-                && state!==catzRocket.catzStateEnum.Frenzy
-                && state!==catzRocket.catzStateEnum.FrenzyUploop)
+        else if(state!==catzStateEnum.FellOffRocket 
+                && state!==catzStateEnum.Frenzy
+                && state!==catzStateEnum.FrenzyUploop)
         {
             if(catzRocket.SnakeLine.alpha===0)
             {
-                catzRocket.showSnake();
+                showSnake();
             }
             if(!catzRocket.frenzyReady)
             {
                 catzRocket.catz.gotoAndPlay("shake");
             }
         }
-        else if(state!==catzRocket.catzStateEnum.FellOffRocket)
+        else if(state!==catzStateEnum.FellOffRocket)
         {
             catzRocket.hideSnake();
             catzRocket.catz.gotoAndPlay("frenzy");
@@ -490,13 +492,56 @@ var CatzRocket = (function(){
     };
     
     catzRocket.hasFrenzy = function(){
-        if(catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop || catzRocket.catzState === catzRocket.catzStateEnum.Frenzy){
+        if(catzRocket.catzState === catzStateEnum.FrenzyUploop || catzRocket.catzState === catzStateEnum.Frenzy){
             return true;
         }
         else{
             return false;
         }
     };        
+    
+    catzRocket.canCollide = function(){
+        return (catzRocket.catzState!==catzStateEnum.FellOffRocket
+                && catzRocket.catzState!==catzStateEnum.Frenzy
+                && catzRocket.catzState!==catzStateEnum.FrenzyUploop);
+    };
+    
+    catzRocket.reset = function(){
+        catzRocket.isWounded=false;
+        catzRocket.isHit = false;
+        catzRocket.isCrashed = false;
+        catzRocket.hideSnake();
+        catzRocket.frenzyReady=false;
+        catzRocket.frenzyTimer=0;
+        catzRocket.frenzyCount=0;
+        catzRocket.changeState(catzStateEnum.Normal);
+    };
+    
+    catzRocket.catzEndLoop = function()
+    {        
+        if(catzRocket.catzState!==catzStateEnum.Downloop
+                && catzRocket.catzState!==catzStateEnum.SlammerReady 
+                && catzRocket.catzState!==catzStateEnum.Slammer 
+                && catzRocket.catzState!==catzStateEnum.SecondDownloop
+                && catzRocket.catzState!==catzStateEnum.Slingshot
+                && catzRocket.catzState!==catzStateEnum.Frenzy
+                && catzRocket.catzState!==catzStateEnum.FrenzyUploop)
+        {
+            catzRocket.changeState(catzStateEnum.Normal);
+        }
+        else if (catzRocket.catzState===catzStateEnum.SecondDownloop)
+        {
+            catzRocket.changeState(catzStateEnum.Slingshot);
+        }
+        else if (catzRocket.catzState===catzStateEnum.Downloop)
+        {
+            catzRocket.changeState(catzStateEnum.SlammerReady);
+        }
+        else if (catzRocket.catzState===catzStateEnum.FrenzyUploop)
+        {
+            catzRocket.changeState(catzStateEnum.Frenzy);
+        }
+    };    
     
     return catzRocket;
 }());
