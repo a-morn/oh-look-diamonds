@@ -80,14 +80,11 @@ var RocketShip = (function(){
     diSpeed = 25,    
     cloudSpeed = 25,
     fgSpeed = 14,
-    parallaxSpeed = 0.2,
-    sgSpeed =25,
-    crashed = false,
+    parallaxSpeed = 0.2,    
     bg,
     queue,
     manifest,    
-    rocketSong,
-    loopTimer = 0,            
+    rocketSong,    
     paused = false,
     directorStateEnum = {
         Normal : 0,
@@ -100,7 +97,7 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,        
     gameStats = {
-        score : 0,
+        score : 1000,
         kills : 0,
         bust : 0,
         currentRound: 0,
@@ -485,7 +482,7 @@ var RocketShip = (function(){
         house.addOnTextOrphanage1 = new createjs.Text("0", "16px Fauna One", "#000"); 
         house.addOnTextOrphanage1.x = 30;             
         house.addOnTextOrphanage1.y = 25;
-        house.addOnTextOrphanage1.text = "";
+        house.addOnTextOrphanage1.text = "asd";
         
         house.addOnTextOrphanage2 = new createjs.Text("0", "16px Fauna One", "#000"); 
         house.addOnTextOrphanage2.x = 30;             
@@ -676,7 +673,7 @@ var RocketShip = (function(){
             .to({x:-130, y:260, rotation:0},300)
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
-            .call(house.addCharacterEvents,[gameStats, diamondCounterText, gotoGameView])
+            .call(house.addCharacterEvents,[diamondCounterText, gotoGameView])
             .call(house.addHouseEvents);
     }
     
@@ -980,7 +977,7 @@ var RocketShip = (function(){
         gameListener = createjs.Ticker.on("tick", update,this);  
         createjs.Ticker.setFPS(30);                    
         
-        stage.addEventListener("stagemousedown", catzUp);    
+        stage.addEventListener("stagemousedown", catzRocket.catzUp);    
         stage.addEventListener("stagemouseup", catzEndLoop);    
         jump = false;
         catzRocket.catzVelocity=-20;
@@ -1061,7 +1058,7 @@ var RocketShip = (function(){
                 catzRocket.diamondFrenzyCharge -= event.delta/1000;
             }
             
-            if(catzRocket.diamondFrenzyCharge>10 && !catzRocket.hasFrenzy)
+            if(catzRocket.diamondFrenzyCharge>10 && !catzRocket.hasFrenzy())
             {                
                 if(!gameStats.hasBeenFirst.frenzy) {
                 setTimeout(function() { 
@@ -1072,9 +1069,7 @@ var RocketShip = (function(){
                     }, 500);
                 }, 500);
                 gameStats.hasBeenFirst.frenzy = true;
-            }
-                {}
-                catzRocket.hasFrenzy = true;                             
+                }                                                   
             }
             
             if(catzRocket.diamondFrenzyCharge>10)
@@ -1082,9 +1077,8 @@ var RocketShip = (function(){
                 catzRocket.diamondFrenzyCharge -= event.delta/20;                
             }
             
-            else if(catzRocket.diamondFrenzyCharge<10 && catzRocket.hasFrenzy)
-            {
-                catzRocket.hasFrenzy = false;
+            else if(catzRocket.diamondFrenzyCharge<10 && catzRocket.hasFrenzy())
+            {                
             }
                         
             catzRocket.update(grav,wind,event);
@@ -1337,7 +1331,9 @@ var RocketShip = (function(){
                 {
                     if(!godMode)
                     {
-                        getHit();
+                        if(catzRocket.getHit(true)) {                     
+                            catzFellOfRocket();
+                        } 
                     }
                     spotX = catzRocket.catzRocketContainer.x;
                     spotY = catzRocket.catzRocketContainer.y;
@@ -1740,34 +1736,7 @@ var RocketShip = (function(){
     function hideExitSmoke()
     {
         exitSmoke.alpha = 0;
-    }
-    
-    function catzUp()
-    {
-        if(catzRocket.diamondFrenzyCharge>0) {
-            mousedown = true;
-            if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
-            {
-                catzRocket.diamondFrenzyCharge -= 0.5;
-                catzRocket.catzVelocity-=2;
-                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
-            }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
-            {
-                catzRocket.catzVelocity-=2;
-                catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
-            }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
-            {
-               catzRocket.changeState(catzRocket.catzStateEnum.EmergencyBoost);
-            }
-            else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
-                    && catzRocket.catzRocketContainer.rotation>-250)
-            {
-               catzRocket.changeState(catzRocket.catzStateEnum.Slammer);
-            }
-        }
-    }
+    }        
 
     function catzEndLoop()
     {
@@ -2062,28 +2031,11 @@ var RocketShip = (function(){
                 return false;
             }
         }
-        if(catzRocket.invincibilityCounter<=0 && godMode ===false
-                &&catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
-                &&catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)
-        {
-            if(!catzRocket.isWounded)
-            {                
-                catzRocket.isWounded=true;
-                var instance = createjs.Sound.play("catzScream2");
-                instance.volume = 0.5;
-                catzRocket.catz.gotoAndPlay("slipping");
-                createjs.Tween.get(catzRocket.catz)
-                        .to({y:10, x:-25},100)
-                        .to({x:-50,y:5},150)
-                        .call(catzRocket.catz.gotoAndPlay,["no shake"]);
-                catzRocket.invincibilityCounter=1000;
-            }
-            else{ getHit();}
-            if(catzRocket.catzState!==catzRocket.catzStateEnum.FellOffRocket)
-            {
-                //setTimeout(function() {paused=false;},125);
-                //paused=true;                
-            }
+        if(godMode ===false)
+        {            
+            if(catzRocket.getHit(false)) {        
+                catzFellOfRocket();
+            }             
         }
         return true;
     }
@@ -2224,13 +2176,7 @@ var RocketShip = (function(){
                 catzRocket.catzRocketContainer.x+lastResolveNorm[0]*100,
                 catzRocket.catzRocketContainer.y+lastResolveNorm[1]*100);
         polygonLine.graphics.endStroke();
-    }
-    
-    function getHit()
-    {
-        stage.removeAllEventListeners();
-        catzRocket.getHit();
-    }
+    }        
     
     function houseTick ()
     {
@@ -2269,8 +2215,14 @@ var RocketShip = (function(){
         
     };
     
+    function catzFellOfRocket(){
+        stage.removeAllEventListeners();
+        createjs.Tween.removeAllTweens(catzRocket.rocket);
+        createjs.Tween.get(catzRocket.rocket).to({x:800},800);
+    }
+    
     function crash()
-    {        
+    {                
         catzRocket.diamondFrenzyCharge = 2;
         currentTrack=0;
         currentLevel=0;

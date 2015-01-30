@@ -2,8 +2,7 @@ var CatzRocket = (function(){
     var catzRocket = {
     catzRocketContainer: null,
     silouette: null,
-    invincibilityCounter:0,    
-    hasFrenzy: false,
+    invincibilityCounter:0,        
     diamondFrenzyCharge: 2,
     isWounded: false,
     isHit : false,
@@ -56,58 +55,7 @@ var CatzRocket = (function(){
     catzRocket.Init = function()
     {
         catzRocket.catzRocketContainer = new createjs.Container();
-    };
-    
-    catzRocket.changeState = function(state)
-    {
-        catzRocket.catzState = state;
-        if(state!==catzRocket.catzStateEnum.SlammerReady && 
-                state!==catzRocket.catzStateEnum.FrenzyUploop)
-        {
-            catzRocket.rocketSound.stop();
-            if(catzRocket.rocketSounds[state]!==null)
-            {
-                catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[state]);
-                catzRocket.rocketSound.volume = 0.5;
-            }
-        }
-        if(state===catzRocket.catzStateEnum.Normal
-            || state===catzRocket.catzStateEnum.TerminalVelocity)
-        {
-            catzRocket.hideSnake();
-            if(!catzRocket.frenzyReady && state===catzRocket.catzStateEnum.Normal)
-            {
-                catzRocket.catz.gotoAndPlay("no shake");
-            }
-            else if(!catzRocket.frenzyReady)
-            {
-                catzRocket.catz.gotoAndPlay("shake");
-            }
-        }
-        else if(state!==catzRocket.catzStateEnum.FellOffRocket 
-                && state!==catzRocket.catzStateEnum.Frenzy
-                && state!==catzRocket.catzStateEnum.FrenzyUploop)
-        {
-            if(catzRocket.SnakeLine.alpha===0)
-            {
-                catzRocket.showSnake();
-            }
-            if(!catzRocket.frenzyReady)
-            {
-                catzRocket.catz.gotoAndPlay("shake");
-            }
-        }
-        else if(state!==catzRocket.catzStateEnum.FellOffRocket)
-        {
-            catzRocket.hideSnake();
-            catzRocket.catz.gotoAndPlay("frenzy");
-        }
-        else
-        {
-            catzRocket.hideSnake();
-            catzRocket.catz.gotoAndPlay("flying");
-        }
-    };
+    };        
     
     catzRocket.update = function(grav,wind,event)
     {      
@@ -273,7 +221,7 @@ var CatzRocket = (function(){
         catzRocket.updateRocketSnake();
     };
     
-    catzRocket.updateFrenzy= function(event)
+    catzRocket.updateFrenzy = function(event)
     {
         if (catzRocket.catzState===catzRocket.catzStateEnum.Frenzy)
         {
@@ -432,16 +380,123 @@ var CatzRocket = (function(){
             catzRocket.changeState(catzRocket.catzStateEnum.Normal);
             catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation *3.14/360)*40;            
         }        
-    }
-    
-    catzRocket.getHit = function()
-    {
-        catzRocket.isHit = true;
-        catzRocket.changeState(catzRocket.catzStateEnum.FellOffRocket);       
-        createjs.Tween.removeAllTweens(catzRocket.rocket);
-        createjs.Tween.get(catzRocket.rocket).to({x:800},800);
-        return catzRocket;
     };
+    
+    catzRocket.getHit = function(isInstaGib)
+    {
+        if((catzRocket.invincibilityCounter<=0 || isInstaGib) && !catzRocket.hasFrenzy())
+        {
+            var instance = createjs.Sound.play("catzScream2");
+            instance.volume = 0.5;
+            
+            if(!catzRocket.isWounded && !isInstaGib)
+            {                
+                catzRocket.isWounded=true;
+                catzRocket.catz.gotoAndPlay("slipping");
+                createjs.Tween.get(catzRocket.catz)
+                        .to({y:10, x:-25},100)
+                        .to({x:-50,y:5},150)
+                        .call(catzRocket.catz.gotoAndPlay,["no shake"]);
+                catzRocket.invincibilityCounter=1000;
+                return false;
+            }
+            else{                 
+                catzRocket.isHit = true;
+                catzRocket.changeState(catzRocket.catzStateEnum.FellOffRocket);      
+                return true;
+            }            
+        }    
+        else{
+            return false;
+        }
+    };
+    
+    catzRocket.catzUp = function()
+    {
+        if(catzRocket.diamondFrenzyCharge>0) {
+            mousedown = true;
+            if(catzRocket.catzState === catzRocket.catzStateEnum.Normal)
+            {
+                catzRocket.diamondFrenzyCharge -= 0.5;
+                catzRocket.catzVelocity-=2;
+                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy)
+            {
+                catzRocket.catzVelocity-=2;
+                catzRocket.changeState(catzRocket.catzStateEnum.FrenzyUploop);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity)
+            {
+               catzRocket.changeState(catzRocket.catzStateEnum.EmergencyBoost);
+            }
+            else if(catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady 
+                    && catzRocket.catzRocketContainer.rotation>-250)
+            {
+               catzRocket.changeState(catzRocket.catzStateEnum.Slammer);
+            }
+        }
+    };
+    
+    catzRocket.changeState = function(state)
+    {
+        catzRocket.catzState = state;
+        if(state!==catzRocket.catzStateEnum.SlammerReady && 
+                state!==catzRocket.catzStateEnum.FrenzyUploop)
+        {
+            catzRocket.rocketSound.stop();
+            if(catzRocket.rocketSounds[state]!==null)
+            {
+                catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[state]);
+                catzRocket.rocketSound.volume = 0.5;
+            }
+        }
+        if(state===catzRocket.catzStateEnum.Normal
+            || state===catzRocket.catzStateEnum.TerminalVelocity)
+        {
+            catzRocket.hideSnake();
+            if(!catzRocket.frenzyReady && state===catzRocket.catzStateEnum.Normal)
+            {
+                catzRocket.catz.gotoAndPlay("no shake");
+            }
+            else if(!catzRocket.frenzyReady)
+            {
+                catzRocket.catz.gotoAndPlay("shake");
+            }
+        }
+        else if(state!==catzRocket.catzStateEnum.FellOffRocket 
+                && state!==catzRocket.catzStateEnum.Frenzy
+                && state!==catzRocket.catzStateEnum.FrenzyUploop)
+        {
+            if(catzRocket.SnakeLine.alpha===0)
+            {
+                catzRocket.showSnake();
+            }
+            if(!catzRocket.frenzyReady)
+            {
+                catzRocket.catz.gotoAndPlay("shake");
+            }
+        }
+        else if(state!==catzRocket.catzStateEnum.FellOffRocket)
+        {
+            catzRocket.hideSnake();
+            catzRocket.catz.gotoAndPlay("frenzy");
+        }
+        else
+        {
+            catzRocket.hideSnake();
+            catzRocket.catz.gotoAndPlay("flying");
+        }
+    };
+    
+    catzRocket.hasFrenzy = function(){
+        if(catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop || catzRocket.catzState === catzRocket.catzStateEnum.Frenzy){
+            return true;
+        }
+        else{
+            return false;
+        }
+    };        
     
     return catzRocket;
 }());

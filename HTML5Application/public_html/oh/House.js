@@ -219,7 +219,7 @@ var House = (function(){
         return -1;
     };
     
-    house.characterDialog = function(gameStats, diamondCounterText, gotoGameView)
+    house.characterDialog = function(diamondCounterText, gotoGameView)
     {             
         var dialog = dialogJSON[house.currentCharacter][house.characterDialogNumber[house.currentCharacter]];           
         if(dialog.dialog[house.characterdialogID[house.currentCharacter]])
@@ -233,20 +233,20 @@ var House = (function(){
                     
                     if(stat === "score")
                     {
-                        house.SetScore(value, gameStats, diamondCounterText);                        
+                        house.SetScore(value, house.gameStats, diamondCounterText);                        
                     }
                     else if (stat=== "kills")
                     {
-                        gameStats.kills += value;
+                        house.gameStats.kills += value;
                     }
                     else if (stat === "isBuilding") {
-                        gameStats[value].isBuilding = true;
-                        gameStats.CurrentlyBuilding = true;
+                        house.gameStats[value].isBuilding = true;
+                        house.gameStats.CurrentlyBuilding = true;
                     }
                     
                     else if (stat === "built")
                     {
-                        if(!gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
+                        if(!house.gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
                             setTimeout(function() { 
                                 paused = true; 
                                 alert(tutorialTexts.houseWithSlots); 
@@ -254,12 +254,12 @@ var House = (function(){
                                     paused = false; 
                                 }, 1000);
                             }, 1000);
-                            gameStats.hasBeenFirst.houseWithSlots = true;
+                            house.gameStats.hasBeenFirst.houseWithSlots = true;
                         }
-                        gameStats[value].isBuilding = false;
-                        gameStats[value].built = true;
-                        gameStats[value].builtOnRound = gameStats.currentRound;
-                        gameStats.CurrentlyBuilding = false;
+                        house.gameStats[value].isBuilding = false;
+                        house.gameStats[value].built = true;
+                        house.gameStats[value].builtOnRound = house.gameStats.currentRound;
+                        house.gameStats.CurrentlyBuilding = false;
                         //SET ALPHA = 1 HERE                        
                         house.diamondHouseArray[value].alpha = 1;
                     }
@@ -268,12 +268,12 @@ var House = (function(){
                     {
                         var building = dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Building;
                         house.diamondHouseArray[building].gotoAndPlay(value);
-                        gameStats[building][value]= true;
+                        house.gameStats[building][value]= true;                        
                         house.UpdateAddOnStat();
                     }
                     else
                     {
-                        gameStats[dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat]= value;                                
+                        house.gameStats[dialog.dialog[house.characterdialogID[house.currentCharacter]].Triggers[i].Stat]= value;                                
                     }                    
                 }
             }
@@ -328,7 +328,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
+                                house.characterDialog(diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -348,7 +348,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);                                
+                                house.characterDialog(diamondCounterText, gotoGameView);                                
                             });                        
                     }
                     
@@ -368,7 +368,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText,gotoGameView);                                
+                                house.characterDialog(diamondCounterText,gotoGameView);                                
                             });                        
                     }
                     
@@ -388,7 +388,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
+                                house.characterDialog(diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -408,7 +408,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText,gotoGameView);                                
+                                house.characterDialog(diamondCounterText,gotoGameView);                                
                             });                        
                     }
                     
@@ -428,7 +428,7 @@ var House = (function(){
                                 house.choice3.alpha = 0;                             
                                 house.choices[0].removeAllEventListeners();
                                 house.choices[1].removeAllEventListeners();
-                                house.characterDialog(gameStats, diamondCounterText, gotoGameView);
+                                house.characterDialog(diamondCounterText, gotoGameView);
                             });                        
                     }
                     
@@ -456,7 +456,7 @@ var House = (function(){
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
                             .call(function () {house.activateWick(gotoGameView)});
                     //To shift to idle speach. Should be implemented smarter.
-                    house.updateHouse(gameStats);
+                    house.updateHouse();
                     house.characterdialogID[house.currentCharacter]+=100;                
                 }                
             }
@@ -522,22 +522,22 @@ var House = (function(){
         house.wickLight.alpha = 0;
     };
     
-    house.updateHouse = function(gameStats)
+    house.updateHouse = function()
     {               
     };
     
-    house.addCharacterEvents = function(gameStats, diamondCounterText, gotoGameView)
+    house.addCharacterEvents = function(diamondCounterText, gotoGameView)
     {        
         house.hoboExclamation.alpha=0.5;
-        house.hobo.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
+        house.hobo.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
         house.hobo.addEventListener("mouseover", house.highlightHobo);
         house.hobo.addEventListener("mouseout", house.downlightHobo);
         
-        house.timmy.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
+        house.timmy.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
         house.timmy.addEventListener("mouseover", house.highlightHobo);
         house.timmy.addEventListener("mouseout", house.downlightHobo);
         
-        house.priest.addEventListener("click",(function(){house.characterDialog(gameStats, diamondCounterText, gotoGameView);}));
+        house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
         house.priest.addEventListener("mouseover", house.highlightHobo);
         house.priest.addEventListener("mouseout", house.downlightHobo);
     };
@@ -785,8 +785,8 @@ var House = (function(){
         }                
     };
     
-    house.UpdateAddOnStat = function () {
-        if(house.gameStats.orphanage.summerCamp){
+    house.UpdateAddOnStat = function () {        
+        if(house.gameStats.orphanage.summerCamp){            
             house.addOnTextOrphanage1.text = "Summer Camp";
         }
         
