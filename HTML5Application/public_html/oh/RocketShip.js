@@ -53,6 +53,7 @@ var RocketShip = (function(){
     diamondSheet,
     greatDiamondSheet,
     mediumDiamondSheet,
+    onlookerSheet,
     grav = 12,
     jump,           
     parallaxCont = new createjs.Container(),
@@ -63,6 +64,7 @@ var RocketShip = (function(){
     gooseCont = new createjs.Container(),
     hawkCont = new createjs.Container(),
     diCont = new createjs.Container(),
+    onlookerCont = new createjs.Container(),
     scatterDiamondsCont = new createjs.Container(),
     fgCont = new createjs.Container(),
     fgTopCont = new createjs.Container(),
@@ -109,9 +111,9 @@ var RocketShip = (function(){
         orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
         rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
         university: {built : false, isBuilding : false, builtOnRound : null, rocketUniversity:null, slots : 0},
-        villagers: {approvalRating : 0},
-        kittens: {approvalRating : 0},
-        catParty: {approvalRating : 0},
+        villagers: {approvalRating : -30},
+        kittens: {approvalRating : 30},
+        catParty: {approvalRating : -30},
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
@@ -349,8 +351,7 @@ var RocketShip = (function(){
             diamond.scaleX=positions[i].scale;
             diamond.scaleY=positions[i].scale;
             house.diCont.addChild(diamond);
-        }
-        //house.diCont.alpha=0;
+        }        
 
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
@@ -744,7 +745,8 @@ var RocketShip = (function(){
         catzBounds = catzRocket.catzRocketContainer.getTransformedBounds();
         
         catzRocket.rocketSnake.x=0;
-        catzRocket.rocketSnake.y=0;
+        catzRocket.rocketSnake.y=0;                        
+        
         var snakeAmt = 11;
         for(i=0;i<snakeAmt;i++)
         {
@@ -797,6 +799,9 @@ var RocketShip = (function(){
         
         var windData = spriteSheetData.wind;
         windSheet = new createjs.SpriteSheet(windData);  
+                
+        onlookerSheet = new createjs.SpriteSheet(spriteSheetData.onlookers);  
+        onlookerCont = new createjs.Container();
             
             
         flameVertices  = [
@@ -872,10 +877,10 @@ var RocketShip = (function(){
         "greatDiamond" : greatDiamondSheet,
         "seagull" : seagullSheet,
         "goose" : seagullSheet,
-        "hawk" : seagullSheet
+        "hawk" : seagullSheet,        
         };
         
-        gameView.addChild(parallaxCont, catzRocket.rocketSnake,catzRocket.SnakeLine,
+        gameView.addChild(parallaxCont, onlookerCont, catzRocket.rocketSnake,catzRocket.SnakeLine,
             sgCont, hawkCont, gooseCont, attackBirdCont,scatterDiamondsCont, diCont,
             exitSmoke,smoke, catzRocket.rocketFlame, catzRocket.catzRocketContainer,
             cloudCont,lightningCont,thunderCont,fgCont, fgTopCont,leaves, collisionCheckDebug);
@@ -991,6 +996,7 @@ var RocketShip = (function(){
             catzRocket.update(grav,wind,event);
             updateVertices();
             updateDirector(event);
+            updateOnlookers(event);
             updateFg(event);
             updateFgTop(event);
             updateParallax(event);
@@ -1403,13 +1409,58 @@ var RocketShip = (function(){
         }
     }
     
-    function updatePointer(event)
-    {
+    function updateOnlookers(event){
+        var arrayLength = onlookerCont.children.length;        
+        if(arrayLength<3)
+        {   
+            function addOnlooker(onlooker){            
+                var oCont = new createjs.Container();
+                oCont.x=800 + 500*Math.random();
+                oCont.y= 180;
+                onlooker.x=30;
+                onlooker.y=0;
+            
+                var hill = new createjs.Shape();
+                hill.graphics.beginFill("#505050").drawRect(0, 95, 200, 300);
+            
+                oCont.addChild(onlooker, hill);
+                onlookerCont.addChild(oCont);
+            }
+            
+            if(Math.random()>1 - gameStats.kittens.approvalRating){
+                var onlooker = new createjs.Sprite(onlookerSheet,"orphans");
+                addOnlooker(onlooker);
+            }
+            if(Math.random()< -gameStats.catParty.approvalRating){
+                var onlooker = new createjs.Sprite(onlookerSheet,"cat party");
+                addOnlooker(onlooker);
+            }
+            if(Math.random()< -gameStats.villagers.approvalRating){
+                var onlooker = new createjs.Sprite(onlookerSheet,"angry mob");
+                addOnlooker(onlooker);
+            }
+            if(Math.random()< gameStats.villagers.approvalRating){
+                var onlooker = new createjs.Sprite(onlookerSheet,"loving mob");
+                addOnlooker(onlooker);
+            }                        
+        }        
+        
+        for (var i = 0; i < arrayLength; i++) {
+            var oC = onlookerCont.children[i];            
+            oC.x -= diSpeed/2*event.delta;    
+            if (oC.x <= -400){
+              onlookerCont.removeChildAt(i);
+              arrayLength = arrayLength - 1;
+              i = i - 1;
+            }         
+        }
+    }
+    
+    function updatePointer(event){
         hudPointer.rotation = Math.min(-30 + catzRocket.diamondFuel*135/10,105);                
     }
 
-    function updateDiamonds(event)
-    {
+    function updateDiamonds(event){
         var arrayLength = diCont.children.length;
         for (var i = 0; i < arrayLength; i++) {
             var kid = diCont.children[i];
@@ -2068,6 +2119,7 @@ var RocketShip = (function(){
         lightningCont.removeAllChildren();
         attackBirdCont.removeAllChildren();
         diCont.removeAllChildren();
+        onlookerCont.removeAllChildren();
         directorState=directorStateEnum.Normal;        
         noWind();
         catzRocket.silouette.alpha=0;
