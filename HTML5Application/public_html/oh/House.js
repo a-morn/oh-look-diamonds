@@ -5,7 +5,9 @@ var House = (function(){
         crashRocket: null,
         hobo: null,
         timmy: null,
-        priest: null,        
+        priest: null,
+        subtractedDiamond: null,
+        currentCharacter: "hoboCat",
         mouseHobo: null,
         mouseTimmy: null,
         mousePriest :null,
@@ -40,7 +42,12 @@ var House = (function(){
         addOnTextOrphanage1 : null,
         addOnTextOrphanage2 : null,
         addOnRehabText1 : null,
-        addOnRehabText2 : null,      
+        addOnRehabText2 : null,
+        displayedScore : null,
+        deltaOrph : 0,
+        deltaRehab : 0,
+        deltaUniversity : 0,
+        bust : 0,  
         wickExclamation : null,
         characterExclamation : null,
         choiceIDs : [],
@@ -85,7 +92,7 @@ var House = (function(){
     house.gotoHouseView = function(aGameStats, diamondCounterText)
     {        
         gameStats = aGameStats; 
-        
+       
         house.rsText.text = gameStats.rehab.slots;
         house.osText.text = gameStats.orphanage.slots;
         house.usText.text = gameStats.university.slots;               
@@ -93,7 +100,7 @@ var House = (function(){
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
         house.priest.alpha = 0;
-        
+        house.displayedScore = gameStats.score;
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
         house.cricketsSound.volume=0.1;        
         var hobDiaNo = house.UpKeep(diamondCounterText);
@@ -442,7 +449,7 @@ var House = (function(){
             
         }            
                 
-        if(!hoboActive && !timmyActive && !priestActive)
+        if(characterActive[currentCharacter])
         {
             house.characterExclamation.alpha=0;  
         }
@@ -598,28 +605,48 @@ var House = (function(){
     
     house.SetScore = function (value, gameStats, diamondCounterText){
         gameStats.score += value;
-        //Should be a "cash-withdrawn"-animation triggered here
-        if(gameStats.score<10)
+        if(value<0)
         {
-            diamondCounterText.text="000"+gameStats.score;
+            createjs.Tween.get(house.subtractedDiamond, {override:true})
+                    .to({alpha:1})
+                    .to({y:300, x:100},400)
+                    .to({alpha:0},100)
+                    .to({x:750,y:420});
         }
-        else if(gameStats.score<100)
-        {
-            diamondCounterText.text="00"+gameStats.score;
-        }
-        else if(gameStats.score<1000)
-        {
-            diamondCounterText.text="0"+gameStats.score;
-        }
-        else if(gameStats.score<10000)
-        {
-            diamondCounterText.text=gameStats.score;
-        }
-        else
-        {
-            diamondCounterText.text="alot";
-        }                        
     };
+    
+    house.updateDisplayedScore = function(event, gameStats, diamondCounterText) {
+        if(house.displayedScore!==gameStats.score)
+        {
+            if((house.displayedScore-gameStats.score)<10)
+            {
+                house.displayedScore-= Math.min(event.delta/100,house.displayedScore-gameStats.score);
+            }
+            else{    
+                house.displayedScore-= (house.displayedScore-gameStats.score)*event.delta/1500;
+            }
+            if(gameStats.score<10)
+            {
+                diamondCounterText.text="000"+Math.floor(house.displayedScore);
+            }
+            else if(gameStats.score<100)
+            {
+                diamondCounterText.text="00"+Math.floor(house.displayedScore);
+            }
+            else if(gameStats.score<1000)
+            {
+                diamondCounterText.text="0"+Math.floor(house.displayedScore);
+            }
+            else if(gameStats.score<10000)
+            {
+                diamondCounterText.text=Math.floor(house.displayedScore);
+            }
+            else
+            {
+                diamondCounterText.text="alot";
+            }    
+        }
+    }
     
     house.calculateApproval = function () {
         deltaOrph = startGameStats.orphanage.slots - gameStats.orphanage.slots;

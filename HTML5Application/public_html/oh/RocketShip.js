@@ -111,9 +111,9 @@ var RocketShip = (function(){
         orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
         rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
         university: {built : false, isBuilding : false, builtOnRound : null, rocketUniversity:null, slots : 0},
-        villagers: {approvalRating : -30},
-        kittens: {approvalRating : 30},
-        catParty: {approvalRating : -30},
+        villagers: {approvalRating : 0},
+        kittens: {approvalRating : 0},
+        catParty: {approvalRating : 0},
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
@@ -248,7 +248,7 @@ var RocketShip = (function(){
         stage.removeChild(progressBar);        
     }
     
-    function houseTick()
+    function houseTick(event)
     {
         stage.update();
         if(house.characterSpeach.alpha > 0)
@@ -261,20 +261,16 @@ var RocketShip = (function(){
             house.catzSpeach.alpha -= 0.015;
         }            
                 
-        if(house.wickExclamation.alpha > 0.8 && house.wickExclamation.alpha < 0.9)
-        {                       
-            if(rocketSong.getPosition()<100)
-            {
+        if(house.wickExclamation.alpha > 0.8 && house.wickExclamation.alpha < 0.9){                       
+            if(rocketSong.getPosition()<100){
                 rocketSong.play();
             }
-        }
+        }                
         
-        house.characterExclamation.alpha = house.hoboActive;                
-        
-        if(house.wickActive && house.wickExclamation.alpha <1)
-        {
+        if(house.wickActive && house.wickExclamation.alpha <1){
             house.wickExclamation.alpha += 0.01;
         }
+        house.updateDisplayedScore(event, gameStats, diamondCounterText);
         
         debugText.text =                 
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
@@ -321,7 +317,7 @@ var RocketShip = (function(){
         house.priest.scaleX=0.8;
         house.priest.scaleY=0.8;
         house.priest.alpha = 0;
-        
+
         house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
         house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
         house.oh.x=100;
@@ -342,8 +338,7 @@ var RocketShip = (function(){
         var diamondData = spriteSheetData.diamond;
         diamondSheet = new createjs.SpriteSheet(diamondData);
         var positions = diamondConstellation;
-        for(var i=0; i<positions.length;i++)
-        {
+        for(var i=0; i<positions.length;i++){
             var diamond = new createjs.Sprite(diamondSheet,"cycle");
             diamond.x=positions[i].x;
             diamond.y=positions[i].y-1500;
@@ -351,7 +346,15 @@ var RocketShip = (function(){
             diamond.scaleX=positions[i].scale;
             diamond.scaleY=positions[i].scale;
             house.diCont.addChild(diamond);
+
         }        
+
+        //house.diCont.alpha=0;
+        
+        house.subtractedDiamond = new createjs.Sprite(diamondSheet,"cycle");
+        house.subtractedDiamond.x = 750;
+        house.subtractedDiamond.y = 420;
+        house.subtractedDiamond.alpha = 0;        
 
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
@@ -603,7 +606,7 @@ var RocketShip = (function(){
             house.hobo,house.timmy, house.priest, house.wick, house.crashRocket, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, house.mousePriest, house.mouseRocket,
-            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton);
+            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton, house.subtractedDiamond);
     }
     
     function showOh()
@@ -905,7 +908,7 @@ var RocketShip = (function(){
         stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, diamondCounterText,debugText);
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
-        gameListener = createjs.Ticker.on("tick", update,this);  
+        gameListener = createjs.Ticker.on("tick", update,this);    
         createjs.Ticker.setFPS(30);                    
         
         stage.addEventListener("stagemousedown", catzRocket.catzUp);    
@@ -2090,17 +2093,6 @@ var RocketShip = (function(){
                 catzRocket.catzRocketContainer.y+lastResolveNorm[1]*100);
         polygonLine.graphics.endStroke();
     }        
-    
-    function houseTick ()
-    {
-        stage.update();
-        house.update();        
-        
-        debugText.text =                 
-                + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
-                + "\nBuilding orphanage "+ gameStats.BuildOrphanage
-                + "HoboDialogNo: " + house.hoboDialogNumber;                     
-    }
     
     function catzFellOfRocket(){
         stage.removeAllEventListeners();
