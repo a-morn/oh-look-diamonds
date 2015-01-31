@@ -232,6 +232,8 @@ var House = (function(){
     
     house.characterDialog = function(diamondCounterText, gotoGameView)
     {             
+        console.log(characterDialogNumber);
+        console.log(currentCharacter);
         var dialog = dialogJSON[currentCharacter][characterDialogNumber[currentCharacter]];           
         if(dialog.dialog[characterdialogID[currentCharacter]])
         {
@@ -249,11 +251,7 @@ var House = (function(){
                     else if (stat=== "kills")
                     {
                         gameStats.kills += value;
-                    }
-                    else if (stat === "isBuilding") {
-                        gameStats[value].isBuilding = true;
-                        gameStats.CurrentlyBuilding = true;
-                    }
+                    }                    
                     
                     else if (stat === "built")
                     {
@@ -266,11 +264,9 @@ var House = (function(){
                                 }, 1000);
                             }, 1000);
                             gameStats.hasBeenFirst.houseWithSlots = true;
-                        }
-                        gameStats[value].isBuilding = false;
+                        }                        
                         gameStats[value].built = true;
-                        gameStats[value].builtOnRound = gameStats.currentRound;
-                        gameStats.CurrentlyBuilding = false;
+                        gameStats[value].builtOnRound = gameStats.currentRound;                        
                         //SET ALPHA = 1 HERE                        
                         house.diamondHouseArray[value].alpha = 1;
                     }
@@ -645,7 +641,7 @@ var House = (function(){
                 diamondCounterText.text="alot";
             }    
         }
-    }
+    };
     
     house.calculateApproval = function () {
         deltaOrph = startGameStats.orphanage.slots - gameStats.orphanage.slots;

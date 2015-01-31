@@ -102,18 +102,17 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,        
     gameStats = {
-        score : 0,
+        score : 1000,
         kills : 0,
         bust : 0,
-        currentRound: 0,
-        CurrentlyBuilding: false,
-        hoboCatHouse : {built : false, isBuilding : false, builtOnRound : null} ,
-        orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
+        currentRound: 0,        
+        hoboCatHouse : {built : false, builtOnRound : null} ,
+        orphanage : {built : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
         rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
-        university: {built : false, isBuilding : false, builtOnRound : null, rocketUniversity:null, slots : 0},
-        villagers: {approvalRating : 30},
-        kittens: {approvalRating : 30},
-        catParty: {approvalRating : -30},
+        university: {built : false, builtOnRound : null, rocketUniversity:null, slots : 0},
+        villagers: {approvalRating : 0},
+        kittens: {approvalRating : 0},
+        catParty: {approvalRating : 0},
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
@@ -1424,9 +1423,11 @@ var RocketShip = (function(){
         var arrayLength = onlookerCont.children.length;        
         if(arrayLength<3)
         {   
+            var xOffset = 0;
             function addOnlooker(onlooker){            
                 var oCont = new createjs.Container();
-                oCont.x=800 + 500*Math.random();
+                oCont.x=800 + xOffset;
+                xOffset+= 300;
                 oCont.y= 180;
                 onlooker.x=30;
                 onlooker.y=0;
