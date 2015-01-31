@@ -40,9 +40,8 @@ var House = (function(){
         osText : null,
         usText : null,
         addOnTextOrphanage1 : null,
-        addOnTextOrphanage2 : null,
         addOnRehabText1 : null,
-        addOnRehabText2 : null,
+        addOnTextUniversity1: null,
         displayedScore : null,
         deltaOrph : 0,
         deltaRehab : 0,
@@ -736,15 +735,15 @@ var House = (function(){
     
     house.UpdateAddOnStat = function () {        
         if(gameStats.orphanage.summerCamp){            
-            house.addOnTextOrphanage1.text = "Summer Camp";
+            house.addOnTextOrphanage1.text = "Youth Centre";
         }
         
         if(gameStats.orphanage.youthCenter){
-            house.addOnTextOrphanage2.text = "Youth Center";
+            house.addOnTextOrphanage1.text = "Boarding House";
         }
         
         if(gameStats.rehab.hospital){
-            house.addOnRehabText1.text = "Hospital";
+            house.addOnRehabText1.text = "Clinic";
         }
         
         if(gameStats.rehab.monastery){
@@ -752,7 +751,10 @@ var House = (function(){
         }
         
         if(gameStats.rehab.phychiatricWing){
-            house.addOnRehabText2.text = "Phychiatric Wing";
+            house.addOnRehabText1.text = "Hospital";
+        }                
+        if(gameStats.university.rocketUniversity){
+            house.addOnTextUniversity1.text = "Rocket Institute";
         }                
     };
     

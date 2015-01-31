@@ -111,9 +111,9 @@ var RocketShip = (function(){
         orphanage : {built : false, isBuilding : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
         rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
         university: {built : false, isBuilding : false, builtOnRound : null, rocketUniversity:null, slots : 0},
-        villagers: {approvalRating : 0},
-        kittens: {approvalRating : 0},
-        catParty: {approvalRating : 0},
+        villagers: {approvalRating : 30},
+        kittens: {approvalRating : 30},
+        catParty: {approvalRating : -30},
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
@@ -198,6 +198,7 @@ var RocketShip = (function(){
                     {id:"flame", src:"assets/new assets/sprites/newFlame.png"},                    
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
+                    {id:"house popup", src:"assets/new assets/img/house popup.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},                   
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
                     {id:"diamondhouse", src:"assets/new assets/sprites/diamond house progression.png"},
@@ -351,7 +352,7 @@ var RocketShip = (function(){
 
         //house.diCont.alpha=0;
         
-        house.subtractedDiamond = new createjs.Sprite(diamondSheet,"cycle");
+        house.subtractedDiamond = new createjs.Bitmap(queue.getResult("diamondIcon"));
         house.subtractedDiamond.x = 750;
         house.subtractedDiamond.y = 420;
         house.subtractedDiamond.alpha = 0;        
@@ -405,68 +406,66 @@ var RocketShip = (function(){
         house.houseInfo["rehab"] = new createjs.Container();
         house.houseInfo["rehab"].x = 390;
         house.houseInfo["rehab"].y = 270;
+        var rGraphics = new createjs.Bitmap(queue.getResult("house popup"));
         var rBox = new createjs.Shape();
         rBox.graphics.beginFill("#ff0000").drawRect(0, 0, 100, 100);
+        rBox.alpha=0;
         var rxBox = new createjs.Shape();
-        rxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        rxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
         rxBox.addEventListener("click",(function(){house.houseInfo["rehab"].alpha = 0;}));
-        
+        rxBox.alpha=0.01;
         var rpBox = new createjs.Shape();
-        rpBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        rpBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
         rpBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.rehab.slots += 1;house.rsText.text = gameStats.rehab.slots;}}));
+        rpBox.alpha=0.01;
         var rmBox = new createjs.Shape();
-        rmBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        rmBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
         rmBox.addEventListener("click",(function(){if(gameStats.rehab.slots>0)gameStats.rehab.slots -= 1; house.rsText.text = gameStats.rehab.slots;}));
+        rmBox.alpha=0.01;
         house.rsText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
         house.rsText.x = 30;             
-        house.rsText.y = 15;
+        house.rsText.y = 38;
         house.rsText.text = gameStats.rehab.slots;
         
         house.addOnRehabText1 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.addOnRehabText1.x = 30;             
-        house.addOnRehabText1.y = 25;
-        house.addOnRehabText1.text = "";
+        house.addOnRehabText1.x = 5;             
+        house.addOnRehabText1.y = 5;
+        house.addOnRehabText1.text = "Rehab";
         
-        house.addOnRehabText2 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.addOnRehabText2.x = 30;             
-        house.addOnRehabText2.y = 35;
-        house.addOnRehabText2.text = "";
-        
-        house.houseInfo["rehab"].addChild(rBox, rxBox, rpBox, rmBox, house.rsText, house.addOnRehabText1, house.addOnRehabText2);
+        house.houseInfo["rehab"].addChild(rBox, rGraphics, rxBox, rpBox, rmBox, house.rsText, house.addOnRehabText1);
         house.houseInfo["rehab"].alpha = 0;        
         house.houseInfoCont.addChild(house.houseInfo["rehab"]);
         
         house.houseInfo["orphanage"] = new createjs.Container();
         house.houseInfo["orphanage"].x = 500;
         house.houseInfo["orphanage"].y = 280;
+        var oGraphics = new createjs.Bitmap(queue.getResult("house popup"));
         var oBox = new createjs.Shape();
         oBox.graphics.beginFill("#00ff00").drawRect(0, 0, 100, 100);
+        oBox.alpha=0;
         var oxBox = new createjs.Shape();
-        oxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        oxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
         oxBox.addEventListener("click",(function(){house.houseInfo["orphanage"].alpha = 0;}));
-        
+        oxBox.alpha=0.01;
         var opBox = new createjs.Shape();
-        opBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        opBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
+        opBox.alpha=.01;
         opBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.orphanage.slots += 1;house.osText.text = gameStats.orphanage.slots;}}));
         var omBox = new createjs.Shape();
-        omBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        omBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
+        omBox.alpha=0.01;
         omBox.addEventListener("click",(function(){if(gameStats.orphanage.slots>0)gameStats.orphanage.slots -= 1;house.osText.text = gameStats.orphanage.slots;}));
         house.osText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
         house.osText.x = 30;             
-        house.osText.y = 15;
+        house.osText.y = 38;
         house.osText.text = gameStats.orphanage.slots;
         
         house.addOnTextOrphanage1 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.addOnTextOrphanage1.x = 30;             
-        house.addOnTextOrphanage1.y = 25;
-        house.addOnTextOrphanage1.text = "asd";
+        house.addOnTextOrphanage1.x = 5;             
+        house.addOnTextOrphanage1.y = 5;
+        house.addOnTextOrphanage1.text = "Orphanage";
         
-        house.addOnTextOrphanage2 = new createjs.Text("0", "16px Fauna One", "#000"); 
-        house.addOnTextOrphanage2.x = 30;             
-        house.addOnTextOrphanage2.y = 35;
-        house.addOnTextOrphanage2.text = "";
-        
-        house.houseInfo["orphanage"].addChild(oBox, oxBox, opBox, omBox, house.osText, house.AddOnTextOrphanage1, house.AddOnTextOrphanage2);
+        house.houseInfo["orphanage"].addChild(oBox, oGraphics, oxBox, opBox, omBox, house.osText, house.AddOnTextOrphanage1);
         house.houseInfo["orphanage"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["orphanage"]);
         
@@ -475,22 +474,31 @@ var RocketShip = (function(){
         house.houseInfo["university"].y = 330;
         var uBox = new createjs.Shape();
         uBox.graphics.beginFill("#0000ff").drawRect(0, 0, 100, 100);
+        uBox.alpha=0;
         var uxBox = new createjs.Shape();
-        uxBox.graphics.beginFill("#ff0000").drawRect(90, 0, 10, 10);
+        uxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
         uxBox.addEventListener("click",(function(){house.houseInfo["university"].alpha = 0;}));        
-        
+        uxBox.alpha=0.01;
+        var uGraphics = new createjs.Bitmap(queue.getResult("house popup"));
         var upBox = new createjs.Shape();
-        upBox.graphics.beginFill("#ffffff").drawRect(10, 10, 10, 10);
+        upBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
         upBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.university.slots += 1; house.usText.text = gameStats.university.slots;}}));
+        upBox.alpha=0.01;
         var umBox = new createjs.Shape();
-        umBox.graphics.beginFill("#000000").drawRect(10, 20, 10, 10);
+        umBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
         umBox.addEventListener("click",(function(){if(gameStats.university.slots>0)gameStats.university.slots -= 1; house.usText.text = gameStats.university.slots;}));
+        umBox.alpha=0.01;
         house.usText = new createjs.Text("0", "16px Fauna One", "#ffffcc"); 
         house.usText.x = 30;             
-        house.usText.y = 15;
+        house.usText.y = 38;
+        house.usText.text = gameStats.orphanage.slots;
         
+        house.addOnTextUniversity1 = new createjs.Text("0", "16px Fauna One", "#000"); 
+        house.addOnTextUniversity1.x = 5;             
+        house.addOnTextUniversity1.y = 5;
+        house.addOnTextUniversity1.text = "School";
         
-        house.houseInfo["university"].addChild(uBox, uxBox, upBox, umBox, house.usText);
+        house.houseInfo["university"].addChild(uBox, uGraphics, uxBox, upBox, umBox, house.usText,house.addOnTextUniversity1);
         house.houseInfo["university"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["university"]);
         
@@ -602,11 +610,11 @@ var RocketShip = (function(){
         bg.y=0;
         starCont.y=1000;
         bg.addEventListener("click",showOh);
-        house.houseView.addChild(house.diamondHouseCont, house.houseInfoCont, house.catz,house.house, 
-            house.hobo,house.timmy, house.priest, house.wick, house.crashRocket, house.characterExclamation, 
+        house.houseView.addChild(house.diamondHouseCont, house.crashRocket, house.catz, house.wick, house.house, 
+            house.hobo, house.timmy, house.priest, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, house.mousePriest, house.mouseRocket,
-            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton, house.subtractedDiamond);
+            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton,house.houseInfoCont, house.subtractedDiamond);
     }
     
     function showOh()
