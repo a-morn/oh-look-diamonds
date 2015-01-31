@@ -1,5 +1,5 @@
 
-var tracksJSON = 
+var Tracks = 
 [
         [
         //level 1

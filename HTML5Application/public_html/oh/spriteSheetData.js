@@ -1,4 +1,4 @@
-spriteSheetData = (function()
+SpriteSheetData = (function()
 {
     var ssd = {
         hobo: null,

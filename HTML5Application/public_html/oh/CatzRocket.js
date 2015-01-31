@@ -1,9 +1,8 @@
 var CatzRocket = (function(){
     var catzRocket = {
     catzRocketContainer: null,
-    silouette: null,
-    invincibilityCounter:0,        
-    diamondFrenzyCharge: 2,
+    silouette: null,    
+    diamondFuel: 2,
     isWounded: false,
     isHit : false,
     isCrashed : false,
@@ -52,7 +51,8 @@ var CatzRocket = (function(){
         Frenzy : 10,
         FrenzyUploop : 11,
         FellOffRocket : 12
-    };
+    },
+    invincibilityCounter = 0;
     
     catzRocket.Init = function()
     {
@@ -269,8 +269,7 @@ var CatzRocket = (function(){
                 }
             }
         }
-        else if (catzRocket.catzState!==catzStateEnum.Frenzy 
-                && catzRocket.catzState!==catzStateEnum.FrenzyUploop
+        else if (!catzRocket.hasFrenzy()
                 && catzRocket.frenzyCount>0)
         {
             if (catzRocket.frenzyCount>100 && 
@@ -363,7 +362,7 @@ var CatzRocket = (function(){
         catzRocket.rocketSound.stop();
         catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[
             catzStateEnum.SecondDownloop]);
-    }
+    };
     
     catzRocket.catzRelease = function()
     {
@@ -386,7 +385,7 @@ var CatzRocket = (function(){
     
     catzRocket.getHit = function(isInstaGib)
     {
-        if((catzRocket.invincibilityCounter<=0 || isInstaGib) && !catzRocket.hasFrenzy())
+        if((invincibilityCounter<=0 || isInstaGib) && !catzRocket.hasFrenzy() && !catzRocket.isHit)
         {
             var instance = createjs.Sound.play("catzScream2");
             instance.volume = 0.5;
@@ -399,7 +398,7 @@ var CatzRocket = (function(){
                         .to({y:10, x:-25},100)
                         .to({x:-50,y:5},150)
                         .call(catzRocket.catz.gotoAndPlay,["no shake"]);
-                catzRocket.invincibilityCounter=1000;
+                invincibilityCounter=1000;
                 return false;
             }
             else{                 
@@ -415,11 +414,11 @@ var CatzRocket = (function(){
     
     catzRocket.catzUp = function()
     {
-        if(catzRocket.diamondFrenzyCharge>0) {
+        if(catzRocket.diamondFuel>0) {
             mousedown = true;
             if(catzRocket.catzState === catzStateEnum.Normal)
             {
-                catzRocket.diamondFrenzyCharge -= 0.5;
+                catzRocket.diamondFuel -= 0.5;
                 catzRocket.catzVelocity-=2;
                 catzRocket.changeState(catzStateEnum.Uploop);
             }
@@ -467,8 +466,7 @@ var CatzRocket = (function(){
             }
         }
         else if(state!==catzStateEnum.FellOffRocket 
-                && state!==catzStateEnum.Frenzy
-                && state!==catzStateEnum.FrenzyUploop)
+                && !catzRocket.hasFrenzy())
         {
             if(catzRocket.SnakeLine.alpha===0)
             {
@@ -502,8 +500,7 @@ var CatzRocket = (function(){
     
     catzRocket.canCollide = function(){
         return (catzRocket.catzState!==catzStateEnum.FellOffRocket
-                && catzRocket.catzState!==catzStateEnum.Frenzy
-                && catzRocket.catzState!==catzStateEnum.FrenzyUploop);
+                && !catzRocket.hasFrenzy());
     };
     
     catzRocket.reset = function(){
@@ -541,7 +538,26 @@ var CatzRocket = (function(){
         {
             catzRocket.changeState(catzStateEnum.Frenzy);
         }
-    };    
+    };   
+    
+    catzRocket.invincibilityCountDown = function(minusTime){
+        if(invincibilityCounter>0)
+        {
+            invincibilityCounter-=minusTime;
+        }
+    };
+    
+    catzRocket.diamondFuelLossPerTime = function(time){            
+        if(catzRocket.diamondFuel>5)
+        {
+            catzRocket.diamondFuel -= time/1000;
+        }
+
+        if(catzRocket.diamondFuel>10)
+        {                            
+            catzRocket.diamondFuel -= time/20;                
+        }
+    };
     
     return catzRocket;
 }());

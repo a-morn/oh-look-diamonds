@@ -1,4 +1,4 @@
-var trackPartsJSON = {
+var TrackParts = {
     "easy" : 
             { 
                 //horizontal line
