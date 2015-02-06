@@ -102,7 +102,7 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,        
     gameStats = {
-        score : 1000,
+        score : 0,
         kills : 0,
         bust : 0,
         currentRound: 0,        
@@ -235,7 +235,7 @@ var RocketShip = (function(){
     }
 
     function handleComplete()
-    {
+    {           
         spriteSheetData.setValues(queue);
         createBG();
         createHouseView();

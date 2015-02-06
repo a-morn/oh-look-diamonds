@@ -341,9 +341,13 @@ var House = (function(){
                 }
                 else
                 {
+                    //END DIALOG
+                    if(!gameStats.hoboCatHouse.built){
+                        setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 1500);
+                    }
+                    //house.wickExclamation.alpha=1; Replaced by match-cursor
                     characterActive[currentCharacter] = false;
-                    house.characterExclamation.alpha=0;
-                    house.wickExclamation.alpha=1;
+                    house.characterExclamation.alpha=0;                    
                     wickActive = true;
                     
                     
@@ -379,9 +383,10 @@ var House = (function(){
             house.wick.x=-225;
             house.wick.gotoAndPlay("cycle");
             house.wick.removeAllEventListeners();        
+            house.wick.addEventListener("animationend",function(){$("#mahCanvas").removeClass("match-cursor");});
             house.wick.addEventListener("animationend",gotoGameView);
             house.catzSpeach.text ="";
-            house.characterSpeach.text ="";
+            house.characterSpeach.text ="";            
         }
     };    
     
