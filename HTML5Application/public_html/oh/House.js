@@ -479,6 +479,9 @@ var House = (function(){
     };
     
     house.houseInfo = function(houseName){
+        house.houseInfo["rehab"].alpha = 0;
+        house.houseInfo["orphanage"].alpha = 0;
+        house.houseInfo["university"].alpha = 0;
         house.houseInfo[houseName].alpha = 1;
     };
     

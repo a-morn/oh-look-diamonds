@@ -464,7 +464,7 @@ var RocketShip = (function(){
         house.addOnTextOrphanage1.y = 5;
         house.addOnTextOrphanage1.text = "Orphanage";
         
-        house.houseInfo["orphanage"].addChild(oBox, oGraphics, oxBox, opBox, omBox, house.osText, house.AddOnTextOrphanage1);
+        house.houseInfo["orphanage"].addChild(oBox, oGraphics, oxBox, opBox, omBox, house.osText, house.addOnTextOrphanage1);
         house.houseInfo["orphanage"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["orphanage"]);
         

@@ -35,6 +35,21 @@ var CatzRocket = (function(){
         null,
         "catzScream3"
     ],
+    fuelConsumption : [
+        0,
+        1,
+        0.7,
+        1,
+        0.8,
+        1,
+        0,
+        1.5,
+        0.7,
+        0.7,
+        0,
+        0,
+        0
+    ],
     catzState: 0};
 
     var catzStateEnum = {
@@ -52,6 +67,7 @@ var CatzRocket = (function(){
         FrenzyUploop : 11,
         FellOffRocket : 12
     },
+
     invincibilityCounter = 0;
     
     catzRocket.Init = function()
@@ -60,7 +76,7 @@ var CatzRocket = (function(){
     };        
     
     catzRocket.update = function(grav,wind,event)
-    {      
+    {  
         if(catzRocket.catzState === catzStateEnum.Normal)   
         {
             catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
@@ -215,10 +231,12 @@ var CatzRocket = (function(){
         {
             catzRocket.catz.x=0;
         }
+        
         if(catzRocket.catzRocketContainer.y > 450 || catzRocket.catzRocketContainer.y < -1000)
         {            
             catzRocket.isCrashed = true;
         }
+        catzRocket.diamondFuel-=catzRocket.fuelConsumption[catzRocket.catzState]*event.delta/1000;
         updateFrenzy(event);
         updateRocketSnake();
     };

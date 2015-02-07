@@ -26,7 +26,7 @@ Hey, with  20 of these I could\n\
         {"Who": "Hobo-Cat", "What": "All done!", "Sound": "HoboCatSound1", 
             "Choice" :false, "NextID":1, "Triggers":[{Stat:"built", 
                     Value: "hoboCatHouse"}, {Stat:"score", Value: -19}], "End":true}                
-    ], "idle":{"what":"house owners association \n\
+    ], "idle":{"what":"homeowners association \n\
 here I come!"}},
 //3
 {"dialog":[
