@@ -44,3 +44,7 @@ a:visited {
     -ms-user-select: none;
     user-select: none;
 }
+
+.match-cursor {         
+    cursor:url(assets/match.gif), auto;
+}
