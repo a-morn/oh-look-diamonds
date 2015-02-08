@@ -18,6 +18,7 @@ var RocketShip = (function(){
     canvas,
     godMode = true,
     infiniteFuel = true,
+    trustFund = true,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -351,11 +352,7 @@ var RocketShip = (function(){
         }        
 
         //house.diCont.alpha=0;
-        
-        house.subtractedDiamond = new createjs.Bitmap(queue.getResult("diamondIcon"));
-        house.subtractedDiamond.x = 750;
-        house.subtractedDiamond.y = 420;
-        house.subtractedDiamond.alpha = 0;        
+            
 
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
@@ -395,8 +392,8 @@ var RocketShip = (function(){
         
         house.university = new createjs.Sprite(dSheet,"university");
         house.university.alpha=0;
-        house.university.x=550;
-        house.university.y=357;
+        house.university.x=570;
+        house.university.y=347;
         house.university.rotation = 16;
         house.diamondHouseCont.addChild(house.university);
         house.diamondHouseArray["university"] = house.university;
@@ -604,6 +601,12 @@ var RocketShip = (function(){
         house.catzSound2 = createjs.Sound.play("catzSound2");
         house.catzSound2.stop();
         
+        house.subtractedDiamond = new createjs.Bitmap(queue.getResult("diamondShardCounter"));
+        house.subtractedDiamond.x = 750;
+        house.subtractedDiamond.y = 420; 
+        house.subtractedDiamond.scaleX=0.4;
+        house.subtractedDiamond.scaleY=0.4;
+        house.subtractedDiamondCont = new createjs.Container();
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
         house.houseView.y=1500;
@@ -613,8 +616,10 @@ var RocketShip = (function(){
         house.houseView.addChild(house.diamondHouseCont, house.crashRocket, house.catz, house.wick, house.house, 
             house.hobo, house.timmy, house.priest, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
-            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, house.mousePriest, house.mouseRocket,
-            house.wickLight,house.oh, house.look, house.diamonds, house.diCont, house.lookingAtStarsButton,house.houseInfoCont, house.subtractedDiamond);
+            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, 
+            house.mousePriest, house.mouseRocket, house.wickLight,house.oh, 
+            house.look, house.diamonds, house.diCont, house.lookingAtStarsButton,
+            house.houseInfoCont, house.subtractedDiamondCont);
     }
     
     function showOh()
@@ -1309,7 +1314,6 @@ var RocketShip = (function(){
     
     function generateTrack()
     {
-        console.log("currentLevel "+currentLevel+" currentTrack "+currentTrack);
         var result = [];
         var displacementX = 800;
         var displacementY = currentDisplacement;
@@ -2140,7 +2144,7 @@ var RocketShip = (function(){
     }
     
     function crash()
-    {       
+    {  
         catzRocket.diamondFuel = 2;        
         currentTrack=0;
         currentLevel=0;
@@ -2160,6 +2164,7 @@ var RocketShip = (function(){
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(house.houseView);
+        house.subtractedDiamondCont.removeAllChildren();
         stage.update();
         house.wickExclamation.alpha= 0;
         createjs.Ticker.setFPS(20);
@@ -2178,7 +2183,10 @@ var RocketShip = (function(){
         {            
             house.gotoHouseViewWithRocket(gameStats, catzRocket, gotoGameView, diamondCounterText);               
         }   
-        
+        if(trustFund && gameStats.score<20000)
+        {
+            gameStats.score=20000;
+        }
         catzRocket.reset();
                 
         catzRocket.catzRocketContainer.x = 300;

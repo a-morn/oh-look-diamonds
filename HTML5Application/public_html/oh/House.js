@@ -103,6 +103,7 @@ var House = (function(){
         house.displayedScore = gameStats.score;
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});
         house.cricketsSound.volume=0.1;        
+        house.AnimateUpkeep(gameStats);
         var hobDiaNo = house.UpKeep(diamondCounterText);
             //If not fail upkeep, check for other dialog
             if(hobDiaNo === -1 && gameStats.bust === 0) {
@@ -231,6 +232,8 @@ var House = (function(){
         return -1;
     };
     
+
+    
     house.characterDialog = function(diamondCounterText, gotoGameView)
     {             
         var dialog = dialogJSON[currentCharacter][characterDialogNumber[currentCharacter]];           
@@ -265,29 +268,15 @@ var House = (function(){
                             gameStats.hasBeenFirst.houseWithSlots = true;
                         }                        
                         gameStats[value].built = true;
-                        gameStats[value].builtOnRound = gameStats.currentRound;                        
-                        //SET ALPHA = 1 HERE                        
-                        house.diamondHouseArray[value].alpha = 1;
-                        house.diamondHouseArray[value].alpha=1;
-                        var oldx = house.diamondHouseArray[value].x;
-                        var oldy = house.diamondHouseArray[value].y;
-                        createjs.Tween.get(house.diamondHouseArray[value])
-                                .to({x:oldx-20,y:oldy+50})
-                                .to({x:oldx,y:oldy},700);
-                        createjs.Tween.get(house.houseView)
-                            .to({x:-25, y:10},50)
-                            .to({x:25, y:-20},50)
-                            .to({x:-25, y:25},50)
-                            .to({x:10, y:-10},50)
-                            .to({x:-5, y:5},50)
-                            .to({x:5, y:-5},50)
-                            .to({x:-25, y:10},50)
-                            .to({x:25, y:-20},50)
-                            .to({x:-25, y:25},50)
-                            .to({x:10, y:-10},50)
-                            .to({x:-5, y:5},50)
-                            .to({x:5, y:-5},50)
-                            .to({x:0, y:0},50);
+                        gameStats[value].builtOnRound = gameStats.currentRound; 
+                        if(value==="hoboCatHouse")
+                        {
+                            house.BuildingAnimation(house.hoboCatHouse);
+                        }
+                        else
+                        {                        
+                            house.BuildingAnimation(house.diamondHouseArray[value]);
+                        }
                     }
                     
                     else if (stat === "addOn")
@@ -389,8 +378,15 @@ var House = (function(){
             house.characterSpeach.alpha = 1;            
         }
         
-        
     };
+    
+    
+    house.buildAnimationFinished = function()
+    {
+        createjs.Tween.removeAllTweens(house.houseView);
+        house.houseView.x=0;
+        house.houseView.y=0;
+    }
     
     house.lightFuse = function(gotoGameView)
     {        
@@ -627,14 +623,46 @@ var House = (function(){
     
     house.SetScore = function (value, gameStats, diamondCounterText){
         gameStats.score += value;
-        if(value<0)
+    };
+    
+    house.BuyingAnimation = function(targetX,targetY)
+    {
+        var clone = house.subtractedDiamond.clone(true);
+        house.subtractedDiamondCont.addChild(clone);
+        createjs.Tween.get(clone)
+            .to({y:targetY, x:targetX},500,createjs.Ease.quadOut)
+            .to({alpha:0},300);
+    };
+    
+    house.BuildingAnimation = function(houseGraphic)
+    {
+        houseGraphic.alpha=1;
+        var oldx = houseGraphic.x;
+        var oldy = houseGraphic.y;
+        house.BuyingAnimation(house.hobo.x+210,house.hobo.y+130);
+        createjs.Tween.get(houseGraphic)
+                .to({x:oldx-20,y:oldy+50})
+                .to({x:oldx,y:oldy},2000)
+                .call(house.buildAnimationFinished);
+        createjs.Tween.get(house.houseView, {loop:true})
+            .to({x:-5, y:5},50)
+            .to({x:5, y:-5},50);
+    }
+    
+    house.AnimateUpkeep = function(gameStats)
+    {
+        if(gameStats.orphanage.built && gameStats.orphanage.slots>0)
         {
-            createjs.Tween.get(house.subtractedDiamond, {override:true})
-                    .to({alpha:1})
-                    .to({y:300, x:100},400)
-                    .to({alpha:0},100)
-                    .to({x:750,y:420});
-        }
+           house.BuyingAnimation(house.orphanage.x,house.orphanage.y); 
+        }       
+        if(gameStats.rehab.built && gameStats.rehab.slots>0)
+        {
+           house.BuyingAnimation(house.rehab.x,house.rehab.y); 
+        }       
+        if(gameStats.university.built && gameStats.university.slots>0)
+        {
+           house.BuyingAnimation(house.university.x,house.university.y); 
+        }       
     };
     
     house.updateDisplayedScore = function(event, gameStats, diamondCounterText) {
