@@ -17,7 +17,7 @@ var RocketShip = (function(){
     rocketShip={},
     canvas,
     godMode = true,
-    infiniteFuel = true,
+    infiniteFuel = false,
     trustFund = true,
     debugMode = false,
     muteButton,

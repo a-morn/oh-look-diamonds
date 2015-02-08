@@ -4,7 +4,7 @@ var Tracks =
     //world 1
     [
         //level 1
-        [            {"difficulty":"easy", "name":"smallDiamond"}],
+        [            {"difficulty":"easy", "name":"smallDiamond"}]
     
     ],
     
