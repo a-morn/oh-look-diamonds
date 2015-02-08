@@ -85,6 +85,21 @@ SpriteSheetData = (function()
                     "unmute":[1]
                 }
             },
+            
+            ssd.match = {
+                "framerate":8,
+                "images":[queue.getResult("match")],
+                "frames":[
+                    [0, 0, 64, 64, 0, -17, -7],
+                    [64, 0, 64, 64, 0, -17, -7],
+                    [128, 0, 64, 64, 0, -17, -7],
+                    [192, 0, 64, 64, 0, -17, -7]
+                ],
+                "animations":{
+                    "cycle":[0,3]
+                }
+            },
+            
             ssd.dHouse= {
                 "framerate":24,
                     "images":[queue.getResult("diamondhouse")],
