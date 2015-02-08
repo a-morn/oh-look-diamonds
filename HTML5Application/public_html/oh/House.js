@@ -7,6 +7,7 @@ var House = (function(){
         timmy: null,
         priest: null,
         subtractedDiamond: null,
+        subtractedDiamondCont:null,
         currentCharacter: "hoboCat",
         mouseHobo: null,
         mouseTimmy: null,
@@ -232,8 +233,6 @@ var House = (function(){
     
     house.characterDialog = function(diamondCounterText, gotoGameView)
     {             
-        console.log(characterDialogNumber);
-        console.log(currentCharacter);
         var dialog = dialogJSON[currentCharacter][characterDialogNumber[currentCharacter]];           
         if(dialog.dialog[characterdialogID[currentCharacter]])
         {
@@ -269,6 +268,26 @@ var House = (function(){
                         gameStats[value].builtOnRound = gameStats.currentRound;                        
                         //SET ALPHA = 1 HERE                        
                         house.diamondHouseArray[value].alpha = 1;
+                        house.diamondHouseArray[value].alpha=1;
+                        var oldx = house.diamondHouseArray[value].x;
+                        var oldy = house.diamondHouseArray[value].y;
+                        createjs.Tween.get(house.diamondHouseArray[value])
+                                .to({x:oldx-20,y:oldy+50})
+                                .to({x:oldx,y:oldy},700);
+                        createjs.Tween.get(house.houseView)
+                            .to({x:-25, y:10},50)
+                            .to({x:25, y:-20},50)
+                            .to({x:-25, y:25},50)
+                            .to({x:10, y:-10},50)
+                            .to({x:-5, y:5},50)
+                            .to({x:5, y:-5},50)
+                            .to({x:-25, y:10},50)
+                            .to({x:25, y:-20},50)
+                            .to({x:-25, y:25},50)
+                            .to({x:10, y:-10},50)
+                            .to({x:-5, y:5},50)
+                            .to({x:5, y:-5},50)
+                            .to({x:0, y:0},50);
                     }
                     
                     else if (stat === "addOn")

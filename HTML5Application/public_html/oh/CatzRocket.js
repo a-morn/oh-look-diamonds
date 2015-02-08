@@ -37,13 +37,13 @@ var CatzRocket = (function(){
     ],
     fuelConsumption : [
         0,
-        1,
+        2,
         0.7,
-        1,
+        3,
         0.8,
         1,
         0,
-        1.5,
+        3.5,
         0.7,
         0.7,
         0,
@@ -436,7 +436,7 @@ var CatzRocket = (function(){
             mousedown = true;
             if(catzRocket.catzState === catzStateEnum.Normal)
             {
-                catzRocket.diamondFuel -= 0.5;
+                catzRocket.diamondFuel -= 0.25;
                 catzRocket.catzVelocity-=2;
                 catzRocket.changeState(catzStateEnum.Uploop);
             }

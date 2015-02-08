@@ -16,7 +16,8 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = false,
+    godMode = true,
+    infiniteFuel = true,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -158,9 +159,9 @@ var RocketShip = (function(){
                     {id: "diamondShardCounter", src: "assets/new assets/img/DiamondIcon.png"},                    
                     {id:"bg", src:"assets/new assets/img/background long.jpg"},                    
                     {id:"ohlookdiamonds", src:"assets/new assets/img/ohlookdiamonds.png"},                    
-                    {id:"bgParallax", src:"assets/new assets/img/background parallax.png"},                    
-                    {id:"bgParallax 3", src:"assets/new assets/img/background parallax 4.png"},                    
-                    {id:"bgParallax 2", src:"assets/new assets/img/background parallax 3.png"},                    
+                    {id:"bgParallax 0", src:"assets/new assets/img/background parallax.png"},                    
+                    {id:"bgParallax 2", src:"assets/new assets/img/background parallax 4.png"},                    
+                    {id:"bgParallax 1", src:"assets/new assets/img/background parallax 3.png"},                    
                     {id:"onlookers", src:"assets/new assets/sprites/onlookers.png"},                    
                     {id:"cloud1", src:"assets/new assets/img/cloud 1.png"},
                     {id:"cloud2", src:"assets/new assets/img/cloud 2.png"},
@@ -685,11 +686,11 @@ var RocketShip = (function(){
         diCont.x = 0;
         diCont.y = 0;
         
-        var bgParallax = new createjs.Bitmap(queue.getResult("bgParallax"));
+        var bgParallax = new createjs.Bitmap(queue.getResult("bgParallax 0"));
         bgParallax.x=0;
         bgParallax.y=-200;
         
-        var bgParallax2 = new createjs.Bitmap(queue.getResult("bgParallax"));
+        var bgParallax2 = new createjs.Bitmap(queue.getResult("bgParallax 0"));
         bgParallax2.x=2460;
         bgParallax2.y=-200;
         parallaxCont.addChild(bgParallax,bgParallax2);
@@ -1002,7 +1003,10 @@ var RocketShip = (function(){
                 }, 500);                
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
             }                                                
-                        
+            if(infiniteFuel && catzRocket.diamondFuel<10)
+            {
+                catzRocket.diamondFuel=10;
+            }
             catzRocket.update(grav,wind,event);
             updateVertices();
             updateDirector(event);
@@ -1280,20 +1284,35 @@ var RocketShip = (function(){
                 .to({x:-10, y:10},50)
                 .to({x:10, y:-10},50)
                 .to({x:0, y:0},50);
-                console.log("lightning");
             }
         }
     }
     
+    function setParallax(int)
+    {
+        parallaxCont.removeAllChildren();
+        var name="bgParallax "+int;
+        var bgParallax = new createjs.Bitmap(queue.getResult(name));
+        bgParallax.x=0;
+        bgParallax.y=-200;
+        
+        var bgParallax2 = new createjs.Bitmap(queue.getResult(name));
+        bgParallax2.x=2460;
+        bgParallax2.y=-200;
+        if(currentLevel===1)
+        {
+            bgParallax.y=100;
+            bgParallax2.y=100;
+        }
+        parallaxCont.addChild(bgParallax,bgParallax2);
+    }
+    
     function generateTrack()
     {
+        console.log("currentLevel "+currentLevel+" currentTrack "+currentTrack);
         var result = [];
         var displacementX = 800;
         var displacementY = currentDisplacement;
-        if(tracksJSON[currentLevel].length===currentTrack)
-        {
-            currentTrack=0;
-        }
         if(gameStats.Difficulty>=0)
         {
             for(j=0;j<tracksJSON[currentLevel][currentTrack].length;j++)
@@ -1326,6 +1345,17 @@ var RocketShip = (function(){
             if(diCont.getNumChildren()===0)
             {
                 onTrack =false;
+                //lägg till vägskylt här
+                if(tracksJSON[currentLevel].length===currentTrack)
+                {
+                    currentTrack=0;
+                    currentLevel++;
+                    if(tracksJSON.length===currentLevel)
+                    {
+                        currentLevel=0;
+                    }
+                    setParallax(currentLevel);
+                }
             }
         }
         else
@@ -2110,7 +2140,7 @@ var RocketShip = (function(){
     }
     
     function crash()
-    {                
+    {       
         catzRocket.diamondFuel = 2;        
         currentTrack=0;
         currentLevel=0;
@@ -2121,6 +2151,7 @@ var RocketShip = (function(){
         attackBirdCont.removeAllChildren();
         diCont.removeAllChildren();
         onlookerCont.removeAllChildren();
+        setParallax(currentLevel);
         directorState=directorStateEnum.Normal;        
         noWind();
         catzRocket.silouette.alpha=0;
