@@ -16,7 +16,7 @@ var RocketShip = (function(){
     cloudIsIn = new Array(),
     rocketShip={},
     canvas,
-    godMode = true,
+    godMode = false,
     infiniteFuel = false,
     trustFund = true,
     debugMode = false,
@@ -104,7 +104,7 @@ var RocketShip = (function(){
     progressBar,    
     diamondSound,        
     gameStats = {
-        score : 1000,
+        score : 0,
         kills : 0,
         bust : 0,
         currentRound: 0,        
@@ -1365,7 +1365,7 @@ var RocketShip = (function(){
         else
         {
             trackTimer+=event.delta;
-            if (trackTimer>5000)
+            if (trackTimer>1000)
             {
                 trackTimer=0;
                 onTrack=true;

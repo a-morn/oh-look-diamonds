@@ -1,7 +1,21 @@
 var TrackParts = {
     "easy" : 
             { 
-                //horizontal line
+                "w1lvl1":
+                [
+                    {"x":0,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    
+                    {"x":2000,"y":150,"type":"diamond","animation":"cycle","graphicType":"sprite"},                    
+                    {"x":2000,"y":50,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":4000,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":4000,"y":130,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":6000,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},                    
+                    {"x":6000,"y":-130,"type":"diamond","animation":"cycle","graphicType":"sprite"},                    
+                    {"x":8000,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":8000,"y":120,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":10000,"y":0,"type":"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":10000,"y":-110,"type":"diamond","animation":"cycle","graphicType":"sprite"}
+                ],
+                
                 "horizontalLine":
                 [
                     {"x":50,"y":0,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
@@ -128,7 +142,7 @@ var TrackParts = {
                     {"x":	2400	, "y":	-142.7761318	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	2550	, "y":	-121.5908193	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	2700	, "y":	-88.5153157	,type:"diamond","animation":"cycle","graphicType":"sprite"},
-                    {"x":	2850	, "y":	-46.78402679	,type:"diamond","animation":"cycle","graphicType":"sprite"},
+                    {"x":	2850	, "y":	-46.78402679	,type:"diamond","animation":"cycle","graphicType":"sprite"}
 
                 ],
                 

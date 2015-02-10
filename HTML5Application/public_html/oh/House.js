@@ -521,8 +521,9 @@ var House = (function(){
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
-        house.characterExclamation.alpha=0;
+        house.characterExclamation.alpha=0;        
         house.gotoHouseView(gameStats, diamondCounterText);
+        $("#mahCanvas").removeClass("match-cursor");
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");

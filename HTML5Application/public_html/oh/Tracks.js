@@ -1,35 +1,47 @@
 
 var Tracks = 
 [
-    //world 1
+    //world 1    
     [
         //level 1
-        [            {"difficulty":"easy", "name":"smallDiamond"}]
+        
+        //Learn fuel management
+        [           
+             
+            {"difficulty":"easy", "name":"w1lvl1"}           
+        ],
+        
+        //Learn loop
+        [
+            {"difficulty":"easy", "name":"loop"}
+        ]
     
     ],
     
     //world 2
     [        
-        //level 2
+        //Learn birds 
+        //level 1
         [
         {"difficulty":"hard", "name":"seagull"},
         {"difficulty":"easy", "name":"horizontalLine"},
         {"difficulty":"easy", "name":"downSlope"},
-        {"difficulty":"easy", "name":"horizontalLine"},
-        {"difficulty":"hard", "name":"thunder"}
+        {"difficulty":"easy", "name":"horizontalLine"}        
         ],
         
-        //level 3
+        //Learn clouds 
+        //level 2
         [
             {"difficulty":"hard", "name":"dualDucks"},
             {"difficulty":"easy", "name":"horizontalLine"},
             {"difficulty":"easy", "name":"upSlope"},
             {"difficulty":"easy", "name":"loop"},
             {"difficulty":"hard", "name":"thunder"}
-        ],
+        ]
     ],
     
     //world 3
+    //Impossible witout support from kittens.
     [   
         //level 4
         [
