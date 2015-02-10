@@ -350,9 +350,9 @@ var House = (function(){
                 else
                 {
                     //END DIALOG
-                    if(!gameStats.hoboCatHouse.built){
-                        setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 1500);
-                    }
+                    
+                    setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 500);
+                    
                     //house.wickExclamation.alpha=1; Replaced by match-cursor
                     characterActive[currentCharacter] = false;
                     house.characterExclamation.alpha=0;                    
@@ -407,6 +407,7 @@ var House = (function(){
     
     house.highlightCharacter = function()
     {                       
+        $("#mahCanvas").addClass("talk-cursor");
         house.mouseChar[currentCharacter].alpha = 1;
         if(characterActive[currentCharacter])
         {
@@ -416,6 +417,7 @@ var House = (function(){
     
     house.downlightCharacter = function()
     {
+        $("#mahCanvas").removeClass("talk-cursor");
         house.mouseChar[currentCharacter].alpha = 0;
         
         if(characterActive[currentCharacter])

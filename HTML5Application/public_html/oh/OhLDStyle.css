@@ -20,10 +20,14 @@ a:link {
 a:visited {
     color: #ffffcc;
 }
-
-@media (max-width: 480px) {
+@media (max-width: 800px) {
     canvas {
         width: 100%;
+    }
+}
+@media (min-width: 801px) {
+    canvas {
+        width: 800px;
     }
 }
 
@@ -47,4 +51,8 @@ a:visited {
 
 .match-cursor {         
     cursor:url(assets/match.gif), auto;
+}
+
+.talk-cursor {         
+    cursor:url(assets/talkCursor.gif), auto;
 }
