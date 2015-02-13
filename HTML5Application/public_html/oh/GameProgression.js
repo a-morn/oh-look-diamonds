@@ -1,18 +1,28 @@
 var gameProgressionJSON = {"hoboCat": 
     [
-        {"Conditions":[{"ConditionType": "Score","Score": 0, "OperatorType": "LargerThan"}],        
+
+        {"Conditions":[{"ConditionType": "Score","Score": 20, "OperatorType": "LargerThan"},
+            {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
-        "ConversationNumber": 1
+        "ConversationNumber": "20Diamonds"
         },
+        
+        {"Conditions":[{"ConditionType": "Score","Score": 0, "OperatorType": "LargerThan"},
+            {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],        
+        "HasHappend":false,
+        "ShouldReoccur":false,
+        "Chance":1,
+        "ConversationNumber": "aDiamond"
+        },                
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
                 {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],        
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":1,
-        "ConversationNumber": 2
+        "ConversationNumber": "hoboCatHouseBuilt"
         },
 
         
@@ -23,7 +33,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.2,
-        "ConversationNumber": 3
+        "ConversationNumber": "orphanage"
         },
                 
         
@@ -34,7 +44,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.2,
-        "ConversationNumber": 4
+        "ConversationNumber": "rehab"
         },                
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -44,7 +54,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.2,
-        "ConversationNumber": 5
+        "ConversationNumber": "school"
         },                
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -55,7 +65,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":0.3,
-        "ConversationNumber": 6
+        "ConversationNumber": "hospital"
         },
         
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -66,7 +76,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":false,
         "Chance":0.3,
-        "ConversationNumber": 7
+        "ConversationNumber": "psyciatricWing"
         }
     ],
     "timmy": [
@@ -77,7 +87,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.3,
-        "ConversationNumber": 0
+        "ConversationNumber": "youthCenter"
     },
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":true},
@@ -87,7 +97,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.3,
-        "ConversationNumber": 1
+        "ConversationNumber": "summerCamp"
         },
     
     {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
@@ -96,7 +106,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.3,
-        "ConversationNumber": 2
+        "ConversationNumber": "rocketUniversity"
         }
     ],
     "priest": [
@@ -108,7 +118,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.3,
-        "ConversationNumber": 0
+        "ConversationNumber": "monestary"
         }
     ]
 };

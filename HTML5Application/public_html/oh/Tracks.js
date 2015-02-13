@@ -6,8 +6,7 @@ var Tracks =
         //level 1
         
         //Learn fuel management
-        [           
-             
+        [                        
             {"difficulty":"easy", "name":"w1lvl1"}           
         ],
         
