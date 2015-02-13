@@ -144,6 +144,7 @@ var House = (function(){
                     else {
                         house.hobo.alpha = 1;
                         currentCharacter = "hoboCat";
+                        $("#mahCanvas").addClass("match-cursor");
                     }
                 }
             }                        
@@ -350,9 +351,9 @@ var House = (function(){
                 else
                 {
                     //END DIALOG
-                    if(!gameStats.hoboCatHouse.built){
-                        setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 1500);
-                    }
+                    
+                    setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 500);
+                    
                     //house.wickExclamation.alpha=1; Replaced by match-cursor
                     characterActive[currentCharacter] = false;
                     house.characterExclamation.alpha=0;                    
@@ -365,7 +366,7 @@ var House = (function(){
                     }
                     createjs.Tween.removeAllTweens(house.wick);
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
-                            .call(function () {house.activateWick(gotoGameView)});
+                            .call(function () {house.activateWick(gotoGameView);});
                     //To shift to idle speach. Should be implemented smarter.
                     characterdialogID[currentCharacter]+=100;                
                 }                
@@ -386,7 +387,7 @@ var House = (function(){
         createjs.Tween.removeAllTweens(house.houseView);
         house.houseView.x=0;
         house.houseView.y=0;
-    }
+    };
     
     house.lightFuse = function(gotoGameView)
     {        
@@ -407,6 +408,7 @@ var House = (function(){
     
     house.highlightCharacter = function()
     {                       
+        $("#mahCanvas").addClass("talk-cursor");
         house.mouseChar[currentCharacter].alpha = 1;
         if(characterActive[currentCharacter])
         {
@@ -416,6 +418,7 @@ var House = (function(){
     
     house.downlightCharacter = function()
     {
+        $("#mahCanvas").removeClass("talk-cursor");
         house.mouseChar[currentCharacter].alpha = 0;
         
         if(characterActive[currentCharacter])
@@ -487,23 +490,40 @@ var House = (function(){
     };
     
     house.addHouseEvents = function()
-    {                
-        house.rehab.addEventListener("mouseover",(function(){house.houseInfo("rehab");}));
-        house.orphanage.addEventListener("mouseover",(function(){house.houseInfo("orphanage");}));
-        house.university.addEventListener("mouseover",(function(){house.houseInfo("university");}));
+    {                        
+        house.rehab.addEventListener("click",(function(){house.houseInfoOpen("rehab");}));
+        house.orphanage.addEventListener("click",(function(){house.houseInfoOpen("orphanage");}));
+        house.university.addEventListener("click",(function(){house.houseInfoOpen("university");}));
+        
+        house.rehab.addEventListener("mouseover",(function(){house.houseInfoHighlight("rehab");}));
+        house.orphanage.addEventListener("mouseover",(function(){house.houseInfoHighlight("orphanage");}));
+        house.university.addEventListener("mouseover",(function(){house.houseInfoHighlight("university");}));
+        
+        house.rehab.addEventListener("mouseout",(function(){house.houseInfoDownlight("rehab");}));
+        house.orphanage.addEventListener("mouseout",(function(){house.houseInfoDownlight("orphanage");}));
+        house.university.addEventListener("mouseout",(function(){house.houseInfoDownlight("university");}));
     };
     
-    house.houseInfo = function(houseName){
+    house.houseInfoOpen = function(houseName){
         house.houseInfo["rehab"].alpha = 0;
         house.houseInfo["orphanage"].alpha = 0;
         house.houseInfo["university"].alpha = 0;
-        house.houseInfo[houseName].alpha = 1;
+        house.houseInfo[houseName].alpha = 1;                
+    };
+    
+    house.houseInfoHighlight = function(houseName){        
+        $("#mahCanvas").addClass("house-cursor");
+    };
+    
+    house.houseInfoDownlight = function(houseName){        
+        $("#mahCanvas").removeClass("house-cursor");
     };
     
     house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
-        house.characterExclamation.alpha=0;
+        house.characterExclamation.alpha=0;        
         house.gotoHouseView(gameStats, diamondCounterText);
+        $("#mahCanvas").removeClass("match-cursor");
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
