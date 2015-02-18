@@ -65,7 +65,7 @@ var House = (function(){
         startGameStats,                
         priestDialogNumber = 0,
         timmyDialogNumber = 0,
-        hoboDialogNumber = 0,
+        hoboDialogNumber = "goodEvening",
         
         characterDialogNumber = {},
         gameStats,
@@ -519,7 +519,7 @@ var House = (function(){
         $("#mahCanvas").removeClass("house-cursor");
     };
     
-    house.gotoHouseViewNormal = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
+    house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
         house.characterExclamation.alpha=0;        
         house.gotoHouseView(gameStats, diamondCounterText);
@@ -667,7 +667,7 @@ var House = (function(){
         createjs.Tween.get(house.houseView, {loop:true})
             .to({x:-5, y:5},50)
             .to({x:5, y:-5},50);
-    }
+    };
     
     house.AnimateUpkeep = function(gameStats)
     {

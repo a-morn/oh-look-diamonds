@@ -18,7 +18,7 @@ var RocketShip = (function(){
     canvas,
     godMode = false,
     infiniteFuel = false,
-    trustFund = true,
+    trustFund = false,
     debugMode = false,
     muteButton,
     catzBounds,
@@ -244,7 +244,7 @@ var RocketShip = (function(){
         createGameView();
         stage.addChild(bg,starCont);
         stage.enableMouseOver();
-        house.gotoHouseViewNormal(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
+        house.gotoHouseViewFirstTime(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
             muteButton, gameListener, rocketSong, gotoGameView);
         houseListener = createjs.Ticker.on("tick", houseTick,this);
         stage.removeChild(progressBar);        
@@ -1020,7 +1020,7 @@ var RocketShip = (function(){
             updateFgTop(event);
             updateParallax(event);
             updateDiamonds(event);
-            updateScatterDiamonds(event);
+            //updateScatterDiamonds(event);
             updatePointer(event);
             updateClouds(event);
             updateWorldContainer();
