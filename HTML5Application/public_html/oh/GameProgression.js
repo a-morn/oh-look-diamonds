@@ -118,7 +118,7 @@ var gameProgressionJSON = {"hoboCat":
         "HasHappend":false,
         "ShouldReoccur":true,
         "Chance":0.3,
-        "ConversationNumber": "monestary"
+        "ConversationNumber": "monastary"
         }
     ]
 };

@@ -159,7 +159,7 @@ that fancy new garden"}},
 
 "priest": {
    
-    "monestary":
+    "monastary":
     {"dialog":[{"Who": "Priest", "What": "I see you have a home for\n\
 cats a stray from the flock.", "Choice":false, "NextID":1, "End":false},
                 {"Who": "Priest", "What": "When they turned to katnip\n\
