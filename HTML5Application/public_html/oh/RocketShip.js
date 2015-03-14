@@ -84,10 +84,10 @@ var RocketShip = (function(){
         "hawk" : hawkCont,
         "thunderCloud" : thunderCont
     },
-    diSpeed = 25,    
-    cloudSpeed = 25,
-    fgSpeed = 14,
-    parallaxSpeed = 0.2,    
+    diSpeed,    
+    cloudSpeed,
+    fgSpeed,
+    parallaxSpeed,    
     bg,
     queue,
     manifest,    
@@ -969,7 +969,7 @@ var RocketShip = (function(){
             {
                 mult=2;
             }
-            diSpeed = (0.4+0.4* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
+            diSpeed = (0.3+0.3* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
             cloudSpeed = (12.5+12.5* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
             fgSpeed = (7+7* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                  
             parallaxSpeed = (0.3+0.3* Math.cos((catzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                    
@@ -1315,8 +1315,7 @@ var RocketShip = (function(){
     function generateTrack()
     {
         var result = [];
-        var displacementX = 800;
-        var displacementY = currentDisplacement;
+        var displacementX = 800;        
         if(gameStats.Difficulty>=0)
         {
             for(j=0;j<tracksJSON[currentLevel][currentTrack].length;j++)
@@ -1325,16 +1324,14 @@ var RocketShip = (function(){
                  for (i=0;i<element.length;i++)
                 {
                     element[i].x+=displacementX;
-                    element[i].y+=displacementY;
+                    element[i].y;
                     if(i===element.length-1 && element[i].graphicType!=="attackBird")
                     {
-                        displacementX = element[i].x;
-                        displacementY = element[i].y;
+                        displacementX = element[i].x;                        
                     }
                 }
                 result = result.concat(element);                
-            }
-            currentDisplacement=result[result.length-1].y;
+            }            
             currentTrack+=1;
             return result;
         }
@@ -1523,7 +1520,7 @@ var RocketShip = (function(){
                 if(kid.currentAnimation==="cycle")
                 {
                     gameStats.score += 1;
-                    catzRocket.frenzyCount+=7.5;
+                    catzRocket.frenzyCount+=5;
                     arrayLength = arrayLength - 1;
                 }
                 else if(kid.currentAnimation==="mediumCycle")
@@ -2147,8 +2144,7 @@ var RocketShip = (function(){
     {  
         catzRocket.diamondFuel = 2;        
         currentTrack=0;
-        currentLevel=0;
-        currentDisplacement =0;
+        currentLevel=0;        
         catzRocket.rocket.x=0;
         catzRocket.rocket.alpha=1;
         lightningCont.removeAllChildren();

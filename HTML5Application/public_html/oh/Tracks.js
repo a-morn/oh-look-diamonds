@@ -4,15 +4,15 @@ var Tracks =
     //world 1    
     [
         //level 1
-        
+        //No frenzy
         //Learn fuel management
         [                        
-            {"difficulty":"easy", "name":"w1lvl1"}           
+            {"difficulty":"easy", "name":"w1lvl1"}, 			
         ],
         
         //Learn loop
         [
-            {"difficulty":"easy", "name":"loop"}
+			{"difficulty":"easy", "name":"w1lvl2"}       
         ]
     
     ],
