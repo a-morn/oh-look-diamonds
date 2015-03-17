@@ -178,6 +178,8 @@ var RocketShip = (function(){
                     {id:"klonk2", src:"assets/new assets/sound/klonk2.mp3"},
                     {id:"klonk3", src:"assets/new assets/sound/klonk3.mp3"},
                     {id:"klonk4", src:"assets/new assets/sound/klonk4.mp3"},
+                    {id:"mobHill1", src:"assets/new assets/img/mob hill.png"},
+                    {id:"mobHill2", src:"assets/new assets/img/mob hill 2.png"},
                     {id:"lightningBolt", src:"assets/new assets/sound/lightning_bolt.mp3"},
                     {id:"thunder", src:"assets/new assets/sound/thunder.mp3"},
                     {id:"crickets", src:"assets/new assets/sound/crickets.mp3"},
@@ -613,8 +615,8 @@ var RocketShip = (function(){
         bg.y=0;
         starCont.y=1000;
         bg.addEventListener("click",showOh);
-        house.houseView.addChild(house.diamondHouseCont, house.crashRocket, house.catz, house.wick, house.house, 
-            house.hobo, house.timmy, house.priest, house.characterExclamation, 
+        house.houseView.addChild(house.diamondHouseCont, house.crashRocket, house.catz, 
+        house.wick, house.house, house.hobo, house.timmy, house.priest, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, 
             house.mousePriest, house.mouseRocket, house.wickLight,house.oh, 
@@ -1008,9 +1010,9 @@ var RocketShip = (function(){
                 }, 500);                
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
             }                                                
-            if(infiniteFuel && catzRocket.diamondFuel<10)
+            if(infiniteFuel && catzRocket.diamondFuel<1)
             {
-                catzRocket.diamondFuel=10;
+                catzRocket.diamondFuel=1;
             }
             catzRocket.update(grav,wind,event);
             updateVertices();
@@ -1033,17 +1035,8 @@ var RocketShip = (function(){
             }
             debugText.text = 
                 "rotation "+catzRocket.catzRocketContainer.rotation
-                +"\nvelocity "+catzRocket.catzVelocity
-                +"\nstate "+catzRocket.catzState
-                +"\nwind"+wind
-                +"\ndirectorState"+directorState
-                +"\ndirectorTimer"+directorTimer
-                +"\nflameFrame"+catzRocket.rocketFlame.currentFrame
-                + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
-                + "\nBuilding orphanage "+ gameStats.BuildOrphanage
-                + "\nonTrack: " + onTrack
-                + "\nFrenzy: " + catzRocket.frenzyCount
-                + "\nFrenzyTimer: " + catzRocket.frenzyTimer
+                +"\n\nvelocity "+catzRocket.catzVelocity
+                +"\nfuel  "+catzRocket.diamondFuel
                 + "\nfrenzyReady: " + catzRocket.frenzyReady
                 + "\nHoboDialogNo: " + house.hoboDialogNumber
                 +"\n\ncurrentDisplacement: "+currentDisplacement
@@ -1387,7 +1380,7 @@ var RocketShip = (function(){
                     }
                     else if(track[i].graphicType==="attackBird")
                     {
-                        spawnAttackBird(track[i].animation,track[i].acc,track[i].x,track[i].y+catzRocket.catzRocketContainer.y);
+                        spawnAttackBird(track[i].animation,track[i].x,track[i].y+catzRocket.catzRocketContainer.y);
                     }
                 }
             }
@@ -1462,10 +1455,9 @@ var RocketShip = (function(){
                 oCont.y= 180;
                 onlooker.x=30;
                 onlooker.y=0;
-            
-                var hill = new createjs.Shape();
-                hill.graphics.beginFill("#505050").drawRect(0, 95, 200, 300);
-            
+                var variant = "MobHill"+Math.floor(Math.random()*2+1);
+                var hill = new createjs.Bitmap(queue.getResult(variant));
+                hill.y=95;
                 oCont.addChild(onlooker, hill);
                 onlookerCont.addChild(oCont);
             }
@@ -1537,7 +1529,7 @@ var RocketShip = (function(){
                 }
 
                 diamondSound.play();
-                catzRocket.diamondFuel +=1;
+                catzRocket.pickupDiamond();
                 diCont.removeChildAt(i);
             }
         }   
@@ -1670,10 +1662,10 @@ var RocketShip = (function(){
         sgCont.addChild(seagull);
     }
     
-    function spawnAttackBird(type,acc,x,y)
+    function spawnAttackBird(type,x,y)
     {
         
-        var attackBird = new AttackBird(acc,seagullSheet,type);
+        var attackBird = new AttackBird(seagullSheet,type);
         attackBird.x = x;
         attackBird.y = y;
         if(type==="duck")
@@ -2046,15 +2038,15 @@ var RocketShip = (function(){
             var reflect = -2.5*(normX*bird.velocityX+normY*bird.velocityY);
             bird.velocityX+=reflect*normX;
             bird.velocityY+=reflect*normY;
-            if(isGround)
-            {
-                catzRocket.catzVelocity-=reflect*normY/250;
+//            if(isGround)
+//            {
+                catzRocket.catzVelocity-=bird.weight*reflect*normY/150;
+                catzRocket.catzRocketContainer.y-=bird.weight*reflect*normY/400;
                 var rand = Math.floor(2*Math.random()+3);
                 var name = "klonk"+rand;
                 var instance = createjs.Sound.play(name);
                 instance.volume=0.15;
-            }
-
+//             }
             if(squawkSound.playState !== createjs.Sound.PLAY_SUCCEEDED)
             {
                 rand = Math.floor(3*Math.random()+1);
@@ -2212,7 +2204,7 @@ var RocketShip = (function(){
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
             .call((function(){house.activateWick(gotoGameView);}));
-        stage.update();        
+        stage.update();     
     }
     return rocketShip;
 }());
