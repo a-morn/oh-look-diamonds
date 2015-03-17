@@ -3,6 +3,7 @@ var CatzRocket = (function(){
     catzRocketContainer: null,
     silouette: null,    
     diamondFuel: 2,
+    maxDiamondFuel: 10,
     isWounded: false,
     isHit : false,
     isCrashed : false,
@@ -237,9 +238,18 @@ var CatzRocket = (function(){
             catzRocket.isCrashed = true;
         }
         catzRocket.diamondFuel-=catzRocket.fuelConsumption[catzRocket.catzState]*event.delta/1000;
+        catzRocket.diamondFuel=Math.max(catzRocket.diamondFuel,0);
         updateFrenzy(event);
         updateRocketSnake();
     };
+
+    catzRocket.pickupDiamond = function()
+    {
+        if(catzRocket.diamondFuel<10 && catzRocket.catzState!=catzStateEnum.Frenzy)
+        {
+            catzRocket.diamondFuel+=1;
+        }
+    }
     
     function updateFrenzy (event)
     {
@@ -290,20 +300,14 @@ var CatzRocket = (function(){
         else if (!catzRocket.hasFrenzy()
                 && catzRocket.frenzyCount>0)
         {
-            if (catzRocket.frenzyCount>100 && 
-                    catzRocket.catzState!==catzStateEnum.FellOffRocket)
+            if (catzRocket.diamondFuel>=catzRocket.maxDiamondFuel)
             {
+                catzRocket.diamondFuel = catzRocket.maxDiamondFuel/2;
                 catzRocket.catz.gotoAndPlay("frenzy ready");
                 catzRocket.rocket.alpha=0;
                 catzRocket.frenzyReady=true;
                 catzRocket.isWounded=false;
                 catzRocket.frenzyTimer= 0;
-            }
-            catzRocket.frenzyTimer+=event.delta;
-            if(catzRocket.frenzyTimer>2000)
-            {
-                catzRocket.frenzyCount=0;
-                catzRocket.frenzyTimer=0;
             }
         }
     };

@@ -1,5 +1,5 @@
-function AttackBird(acc,sheet,current) {
-    this.initialize(acc,sheet,current);
+function AttackBird(sheet,current) {
+    this.initialize(sheet,current);
 }
 //inheritance
 AttackBird.prototype = new createjs.Sprite();
@@ -10,14 +10,27 @@ AttackBird.prototype.state = "normal";
 AttackBird.prototype.velocityX = 0;
 AttackBird.prototype.velocityY = 0;
 AttackBird.prototype.acceleration = 3;
+AttackBird.prototype.topSpeed2 = 3;
 AttackBird.prototype.rad = 25;
 AttackBird.prototype.shape = new createjs.Shape();
 AttackBird.prototype.temperature = 0;
-
+AttackBird.prototype.weight = 0;
+AttackBird.prototype.BirdProperties = {
+                    "chicken":  {acceleration: 0,  topSpeed2: 100000, weight: 0.2},
+                    "falcon":   {acceleration: 8, topSpeed2: 100000, weight:0.3}, 
+                    "crow":     {acceleration: 5,  topSpeed2: 100000, weight:0.5}, 
+                    "bat":      {acceleration: 7,  topSpeed2: 100000, weight:0.1}, 
+                    "duck":     {acceleration: 5, topSpeed2: 100000, weight:0.2}, 
+                    "seagull":  {acceleration: 3, topSpeed2: 100000, weight:0.1}, 
+                    "glasses":  {acceleration: 11, topSpeed2: 100000, weight:1}
+                };
+               
 //constructor
-AttackBird.prototype.initialize = function (acc,sheet,current) {
+AttackBird.prototype.initialize = function (sheet,current) {
     this.BirdInit(sheet,current);
-    this.acceleration = acc;
+    this.topSpeed2 = this.BirdProperties[current].topSpeed2;
+    this.weight = this.BirdProperties[current].weight;
+    this.acceleration = this.BirdProperties[current].acceleration;
     this.falconTimer=0;
     this.target=0;
     this.shape = new createjs.Shape();
@@ -57,11 +70,10 @@ AttackBird.prototype.updateDuck = function(rocketX,rocketY,event) {
     }
     this.velocityY += aY;
     //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
-    var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
-    if(speed2>maxSpeed2){
-        this.velocityX=this.velocityX*maxSpeed2/speed2;
-        this.velocityY= this.velocityY*maxSpeed2/speed2;      
+    if(speed2>this.topSpeed2){
+        this.velocityX=this.velocityX*this.topSpeed2/speed2;
+        this.velocityY= this.velocityY*this.topSpeed2/speed2;      
     }
 };
 
@@ -106,12 +118,11 @@ AttackBird.prototype.updateFalcon = function(rocketX, rocketY, event){
     this.velocityX+=aX;
     this.velocityY += aY;
     //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
-    var maxSpeed2=100000;
     var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;
-    if(speed2>maxSpeed2)
+    if(speed2>this.topSpeed2)
     {
-        this.velocityX=this.velocityX*maxSpeed2/speed2;
-        this.velocityY= this.velocityY*maxSpeed2/speed2;      
+        this.velocityX=this.velocityX*this.topSpeed2/speed2;
+        this.velocityY= this.velocityY*this.topSpeed2/speed2;      
     }
 };
 
@@ -130,9 +141,9 @@ AttackBird.prototype.updateSeagull = function(rocketX, rocketY, event){
     this.velocityX+=aX;
     this.velocityY += aY;
     //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;
-    if(speed2>maxSpeed2){
-        this.velocityX=this.velocityX*maxSpeed2/speed2;
-        this.velocityY= this.velocityY*maxSpeed2/speed2;      
+    if(speed2>this.topSpeed2){
+        this.velocityX=this.velocityX*this.topSpeed2/speed2;
+        this.velocityY= this.velocityY*this.topSpeed2/speed2;      
     }
 };
 

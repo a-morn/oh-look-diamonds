@@ -6,6 +6,7 @@ var House = (function(){
         hobo: null,
         timmy: null,
         priest: null,
+        diamondHill: null,
         subtractedDiamond: null,
         subtractedDiamondCont:null,
         currentCharacter: "hoboCat",

@@ -3,65 +3,130 @@
 	{
 		"selected_items":
 		[
+			[
+				"ca",
+				"catzState"
+			],
+			[
+				"catz",
+				"catzRocket"
+			],
+			[
+				"m",
+				"maxDiamondFuel"
+			],
+			[
+				"fuel",
+				"diamondFuel"
+			],
+			[
+				"B",
+				"BirdProperties"
+			],
+			[
+				"pr",
+				"prototype"
+			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "HTML5Application/public_html/index.html",
+			"file": "HTML5Application/public_html/oh/GameProgression.js",
 			"settings":
 			{
-				"buffer_size": 343,
+				"buffer_size": 5612,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "ohlookdiamonds.sublime-project",
+			"file": "HTML5Application/public_html/oh/Tracks.js",
 			"settings":
 			{
-				"buffer_size": 91,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
-			"settings":
-			{
-				"buffer_size": 855,
+				"buffer_size": 4313,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/index.html",
+			"file": "HTML5Application/public_html/oh/TrackParts.js",
 			"settings":
 			{
-				"buffer_size": 772,
+				"buffer_size": 20445,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Web Inspector/swi.sublime-settings",
+			"contents": "Searching 89 files for \", \"acc\": 5\" (regex)\n\n0 matches across 0 files\n",
 			"settings":
 			{
-				"buffer_size": 849,
+				"buffer_size": 70,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"contents": "function AttackBird(sheet,current) {\n    this.initialize(sheet,current);\n}\n//inheritance\nAttackBird.prototype = new createjs.Sprite();\nAttackBird.prototype.BirdInit = AttackBird.prototype.initialize;\n\n//props\nAttackBird.prototype.state = \"normal\";\nAttackBird.prototype.velocityX = 0;\nAttackBird.prototype.velocityY = 0;\nAttackBird.prototype.acceleration = 3;\nAttackBird.prototype.topSpeed2 = 3;\nAttackBird.prototype.rad = 25;\nAttackBird.prototype.shape = new createjs.Shape();\nAttackBird.prototype.temperature = 0;\nAttackBird.prototype.weight = 0;\nAttackBird.prototype.BirdProperties = {\n                    \"chicken\":  {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\": 1},\n                    \"falcon\":   {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"crow\":     {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"bat\":      {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"duck\":     {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"seagull\":  {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"glasses\":  {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}\n                };\n               \n//constructor\nAttackBird.prototype.initialize = function (sheet,current) {\n    this.BirdInit(sheet,current);\n    this.topSpeed2 = BirdProperties[sheet].topSpeed2;\n    this.weight = BirdProperties[sheet].weight;\n    this.acceleration = this.BirdProperties[sheet].acceleration;\n    this.falconTimer=0;\n    this.target=0;\n    this.shape = new createjs.Shape();\n    this.shape.graphics.beginFill(\"red\").dc(0, 0, this.rad);\n    this.scaleX = 0.5;\n    this.scaleY = 0.5;\n};\n\nAttackBird.prototype.update = function (rocketX, rocketY, event) {\n    if(this.currentAnimation===\"falcon\"){\n        this.updateFalcon(rocketX, rocketY,event);\n    }\n    else if(this.currentAnimation===\"duck\"){\n        this.updateDuck(rocketX,rocketY,event);\n    }\n    else{\n        this.updateSeagull(rocketX,rocketY,event);\n    }\n};\n\nAttackBird.prototype.updateDuck = function(rocketX,rocketY,event) {\n    if(this.state===\"normal\"){\n        this.velocityX=-300;\n        var aY=0;\n        if(this.x<650){\n            this.state=\"attacking\";\n            this.target=rocketY;\n        }\n    }\n    else if(this.state===\"attacking\"){\n        this.velocityX=-250;\n        aY=this.acceleration*event.delta*(rocketY-this.y)/(1000);\n    }\n    else if(this.state===\"grilled\"){\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;\n    }\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(speed2>topSpeed2){\n        this.velocityX=this.velocityX*topSpeed2/speed2;\n        this.velocityY= this.velocityY*topSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateFalcon = function(rocketX, rocketY, event){\n    if(this.state===\"normal\"){\n        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        var aY = this.acceleration*event.delta*(rocketY-350-this.y)/(1000);\n        if(rocketY-250-this.y>0){\n            this.rotation=-20;\n            this.state=\"soaring\";\n            this.falconTimer=3000;\n            aX =0;\n            aY =0;\n        }\n    }\n    else if(this.state===\"attacking\"){\n        aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n        this.rotation = Math.atan(aY/60)*270/3.14;\n        if(this.y-(rocketY)>0){\n            this.rotation=-30;\n            this.state=\"normal\";\n        }\n        \n    }\n    else if(this.state===\"soaring\"){\n        aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        aY = this.acceleration*event.delta*(rocketY-250-this.y)/(1000);\n        this.falconTimer-=event.delta;\n        if(this.falconTimer<0){\n            this.state=\"attacking\";\n            this.rotation=45;\n            this.velocityX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n            this.velocityY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n        }\n    }\n    else if(this.state===\"grilled\"){\n        aX=0;\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;  \n    }\n    this.velocityX+=aX;\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(speed2>topSpeed2)\n    {\n        this.velocityX=this.velocityX*topSpeed2/speed2;\n        this.velocityY= this.velocityY*topSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateSeagull = function(rocketX, rocketY, event){\n    var maxSpeed2=100000;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(this.state!==\"grilled\"){\n        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n    }\n    else{\n        aX=0;\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;\n    }\n    this.velocityX+=aX;\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    if(speed2>maxSpeed2){\n        this.velocityX=this.velocityX*maxSpeed2/speed2;\n        this.velocityY= this.velocityY*maxSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateCircle = function(){\n    this.shape.x=this.x;\n    this.shape.y=this.y;\n};\n\nAttackBird.prototype.setGrilled = function(){\n    this.velocityX = -10;\n    this.gotoAndPlay(\"chicken\");\n    this.state = \"grilled\";\n    var instance = createjs.Sound.play(\"grilled\");\n    instance.volume=1;\n};",
+			"file": "HTML5Application/public_html/oh/attackBirds.js",
+			"file_size": 5943,
+			"file_write_time": 130708166218249777,
+			"settings":
+			{
+				"buffer_size": 5804,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "Catz story mode.docx",
+			"settings":
+			{
+				"buffer_size": 43010,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
+			"file": "constellation.xlsx",
 			"settings":
 			{
-				"buffer_size": 474,
+				"buffer_size": 31832,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/CatzRocket.js",
+			"settings":
+			{
+				"buffer_size": 22431,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/RocketShip.js",
+			"settings":
+			{
+				"buffer_size": 85627,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/ApplicationControl.js",
+			"settings":
+			{
+				"buffer_size": 152,
+				"line_ending": "Windows"
 			}
 		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 81.0,
+		"height": 375.0,
 		"selected_items":
 		[
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
 			[
 				"insta",
 				"Package Control: Install Package"
@@ -83,7 +148,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 400.0
+		"width": 402.0
 	},
 	"console":
 	{
@@ -100,9 +165,13 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/ohlookdiamonds.sublime-project",
-		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
+		"/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Web Inspector/swi.sublime-settings",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/index.html",
+		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/ohlookdiamonds.sublime-project",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Node.sublime-build",
@@ -122,6 +191,7 @@
 		"height": 0.0,
 		"where_history":
 		[
+			""
 		]
 	},
 	"find_state":
@@ -129,14 +199,35 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"spawnAttackBird",
+			"AttackBird(",
+			"mediumDiamond",
+			"pick",
+			"infiniteFuel",
+			"debugtext",
+			"catzRocket.diamondFuel",
+			"diamondFuel",
+			"newBounds",
+			",\n",
+			", \"acc\": *",
+			", \"acc\": 5",
+			"catzState",
+			"catzStateEnum",
+			"catzRocketEnum",
+			"diamondFuel",
+			"diamondSheet",
+			"maxDiamondFuel",
+			"diamondFuel",
+			"frenzy",
 			"theme"
 		],
 		"highlight": true,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": false,
+		"regex": true,
 		"replace_history":
 		[
+			""
 		],
 		"reverse": false,
 		"show_context": true,
@@ -147,28 +238,30 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "HTML5Application/public_html/index.html",
+					"file": "HTML5Application/public_html/oh/GameProgression.js",
 					"settings":
 					{
-						"buffer_size": 343,
+						"buffer_size": 5612,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								343,
-								343
+								598,
+								598
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -178,10 +271,65 @@
 				},
 				{
 					"buffer": 1,
-					"file": "ohlookdiamonds.sublime-project",
+					"file": "HTML5Application/public_html/oh/Tracks.js",
 					"settings":
 					{
-						"buffer_size": 91,
+						"buffer_size": 4313,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1151,
+								1151
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 5.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "HTML5Application/public_html/oh/TrackParts.js",
+					"settings":
+					{
+						"buffer_size": 20445,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20241,
+								20241
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3039.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"settings":
+					{
+						"buffer_size": 70,
 						"regions":
 						{
 						},
@@ -194,7 +342,13 @@
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+							"detect_indentation": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -203,51 +357,24 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
+					"buffer": 4,
+					"file": "HTML5Application/public_html/oh/attackBirds.js",
 					"settings":
 					{
-						"buffer_size": 855,
+						"buffer_size": 5804,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								125,
-								125
+								9,
+								19
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "HTML5Application/public_html/oh/index.html",
-					"settings":
-					{
-						"buffer_size": 772,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								772,
-								772
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -258,38 +385,119 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Web Inspector/swi.sublime-settings",
+					"buffer": 5,
+					"file": "Catz story mode.docx",
 					"settings":
 					{
-						"buffer_size": 849,
+						"buffer_size": 43010,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								442,
-								442
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JSON.tmLanguage",
-							"translate_tabs_to_spaces": false
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
-						"translation.x": 30.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
+					"buffer": 6,
+					"file": "constellation.xlsx",
 					"settings":
 					{
-						"buffer_size": 474,
+						"buffer_size": 31832,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "HTML5Application/public_html/oh/CatzRocket.js",
+					"settings":
+					{
+						"buffer_size": 22431,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								9319,
+								9321
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2649.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "HTML5Application/public_html/oh/RocketShip.js",
+					"settings":
+					{
+						"buffer_size": 85627,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								84568,
+								84568
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 29953.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "HTML5Application/public_html/oh/ApplicationControl.js",
+					"settings":
+					{
+						"buffer_size": 152,
 						"regions":
 						{
 						},
@@ -358,6 +566,46 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"r",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"roc",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"ca",
+				"HTML5Application/public_html/oh/CatzRocket.js"
+			],
+			[
+				"cat",
+				"HTML5Application/public_html/oh/CatzRocket.js"
+			],
+			[
+				"at",
+				"HTML5Application/public_html/oh/attackBirds.js"
+			],
+			[
+				"rock",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"ro",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"rocke",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"catzr",
+				"HTML5Application/public_html/oh/CatzRocket.js"
+			],
+			[
+				"",
+				"HTML5Application/public_html/oh/CatzRocket.js"
+			]
 		],
 		"width": 0.0
 	},
@@ -373,6 +621,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 254.0,
+	"side_bar_width": 277.0,
 	"status_bar_visible": true
 }

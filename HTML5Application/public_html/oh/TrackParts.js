@@ -303,52 +303,52 @@ var TrackParts = {
             {
                 "falcon":
                 [
-                    {"x":-500, "y":-400,type:"attackBird","animation":"falcon","graphicType":"attackBird", "acc": 8},
+                    {"x":-500, "y":-400,type:"attackBird","animation":"falcon","graphicType":"attackBird"},
                 ],
                 "crow":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird", "acc": 5}
+                    {"x":0, "y":0,type:"attackBird","animation":"crow","graphicType":"attackBird"}
                 ],
                 "dualCrows":
                 [
-                    {"x":10, "y":-200,type:"attackBird","animation":"crow","graphicType":"attackBird", "acc": 5},
-                    {"x":200, "y":-400,type:"attackBird","animation":"crow","graphicType":"attackBird", "acc": 7}
+                    {"x":10, "y":-200,type:"attackBird","animation":"crow","graphicType":"attackBird"},
+                    {"x":200, "y":-400,type:"attackBird","animation":"crow","graphicType":"attackBird"}
                 ],
                 "bat":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird", "acc": 7}
+                    {"x":0, "y":0,type:"attackBird","animation":"bat","graphicType":"attackBird"}
                 ],
                 
                 "tripleBats":
                 [
-                    {"x":-700, "y":400,type:"attackBird","animation":"bat","graphicType":"attackBird", "acc": 6},
-                    {"x":-800, "y":500,type:"attackBird","animation":"bat","graphicType":"attackBird", "acc": 8},
-                    {"x":-900, "y":700,type:"attackBird","animation":"bat","graphicType":"attackBird", "acc": 10}
+                    {"x":-700, "y":400,type:"attackBird","animation":"bat","graphicType":"attackBird"},
+                    {"x":-800, "y":500,type:"attackBird","animation":"bat","graphicType":"attackBird"},
+                    {"x":-900, "y":700,type:"attackBird","animation":"bat","graphicType":"attackBird"}
                 ],
                 
                 "duck":
                 [
-                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9}
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird"}
                 ],
                 "dualDucks":
                 [
-                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9},
-                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 9}
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird"}
                 ],
                 "quadDucks":
                 [
-                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
-                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
-                    {"x":0, "y":200,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8},
-                    {"x":0, "y":400,type:"attackBird","animation":"duck","graphicType":"attackBird", "acc": 8}
+                    {"x":0, "y":-200,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                    {"x":0, "y":-400,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                    {"x":0, "y":200,type:"attackBird","animation":"duck","graphicType":"attackBird"},
+                    {"x":0, "y":400,type:"attackBird","animation":"duck","graphicType":"attackBird"}
                 ],
                 "seagull":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird","acc": 3}
+                    {"x":0, "y":0,type:"attackBird","animation":"seagull","graphicType":"attackBird"}
                 ],
                 "glasses":
                 [
-                    {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird","acc": 11}
+                    {"x":0, "y":0,type:"attackBird","animation":"glasses","graphicType":"attackBird"}
                 ],
                 "thunder":
                 [
