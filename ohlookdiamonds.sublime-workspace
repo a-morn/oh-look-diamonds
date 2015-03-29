@@ -4,6 +4,22 @@
 		"selected_items":
 		[
 			[
+				"hoboHou",
+				"hoboCatHouse"
+			],
+			[
+				"o",
+				"orphanage"
+			],
+			[
+				"scale",
+				"scaleX"
+			],
+			[
+				"w",
+				"weight"
+			],
+			[
 				"ca",
 				"catzState"
 			],
@@ -35,7 +51,7 @@
 			"file": "HTML5Application/public_html/oh/GameProgression.js",
 			"settings":
 			{
-				"buffer_size": 5612,
+				"buffer_size": 6211,
 				"line_ending": "Windows"
 			}
 		},
@@ -43,7 +59,7 @@
 			"file": "HTML5Application/public_html/oh/Tracks.js",
 			"settings":
 			{
-				"buffer_size": 4313,
+				"buffer_size": 3403,
 				"line_ending": "Windows"
 			}
 		},
@@ -51,45 +67,24 @@
 			"file": "HTML5Application/public_html/oh/TrackParts.js",
 			"settings":
 			{
-				"buffer_size": 20445,
+				"buffer_size": 29459,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"contents": "Searching 89 files for \", \"acc\": 5\" (regex)\n\n0 matches across 0 files\n",
-			"settings":
-			{
-				"buffer_size": 70,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"contents": "function AttackBird(sheet,current) {\n    this.initialize(sheet,current);\n}\n//inheritance\nAttackBird.prototype = new createjs.Sprite();\nAttackBird.prototype.BirdInit = AttackBird.prototype.initialize;\n\n//props\nAttackBird.prototype.state = \"normal\";\nAttackBird.prototype.velocityX = 0;\nAttackBird.prototype.velocityY = 0;\nAttackBird.prototype.acceleration = 3;\nAttackBird.prototype.topSpeed2 = 3;\nAttackBird.prototype.rad = 25;\nAttackBird.prototype.shape = new createjs.Shape();\nAttackBird.prototype.temperature = 0;\nAttackBird.prototype.weight = 0;\nAttackBird.prototype.BirdProperties = {\n                    \"chicken\":  {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\": 1},\n                    \"falcon\":   {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"crow\":     {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"bat\":      {\"acceleration\": 1,  \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"duck\":     {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"seagull\":  {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}, \n                    \"glasses\":  {\"acceleration\": 1, \"topSpeed2\": 1000000, \"weight\":1}\n                };\n               \n//constructor\nAttackBird.prototype.initialize = function (sheet,current) {\n    this.BirdInit(sheet,current);\n    this.topSpeed2 = BirdProperties[sheet].topSpeed2;\n    this.weight = BirdProperties[sheet].weight;\n    this.acceleration = this.BirdProperties[sheet].acceleration;\n    this.falconTimer=0;\n    this.target=0;\n    this.shape = new createjs.Shape();\n    this.shape.graphics.beginFill(\"red\").dc(0, 0, this.rad);\n    this.scaleX = 0.5;\n    this.scaleY = 0.5;\n};\n\nAttackBird.prototype.update = function (rocketX, rocketY, event) {\n    if(this.currentAnimation===\"falcon\"){\n        this.updateFalcon(rocketX, rocketY,event);\n    }\n    else if(this.currentAnimation===\"duck\"){\n        this.updateDuck(rocketX,rocketY,event);\n    }\n    else{\n        this.updateSeagull(rocketX,rocketY,event);\n    }\n};\n\nAttackBird.prototype.updateDuck = function(rocketX,rocketY,event) {\n    if(this.state===\"normal\"){\n        this.velocityX=-300;\n        var aY=0;\n        if(this.x<650){\n            this.state=\"attacking\";\n            this.target=rocketY;\n        }\n    }\n    else if(this.state===\"attacking\"){\n        this.velocityX=-250;\n        aY=this.acceleration*event.delta*(rocketY-this.y)/(1000);\n    }\n    else if(this.state===\"grilled\"){\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;\n    }\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(speed2>topSpeed2){\n        this.velocityX=this.velocityX*topSpeed2/speed2;\n        this.velocityY= this.velocityY*topSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateFalcon = function(rocketX, rocketY, event){\n    if(this.state===\"normal\"){\n        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        var aY = this.acceleration*event.delta*(rocketY-350-this.y)/(1000);\n        if(rocketY-250-this.y>0){\n            this.rotation=-20;\n            this.state=\"soaring\";\n            this.falconTimer=3000;\n            aX =0;\n            aY =0;\n        }\n    }\n    else if(this.state===\"attacking\"){\n        aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n        this.rotation = Math.atan(aY/60)*270/3.14;\n        if(this.y-(rocketY)>0){\n            this.rotation=-30;\n            this.state=\"normal\";\n        }\n        \n    }\n    else if(this.state===\"soaring\"){\n        aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        aY = this.acceleration*event.delta*(rocketY-250-this.y)/(1000);\n        this.falconTimer-=event.delta;\n        if(this.falconTimer<0){\n            this.state=\"attacking\";\n            this.rotation=45;\n            this.velocityX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n            this.velocityY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n        }\n    }\n    else if(this.state===\"grilled\"){\n        aX=0;\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;  \n    }\n    this.velocityX+=aX;\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(speed2>topSpeed2)\n    {\n        this.velocityX=this.velocityX*topSpeed2/speed2;\n        this.velocityY= this.velocityY*topSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateSeagull = function(rocketX, rocketY, event){\n    var maxSpeed2=100000;\n    var speed2 = this.velocityX*this.velocityX+this.velocityY*this.velocityY;\n    if(this.state!==\"grilled\"){\n        var aX = this.acceleration*event.delta*(rocketX-this.x)/(1000);\n        var aY = this.acceleration*event.delta*(rocketY-this.y)/(1000);\n    }\n    else{\n        aX=0;\n        aY=200*this.acceleration*event.delta/1000;\n        this.rotation = Math.atan(this.velocityY/600)*360/3.14;\n    }\n    this.velocityX+=aX;\n    this.velocityY += aY;\n    //this.rotation = Math.atan(2*Math.abs(aX)/aY)*360/6.28;\n    if(speed2>maxSpeed2){\n        this.velocityX=this.velocityX*maxSpeed2/speed2;\n        this.velocityY= this.velocityY*maxSpeed2/speed2;      \n    }\n};\n\nAttackBird.prototype.updateCircle = function(){\n    this.shape.x=this.x;\n    this.shape.y=this.y;\n};\n\nAttackBird.prototype.setGrilled = function(){\n    this.velocityX = -10;\n    this.gotoAndPlay(\"chicken\");\n    this.state = \"grilled\";\n    var instance = createjs.Sound.play(\"grilled\");\n    instance.volume=1;\n};",
 			"file": "HTML5Application/public_html/oh/attackBirds.js",
-			"file_size": 5943,
-			"file_write_time": 130708166218249777,
 			"settings":
 			{
-				"buffer_size": 5804,
+				"buffer_size": 5829,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "Catz story mode.docx",
+			"file": "HTML5Application/public_html/oh/RocketShip.js",
 			"settings":
 			{
-				"buffer_size": 43010,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "constellation.xlsx",
-			"settings":
-			{
-				"buffer_size": 31832,
-				"line_ending": "Unix"
+				"buffer_size": 86028,
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -101,18 +96,26 @@
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/RocketShip.js",
+			"file": "HTML5Application/public_html/oh/spriteSheetData.js",
 			"settings":
 			{
-				"buffer_size": 85627,
+				"buffer_size": 29690,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/ApplicationControl.js",
+			"file": "HTML5Application/public_html/oh/House.js",
 			"settings":
 			{
-				"buffer_size": 152,
+				"buffer_size": 34375,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/dialog.js",
+			"settings":
+			{
+				"buffer_size": 11597,
 				"line_ending": "Windows"
 			}
 		}
@@ -165,15 +168,20 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
+		"/C/Users/Rasmus/Desktop/xss.html",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/CatzRocket.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/ApplicationControl.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/constellation.xlsx",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/Catz story mode.docx",
+		"/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Web Inspector/swi.sublime-settings",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/ohlookdiamonds.sublime-project",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Node.sublime-build",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
@@ -199,6 +207,13 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"578",
+			"house.diamondHouseCont",
+			"catnip",
+			"\"house\"",
+			"isGround",
+			"track",
+			"gameStats",
 			"spawnAttackBird",
 			"AttackBird(",
 			"mediumDiamond",
@@ -222,7 +237,7 @@
 			"theme"
 		],
 		"highlight": true,
-		"in_selection": false,
+		"in_selection": true,
 		"preserve_case": false,
 		"regex": true,
 		"replace_history":
@@ -238,7 +253,7 @@
 	"groups":
 	[
 		{
-			"selected": 8,
+			"selected": 4,
 			"sheets":
 			[
 				{
@@ -246,15 +261,15 @@
 					"file": "HTML5Application/public_html/oh/GameProgression.js",
 					"settings":
 					{
-						"buffer_size": 5612,
+						"buffer_size": 6211,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								598,
-								598
+								0,
+								0
 							]
 						],
 						"settings":
@@ -274,15 +289,15 @@
 					"file": "HTML5Application/public_html/oh/Tracks.js",
 					"settings":
 					{
-						"buffer_size": 4313,
+						"buffer_size": 3403,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1151,
-								1151
+								0,
+								0
 							]
 						],
 						"settings":
@@ -291,7 +306,7 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 5.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
@@ -302,15 +317,15 @@
 					"file": "HTML5Application/public_html/oh/TrackParts.js",
 					"settings":
 					{
-						"buffer_size": 20445,
+						"buffer_size": 29459,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								20241,
-								20241
+								0,
+								0
 							]
 						],
 						"settings":
@@ -320,56 +335,25 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3039.0,
+						"translation.y": 1876.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 3,
-					"settings":
-					{
-						"buffer_size": 70,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"detect_indentation": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([A-Za-z\\\\/<].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
 					"file": "HTML5Application/public_html/oh/attackBirds.js",
 					"settings":
 					{
-						"buffer_size": 5804,
+						"buffer_size": 5829,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								9,
-								19
+								1166,
+								1166
 							]
 						],
 						"settings":
@@ -379,65 +363,41 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 24.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "HTML5Application/public_html/oh/RocketShip.js",
+					"settings":
+					{
+						"buffer_size": 86028,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								17034,
+								17034
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4981.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 5,
-					"file": "Catz story mode.docx",
-					"settings":
-					{
-						"buffer_size": 43010,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "constellation.xlsx",
-					"settings":
-					{
-						"buffer_size": 31832,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
 					"file": "HTML5Application/public_html/oh/CatzRocket.js",
 					"settings":
 					{
@@ -448,72 +408,102 @@
 						"selection":
 						[
 							[
-								9319,
-								9321
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2649.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "HTML5Application/public_html/oh/RocketShip.js",
-					"settings":
-					{
-						"buffer_size": 85627,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								84568,
-								84568
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 29953.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "HTML5Application/public_html/oh/ApplicationControl.js",
-					"settings":
-					{
-						"buffer_size": 152,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
 								0,
 								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2302.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
+					"settings":
+					{
+						"buffer_size": 29690,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								301,
+								301
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "HTML5Application/public_html/oh/House.js",
+					"settings":
+					{
+						"buffer_size": 34375,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								85,
+								85
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3228.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "HTML5Application/public_html/oh/dialog.js",
+					"settings":
+					{
+						"buffer_size": 11597,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5875,
+								5875
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 753.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -621,6 +611,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 277.0,
+	"side_bar_width": 376.0,
 	"status_bar_visible": true
 }

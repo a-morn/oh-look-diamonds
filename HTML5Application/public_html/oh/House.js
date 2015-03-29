@@ -1,6 +1,7 @@
 var House = (function(){
     var house = {
         house: null,
+        bgHill: null,
         houseView: null,        
         crashRocket: null,
         hobo: null,

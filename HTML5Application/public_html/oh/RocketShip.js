@@ -18,8 +18,8 @@ var RocketShip = (function(){
     canvas,
     godMode = false,
     infiniteFuel = false,
-    trustFund = false,
-    debugMode = false,
+    trustFund = true,
+    debugMode = true,
     muteButton,
     catzBounds,
     lastResolveNorm = [1,0],
@@ -201,6 +201,7 @@ var RocketShip = (function(){
                     {id:"flame", src:"assets/new assets/sprites/newFlame.png"},                    
                     {id:"star", src:"assets/new assets/img/star.png"},
                     {id:"house", src:"assets/new assets/img/house no hill.png"},
+                    {id:"far right hill", src:"assets/new assets/img/far right hill.png"},
                     {id:"house popup", src:"assets/new assets/img/house popup.png"},
                     {id:"hobo", src:"assets/new assets/sprites/hoboCat.png"},                   
                     {id:"smokepuffs", src:"assets/new assets/sprites/smokepuffs.png"},
@@ -296,6 +297,11 @@ var RocketShip = (function(){
         house.house.scaleY=0.8;
         house.house.y=-20;
         
+        house.bgHill = new createjs.Bitmap(queue.getResult("far right hill"));   
+        house.bgHill.scaleX=0.8;
+        house.bgHill.scaleY=0.8;
+        house.bgHill.y=-20;
+
         var hoboData= spriteSheetData.hobo;
         var sheet = new createjs.SpriteSheet(hoboData);
         house.hobo  = new createjs.Sprite(sheet,"cycle");
@@ -372,31 +378,35 @@ var RocketShip = (function(){
         house.hoboCatHouse.alpha=0;
         house.hoboCatHouse.x=430;
         house.hoboCatHouse.y=375;
-        house.hoboCatHouse.rotation = 5;
+        house.hoboCatHouse.rotation = -8;
         house.diamondHouseCont.addChild(house.hoboCatHouse);
         house.diamondHouseArray["hoboCatHouse"] = house.hoboCatHouse;
         
         house.rehab = new createjs.Sprite(dSheet,"catnip treatment facility");
         house.rehab.alpha=0;
-        house.rehab.x=455;
-        house.rehab.y=360;
-        house.rehab.rotation = 12;
+        house.rehab.x=583;
+        house.rehab.y=357;
+        house.rehab.scaleY=1.5;
+        house.rehab.scaleX=1.5;
+        house.rehab.rotation = 0;
         house.diamondHouseCont.addChild(house.rehab);
         house.diamondHouseArray["rehab"] = house.rehab;
         
         house.orphanage = new createjs.Sprite(dSheet,"orphanage");
         house.orphanage.alpha=0;
         house.orphanage.x=500;
-        house.orphanage.y=382;
-        house.orphanage.rotation = 15;
+        house.orphanage.y=381;
+        house.orphanage.scaleY=1.5;
+        house.orphanage.scaleX=1.5;
+        house.orphanage.rotation = 0;
         house.diamondHouseCont.addChild(house.orphanage);
         house.diamondHouseArray["orphanage"] = house.orphanage;
         
         house.university = new createjs.Sprite(dSheet,"university");
         house.university.alpha=0;
-        house.university.x=570;
-        house.university.y=347;
-        house.university.rotation = 16;
+        house.university.x=700;
+        house.university.y=305;
+        house.university.rotation = 5;
         house.diamondHouseCont.addChild(house.university);
         house.diamondHouseArray["university"] = house.university;
         
@@ -615,8 +625,9 @@ var RocketShip = (function(){
         bg.y=0;
         starCont.y=1000;
         bg.addEventListener("click",showOh);
-        house.houseView.addChild(house.diamondHouseCont, house.crashRocket, house.catz, 
-        house.wick, house.house, house.hobo, house.timmy, house.priest, house.characterExclamation, 
+        house.houseView.addChild(house.university, house.rehab, house.bgHill, house.orphanage, 
+            house.hoboCatHouse,house.crashRocket, house.catz, 
+            house.wick, house.house, house.hobo, house.timmy, house.priest, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
             house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, 
             house.mousePriest, house.mouseRocket, house.wickLight,house.oh, 

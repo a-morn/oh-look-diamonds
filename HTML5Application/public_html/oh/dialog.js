@@ -101,7 +101,7 @@ teach in between those\n\
 rocket rides, right kitten?", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true}        
     ], "idle":{"what":"vetenskap och konst"}},
 
-"catnipCenter":
+"hospital":
 {"dialog":[{"Who": "Hobo-Cat", "What": "Let's make the catnip rehab center\n\
 a full blown hospital!", "Choice":true, "Choices":[{"text":"no", "ChoiceID":1},{"text":"yes", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
