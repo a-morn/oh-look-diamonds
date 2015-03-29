@@ -330,18 +330,18 @@ var RocketShip = (function(){
 
         house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
         house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
-        house.oh.x=100;
-        house.oh.y=-1450;
+        house.oh.x=90;
+        house.oh.y=-1460;
         house.oh.alpha=0;
         house.look = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
-        house.look.x=350;
-        house.look.y=-1450;
+        house.look.x=340;
+        house.look.y=-1460;
         house.look.sourceRect = new createjs.Rectangle(227,0,400,160);
         house.look.alpha=0;;
         house.diamonds = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
         house.diamonds.sourceRect = new createjs.Rectangle(0,176,620,160);
-        house.diamonds.x=100;
-        house.diamonds.y=-1273;
+        house.diamonds.x=90;
+        house.diamonds.y=-1283;
         house.diamonds.alpha=0;
         
         house.diCont = new createjs.Container();
@@ -357,10 +357,7 @@ var RocketShip = (function(){
             diamond.scaleY=positions[i].scale;
             house.diCont.addChild(diamond);
 
-        }        
-
-        //house.diCont.alpha=0;
-            
+        }                           
 
         house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
         house.crashRocket.regX=180;
@@ -691,18 +688,7 @@ var RocketShip = (function(){
         directorState=directorStateEnum.Normal;
         debugText = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
         debugText.x=500;
-        debugText.y=0;
-        
-        var diamondData = spriteSheetData.diamond;
-        diamondSheet = new createjs.SpriteSheet(diamondData);
-        var diamond = new createjs.Sprite(diamondSheet,"cycle");
-
-        diamond.x = 0;
-        diamond.y = 0;
-        
-        diCont.addChild(diamond);
-        diCont.x = 0;
-        diCont.y = 0;
+        debugText.y=0;               
         
         var bgParallax = new createjs.Bitmap(queue.getResult("bgParallax 0"));
         bgParallax.x=0;
@@ -1371,7 +1357,7 @@ var RocketShip = (function(){
                 trackTimer=0;
                 onTrack=true;
                 gameStats.Difficulty++;
-                track = generateTrack();
+                track = generateTrack();				
                 for (i=0; i<track.length;i++)
                 {
                     if (track[i].graphicType==="thunderCloud")
@@ -1385,15 +1371,13 @@ var RocketShip = (function(){
                         var sprite = new createjs.Sprite(sheet,track[i].animation);
                         sprite.x = track[i].x; 
                         sprite.y = track[i].y;
-                        var cont = containerDict[track[i].type];
-                        cont.addChild(sprite);
-                        
+                        containerDict[track[i].type].addChild(sprite);                                                
                     }
                     else if(track[i].graphicType==="attackBird")
                     {
                         spawnAttackBird(track[i].animation,track[i].x,track[i].y+catzRocket.catzRocketContainer.y);
                     }
-                }
+                }				
             }
         }
         switch(directorState)
@@ -1510,39 +1494,44 @@ var RocketShip = (function(){
         var arrayLength = diCont.children.length;
         for (var i = 0; i < arrayLength; i++) {
             var kid = diCont.children[i];
-            kid.x = kid.x - diSpeed*event.delta;    
+			
+            kid.x -= diSpeed*event.delta;    			
+								
             if (kid.x <= -100)
             {
               diCont.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
-            }                   
-            var isOverlap = overlapCheckCircle(kid.x,kid.y,40);
-            if(isOverlap)
-            {
-                if(kid.currentAnimation==="cycle")
-                {
-                    gameStats.score += 1;
-                    catzRocket.frenzyCount+=5;
-                    arrayLength = arrayLength - 1;
-                }
-                else if(kid.currentAnimation==="mediumCycle")
-                {
-                    gameStats.score += 10;
-                    catzRocket.frenzyCount+=15.5;
-                    arrayLength = arrayLength - 1;
-                }
-                else if(kid.currentAnimation==="greatCycle")
-                {
-                    gameStats.score += 100;
-                    catzRocket.frenzyCount+=50.5;
-                    arrayLength = arrayLength - 1;
-                }
-
-                diamondSound.play();
-                catzRocket.pickupDiamond();
-                diCont.removeChildAt(i);
-            }
+            }   
+			else {
+				var isOverlap = overlapCheckCircle(kid.x,kid.y,40);
+				if(isOverlap)
+				{
+					if(kid.currentAnimation==="cycle")
+					{	
+						gameStats.score += 1;
+						catzRocket.diamondFuel +=0.05;					
+						catzRocket.frenzyCount+=0.1;                    
+					}
+					else if(kid.currentAnimation==="mediumCycle")
+					{
+						catzRocket.diamondFuel +=1;
+						gameStats.score += 10;
+						catzRocket.frenzyCount+=5;                    
+					}
+					else if(kid.currentAnimation==="greatCycle")
+					{
+						catzRocket.diamondFuel +=1;
+						gameStats.score += 1000;
+						catzRocket.frenzyCount+=50.5;                    
+					}
+								
+					diCont.removeChildAt(i);
+					arrayLength = arrayLength - 1;
+					i = i - 1;
+					diamondSound.play();                					
+				}
+			}
         }   
     }
     

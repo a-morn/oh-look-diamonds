@@ -13,8 +13,12 @@ var Tracks =
         //Learn loop
         [
 			{"difficulty":"easy", "name":"w1lvl2"}       
+        ],
+		
+		//Fuel managment + looping
+		[
+			{"difficulty":"easy", "name":"w1lvl3"}       
         ]
-    
     ],
     
     //world 2
