@@ -1,80 +1,89 @@
 var RocketShip = (function(){
-    var 
-    currentTrack = 0,
-    currentLevel = 0,
-    currentDisplacement = 0,
-    catzRocket,
-    house,     
-    spriteSheetData,
-    tutorialTexts,
-    tracksJSON,
-    trackPartsJSON,
-    hud,
-    hudPointer,    
-    houseListener,
-    onTrack=false,                
-    cloudIsIn = new Array(),
-    rocketShip={},
-    canvas,
-    godMode = false,
-    infiniteFuel = false,
-    trustFund = true,
-    debugMode = true,
-    muteButton,
-    catzBounds,
-    lastResolveNorm = [1,0],
-    polygonLine,
-    polygonVertices,
-    catzVertices,
-    flameVertices,
-    flameNorm,
-    flameBounds,
-    catzNorm,
-    norm,
-    newBounds,
-    catzBounds,
-    squawkSound,
-    debugText,
-    gameView,    
-    gameListener,    
-    stage,
-    wind=0,
-    trackTimer = 0,
-    windSheet,    
-    track,    
-    smoke,
-    exitSmoke,
-    leaves,    
-    lightningColor = "#99ccff",       
-    seagullSheet,
+    var         
     bg,        
+    canvas,    
+    catzBounds,
+    catzNorm,
+    catzRocket,
+    catzVertices,    
+    cloudSpeed,    
+	dataDict,
+    debugText,
     diamondCounterText,     
     diamondShardCounter,
-    queue,
-    mousedown,
     diamondSheet,
-    greatDiamondSheet,
+    diamondSound,          
+    diSpeed,    
+    exitSmoke,    
+    fgSpeed,    
+    flameBounds,
+    flameNorm,
+    flameVertices,
+    gameListener,    
+    gameView,        
+    greatDiamondSheet,    
+    house,     
+    houseListener,
+    hud,
+    hudPointer,        
+    jump,               
+    leaves,            
+    manifest,    
     mediumDiamondSheet,
-    onlookerSheet,
-    grav = 12,
-    jump,           
-    parallaxCont = new createjs.Container(),
-    attackBirdCont = new createjs.Container(),
-    collisionCheckDebug = new createjs.Container(),
-    lightningCont = new createjs.Container(),
-    sgCont = new createjs.Container(),
-    gooseCont = new createjs.Container(),
-    hawkCont = new createjs.Container(),
-    diCont = new createjs.Container(),
-    onlookerCont = new createjs.Container(),
-    scatterDiamondsCont = new createjs.Container(),
-    fgCont = new createjs.Container(),
-    fgTopCont = new createjs.Container(),
-    starCont = new createjs.Container(),
-    cloudCont = new createjs.Container(),
-    thunderCont = new createjs.Container(),
-    windCont = new createjs.Container(),
-    sheetDict,
+    mousedown,
+    muteButton,
+    newBounds,
+    norm,    
+    onlookerSheet,        
+    parallaxSpeed,        
+    polygonLine,
+    polygonVertices,
+    progressBar,    
+    queue,    
+    rocketSong,        
+    seagullSheet,        
+    smoke,
+    spriteSheetData,
+    squawkSound,
+    stage,        
+    track,    
+    trackPartsJSON,
+    tracksJSON,        
+    tutorialTexts,        
+    windSheet,    
+	attackBirdCont = new createjs.Container(),
+	cloudCont = new createjs.Container(),
+	cloudIsIn = new Array(),
+	collisionCheckDebug = new createjs.Container(),
+	currentDisplacement = 0,
+	currentLevel = 0,
+	currentTrack = 0,
+	debugMode = false,
+	diCont = new createjs.Container(),	
+	directorTimer=0,
+	fgCont = new createjs.Container(),
+	fgTopCont = new createjs.Container(),
+	godMode = false,
+	gooseCont = new createjs.Container(),
+	grav = 12,
+	hawkCont = new createjs.Container(),
+	infiniteFuel = false,
+	lastResolveNorm = [1,0],
+	lightningColor = "#99ccff",       
+	lightningCont = new createjs.Container(),
+	onlookerCont = new createjs.Container(),
+	onTrack=false,                
+	parallaxCont = new createjs.Container(),
+	paused = false,
+	rocketShip={},
+	scatterDiamondsCont = new createjs.Container(),
+	sgCont = new createjs.Container(),
+	starCont = new createjs.Container(),
+	thunderCont = new createjs.Container(),
+	trackTimer = 0,
+	trustFund = true,
+	wind=0,
+windCont = new createjs.Container(),
     containerDict = {
         "diamond" : diCont,
         "mediumDiamond" : diCont,
@@ -84,25 +93,15 @@ var RocketShip = (function(){
         "hawk" : hawkCont,
         "thunderCloud" : thunderCont
     },
-    diSpeed,    
-    cloudSpeed,
-    fgSpeed,
-    parallaxSpeed,    
-    bg,
-    queue,
-    manifest,    
-    rocketSong,    
-    paused = false,
+    
     directorStateEnum = {
         Normal : 0,
         Birds : 1,
         Wind : 2,
         Thunder : 3
     },
-    directorState=directorStateEnum.Normal,
-    directorTimer=0,
-    progressBar,    
-    diamondSound,        
+	directorState=directorStateEnum.Normal,
+      
     gameStats = {
         score : 0,
         kills : 0,
@@ -124,20 +123,23 @@ var RocketShip = (function(){
         }        
     };    
 
+	/**
+	* Init (duh)
+	*/
     rocketShip.Init = function(aCatzRocket, aHouse, aSpriteSheetData, aTutorialTexts, aTracksJSON, aTrackPartsJSON)
-    {
+    {		
         catzRocket = aCatzRocket;
         house = aHouse;
         spriteSheetData = aSpriteSheetData;
         tutorialTexts = aTutorialTexts;
         tracksJSON = aTracksJSON;
-        trackPartsJSON = aTrackPartsJSON;
-        
+        trackPartsJSON = aTrackPartsJSON;								
+		
         catzRocket.Init();        
         house.Init(tutorialTexts);
-        canvas = document.getElementById('mahCanvas');                                
-        stage                       = new createjs.Stage(canvas);
-        stage.mouseEventsEnabled    = true;
+        canvas = $("#mahCanvas")[0];                                
+        stage = new createjs.Stage(canvas);
+        stage.mouseEventsEnabled = true;
         
         if ('ontouchstart' in document.documentElement) {
             createjs.Touch.enable(stage);           
@@ -219,8 +221,7 @@ var RocketShip = (function(){
                     {id:"frenzySound", src:"assets/new assets/sound/frenzy.mp3"},
                     {id:"emeregencyBoostSound", src:"assets/new assets/sound/emergencyBoost.mp3"},
                     {id:"miscSound", src:"assets/new assets/sound/misc.mp3"},
-                    {id:"catzScream2", src:"assets/new assets/sound/cat_meow_wounded_1.mp3"},
-                    //{id:"lookDiamondsSong", src:"assets/new assets/sound/tmpMusic1.mp3"},
+                    {id:"catzScream2", src:"assets/new assets/sound/cat_meow_wounded_1.mp3"},                    
                     {id:"wick", src:"assets/new assets/sprites/wick.png"},
                     {id:"wickSound", src:"assets/new assets/sound/wick.mp3"},
                     {id:"mute", src:"assets/new assets/sprites/mute button.png"}
@@ -242,6 +243,14 @@ var RocketShip = (function(){
     function handleComplete()
     {           
         spriteSheetData.setValues(queue);
+		dataDict = {
+			"diamond" : spriteSheetData.diamond,
+			"mediumDiamond" : spriteSheetData.mediumDiamond,
+			"greatDiamond" : spriteSheetData.greatDiamond,
+			"seagull" : spriteSheetData.seagullSheet,
+			"goose" : spriteSheetData.seagullSheet,
+			"hawk" : spriteSheetData.enemybirds,        
+		};
         createBG();
         createHouseView();
         createGameView();
@@ -256,154 +265,88 @@ var RocketShip = (function(){
     function houseTick(event)
     {
         stage.update();
-        if(house.characterSpeach.alpha > 0)
-        {
-            house.characterSpeach.alpha -= 0.015;
-        }
+        if(house.characterSpeach.alpha > 0)        
+            house.characterSpeach.alpha -= 0.015;        
         
-        if(house.catzSpeach.alpha > 0)
-        {
-            house.catzSpeach.alpha -= 0.015;
-        }            
+        if(house.catzSpeach.alpha > 0)        
+            house.catzSpeach.alpha -= 0.015;        
                 
-        if(house.wickExclamation.alpha > 0.8 && house.wickExclamation.alpha < 0.9){                       
-            if(rocketSong.getPosition()<100){
-                rocketSong.play();
-            }
-        }                
+        if(house.wickExclamation.alpha > 0.8 && house.wickExclamation.alpha < 0.9 && rocketSong.getPosition()<100)
+			rocketSong.play();            
         
-        if(house.wickActive && house.wickExclamation.alpha <1){
-            house.wickExclamation.alpha += 0.01;
-        }
+        if(house.wickActive && house.wickExclamation.alpha <1)
+            house.wickExclamation.alpha += 0.01;        
+			
         house.updateDisplayedScore(event, gameStats, diamondCounterText);
         
         debugText.text =                 
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
                 + "\nBuilding orphanage "+ gameStats.BuildOrphanage
-                + "HoboDialogNo: " + house.hoboDialogNumber                        
-                + "bg.y: " + bg.y;
+                + "\nHoboDialogNo: " + house.hoboDialogNumber                        
+                + "\nbg.y: " + bg.y;
     }
     
     function createHouseView()
     {        
-        var mSheet = new createjs.SpriteSheet(spriteSheetData.muteButton);
-        muteButton = new createjs.Sprite(mSheet,"mute");
-        muteButton.x = 745;
-        muteButton.y = 0;
+		muteButton = helpers.createSprite(spriteSheetData.muteButton, "mute", {x:745});        
         muteButton.addEventListener("click",switchMute);
+                
+		house.house = helpers.createBitmap(queue.getResult("house"), 
+			{scaleX:0.8, scaleY:0.8, y:-20});                
         
-        house.house = new createjs.Bitmap(queue.getResult("house"));   
-        house.house.scaleX=0.8;
-        house.house.scaleY=0.8;
-        house.house.y=-20;
-        
-        house.bgHill = new createjs.Bitmap(queue.getResult("far right hill"));   
-        house.bgHill.scaleX=0.8;
-        house.bgHill.scaleY=0.8;
-        house.bgHill.y=-20;
+		house.bgHill = helpers.createBitmap(queue.getResult("far right hill"), 
+			{scaleX:0.8, scaleY:0.8, y:-20});                        
 
-        var hoboData= spriteSheetData.hobo;
-        var sheet = new createjs.SpriteSheet(hoboData);
-        house.hobo  = new createjs.Sprite(sheet,"cycle");
-        house.hobo.x=-110;
-        house.hobo.y=225;  
-        house.hobo.regX = -210;
-        house.hobo.regY = -180;
-        
-        var timmyData= spriteSheetData.supportingCharacter;
-        sheet = new createjs.SpriteSheet(timmyData);
-        house.timmy= new createjs.Sprite(sheet,"timmy");
-        house.timmy.x=83;
-        house.timmy.y=362;
-        house.timmy.scaleX=0.8;
-        house.timmy.scaleY=0.8;
-        house.timmy.alpha = 0;
-        
-        var priestData= spriteSheetData.supportingCharacter;
-        sheet = new createjs.SpriteSheet(priestData);
-        house.priest= new createjs.Sprite(sheet,"priest");
-        house.priest.x=52;
-        house.priest.y=330;
-        house.priest.scaleX=0.8;
-        house.priest.scaleY=0.8;
-        house.priest.alpha = 0;
+        house.hobo = helpers.createSprite(spriteSheetData.hobo, "cycle", 
+			{x:-110, y:225, regX:-210, regY:-180});        		        
+                       
+        house.timmy = helpers.createSprite(spriteSheetData.supportingCharacter, "timmy", 
+			{x:83, y:362, scaleX:0.8, scaleY:0.8, alpha:0});        		        		
+                
+        house.priest = helpers.createSprite(spriteSheetData.supportingCharacter, "priest", 
+			{x:52, y:330, scaleX:0.8, scaleY:0.8, alpha:0});        		        				
 
-        house.oh = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
-        house.oh.sourceRect = new createjs.Rectangle(0,0,227,190);
-        house.oh.x=90;
-        house.oh.y=-1460;
-        house.oh.alpha=0;
-        house.look = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
-        house.look.x=340;
-        house.look.y=-1460;
-        house.look.sourceRect = new createjs.Rectangle(227,0,400,160);
-        house.look.alpha=0;;
-        house.diamonds = new createjs.Bitmap(queue.getResult("ohlookdiamonds"));
-        house.diamonds.sourceRect = new createjs.Rectangle(0,176,620,160);
-        house.diamonds.x=90;
-        house.diamonds.y=-1283;
-        house.diamonds.alpha=0;
+		house.oh = helpers.createBitmap(queue.getResult("ohlookdiamonds"), 
+			{x:90, y:-1460, alpha:0, sourceRect:new createjs.Rectangle(0,0,227,190)});                                        
+        house.look = helpers.createBitmap(queue.getResult("ohlookdiamonds"), 
+			{x:340, y:-1460, alpha:0, sourceRect:new createjs.Rectangle(227,0,400,160)});                                                
+        house.diamonds = helpers.createBitmap(queue.getResult("ohlookdiamonds"), 
+			{x:90, y:-1283, alpha:0, sourceRect:new createjs.Rectangle(0,176,620,160)});                                                
         
         house.diCont = new createjs.Container();
-        var diamondData = spriteSheetData.diamond;
-        diamondSheet = new createjs.SpriteSheet(diamondData);
-        var positions = diamondConstellation;
-        for(var i=0; i<positions.length;i++){
-            var diamond = new createjs.Sprite(diamondSheet,"cycle");
-            diamond.x=positions[i].x;
-            diamond.y=positions[i].y-1500;
-            diamond.currentAnimationFrame = positions[i].frame;
-            diamond.scaleX=positions[i].scale;
-            diamond.scaleY=positions[i].scale;
-            house.diCont.addChild(diamond);
-
-        }                           
-
-        house.crashRocket = new createjs.Bitmap(queue.getResult("rocketSilouette"));
-        house.crashRocket.regX=180;
-        house.crashRocket.regY=83;
-        house.crashRocket.scaleX=0.5;
-        house.crashRocket.scaleY=0.5;  
-        house.crashRocket.alpha = 0;
-        house.crashRocket.x=220;
-        house.crashRocket.y=320;
-                
-        var dSheet = new createjs.SpriteSheet(spriteSheetData.dHouse);
         
+        diamondConstellation.forEach(function(position){       
+            var diamond = helpers.createSprite(spriteSheetData.diamond, "cycle", 
+				{x:position.x, y:position.y-1500, scaleX:position.scale, scaleY:position.scale, 
+				currentAnimationFrame:position.frame}); 
+            house.diCont.addChild(diamond);
+        });
+
+		house.crashRocket = helpers.createBitmap(queue.getResult("rocketSilouette"), 
+			{x:220, y:320, alpha:0, regX:180, regY:83,scaleX:0.5, scaleY:0.5});                       
+                                
         house.diamondHouseCont = new createjs.Container();
-        house.hoboCatHouse = new createjs.Sprite(dSheet,"hoboHouse");
-        house.hoboCatHouse.alpha=0;
-        house.hoboCatHouse.x=430;
-        house.hoboCatHouse.y=375;
-        house.hoboCatHouse.rotation = -8;
+        house.hoboCatHouse = helpers.createSprite(spriteSheetData.dHouse, "hoboHouse", 
+			{x:430, y:375, scaleX:0.8, scaleY:0.8, alpha:0,rotation:-8}); 				               
+                
         house.diamondHouseCont.addChild(house.hoboCatHouse);
         house.diamondHouseArray["hoboCatHouse"] = house.hoboCatHouse;
         
-        house.rehab = new createjs.Sprite(dSheet,"catnip treatment facility");
-        house.rehab.alpha=0;
-        house.rehab.x=583;
-        house.rehab.y=357;
-        house.rehab.scaleY=1.5;
-        house.rehab.scaleX=1.5;
-        house.rehab.rotation = 0;
+        house.rehab = helpers.createSprite(spriteSheetData.dHouse, "catnip treatment facility", 
+			{x:583, y:357, scaleX:1.5, scaleY:1.5, alpha:0});		
+                        
         house.diamondHouseCont.addChild(house.rehab);
         house.diamondHouseArray["rehab"] = house.rehab;
         
-        house.orphanage = new createjs.Sprite(dSheet,"orphanage");
-        house.orphanage.alpha=0;
-        house.orphanage.x=500;
-        house.orphanage.y=381;
-        house.orphanage.scaleY=1.5;
-        house.orphanage.scaleX=1.5;
-        house.orphanage.rotation = 0;
+        house.orphanage = helpers.createSprite(spriteSheetData.dHouse, "orphanage", 
+			{x:500, y:381, scaleX:1.5, scaleY:1.5, alpha:0});				
+                       
         house.diamondHouseCont.addChild(house.orphanage);
         house.diamondHouseArray["orphanage"] = house.orphanage;
         
-        house.university = new createjs.Sprite(dSheet,"university");
-        house.university.alpha=0;
-        house.university.x=700;
-        house.university.y=305;
-        house.university.rotation = 5;
+        house.university = helpers.createSprite(spriteSheetData.dHouse, "university", 
+			{x:700, y:305, rotation:5, alpha:0});
+
         house.diamondHouseCont.addChild(house.university);
         house.diamondHouseArray["university"] = house.university;
         
@@ -412,6 +355,7 @@ var RocketShip = (function(){
         house.houseInfo["rehab"] = new createjs.Container();
         house.houseInfo["rehab"].x = 390;
         house.houseInfo["rehab"].y = 270;
+
         var rGraphics = new createjs.Bitmap(queue.getResult("house popup"));
         var rBox = new createjs.Shape();
         rBox.graphics.beginFill("#ff0000").drawRect(0, 0, 100, 100);
@@ -508,50 +452,25 @@ var RocketShip = (function(){
         house.houseInfo["university"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["university"]);
         
-        house.mouseHobo = new createjs.Bitmap(queue.getResult("mouseHobo"));
-        house.mouseHobo.scaleX=0.5;
-        house.mouseHobo.scaleY=0.5;  
-        house.mouseHobo.x=110;
-        house.mouseHobo.y=316;
-        house.mouseHobo.alpha=0;
+		house.mouseHobo = helpers.createBitmap(queue.getResult("mouseHobo"), 
+			{x:110, y:316, alpha:0, scaleX:0.5, scaleY:0.5});                
         
-        house.mouseTimmy = new createjs.Bitmap(queue.getResult("mouseTimmy"));
-        house.mouseTimmy.scaleX=0.5;
-        house.mouseTimmy.scaleY=0.5;  
-        house.mouseTimmy.x=85;
-        house.mouseTimmy.y=360;
-        house.mouseTimmy.alpha=0;
+		house.mouseTimmy = helpers.createBitmap(queue.getResult("mouseTimmy"), 
+			{x:85, y:360, alpha:0, scaleX:0.5, scaleY:0.5});        
         
-        house.mousePriest = new createjs.Bitmap(queue.getResult("mousePriest"));
-        house.mousePriest.scaleX=0.5;
-        house.mousePriest.scaleY=0.5;  
-        house.mousePriest.x=53;
-        house.mousePriest.y=330;
-        house.mousePriest.alpha=0;
+        house.mousePries = helpers.createBitmap(queue.getResult("mousePriest"), 
+			{x:53, y:330, alpha:0, scaleX:0.5, scaleY:0.5});                
         
         house.mouseChar = {"hoboCat":house.mouseHobo, "timmy":house.mouseTimmy, "priest" : house.mousePriest};
         
-        house.mouseRocket = new createjs.Bitmap(queue.getResult("mouseRocket"));
-        house.mouseRocket.scaleX=1;
-        house.mouseRocket.scaleY=1;  
-        house.mouseRocket.x=207;
-        house.mouseRocket.y=338;
-        house.mouseRocket.alpha=0;
-                
-        var catSheet = new createjs.SpriteSheet(spriteSheetData.cat);
-        house.catz = new createjs.Sprite(catSheet,"cycle");
-        
-        house.catz.y=270;
-        house.catz.x=360;
-        house.catz.scaleX =0.8;
-        house.catz.scaleY =0.8;
-                
-        sheet = new createjs.SpriteSheet(spriteSheetData.wick);
-        house.wick  = new createjs.Sprite(sheet,"still");
-        house.wick.y=50;
-        house.wick.x=-210;
-        house.wick.scaleX=1.5;
-        house.wick.scaleY=1.5;
+		house.mouseRocket = helpers.createBitmap(queue.getResult("mouseRocket"), 
+			{x:207, y:338, alpha:0});        		        
+                				        
+        house.catz = helpers.createSprite(spriteSheetData.cat, "cycle", 
+			{x:360, y:270, scaleX:0.8, scaleY:0.8});		                                    		
+		
+        house.wick = helpers.createSprite(spriteSheetData.wick, "still", 
+			{x:-210, y:50, scaleX:1.5, scaleY:1.5});			
         
         house.wickLight = new createjs.Shape();
         house.wickLight.graphics.beginFill("#ffcc00").dc(0,0,1.5);
@@ -610,11 +529,9 @@ var RocketShip = (function(){
         house.catzSound2 = createjs.Sound.play("catzSound2");
         house.catzSound2.stop();
         
-        house.subtractedDiamond = new createjs.Bitmap(queue.getResult("diamondShardCounter"));
-        house.subtractedDiamond.x = 750;
-        house.subtractedDiamond.y = 420; 
-        house.subtractedDiamond.scaleX=0.4;
-        house.subtractedDiamond.scaleY=0.4;
+		house.subtractedDiamond = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
+			{x:750, y:420, scaleX:0.4, scaleY:0.4});                
+        
         house.subtractedDiamondCont = new createjs.Container();
         rocketSong = createjs.Sound.play("palladiumAlloySong");
         rocketSong.stop();
@@ -677,9 +594,8 @@ var RocketShip = (function(){
        
    function createBG()
    {
-        
-        bg = new createjs.Bitmap(queue.getResult("bg"));
-        bg.y = -1200;
+        bg = helpers.createBitmap(queue.getResult("bg"), 
+			{y: -1200});                
         setStars();
    }                            
 
@@ -690,59 +606,41 @@ var RocketShip = (function(){
         debugText.x=500;
         debugText.y=0;               
         
-        var bgParallax = new createjs.Bitmap(queue.getResult("bgParallax 0"));
-        bgParallax.x=0;
-        bgParallax.y=-200;
+		var bgParallax = helpers.createBitmap(queue.getResult("bgParallax 0"), 
+			{x:0, y: -200});        
         
-        var bgParallax2 = new createjs.Bitmap(queue.getResult("bgParallax 0"));
-        bgParallax2.x=2460;
-        bgParallax2.y=-200;
+		var bgParallax2 = helpers.createBitmap(queue.getResult("bgParallax 0"), 
+			{x:2460, y: -200});        
+			        
         parallaxCont.addChild(bgParallax,bgParallax2);
 
-        var fgGround1 = new createjs.Bitmap(queue.getResult("fgGround"));        
-        fgGround1.x = 0;
-        fgGround1.y = 300;                       
-        var fgGround2 = new createjs.Bitmap(queue.getResult("fgGround"));        
-        fgGround2.x = 2000;
-        fgGround2.y = 300;    
-        var fgGroundTop1 = new createjs.Bitmap(queue.getResult("fgGroundTop"));        
-        fgGroundTop1.x = 0;
-        fgGroundTop1.y = -830;                       
-        var fgGroundTop2 = new createjs.Bitmap(queue.getResult("fgGroundTop"));        
-        fgGroundTop2.x = 2000;
-        fgGroundTop2.y = -830; 
-        fgCont.addChild(fgGround1, fgGround2);  
-        fgTopCont.addChild(fgGroundTop1,fgGroundTop2); 
+        var fgGround1 = helpers.createBitmap(queue.getResult("fgGround"), 
+			{x:0, y: 300});        
+				
+        var fgGround2 = helpers.createBitmap(queue.getResult("fgGround"), 
+			{x:2000, y: 300});        
         
-
-        diamondShardCounter = new createjs.Bitmap(queue.getResult("diamondShardCounter"));        
-        diamondShardCounter.scaleY= 0.8;
-        diamondShardCounter.scaleX= 0.8;        
+        var fgGroundTop1 = helpers.createBitmap(queue.getResult("fgGroundTop"), 
+			{y: -830});        
+			
+        var fgGroundTop2 = helpers.createBitmap(queue.getResult("fgGroundTop"), 
+			{x:2000, y: -830});    
+			
+        fgCont.addChild(fgGround1, fgGround2);  
+        fgTopCont.addChild(fgGroundTop1,fgGroundTop2);         		 
+			
+        diamondShardCounter = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
+			{scaleX:0.8, scaleY:0.8, y: -830});    
+		
         diamondCounterText = new createjs.Text("0", "22px Courier New", "white"); 
         diamondCounterText.x = 608+108;             
         diamondCounterText.y = 422-17;
-        
-        var rocketData = spriteSheetData.rocket;
-           
-        
-        var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        catzRocket.catz = new createjs.Sprite(spriteSheet, "no shake");
-        
-        rocketData = spriteSheetData.flame;
-        var spriteSheet = new createjs.SpriteSheet(rocketData);    
-        catzRocket.rocketFlame = new createjs.Sprite(spriteSheet, "cycle");
-        catzRocket.rocketFlame.alpha=0;
-        catzRocket.rocketFlame.x=190;
-        catzRocket.rocketFlame.y=200;
-        catzRocket.rocketFlame.regY = -37;
-        catzRocket.rocketFlame.regX = 40;
-        
-        catzRocket.silouette = new createjs.Bitmap(queue.getResult("rocketSilouette"));
-        catzRocket.silouette.scaleX = 0.25;
-        catzRocket.silouette.scaleY = 0.25;
-        catzRocket.silouette.alpha = 0;
-        catzRocket.silouette.x = 110;
-        catzRocket.silouette.y = 90;
+                        
+        catzRocket.catz = helpers.createSprite(spriteSheetData.rocket, "no shake", 
+			{});
+                
+        catzRocket.rocketFlame = helpers.createSprite(spriteSheetData.flame, "cycle", 
+			{x:190, y:200, regX:40, regY:-37, alpha:0});							
                 
         catzRocket.catzRocketContainer.x = 260;
         catzRocket.catzRocketContainer.y = 200;
@@ -750,13 +648,11 @@ var RocketShip = (function(){
         catzRocket.catzRocketContainer.regY = 100;
         catzRocket.catzRocketContainer.regX = 150;
         catzRocket.catz.currentFrame = 0;  
+                
+		catzRocket.rocket = helpers.createBitmap(queue.getResult("rocket"), 
+			{scaleX:0.25, scaleY:0.25, regX:-430, regY:-320});        
         
-        catzRocket.rocket = new createjs.Bitmap(queue.getResult("rocket"));
-        catzRocket.rocket.scaleX = 0.25;
-        catzRocket.rocket.scaleY = 0.25;
-        catzRocket.rocket.regX = -430;
-        catzRocket.rocket.regY = -320;
-        catzRocket.catzRocketContainer.addChild(catzRocket.rocket,catzRocket.catz,catzRocket.silouette);
+		catzRocket.catzRocketContainer.addChild(catzRocket.rocket,catzRocket.catz);
         catzBounds = catzRocket.catzRocketContainer.getTransformedBounds();
         
         catzRocket.rocketSnake.x=0;
@@ -775,47 +671,25 @@ var RocketShip = (function(){
         }
         
         catzRocket.SnakeLine = new createjs.Shape();
-        
-        var smokeData = spriteSheetData.smoke;
-        var smokeSheet = new createjs.SpriteSheet(smokeData);
-        smoke = new createjs.Sprite(smokeSheet,"jump");
-        smoke.alpha=0;
-        smoke.regX = 150;
-        smoke.regY = 350;
-        
-        exitSmoke = new createjs.Sprite(smokeSheet,"right");
-        exitSmoke.alpha=0;
-        exitSmoke.regX = 150;
-        exitSmoke.regY = 200;
-        
-        hud = new createjs.Bitmap(queue.getResult("hud"));
-        var glassData = spriteSheetData.hudGlass;
-        var glassSheet = new createjs.SpriteSheet(glassData);
-        catzRocket.glass = new createjs.Sprite(glassSheet, "still");
-        hudPointer = new createjs.Bitmap(queue.getResult("hudPointer"));
-        hudPointer.regX=191;
-        hudPointer.regY=54;
-        hud.x=550+107;
-        hud.y=345+2;
-        catzRocket.glass.scaleX=0.85;
-        catzRocket.glass.scaleY=0.85;
-        catzRocket.glass.x=533;
-        catzRocket.glass.y=341;
-        hudPointer.x=550+191;
-        hudPointer.y=350+54;
-        
-        var leavesData = spriteSheetData.leaves;
-        var leavesSheet = new createjs.SpriteSheet(leavesData);
-        leaves = new createjs.Sprite(leavesSheet,"cycle");
-        leaves.alpha=0;
-        
-        var seagullData = spriteSheetData.enemybirds;
-        seagullSheet = new createjs.SpriteSheet(seagullData);
-        
-        var windData = spriteSheetData.wind;
-        windSheet = new createjs.SpriteSheet(windData);  
                 
-        onlookerSheet = new createjs.SpriteSheet(spriteSheetData.onlookers);  
+        smoke = helpers.createSprite(spriteSheetData.smoke, "jump", 
+			{regX:150, regY:350, alpha:0});												       
+        
+        exitSmoke = helpers.createSprite(spriteSheetData.smoke, "right", 
+			{regX:150, regY:200, alpha:0});												       				
+        		
+        hud = helpers.createBitmap(queue.getResult("hud"), 
+			{x:550+107, y:345+2});                			        
+        
+        hudPointer = helpers.createBitmap(queue.getResult("hudPointer"), 
+			{x:550+191, y:350+54, regX:191,regY:54});        		
+		
+		catzRocket.glass = helpers.createSprite(spriteSheetData.hudGlass, "still", 
+			{regX:150, regY:200, alpha:0, scaleX:0.85, scaleY:0.85, x:533, y:341});					
+                
+        leaves = helpers.createSprite(spriteSheetData.leaves, "cycle", 
+			{alpha:0});							                
+                        
         onlookerCont = new createjs.Container();
             
             
@@ -883,17 +757,7 @@ var RocketShip = (function(){
         squawkSound = createjs.Sound.play(name);
         squawkSound.volume=0.15;
         squawkSound.stop();
-        gameView = new createjs.Container();
-        greatDiamondSheet = new createjs.SpriteSheet(spriteSheetData.greatDiamond);
-        mediumDiamondSheet = new createjs.SpriteSheet(spriteSheetData.mediumDiamond);
-         sheetDict = {
-        "diamond" : diamondSheet,
-        "mediumDiamond" : mediumDiamondSheet,
-        "greatDiamond" : greatDiamondSheet,
-        "seagull" : seagullSheet,
-        "goose" : seagullSheet,
-        "hawk" : seagullSheet,        
-        };
+        gameView = new createjs.Container();                
         
         gameView.addChild(parallaxCont, onlookerCont, catzRocket.rocketSnake,catzRocket.SnakeLine,
             sgCont, hawkCont, gooseCont, attackBirdCont,scatterDiamondsCont, diCont,
@@ -947,10 +811,9 @@ var RocketShip = (function(){
     {
         for(i=0;i<80;i++)
         {
-            var star = new createjs.Bitmap(queue.getResult("star"));
-            var delay = Math.random()*2000;
-            star.x = Math.random()*800;
-            star.y= Math.random()*1450-1000;
+            var star = helpers.createBitmap(queue.getResult("star"), 
+				{x:Math.random()*800, y:Math.random()*1450-1000});                			
+            var delay = Math.random()*2000;                        
             createjs.Tween.get(star,{loop:true})
                     .wait(delay)
                     .to({alpha:0},1000)
@@ -1071,10 +934,9 @@ var RocketShip = (function(){
     function updateFg(event)
     {
         if(Math.random()>0.98)
-        {
-            var tree = new createjs.Bitmap(queue.getResult("fgTree1"));
-            tree.x = 1000;
-            tree.y = 290;
+        {		
+            var tree = helpers.createBitmap(queue.getResult("fgTree1"), 
+				{x:1000, y:290});                						
             fgCont.addChild(tree);        
         }
 
@@ -1134,18 +996,12 @@ var RocketShip = (function(){
     function updateClouds(event)
     {
         if(Math.random()>0.97)
-        {
-            var cloudtype = Math.floor(Math.random()*5+1);
-            cloudtype = "cloud"+cloudtype.toString();
-            var yPos = Math.floor(Math.random()*1000-1000);
-            var scale = Math.random()*0.3+0.3;
-            var cloud = new createjs.Bitmap(queue.getResult(cloudtype));
-            cloudIsIn[cloud]=false;
-
-            cloud.scaleX = scale;
-            cloud.scaleY = scale;
-            cloud.x = 1000;
-            cloud.y = yPos;
+        {            
+            var cloudtype = "cloud"+Math.floor(Math.random()*5+1).toString();            
+            var scale = Math.random()*0.3+0.3;			
+            var cloud = helpers.createBitmap(queue.getResult(cloudtype), 
+				{x:1000, y:Math.floor(Math.random()*1000-1000), scaleX:scale, scaleY:scale});                									            
+			cloudIsIn[cloud]=false;
             cloudCont.addChild(cloud); 
         }
         var arrayLength = cloudCont.children.length;    
@@ -1286,14 +1142,11 @@ var RocketShip = (function(){
     function setParallax(int)
     {
         parallaxCont.removeAllChildren();
-        var name="bgParallax "+int;
-        var bgParallax = new createjs.Bitmap(queue.getResult(name));
-        bgParallax.x=0;
-        bgParallax.y=-200;
+        var name="bgParallax "+int;		
+        var bgParallax = helpers.createBitmap(queue.getResult(name), {y:-200});                
+                
+        var bgParallax2 = helpers.createBitmap(queue.getResult(name), {x:2460, y:-200});                
         
-        var bgParallax2 = new createjs.Bitmap(queue.getResult(name));
-        bgParallax2.x=2460;
-        bgParallax2.y=-200;
         if(currentLevel===1)
         {
             bgParallax.y=100;
@@ -1365,12 +1218,10 @@ var RocketShip = (function(){
                         spawnThunderCloud(track[i].x,track[i].y-200);
                     }
                     else if(track[i].graphicType==="sprite")
-                    {
-                        var sheet = sheetDict[track[i].type];
-                        
-                        var sprite = new createjs.Sprite(sheet,track[i].animation);
-                        sprite.x = track[i].x; 
-                        sprite.y = track[i].y;
+                    {                                                						
+                        var sprite  = helpers.createSprite(dataDict[track[i].type],track[i].animation, 
+							{x:track[i].x, y:track[i].y});					
+						
                         containerDict[track[i].type].addChild(sprite);                                                
                     }
                     else if(track[i].graphicType==="attackBird")
@@ -1450,27 +1301,26 @@ var RocketShip = (function(){
                 oCont.y= 180;
                 onlooker.x=30;
                 onlooker.y=0;
-                var variant = "MobHill"+Math.floor(Math.random()*2+1);
-                var hill = new createjs.Bitmap(queue.getResult(variant));
-                hill.y=95;
+                var variant = "MobHill"+Math.floor(Math.random()*2+1);				
+                var hill = helpers.createBitmap(queue.getResult(variant), {y:95});                			               
                 oCont.addChild(onlooker, hill);
                 onlookerCont.addChild(oCont);
             }
             
             if(Math.random()>1 - gameStats.kittens.approvalRating){
-                var onlooker = new createjs.Sprite(onlookerSheet,"orphans");
+                var onlooker = helpers.createSprite("orphans", {});								
                 addOnlooker(onlooker);
             }
             if(Math.random()< -gameStats.catParty.approvalRating){
-                var onlooker = new createjs.Sprite(onlookerSheet,"cat party");
+                var onlooker = helpers.createSprite("cat party", {});												
                 addOnlooker(onlooker);
             }
             if(Math.random()< -gameStats.villagers.approvalRating){
-                var onlooker = new createjs.Sprite(onlookerSheet,"angry mob");
+                var onlooker = helpers.createSprite("angry mob", {});												
                 addOnlooker(onlooker);
             }
             if(Math.random()< gameStats.villagers.approvalRating){
-                var onlooker = new createjs.Sprite(onlookerSheet,"loving mob");
+				var onlooker = helpers.createSprite("loving mob", {});												                
                 addOnlooker(onlooker);
             }                        
         }        
@@ -1553,13 +1403,9 @@ var RocketShip = (function(){
         {
             thres = 0.7;
         }
-        if(Math.random()>thres)
-        {
-            var diamond = new createjs.Sprite(diamondSheet,"cycle");
-            diamond.x=800;
-            diamond.y=Math.pow(35*Math.random(),2)-1000;
-            diamond.scaleX=0.75;
-            diamond.scaleY=0.75;
+        if(Math.random()>thres){
+            var diamond = helpers.createSprite(spriteSheetData.diamond, "cycle", 
+				{x:800, y:Math.pow(35*Math.random(),2)-1000, scaleX:0.75, scaleY:0.75});			                                    
             scatterDiamondsCont.addChild(diamond);
         }
         var arrayLength = scatterDiamondsCont.children.length;
@@ -1590,24 +1436,15 @@ var RocketShip = (function(){
     {
         wind = -0.73*grav;
         windCont.removeAllChildren();
-        var windSprite1 = new createjs.Sprite(windSheet,"cycle");
-        windSprite1.x = 50;
-        windSprite1.y = 50;
-        windSprite1.scaleX = -1;
-        windSprite1.scaleY = -1;
-        windSprite1.rotation = 10;
-        var windSprite2 = new createjs.Sprite(windSheet,"cycle");
-        windSprite2.x = 200;
-        windSprite2.y = 300;
-        windSprite2.scaleX = -1;
-        windSprite2.scaleY = -1;
-        windSprite1.rotation = 10;
-        var windSprite3 = new createjs.Sprite(windSheet,"cycle");
-        windSprite3.x = 500;
-        windSprite3.y = 400;
-        windSprite3.scaleX = -1;
-        windSprite3.scaleY = -1;
-        windSprite1.rotation = 10;
+        var windSprite1 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:50, y:50, scaleX:-1, scaleY:-1, rotation:10});
+                        
+		var windSprite2 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:200, y:300, scaleX:-1, scaleY:-1, rotation:10});
+        
+		var windSprite3 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:500, y:300, scaleX:-1, scaleY:-1, rotation:10});
+        
         windCont.addChild(windSprite1,windSprite2,windSprite3);
         }
          
@@ -1615,24 +1452,15 @@ var RocketShip = (function(){
     {
         wind = 2*grav;
         windCont.removeAllChildren();
-        var windSprite1 = new createjs.Sprite(windSheet,"cycle");
-        windSprite1.x = 50;
-        windSprite1.y = 50;
-        windSprite1.scaleX = 1;
-        windSprite1.scaleY = 1;
-        windSprite1.rotation = 10;
-        var windSprite2 = new createjs.Sprite(windSheet,"cycle");
-        windSprite2.x = 270;
-        windSprite2.y = 170;
-        windSprite2.scaleX = 1;
-        windSprite2.scaleY = 1;
-        windSprite1.rotation = 10;
-        var windSprite3 = new createjs.Sprite(windSheet,"cycle");
-        windSprite3.x = 700;
-        windSprite3.y = 400;
-        windSprite3.scaleX = 1;
-        windSprite3.scaleY = 1;
-        windSprite1.rotation = 10;
+		var windSprite1 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:50, y:50, rotation:10});
+				
+        var windSprite2 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:270, y:170, rotation:10});
+				
+		var windSprite3 = helpers.createSprite(spriteSheetData.wind, "cycle", 
+				{x:700, y:400, rotation:10});
+				        
         windCont.addChild(windSprite1,windSprite2,windSprite3);
     }
     
@@ -1644,28 +1472,22 @@ var RocketShip = (function(){
     
     function spawnGoose(x,y)
     {
-        var seagull = new createjs.Sprite(seagullSheet,"goose");
-        seagull.scaleX = 0.8;
-        seagull.scaleY = 0.8;
-        seagull.x = x;
-        seagull.y = y;
-        gooseCont.addChild(seagull);
+		var goose = helpers.createSprite(spriteSheetData.enemybirds, "goose", 
+			{x:x, y:y, scaleX:0.8, scaleY:0.8});        
+        gooseCont.addChild(goose);
     }
     
     function spawnSeagull(x,y)
     {
-        var seagull = new createjs.Sprite(seagullSheet,"seagull");
-        seagull.scaleX = 0.8;
-        seagull.scaleY = 0.8;
-        seagull.x = x;
-        seagull.y = y;
+        var seagull = helpers.createSprite(spriteSheetData.enemybirds, "seagull", 
+			{x:x, y:y, scaleX:0.8, scaleY:0.8});
         sgCont.addChild(seagull);
     }
     
     function spawnAttackBird(type,x,y)
     {
         
-        var attackBird = new AttackBird(seagullSheet,type);
+        var attackBird = new AttackBird(new createjs.SpriteSheet(spriteSheetData.attackbirds),type);
         attackBird.x = x;
         attackBird.y = y;
         if(type==="duck")
@@ -2145,8 +1967,7 @@ var RocketShip = (function(){
         onlookerCont.removeAllChildren();
         setParallax(currentLevel);
         directorState=directorStateEnum.Normal;        
-        noWind();
-        catzRocket.silouette.alpha=0;
+        noWind();        
         catzRocket.catz.alpha = 1;
         catzRocket.glass.gotoAndPlay("still");
         stage.removeAllEventListeners();
