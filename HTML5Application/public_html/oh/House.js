@@ -16,6 +16,7 @@ var House = (function(){
         mousePriest :null,
         mouseChar: {},
         mouseRocket: null,
+        mouseCatz: null,
         catz: null,       
         cricketsSound: null,
         wick: null,
@@ -76,6 +77,7 @@ var House = (function(){
         hoboActive = true,
         timmyActive = false,
         priestActive = false,
+        catzActive = false,
         hoboDialogID = 0,
         timmyDialogID = 0,
         priestDialogID = 0,
@@ -86,7 +88,7 @@ var House = (function(){
     {        
         tutorialTexts = aTutorialTexts;
         house.houseView = new createjs.Container();
-        characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive};        
+        characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive, "catz":catzActive};        
         characterDialogNumber = {"hoboCat":hoboDialogNumber, "timmy":timmyDialogNumber, "priest":priestDialogNumber};
         characterdialogID = {"hoboCat": hoboDialogID, "timmy" : timmyDialogID, "priest" : priestDialogID};
     };
@@ -400,7 +402,8 @@ var House = (function(){
             house.wickLight.alpha = 0;
             house.wick.x=-225;
             house.wick.gotoAndPlay("cycle");
-            house.wick.removeAllEventListeners();        
+            house.wick.removeAllEventListeners();   
+            house.house.removeAllEventListeners();       
             house.wick.addEventListener("animationend",function(){$("#mahCanvas").removeClass("match-cursor");});
             house.wick.addEventListener("animationend",gotoGameView);
             house.catzSpeach.text ="";
@@ -489,6 +492,10 @@ var House = (function(){
         house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
         house.priest.addEventListener("mouseover", house.highlightCharacter);
         house.priest.addEventListener("mouseout", house.downlightCharacter);
+
+        house.catz.addEventListener("click", house.meow);
+        house.catz.addEventListener("mouseover", house.highlightCharacter);
+        house.catzt.addEventListener("mouseout", house.downlightCharacter);
     };
     
     house.addHouseEvents = function()
@@ -515,10 +522,23 @@ var House = (function(){
     
     house.houseInfoHighlight = function(houseName){        
         $("#mahCanvas").addClass("house-cursor");
+        if (house.[houseName].scaleX===1.5)
+        {
+            (house.[houseName].scaleX=2;
+        }
+        else if (house.[houseName].scaleX === 1) 
+        {
+            (house.[houseName].scaleX=1.5;
+        };
     };
     
     house.houseInfoDownlight = function(houseName){        
         $("#mahCanvas").removeClass("house-cursor");
+        if (house.[houseName].scaleX === 2) {
+            (house.[houseName].scaleX = 1.5;
+            } else if (house.[houseName].scaleX === 1.5) {
+                (house.[houseName].scaleX = 1;
+                };
     };
     
     house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
@@ -528,14 +548,12 @@ var House = (function(){
         $("#mahCanvas").removeClass("match-cursor");
         house.wick.x=-120;
         house.wick.removeAllEventListeners();
+        house.house.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
         stage.removeAllEventListeners();
         if(wickActive)
         {
-            house.wick.x=-210;
-            house.wick.addEventListener("click",(function(){house.lightFuse(gotoGameView);}));
-            house.wick.addEventListener("mouseover", house.highlightRocket);
-            house.wick.addEventListener("mouseout", house.downlightRocket);
+            house.activateWick(gotoGameView);
         }
         house.hobo.x=-300;
         house.hobo.y=270;
@@ -600,7 +618,9 @@ var House = (function(){
     {   
         house.wick.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse(gotoGameView);}));
         house.wick.addEventListener("mouseover", house.highlightRocket);
-        house.wick.addEventListener("mouseout", house.downlightRocket);                
+        house.wick.addEventListener("mouseout", house.downlightRocket);
+        house.house.addEventListener("mouseover", house.highlightRocket);
+        house.house.addEventListener("mouseout", house.downlightRocket);                                
     };
     
     house.UpKeep = function (diamondCounterText){        

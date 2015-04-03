@@ -397,8 +397,17 @@ SpriteSheetData = (function()
                 "framerate":24,
                 "images":[queue.getResult("hudGlass")],
                 "frames":[[0, 0, 128, 128, 0, -196, -14],
-                        [128, 0, 128, 128, 0, -196, -14]],
-                "animations":{"still":[0],"frenzy":[0,1]}
+                        [128, 0, 128, 128, 0, -196, -14],
+                        [256, 0, 128, 64, 0, -196, -14]],
+                "animations":{
+                    "still":[0],
+                    "frenzy":[0,1], 
+                    "outOfFuel":{
+                        frames:[2],
+                        speed: 0.3,
+                        next:  "still"
+                    }
+                }
             };
             
             ssd.rocket = {

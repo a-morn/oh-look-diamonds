@@ -34,7 +34,9 @@ var CatzRocket = (function(){
         "miscSound",
         "frenzySound", 
         null,
-        "catzScream3"
+        "catzScream3",
+        null,
+        null
     ],
     fuelConsumption : [
         0,
@@ -47,6 +49,8 @@ var CatzRocket = (function(){
         3.5,
         0.7,
         0.7,
+        0,
+        0,
         0,
         0,
         0
@@ -66,7 +70,9 @@ var CatzRocket = (function(){
         Slammer : 9,
         Frenzy : 10,
         FrenzyUploop : 11,
-        FellOffRocket : 12
+        FellOffRocket : 12,
+        OutOfFuel : 13,
+        OutOfFuelUpsideDown: 14
     },
 
     invincibilityCounter = 0;
@@ -104,6 +110,23 @@ var CatzRocket = (function(){
             {
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
             }        
+        }
+        if (catzRocket.catzState === catzStateEnum.OutOfFuel)
+        {
+            catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
+            if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
+            {
+                catzRocket.catzVelocity = catzRocket.limitVelocity;
+            }
+            catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
+            if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
+            {
+                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
+            } 
+            if(catzRocket.diamondFuel>0)
+            {
+                catzRocket.changeState(catzStateEnum.Normal);
+            }
         }
         if(catzRocket.catzState === catzStateEnum.Frenzy)   
         {
@@ -237,8 +260,34 @@ var CatzRocket = (function(){
         {            
             catzRocket.isCrashed = true;
         }
+
         catzRocket.diamondFuel-=catzRocket.fuelConsumption[catzRocket.catzState]*event.delta/1000;
         catzRocket.diamondFuel=Math.max(catzRocket.diamondFuel,0);
+        if(catzRocket.diamondFuel === 0)
+        {
+            mousedown = false;
+            catzRocket.glass.gotoAndPlay("outOfFuel");
+            switch (catzRocket.catzState) {
+                case catzStateEnum.Normal:
+                case catzStateEnum.Uploop:
+                case catzStateEnum.SecondUploop:
+                case catzStateEnum.TerminalVelocity:
+                case catzStateEnum.EmergencyBoost:
+                    createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+                    catzRocket.changeState(catzStateEnum.OutOfFuel);
+                    break;
+                case catzStateEnum.Downloop:
+                case catzStateEnum.SecondDownloop:
+                case catzStateEnum.Slammer:
+                case catzStateEnum.SlammerReady:
+                case catzStateEnum.Slingshot:
+                    createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+                    catzRocket.changeState(catzStateEnum.OutOfFuelUpsideDown);
+                    isHit = true;
+                    break;
+
+            }
+        }
         updateFrenzy(event);
         updateRocketSnake();
     };
@@ -459,6 +508,10 @@ var CatzRocket = (function(){
                catzRocket.changeState(catzStateEnum.Slammer);
             }
         }
+        else
+        {
+            catzRocket.glass.gotoAndPlay("outOfFuel");
+        }
     };
     
     catzRocket.changeState = function(state)
@@ -475,14 +528,15 @@ var CatzRocket = (function(){
             }
         }
         if(state===catzStateEnum.Normal
-            || state===catzStateEnum.TerminalVelocity)
+            || state===catzStateEnum.TerminalVelocity
+            || state===catzStateEnum.OutOfFuel)
         {
             catzRocket.hideSnake();
             if(!catzRocket.frenzyReady && state===catzStateEnum.Normal)
             {
                 catzRocket.catz.gotoAndPlay("no shake");
             }
-            else if(!catzRocket.frenzyReady)
+            else
             {
                 catzRocket.catz.gotoAndPlay("shake");
             }

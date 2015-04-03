@@ -385,7 +385,7 @@ var RocketShip = (function(){
         house.rehab = new createjs.Sprite(dSheet,"catnip treatment facility");
         house.rehab.alpha=0;
         house.rehab.x=583;
-        house.rehab.y=357;
+        house.rehab.y=345;
         house.rehab.scaleY=1.5;
         house.rehab.scaleX=1.5;
         house.rehab.rotation = 0;
@@ -413,7 +413,7 @@ var RocketShip = (function(){
         house.houseInfoCont = new createjs.Container();
                 
         house.houseInfo["rehab"] = new createjs.Container();
-        house.houseInfo["rehab"].x = 390;
+        house.houseInfo["rehab"].x = 590;
         house.houseInfo["rehab"].y = 270;
         var rGraphics = new createjs.Bitmap(queue.getResult("house popup"));
         var rBox = new createjs.Shape();
@@ -690,7 +690,7 @@ var RocketShip = (function(){
     {    
         directorState=directorStateEnum.Normal;
         debugText = new createjs.Text("0", "12px Courier New", "#ffffcc"); 
-        debugText.x=500;
+        debugText.x=0;
         debugText.y=0;
         
         var diamondData = spriteSheetData.diamond;
@@ -733,8 +733,8 @@ var RocketShip = (function(){
         diamondShardCounter.scaleY= 0.8;
         diamondShardCounter.scaleX= 0.8;        
         diamondCounterText = new createjs.Text("0", "22px Courier New", "white"); 
-        diamondCounterText.x = 608+108;             
-        diamondCounterText.y = 422-17;
+        diamondCounterText.x = 608+118;             
+        diamondCounterText.y = 52;
         
         var rocketData = spriteSheetData.rocket;
            
@@ -809,14 +809,14 @@ var RocketShip = (function(){
         hudPointer = new createjs.Bitmap(queue.getResult("hudPointer"));
         hudPointer.regX=191;
         hudPointer.regY=54;
-        hud.x=550+107;
-        hud.y=345+2;
+        hud.x=588+107;
+        hud.y=-6;
         catzRocket.glass.scaleX=0.85;
         catzRocket.glass.scaleY=0.85;
-        catzRocket.glass.x=533;
-        catzRocket.glass.y=341;
-        hudPointer.x=550+191;
-        hudPointer.y=350+54;
+        catzRocket.glass.x=544;
+        catzRocket.glass.y=-11;
+        hudPointer.x=588+158;
+        hudPointer.y=50;
         
         var leavesData = spriteSheetData.leaves;
         var leavesSheet = new createjs.SpriteSheet(leavesData);
@@ -932,6 +932,7 @@ var RocketShip = (function(){
         }
         stage.removeChild(house.houseView);
         stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, diamondCounterText,debugText);
+        muteButton.x=645;
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);    
@@ -1051,9 +1052,8 @@ var RocketShip = (function(){
                 + "\nfrenzyReady: " + catzRocket.frenzyReady
                 + "\nHoboDialogNo: " + house.hoboDialogNumber
                 +"\n\ncurrentDisplacement: "+currentDisplacement
-                +"\n\currentLevel"+currentLevel;
-        
-        
+                +"\n\currentLevel"+currentLevel
+                +"\n\ncatzState"+catzRocket.catzState;
             stage.update(event); 
         }
     }
@@ -1503,7 +1503,7 @@ var RocketShip = (function(){
     }
     
     function updatePointer(event){
-        hudPointer.rotation = Math.min(-30 + catzRocket.diamondFuel*135/10,105);                
+        hudPointer.rotation = Math.min(-35 + catzRocket.diamondFuel*140/10,105);                
     }
 
     function updateDiamonds(event){

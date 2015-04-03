@@ -4,12 +4,80 @@
 		"selected_items":
 		[
 			[
-				"hoboHou",
-				"hoboCatHouse"
+				"hou",
+				"houseName"
+			],
+			[
+				"Out",
+				"OutOfFuelUpsideDown"
+			],
+			[
+				"Sl",
+				"SlammerReady"
+			],
+			[
+				"sE",
+				"SecondDownloop"
+			],
+			[
+				"CA",
+				"catzState"
+			],
+			[
+				"Sec",
+				"SecondUploop"
+			],
+			[
+				"T",
+				"TerminalVelocity"
+			],
+			[
+				"ca",
+				"catzState"
 			],
 			[
 				"o",
-				"orphanage"
+				"outOfFuel"
+			],
+			[
+				"g",
+				"glass"
+			],
+			[
+				"c",
+				"catzState"
+			],
+			[
+				"d",
+				"diamondFuel"
+			],
+			[
+				"F",
+				"OutOfFuel"
+			],
+			[
+				"catz",
+				"catzState"
+			],
+			[
+				"sLA",
+				"SlammerReady"
+			],
+			[
+				"catzS",
+				"catzStateEnum"
+			],
+			[
+				"Se",
+				"SecondUploop"
+			],
+			[
+				"mute",
+				"muteButton"
+			],
+			[
+				"hoboHou",
+				"hoboCatHouse"
 			],
 			[
 				"scale",
@@ -18,14 +86,6 @@
 			[
 				"w",
 				"weight"
-			],
-			[
-				"ca",
-				"catzState"
-			],
-			[
-				"catz",
-				"catzRocket"
 			],
 			[
 				"m",
@@ -83,7 +143,7 @@
 			"file": "HTML5Application/public_html/oh/RocketShip.js",
 			"settings":
 			{
-				"buffer_size": 86028,
+				"buffer_size": 86077,
 				"line_ending": "Windows"
 			}
 		},
@@ -91,7 +151,7 @@
 			"file": "HTML5Application/public_html/oh/CatzRocket.js",
 			"settings":
 			{
-				"buffer_size": 22431,
+				"buffer_size": 24492,
 				"line_ending": "Windows"
 			}
 		},
@@ -99,7 +159,7 @@
 			"file": "HTML5Application/public_html/oh/spriteSheetData.js",
 			"settings":
 			{
-				"buffer_size": 29690,
+				"buffer_size": 29975,
 				"line_ending": "Windows"
 			}
 		},
@@ -107,7 +167,7 @@
 			"file": "HTML5Application/public_html/oh/House.js",
 			"settings":
 			{
-				"buffer_size": 34375,
+				"buffer_size": 35123,
 				"line_ending": "Windows"
 			}
 		},
@@ -126,6 +186,10 @@
 		"height": 375.0,
 		"selected_items":
 		[
+			[
+				"P",
+				"Package Control: Install Package"
+			],
 			[
 				"pac",
 				"Package Control: Install Package"
@@ -151,7 +215,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 402.0
+		"width": 336.0
 	},
 	"console":
 	{
@@ -192,7 +256,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 36.0
 	},
 	"find_in_files":
 	{
@@ -207,6 +271,49 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"house.houseInfoHighlight",
+			"addE",
+			"wick.rem",
+			"activateWick",
+			"calculateapproval",
+			"wick.addEventListener(\"mouse",
+			"wick",
+			"wick.x",
+			"wick",
+			"catzFellof",
+			"catz.",
+			"catz.x",
+			"catz.",
+			"catzRocket.heightOffset",
+			"catzRocket.height",
+			"changeState",
+			"debugText",
+			" catzRocket.getHit",
+			" catzRocket.changeState(catzStateEnum.FellOffRocket);",
+			"Fell",
+			"hospital",
+			"rehab",
+			"diamondFuel",
+			"diamondfuel=",
+			"diamondfuel =",
+			"hudpointer.x",
+			"hudp",
+			"eventlistener(\"",
+			"eventlistener(\"m",
+			"eventlistener(\"cl",
+			"eventliste",
+			"up",
+			"rocket",
+			"muteButton.x",
+			"hud",
+			"hud.a",
+			"diamondCo",
+			"muteButton.x",
+			"sound",
+			"diamondCountertext.x",
+			"text",
+			"debugtext.x",
+			"debugtex",
 			"578",
 			"house.diamondHouseCont",
 			"catnip",
@@ -237,9 +344,9 @@
 			"theme"
 		],
 		"highlight": true,
-		"in_selection": true,
+		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
 			""
@@ -253,7 +360,7 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 7,
 			"sheets":
 			[
 				{
@@ -352,8 +459,8 @@
 						"selection":
 						[
 							[
-								1166,
-								1166
+								1125,
+								1125
 							]
 						],
 						"settings":
@@ -373,15 +480,15 @@
 					"file": "HTML5Application/public_html/oh/RocketShip.js",
 					"settings":
 					{
-						"buffer_size": 86028,
+						"buffer_size": 86077,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								17034,
-								17034
+								16936,
+								16944
 							]
 						],
 						"settings":
@@ -390,8 +497,8 @@
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
-						"translation.x": 0.0,
-						"translation.y": 4981.0,
+						"translation.x": 56.0,
+						"translation.y": 4893.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -401,43 +508,15 @@
 					"file": "HTML5Application/public_html/oh/CatzRocket.js",
 					"settings":
 					{
-						"buffer_size": 22431,
+						"buffer_size": 24492,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2302.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
-					"settings":
-					{
-						"buffer_size": 29690,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								301,
-								301
+								10049,
+								10054
 							]
 						],
 						"settings":
@@ -453,19 +532,19 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "HTML5Application/public_html/oh/House.js",
+					"buffer": 6,
+					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
 					"settings":
 					{
-						"buffer_size": 34375,
+						"buffer_size": 29975,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								85,
-								85
+								18718,
+								18718
 							]
 						],
 						"settings":
@@ -475,7 +554,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3228.0,
+						"translation.y": 5403.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "HTML5Application/public_html/oh/House.js",
+					"settings":
+					{
+						"buffer_size": 35123,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								21896,
+								21896
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 6806.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -492,8 +599,8 @@
 						"selection":
 						[
 							[
-								5875,
-								5875
+								3469,
+								3468
 							]
 						],
 						"settings":
@@ -503,7 +610,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 753.0,
+						"translation.y": 164.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
