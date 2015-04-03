@@ -4,7 +4,7 @@ body {
     color: #ffffcc;    
 }
 
-#mahCanvas, #hideShow{
+canvas, #hideShow{
     display: block;
     margin: 0 auto;    
 }
