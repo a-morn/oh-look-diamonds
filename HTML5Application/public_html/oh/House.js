@@ -239,7 +239,7 @@ var House = (function(){
     
 
     
-    house.characterDialog = function(diamondCounterText, gotoGameView)
+    house.characterDialog = function(diamondCounterText)
     {             
         var dialog = dialogJSON[currentCharacter][characterDialogNumber[currentCharacter]];           
         if(dialog.dialog[characterdialogID[currentCharacter]])
@@ -335,7 +335,7 @@ var House = (function(){
                             house.choice3.alpha = 0;
                             house.choices[0].removeAllEventListeners();
                             house.choices[1].removeAllEventListeners();
-                            house.characterDialog(diamondCounterText, gotoGameView);
+                            house.characterDialog(diamondCounterText);
                     }); 
                 }
                 for (var i=0;i<dialog.dialog[characterdialogID[currentCharacter]].Choices.length;i++)
@@ -370,7 +370,7 @@ var House = (function(){
                     }
                     createjs.Tween.removeAllTweens(house.wick);
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
-                            .call(function () {house.activateWick(gotoGameView);});
+                            .call(function () {house.activateWick();});
                     //To shift to idle speach. Should be implemented smarter.
                     characterdialogID[currentCharacter]+=100;                
                 }                
@@ -393,7 +393,7 @@ var House = (function(){
         house.houseView.y=0;
     };
     
-    house.lightFuse = function(gotoGameView)
+    house.lightFuse = function()
     {        
         if(wickActive)
         {
@@ -405,7 +405,7 @@ var House = (function(){
             house.wick.removeAllEventListeners();   
             house.house.removeAllEventListeners();       
             house.wick.addEventListener("animationend",function(){$("#mahCanvas").removeClass("match-cursor");});
-            house.wick.addEventListener("animationend",gotoGameView);
+            house.wick.addEventListener("animationend",GameLogic.gotoGameView);
             house.catzSpeach.text ="";
             house.characterSpeach.text ="";            
         }
@@ -494,18 +494,18 @@ var House = (function(){
 
     };
     
-    house.addCharacterEvents = function(diamondCounterText, gotoGameView)
+    house.addCharacterEvents = function(diamondCounterText)
     {        
         house.characterExclamation.alpha=0.5;
-        house.hobo.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
+        house.hobo.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
         house.hobo.addEventListener("mouseover", house.highlightCharacter);
         house.hobo.addEventListener("mouseout", house.downlightCharacter);
         
-        house.timmy.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
+        house.timmy.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
         house.timmy.addEventListener("mouseover", house.highlightCharacter);
         house.timmy.addEventListener("mouseout", house.downlightCharacter);
         
-        house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText, gotoGameView);}));
+        house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
         house.priest.addEventListener("mouseover", house.highlightCharacter);
         house.priest.addEventListener("mouseout", house.downlightCharacter);
 
@@ -566,7 +566,7 @@ var House = (function(){
         console.log("meow");
     }
     
-    house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
+    house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener)
     {        
         house.characterExclamation.alpha=0;        
         house.gotoHouseView(gameStats, diamondCounterText);
@@ -589,7 +589,7 @@ var House = (function(){
         createjs.Ticker.off("tick", gameListener);        
     };
     
-    house.gotoHouseViewWithRocket = function(gameStats, catzRocket, gotoGameView, diamondCounterText)
+    house.gotoHouseViewWithRocket = function(gameStats, diamondCounterText)
     {        
         
         house.gotoHouseView(gameStats, diamondCounterText);
@@ -621,13 +621,13 @@ var House = (function(){
                 ;
     };    
     
-    house.gotoHouseViewWithoutRocket = function(gameStats, catzRocket, gotoGameView, diamondCounterText)
+    house.gotoHouseViewWithoutRocket = function(gameStats, diamondCounterText)
     {
         house.gotoHouseView(gameStats, diamondCounterText);
-        house.catz.x=300-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
-        house.catz.y =370-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        house.catz.x=300-400*Math.cos(CatzRocket.catzRocketContainer.rotation*6.28/360);
+        house.catz.y =370-400*Math.sin(CatzRocket.catzRocketContainer.rotation*6.28/360);
         house.catz.gotoAndPlay("flying");
-        house.catz.rotation=catzRocket.catzRocketContainer.rotation+90;
+        house.catz.rotation=CatzRocket.catzRocketContainer.rotation+90;
         createjs.Tween.get(house.catz)
                 .to({x:300, y:370},200)
                 .call(house.catz.gotoAndPlay,["cycle"])
@@ -647,9 +647,9 @@ var House = (function(){
                 .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn);
     };           
     
-    house.activateWick = function(gotoGameView)
+    house.activateWick = function()
     {   
-        house.wick.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse(gotoGameView);}));
+        house.wick.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse();}));
         house.wick.addEventListener("mouseover", house.highlightRocket);
         house.wick.addEventListener("mouseout", house.downlightRocket);
         house.house.addEventListener("mouseover", house.highlightRocket);

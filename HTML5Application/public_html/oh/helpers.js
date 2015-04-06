@@ -31,5 +31,15 @@ var helpers = (function(){
 			spr.alpha = options.alpha;        		
 		return spr;
 	};
+	
+	halp.createText = function(msg, font, color, options){		
+		var text = new createjs.Text(msg, font, color);         
+		var options = options || {};	
+		text.x = options.x || 0;             
+        text.y =  options.y || 0;        
+        if(typeof options.alpha !== "undefined")
+			text.alpha = options.alpha;        		
+		return text;
+	};
 	return halp;
 }());
