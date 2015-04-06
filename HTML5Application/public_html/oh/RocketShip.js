@@ -194,6 +194,7 @@ var RocketShip = (function(){
                     {id:"mouseHobo", src:"assets/new assets/img/mouseover hobo.png"},
                     {id:"mouseRocket", src:"assets/new assets/img/mouseover rocket.png"},
                     {id:"mouseTimmy", src:"assets/new assets/img/mouseover timmy.png"},
+                    {id:"mouseCatz", src:"assets/new assets/img/mouseover catz.png"},
                     {id:"mousePriest", src:"assets/new assets/img/mouseover priest.png"},
                     {id:"mouseCatparty", src:"assets/new assets/img/mouseover cat party.png"},
                     {id:"supportingCharacter", src:"assets/new assets/sprites/supporting characters.png"},
@@ -327,13 +328,13 @@ var RocketShip = (function(){
                                 
         house.diamondHouseCont = new createjs.Container();
         house.hoboCatHouse = helpers.createSprite(spriteSheetData.dHouse, "hoboHouse", 
-			{x:430, y:375, scaleX:0.8, scaleY:0.8, alpha:0,rotation:-8}); 				               
+			{x:430, y:378, scaleX:1, scaleY:1, alpha:0,rotation:-8}); 				               
                 
         house.diamondHouseCont.addChild(house.hoboCatHouse);
         house.diamondHouseArray["hoboCatHouse"] = house.hoboCatHouse;
         
         house.rehab = helpers.createSprite(spriteSheetData.dHouse, "catnip treatment facility", 
-			{x:583, y:345, scaleX:1.5, scaleY:1.5, alpha:0});		
+			{x:583, y:355, scaleX:1.5, scaleY:1.5, alpha:0});		
                         
         house.diamondHouseCont.addChild(house.rehab);
         house.diamondHouseArray["rehab"] = house.rehab;
@@ -452,16 +453,19 @@ var RocketShip = (function(){
         house.houseInfo["university"].alpha = 0; 
         house.houseInfoCont.addChild(house.houseInfo["university"]);
         
-		house.mouseHobo = helpers.createBitmap(queue.getResult("mouseHobo"), 
-			{x:110, y:316, alpha:0, scaleX:0.5, scaleY:0.5});                
+        house.mouseHobo = helpers.createBitmap(queue.getResult("mouseHobo"), 
+            {x:110, y:316, alpha:0, scaleX:0.5, scaleY:0.5});  
+
+        house.mouseCatz = helpers.createBitmap(queue.getResult("mouseCatz"), 
+            {x:118, y:57, alpha:0, scaleX:0.5, scaleY:0.5});                
         
 		house.mouseTimmy = helpers.createBitmap(queue.getResult("mouseTimmy"), 
-			{x:85, y:360, alpha:0, scaleX:0.5, scaleY:0.5});        
+			{x:73, y:360, alpha:0, scaleX:0.5, scaleY:0.5});        
         
-        house.mousePries = helpers.createBitmap(queue.getResult("mousePriest"), 
+        house.mousePriest = helpers.createBitmap(queue.getResult("mousePriest"), 
 			{x:53, y:330, alpha:0, scaleX:0.5, scaleY:0.5});                
         
-        house.mouseChar = {"hoboCat":house.mouseHobo, "timmy":house.mouseTimmy, "priest" : house.mousePriest};
+        house.mouseChar = {"hoboCat":house.mouseHobo, "timmy":house.mouseTimmy, "priest" : house.mousePriest, "catz" : house.mouseCatz};
         
 		house.mouseRocket = helpers.createBitmap(queue.getResult("mouseRocket"), 
 			{x:207, y:338, alpha:0});        		        
@@ -530,7 +534,7 @@ var RocketShip = (function(){
         house.catzSound2.stop();
         
 		house.subtractedDiamond = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
-			{x:750, y:420, scaleX:0.4, scaleY:0.4});                
+			{x:750, y:20, scaleX:0.4, scaleY:0.4});                
         
         house.subtractedDiamondCont = new createjs.Container();
         rocketSong = createjs.Sound.play("palladiumAlloySong");
@@ -543,7 +547,7 @@ var RocketShip = (function(){
             house.hoboCatHouse,house.crashRocket, house.catz, 
             house.wick, house.house, house.hobo, house.timmy, house.priest, house.characterExclamation, 
             house.wickExclamation, house.catzSpeach, house.characterSpeach, house.choice1, 
-            house.choice2, house.choice3,muteButton, house.mouseHobo, house.mouseTimmy, 
+            house.choice2, house.choice3,muteButton, house.mouseCatz, house.mouseHobo, house.mouseTimmy, 
             house.mousePriest, house.mouseRocket, house.wickLight,house.oh, 
             house.look, house.diamonds, house.diCont, house.lookingAtStarsButton,
             house.houseInfoCont, house.subtractedDiamondCont);
@@ -684,7 +688,7 @@ var RocketShip = (function(){
 			{x:588+158, y:50, regX:191,regY:54});        		
 		
 		catzRocket.glass = helpers.createSprite(spriteSheetData.hudGlass, "still", 
-			{regX:150, regY:200, alpha:0, scaleX:0.85, scaleY:0.85, x:544, y:-11});					
+			{regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});					
                 
         leaves = helpers.createSprite(spriteSheetData.leaves, "cycle", 
 			{alpha:0});							                
@@ -1950,7 +1954,7 @@ var RocketShip = (function(){
     function catzFellOfRocket(){
         stage.removeAllEventListeners();
         createjs.Tween.removeAllTweens(catzRocket.rocket);
-        createjs.Tween.get(catzRocket.rocket).to({x:800},800);
+        createjs.Tween.get(catzRocket.rocket).to({x:800},800);   
     }
     
     function crash()

@@ -4,6 +4,42 @@
 		"selected_items":
 		[
 			[
+				"sta",
+				"state"
+			],
+			[
+				"h",
+				"heightOffset"
+			],
+			[
+				"ca",
+				"catzRocket"
+			],
+			[
+				"sc",
+				"xScreenPosition"
+			],
+			[
+				"OutOf",
+				"OutOfFuelUpsideDown"
+			],
+			[
+				"ro",
+				"rotation"
+			],
+			[
+				"cat",
+				"catzRocket"
+			],
+			[
+				"ha",
+				"hasActiveTweens"
+			],
+			[
+				"mousec",
+				"mouseCatz"
+			],
+			[
 				"hou",
 				"houseName"
 			],
@@ -30,10 +66,6 @@
 			[
 				"T",
 				"TerminalVelocity"
-			],
-			[
-				"ca",
-				"catzState"
 			],
 			[
 				"o",
@@ -119,7 +151,7 @@
 			"file": "HTML5Application/public_html/oh/Tracks.js",
 			"settings":
 			{
-				"buffer_size": 3403,
+				"buffer_size": 3494,
 				"line_ending": "Windows"
 			}
 		},
@@ -127,7 +159,7 @@
 			"file": "HTML5Application/public_html/oh/TrackParts.js",
 			"settings":
 			{
-				"buffer_size": 29459,
+				"buffer_size": 55885,
 				"line_ending": "Windows"
 			}
 		},
@@ -143,7 +175,7 @@
 			"file": "HTML5Application/public_html/oh/RocketShip.js",
 			"settings":
 			{
-				"buffer_size": 86077,
+				"buffer_size": 80653,
 				"line_ending": "Windows"
 			}
 		},
@@ -151,7 +183,7 @@
 			"file": "HTML5Application/public_html/oh/CatzRocket.js",
 			"settings":
 			{
-				"buffer_size": 24492,
+				"buffer_size": 26681,
 				"line_ending": "Windows"
 			}
 		},
@@ -167,7 +199,7 @@
 			"file": "HTML5Application/public_html/oh/House.js",
 			"settings":
 			{
-				"buffer_size": 35123,
+				"buffer_size": 35816,
 				"line_ending": "Windows"
 			}
 		},
@@ -271,6 +303,73 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"catzState",
+			"stateEnum",
+			"statenum",
+			"gotohouse",
+			"scaleY",
+			"highlight",
+			"crash",
+			"FellOff",
+			"catzRocket.rocket",
+			"catz.rocket",
+			"glass",
+			"updateFg",
+			"glass",
+			"subtractedDiamond",
+			"rehab.x",
+			"rehab",
+			"            catzRocket.catzRocketContainer.x = 200+\n                        Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*160;\n            catzRocket.catzRocketContainer.y = 200+\n                        Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*210\n                +catzRocket.heightOffset;",
+			"changeState",
+			"catzFellOfRocket",
+			"catzCollisionCheck",
+			"collisionResolve",
+			" =true",
+			" =tre",
+			"isH",
+			"//}",
+			"FellOffRocket",
+			"glass",
+			"house.update",
+			"update",
+			"houset",
+			"houseListener",
+			"crash",
+			"catzRocket.glass",
+			"crash",
+			"house.catz.x",
+			"catz.x",
+			"update",
+			"HOUSE.CAT",
+			"DIAMOND",
+			"HIGHLIGH",
+			"highlightCa",
+			"highlight",
+			"catzScream3",
+			"catzScream2",
+			"catzScream3",
+			"catzScream",
+			"createjs.Sound",
+			"catz.a",
+			"highlight",
+			"mouseCatz",
+			"mouseCa",
+			"house",
+			"highlight",
+			"ouseCatz",
+			"mouseH",
+			"mouse ho",
+			"mouseover",
+			"mouse",
+			"addEvent",
+			"catz.add",
+			"house",
+			"queue",
+			"eatejs.Sound.pla",
+			"meow",
+			"houseInfo",
+			"<<<<<<<",
+			"HEAD",
 			"house.houseInfoHighlight",
 			"addE",
 			"wick.rem",
@@ -331,17 +430,7 @@
 			"diamondFuel",
 			"newBounds",
 			",\n",
-			", \"acc\": *",
-			", \"acc\": 5",
-			"catzState",
-			"catzStateEnum",
-			"catzRocketEnum",
-			"diamondFuel",
-			"diamondSheet",
-			"maxDiamondFuel",
-			"diamondFuel",
-			"frenzy",
-			"theme"
+			", \"acc\": *"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -396,7 +485,7 @@
 					"file": "HTML5Application/public_html/oh/Tracks.js",
 					"settings":
 					{
-						"buffer_size": 3403,
+						"buffer_size": 3494,
 						"regions":
 						{
 						},
@@ -424,7 +513,7 @@
 					"file": "HTML5Application/public_html/oh/TrackParts.js",
 					"settings":
 					{
-						"buffer_size": 29459,
+						"buffer_size": 55885,
 						"regions":
 						{
 						},
@@ -470,7 +559,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 24.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -480,43 +569,15 @@
 					"file": "HTML5Application/public_html/oh/RocketShip.js",
 					"settings":
 					{
-						"buffer_size": 86077,
+						"buffer_size": 80653,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								16936,
-								16944
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 56.0,
-						"translation.y": 4893.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "HTML5Application/public_html/oh/CatzRocket.js",
-					"settings":
-					{
-						"buffer_size": 24492,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								10049,
-								10054
+								40089,
+								40098
 							]
 						],
 						"settings":
@@ -526,7 +587,35 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 12204.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "HTML5Application/public_html/oh/CatzRocket.js",
+					"settings":
+					{
+						"buffer_size": 26681,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								20567,
+								20607
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 28.0,
+						"translation.y": 701.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -543,8 +632,8 @@
 						"selection":
 						[
 							[
-								18718,
-								18718
+								18448,
+								18448
 							]
 						],
 						"settings":
@@ -564,15 +653,15 @@
 					"file": "HTML5Application/public_html/oh/House.js",
 					"settings":
 					{
-						"buffer_size": 35123,
+						"buffer_size": 35816,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								21896,
-								21896
+								341,
+								341
 							]
 						],
 						"settings":
@@ -582,7 +671,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 6806.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -718,6 +807,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 376.0,
+	"side_bar_width": 380.0,
 	"status_bar_visible": true
 }

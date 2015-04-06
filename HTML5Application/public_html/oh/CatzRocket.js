@@ -14,6 +14,8 @@ var CatzRocket = (function(){
     frenzyTimer: 0,
     frenzyReady: false,
     rocketSound: null,
+    xScreenPosition : 0,
+    yScreenPosition : 0,
     catz: null,  
     rocket: null,
     rocketFlame: null,
@@ -108,7 +110,14 @@ var CatzRocket = (function(){
             catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
             if(!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             {
-                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
+                if(catzRocket.catzRocketContainer.rotation<=-270 || catzRocket.catzRocketContainer.rotation>-90)
+                {
+                    catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
+                }
+                else if (catzRocket.catzRocketContainer.rotation<=-180 && catzRocket.catzRocketContainer.rotation>-270)
+                {
+                    catzRocket.catzRocketContainer.rotation = -Math.atan(catzRocket.catzVelocity/40)*360/3.14;                
+                }
             }        
         }
         if (catzRocket.catzState === catzStateEnum.OutOfFuel)
@@ -127,6 +136,27 @@ var CatzRocket = (function(){
             {
                 catzRocket.changeState(catzStateEnum.Normal);
             }
+        }
+        else if (catzRocket.catzState === catzStateEnum.OutOfFuelUpsideDown)
+        {
+            catzRocket.catzVelocity += (grav+wind)*event.delta/1000;
+            if(catzRocket.catzVelocity>=catzRocket.limitVelocity)
+            {
+                catzRocket.catzVelocity = catzRocket.limitVelocity;
+            }
+            catzRocket.heightOffset += 20*catzRocket.catzVelocity*event.delta/1000;   
+            if(catzRocket.catzRocketContainer.rotation<=-270 || catzRocket.catzRocketContainer.rotation>-90)
+            {
+                catzRocket.catzRocketContainer.rotation+= event.delta*(Math.atan(catzRocket.catzVelocity/40)*360/3.14)/300;                
+            } 
+            else if (catzRocket.catzRocketContainer.rotation<=-180 && catzRocket.catzRocketContainer.rotation>-270)
+            {
+                catzRocket.catzRocketContainer.rotation+= event.delta*(-Math.atan(catzRocket.catzVelocity/40)*360/3.14)/300;                
+            } 
+            //if(catzRocket.diamondFuel>0)
+            //{
+            //   catzRocket.changeState(catzStateEnum.Normal);
+            //}
         }
         if(catzRocket.catzState === catzStateEnum.Frenzy)   
         {
@@ -229,28 +259,27 @@ var CatzRocket = (function(){
             .call(catzRocket.playSecondDownloopSound);
         }
         if(catzRocket.catzState !== catzStateEnum.SecondDownloop 
-                && catzRocket.catzState !== catzStateEnum.Slingshot)
+                && catzRocket.catzState !== catzStateEnum.Slingshot
+                && catzRocket.catzState !== catzStateEnum.OutOfFuelUpsideDown)
         {
-            catzRocket.catzRocketContainer.x = 200+
+            catzRocket.xScreenPosition = 200+
                         Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*160;
-            catzRocket.catzRocketContainer.y = 200+
-                        Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*210
-                +catzRocket.heightOffset;
+            catzRocket.yScreenPosition = 200+
+                        Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*210;    
         }
-        else
+        else if(catzRocket.catzState !== catzStateEnum.OutOfFuelUpsideDown)
         {
-            catzRocket.catzRocketContainer.x = 255+
+            catzRocket.xScreenPosition = 255+
                 Math.cos((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*80;
-            catzRocket.catzRocketContainer.y = 200+
-                Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*100
-                +catzRocket.heightOffset;
+            catzRocket.yScreenPosition = 200+
+                Math.sin((catzRocket.catzRocketContainer.rotation+90)/360*2*Math.PI)*100;
         }
         if(catzRocket.isWounded && 
                 !createjs.Tween.hasActiveTweens(catzRocket.catz))
         {
             catzRocket.catz.x=-50;
         }
-        else if (!catzRocket.isWounded && 
+        else if (!catzRocket.is3Wounded && 
                 !createjs.Tween.hasActiveTweens(catzRocket.catz))
         {
             catzRocket.catz.x=0;
@@ -260,6 +289,8 @@ var CatzRocket = (function(){
         {            
             catzRocket.isCrashed = true;
         }
+        catzRocket.catzRocketContainer.x=catzRocket.xScreenPosition;
+        catzRocket.catzRocketContainer.y=catzRocket.yScreenPosition+catzRocket.heightOffset;
 
         catzRocket.diamondFuel-=catzRocket.fuelConsumption[catzRocket.catzState]*event.delta/1000;
         catzRocket.diamondFuel=Math.max(catzRocket.diamondFuel,0);
@@ -282,8 +313,15 @@ var CatzRocket = (function(){
                 case catzStateEnum.SlammerReady:
                 case catzStateEnum.Slingshot:
                     createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
-                    catzRocket.changeState(catzStateEnum.OutOfFuelUpsideDown);
-                    isHit = true;
+                    if (catzRocket.catzRocketContainer.rotation <= -90 && catzRocket.catzRocketContainer.rotation >= -270) 
+                    {
+                        catzRocket.changeState(catzStateEnum.OutOfFuelUpsideDown);
+                        isHit = true;
+                    }
+                    else
+                    {
+                        catzRocket.changeState(catzStateEnum.OutOfFuel);
+                    }
                     break;
 
             }
@@ -529,16 +567,17 @@ var CatzRocket = (function(){
         }
         if(state===catzStateEnum.Normal
             || state===catzStateEnum.TerminalVelocity
-            || state===catzStateEnum.OutOfFuel)
+            || state===catzStateEnum.OutOfFuel
+            || state===catzStateEnum.OutOfFuelUpsideDown)
         {
             catzRocket.hideSnake();
-            if(!catzRocket.frenzyReady && state===catzStateEnum.Normal)
+            if(catzRocket.frenzyReady || state===catzStateEnum.TerminalVelocity)
             {
-                catzRocket.catz.gotoAndPlay("no shake");
+                catzRocket.catz.gotoAndPlay("shake");
             }
             else
             {
-                catzRocket.catz.gotoAndPlay("shake");
+                catzRocket.catz.gotoAndPlay("no shake");
             }
         }
         else if(state!==catzStateEnum.FellOffRocket 

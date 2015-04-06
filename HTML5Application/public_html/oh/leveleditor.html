@@ -1,0 +1,46 @@
+<!DOCTYP html>
+<html>
+<head>
+    <title>OhLD Level editor</title>   
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+    <link href='http://fonts.googleapis.com/css?family=Fauna+One' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="OhLDStyle.css">    
+    <link rel="icon" href="favicon.ico">
+    <script src = "http://code.createjs.com/createjs-2013.12.12.min.js"></script>    
+    <script src="dialog.js"></script>
+    <!script src="ApplicationControl.js"><!/script>  
+    <script src="Tracks.js"></script>
+    <script src="TrackParts.js"></script>
+    <script src="LevelEditor.js"></script>
+    <script src="spriteSheetData.js"></script>    
+	<script src="helpers.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>         		
+</head>
+<body onload ="levelEditor.Init()">
+    <canvas id = "levelEditCanvas" width = "8000" height = "650">        
+    </canvas>
+    <div id="belowLevelEditor">
+        <div id="actionMenu">
+            <button onclick="createSmallDiamond()">diamond</button>
+            <button onclick="createMediumDiamond()">mediumDiamond</button>
+            <button onclick="createGrandDiamond()">grandDiamond</button>
+            <button onclick="createSeagull()">seagull</button>
+            <br>
+        </div>
+        <div id="importArea">
+            <button onclick="saveLevel()">export</button>
+            <br>
+            <textarea rows="5" cols="60" id="levelText"> 
+            </textarea>
+        </div>
+        <div id="exportArea">
+            <br><br>
+            <select id="importSelect"></select>
+            <button onclick="eraseAndImport()">import</button>
+            <button onclick="addToImport()">add in to position</button>
+        </div>
+    </div>
+
+</body>
+</html>

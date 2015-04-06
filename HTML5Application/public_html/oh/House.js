@@ -409,15 +409,30 @@ var House = (function(){
             house.catzSpeach.text ="";
             house.characterSpeach.text ="";            
         }
-    };    
+    };
+
+    house.highlightCatz = function()
+    {
+        if(!createjs.Tween.hasActiveTweens(house.catz))
+        {
+            house.mouseCatz.alpha=1;            
+        }
+    }
+
+
+    house.downlightCatz = function()
+    {
+        house.mouseCatz.alpha=0;
+    }
+    
     
     house.highlightCharacter = function()
     {                       
         $("#mahCanvas").addClass("talk-cursor");
         house.mouseChar[currentCharacter].alpha = 1;
-        if(characterActive[currentCharacter])
+        if(characterActive[currentCharacter] && currentCharacter!="catz")
         {
-            house.characterExclamation.alpha = 1;            
+            house.characterExclamation.alpha = 1;
         }
     };
     
@@ -476,6 +491,7 @@ var House = (function(){
         {
             house.characterExclamation.alpha=0;  
         }
+
     };
     
     house.addCharacterEvents = function(diamondCounterText, gotoGameView)
@@ -494,8 +510,8 @@ var House = (function(){
         house.priest.addEventListener("mouseout", house.downlightCharacter);
 
         house.catz.addEventListener("click", house.meow);
-        house.catz.addEventListener("mouseover", house.highlightCharacter);
-        house.catzt.addEventListener("mouseout", house.downlightCharacter);
+        house.catz.addEventListener("mouseover", house.highlightCatz);
+        house.catz.addEventListener("mouseout", house.downlightCatz);
     };
     
     house.addHouseEvents = function()
@@ -522,24 +538,33 @@ var House = (function(){
     
     house.houseInfoHighlight = function(houseName){        
         $("#mahCanvas").addClass("house-cursor");
-        if (house.[houseName].scaleX===1.5)
+        if (house[houseName].scaleX===1.5)
         {
-            (house.[houseName].scaleX=2;
+            house[houseName].scaleX=1.7;
+            house[houseName].scaleY=1.7;
         }
-        else if (house.[houseName].scaleX === 1) 
+        else if (house[houseName].scaleX === 1) 
         {
-            (house.[houseName].scaleX=1.5;
+            house[houseName].scaleX=1.2;
+            house[houseName].scaleY=1.2;
         };
     };
     
     house.houseInfoDownlight = function(houseName){        
         $("#mahCanvas").removeClass("house-cursor");
-        if (house.[houseName].scaleX === 2) {
-            (house.[houseName].scaleX = 1.5;
-            } else if (house.[houseName].scaleX === 1.5) {
-                (house.[houseName].scaleX = 1;
+        if (house[houseName].scaleX === 1.7) {
+            house[houseName].scaleX = 1.5;
+            house[houseName].scaleY = 1.5;
+            } else if (house[houseName].scaleX === 1.2) {
+                house[houseName].scaleX = 1;
+                house[houseName].scaleY = 1;
                 };
     };
+
+    house.meow = function(){
+        createjs.Sound.play("catzScream2");
+        console.log("meow");
+    }
     
     house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener, gotoGameView)
     {        
@@ -568,9 +593,17 @@ var House = (function(){
     {        
         
         house.gotoHouseView(gameStats, diamondCounterText);
-        house.crashRocket.alpha=1;
+        if(catzRocket.state===14)
+        {;
+            house.crashRocket.x=315;
+            house.crashRocket.y = -90;
+
+        }
+        else{
         house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
         house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        }
+        house.crashRocket.alpha=1;
         house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;        
         createjs.Tween.get(house.crashRocket)
                 .to({x:315, y:310},200)
