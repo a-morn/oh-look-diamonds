@@ -1,4 +1,74 @@
-function StartGame(){    
-    var rocketShip = RocketShip;
-    rocketShip.Init(CatzRocket, House, SpriteSheetData, TutorialTexts, Tracks, TrackParts);
+var 
+	bg,            
+	canvas, 
+	catzBounds,
+	catzNorm,        
+	catzVertices,
+	dataDict,        
+	diamondShardCounter,
+	diamondSound,
+	debugText,
+	debugMode = false,	
+	debugOptions = {noHouseView: false},
+	diamondCounterText,     
+	exitSmoke,
+	flameBounds,
+	flameNorm,
+	flameVertices,
+	gameView,
+	gameListener,
+	hud,
+	hudPointer,        
+	houseListener,
+	leaves,	       
+	muteButton,        	
+	newBounds,
+	norm,
+	polygonLine,
+	polygonVertices,	
+	rocketSong,
+	smoke,
+	squawkSound,
+	stage,
+	queue,    
+	attackBirdCont = new createjs.Container(),
+	cloudCont = new createjs.Container(),
+	collisionCheckDebug = new createjs.Container(),
+	diCont = new createjs.Container(),	
+	fgCont = new createjs.Container(),
+	fgTopCont = new createjs.Container(),	
+	gameStats = {
+        score : 0,
+        kills : 0,
+        bust : 0,
+        currentRound: 0,        
+        hoboCatHouse : {built : false, builtOnRound : null} ,
+        orphanage : {built : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
+        rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
+        university: {built : false, builtOnRound : null, rocketUniversity:null, slots : 0},
+        villagers: {approvalRating : 0},
+        kittens: {approvalRating : 0},
+        catParty: {approvalRating : 0},
+        Difficulty : 0,
+        hasBeenFirst: {
+            round : false,
+            frenzy : false,            
+            houseWithSlots : false,
+            bouncedCheck : false
+        }        
+    },
+	gooseCont = new createjs.Container(),
+	hawkCont = new createjs.Container(),
+	lightningCont = new createjs.Container(),
+	onlookerCont = new createjs.Container(),
+	parallaxCont = new createjs.Container(),
+	scatterDiamondsCont = new createjs.Container(),		
+	sgCont = new createjs.Container(),
+	starCont = new createjs.Container(),	
+	thunderCont = new createjs.Container(),
+	windCont = new createjs.Container();
+function StartGame(){    	
+    //var rocketShip = GameLogic;	
+	InitializeStage.init(canvas, stage);
+    //rocketShip.Init(CatzRocket, House, SpriteSheetData, TutorialTexts, Tracks, TrackParts);
 }
