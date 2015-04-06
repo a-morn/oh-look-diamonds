@@ -12,15 +12,12 @@ var GameLogic = (function(){
 	currentDisplacement = 0,
 	currentLevel = 0,
 	currentTrack = 0,	
-	directorTimer=0,	
-	godMode = false,	
-	grav = 12,	
-	infiniteFuel = false,
+	directorTimer=0,		
+	grav = 12,		
 	lastResolveNorm = [1,0],	
 	onTrack=false,                	
 	paused = false,	
-	trackTimer = 0,
-	trustFund = true,
+	trackTimer = 0,	
 	wind=0,	
     containerDict = {
         "diamond" : diCont,
@@ -96,7 +93,7 @@ var GameLogic = (function(){
                 }, 500);                
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
             }                                                
-            if(infiniteFuel && CatzRocket.diamondFuel<1)            
+            if(debugOptions.infiniteFuel && CatzRocket.diamondFuel<1)            
                 CatzRocket.diamondFuel=1;            
             CatzRocket.update(grav,wind,event);
             updateVertices();
@@ -285,7 +282,7 @@ var GameLogic = (function(){
                     }
                 }
                 if(!birdHit){
-                    if(!godMode){
+                    if(!debugOptions.godMode){
                         if(CatzRocket.getHit(true)) {                     
                             catzFellOfRocket();
                         } 
@@ -519,7 +516,7 @@ var GameLogic = (function(){
         }   
     }
     
-    function updateScatterDiamonds(event){
+    /*function updateScatterDiamonds(event){
         if(currentTrack<2)
             var thres = 0.95;        
         else if(currentTrack<4)
@@ -551,7 +548,7 @@ var GameLogic = (function(){
                 scatterDiamondsCont.removeChildAt(i);
             }
         }   
-    }
+    }*/
         
     function upWind(){
         wind = -0.73*grav;
@@ -844,7 +841,7 @@ var GameLogic = (function(){
             if(projC-Math.max(proj1,proj2)>bird.rad || Math.min(proj1,proj2)-projC>bird.rad)       
                 return false;
         }                 
-		if(!godMode &&CatzRocket.getHit(false)) 
+		if(!debugOptions.godMode &&CatzRocket.getHit(false)) 
 			catzFellOfRocket();            
         return true;
     }
@@ -989,7 +986,7 @@ var GameLogic = (function(){
             House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
         else        
             House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
-        if(trustFund && gameStats.score<20000)        
+        if(debugOptions.trustFund && gameStats.score<20000)        
             gameStats.score=20000;        
         CatzRocket.reset();                
         CatzRocket.catzRocketContainer.x = 300;
@@ -1027,7 +1024,7 @@ var GameLogic = (function(){
         if(rocketSong.getPosition()<100)        
             rocketSong.play({loop:-1});        
         CatzRocket.hideSnake();
-        if(!debugMode){
+        if(!debugOptions.debugMode){
             collisionCheckDebug.alpha=0;
             debugText.alpha=0;
         }

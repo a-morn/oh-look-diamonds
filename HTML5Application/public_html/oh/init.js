@@ -563,7 +563,6 @@ var InitializeStage = (function(){
             .to({x:-110, y:225, rotation:0},300)
             .call(House.addCharacterEvents,[diamondCounterText])
             .call(House.addHouseEvents);
-    }                  		
-	
+    }                  			
 	return is;
 }());

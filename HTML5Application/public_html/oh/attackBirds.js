@@ -16,14 +16,14 @@ AttackBird.prototype.shape = new createjs.Shape();
 AttackBird.prototype.temperature = 0;
 AttackBird.prototype.weight = 0;
 AttackBird.prototype.BirdProperties = {
-                    "chicken":  {acceleration: 0,  topSpeed2: 100000, weight: 0.2},
-                    "falcon":   {acceleration: 8, topSpeed2: 100000, weight:0.3}, 
-                    "crow":     {acceleration: 5,  topSpeed2: 100000, weight:0.5}, 
-                    "bat":      {acceleration: 7,  topSpeed2: 100000, weight:0.1}, 
-                    "duck":     {acceleration: 5, topSpeed2: 100000, weight:0.2}, 
-                    "seagull":  {acceleration: 3, topSpeed2: 100000, weight:0.1}, 
-                    "glasses":  {acceleration: 11, topSpeed2: 100000, weight:1}
-                };
+	"chicken":  {acceleration: 0,  topSpeed2: 100000, weight: 0.2},
+	"falcon":   {acceleration: 8, topSpeed2: 100000, weight:0.3}, 
+	"crow":     {acceleration: 5,  topSpeed2: 100000, weight:0.5}, 
+	"bat":      {acceleration: 7,  topSpeed2: 100000, weight:0.1}, 
+	"duck":     {acceleration: 5, topSpeed2: 100000, weight:0.2}, 
+	"seagull":  {acceleration: 3, topSpeed2: 100000, weight:0.1}, 
+	"glasses":  {acceleration: 11, topSpeed2: 100000, weight:1}
+};
                
 //constructor
 AttackBird.prototype.initialize = function (sheet,current) {

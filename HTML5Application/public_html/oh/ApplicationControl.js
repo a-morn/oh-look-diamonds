@@ -7,9 +7,8 @@ var
 	dataDict,        
 	diamondShardCounter,
 	diamondSound,
-	debugText,
-	debugMode = false,	
-	debugOptions = {noHouseView: false},
+	debugText,	
+	debugOptions = {noHouseView: false, debugMode: false, trustFund : true, infiniteFuel : false, godMode : false},
 	diamondCounterText,     
 	exitSmoke,
 	flameBounds,
@@ -67,8 +66,7 @@ var
 	starCont = new createjs.Container(),	
 	thunderCont = new createjs.Container(),
 	windCont = new createjs.Container();
-function StartGame(){    	
-    //var rocketShip = GameLogic;	
-	InitializeStage.init(canvas, stage);
-    //rocketShip.Init(CatzRocket, House, SpriteSheetData, TutorialTexts, Tracks, TrackParts);
+	
+function StartGame(){    	    
+	InitializeStage.init(canvas, stage);    
 }
