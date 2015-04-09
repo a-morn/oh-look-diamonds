@@ -30,12 +30,22 @@ var
 	squawkSound,
 	stage,
 	queue,    
-	attackBirdCont = new createjs.Container(),
-	cloudCont = new createjs.Container(),
-	collisionCheckDebug = new createjs.Container(),
-	diCont = new createjs.Container(),	
-	fgCont = new createjs.Container(),
-	fgTopCont = new createjs.Container(),	
+	cont = {attackBird : new createjs.Container(), 
+		cloud : new createjs.Container(),
+		collisionCheckDebug : new createjs.Container(), 
+		diamond : new createjs.Container(),	
+		fg : new createjs.Container(), 
+		fgTop : new createjs.Container(),
+		goose : new createjs.Container(),
+		hawk : new createjs.Container(),
+		lightning : new createjs.Container(),
+		onlooker : new createjs.Container(),
+		parallax : new createjs.Container(),
+		//scatterDiamonds : new createjs.Container(),		
+		sg : new createjs.Container(),
+		star : new createjs.Container(),	
+		thunder : new createjs.Container(),
+		wind : new createjs.Container()},	
 	gameStats = {
         score : 0,
         kills : 0,
@@ -55,17 +65,7 @@ var
             houseWithSlots : false,
             bouncedCheck : false
         }        
-    },
-	gooseCont = new createjs.Container(),
-	hawkCont = new createjs.Container(),
-	lightningCont = new createjs.Container(),
-	onlookerCont = new createjs.Container(),
-	parallaxCont = new createjs.Container(),
-	scatterDiamondsCont = new createjs.Container(),		
-	sgCont = new createjs.Container(),
-	starCont = new createjs.Container(),	
-	thunderCont = new createjs.Container(),
-	windCont = new createjs.Container();
+    };	
 	
 function StartGame(){    	    
 	InitializeStage.init(canvas, stage);    

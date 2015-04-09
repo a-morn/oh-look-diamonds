@@ -20,13 +20,13 @@ var GameLogic = (function(){
 	trackTimer = 0,	
 	wind=0,	
     containerDict = {
-        "diamond" : diCont,
-        "mediumDiamond" : diCont,
-        "greatDiamond" : diCont,
-        "seagull" : sgCont,
-        "goose" : gooseCont,
-        "hawk" : hawkCont,
-        "thunderCloud" : thunderCont
+        "diamond" : cont.diamond,
+        "mediumDiamond" : cont.diamond,
+        "greatDiamond" : cont.diamond,
+        "seagull" : cont.sg,
+        "goose" : cont.goose,
+        "hawk" : cont.hawk,
+        "thunderCloud" : cont.thunder
     },
     
     directorStateEnum = {
@@ -128,14 +128,14 @@ var GameLogic = (function(){
     
     function updateWorldContainer(event){
 		bg.y = -1100-(CatzRocket.catzRocketContainer.y)/2;
-		starCont.y=100-(CatzRocket.catzRocketContainer.y)/2;
+		cont.star.y=100-(CatzRocket.catzRocketContainer.y)/2;
 		if(CatzRocket.catzRocketContainer.y<200 && CatzRocket.catzRocketContainer.y>-600)         
 			gameView.y=200-CatzRocket.catzRocketContainer.y;
     }
 
     function updateParallax(event){        
-        for (var i = 0, arrayLength = parallaxCont.children.length; i < arrayLength; i++) {
-            var kid = parallaxCont.children[i];        
+        for (var i = 0, arrayLength = cont.parallax.children.length; i < arrayLength; i++) {
+            var kid = cont.parallax.children[i];        
             if (kid.x <= -2460)            
 				kid.x = 2460;            
             kid.x = kid.x - parallaxSpeed*event.delta/10; 
@@ -146,10 +146,10 @@ var GameLogic = (function(){
         if(Math.random()>0.98){		
             var tree = helpers.createBitmap(queue.getResult("fgTree1"), 
 				{x:1000, y:290});                						
-            fgCont.addChild(tree);        
+            cont.fg.addChild(tree);        
         }        		
-        for (var i = 0, arrayLength = fgCont.children.length; i < arrayLength; i++) {
-            var kid = fgCont.children[i];        
+        for (var i = 0, arrayLength = cont.fg.children.length; i < arrayLength; i++) {
+            var kid = cont.fg.children[i];        
             if (kid.x <= -3200)
 				kid.x = kid.x + 4000;            
             kid.x = kid.x - fgSpeed*event.delta/10; 
@@ -165,8 +165,8 @@ var GameLogic = (function(){
             }
         }                
         if (arrayLength>2){
-            if(fgCont.children[2].x < -100)            
-                fgCont.removeChildAt(2);            
+            if(cont.fg.children[2].x < -100)            
+                cont.fg.removeChildAt(2);            
         }
         
         if(leaves.alpha===1)        
@@ -174,8 +174,8 @@ var GameLogic = (function(){
     }
     
     function updateFgTop(event){           
-        for (var i = 0, arrayLength = fgTopCont.children.length; i < arrayLength; i++) {
-            var kid = fgTopCont.children[i];        
+        for (var i = 0, arrayLength = cont.fgTop.children.length; i < arrayLength; i++) {
+            var kid = cont.fgTop.children[i];        
             if (kid.x <= -3200)            
 				kid.x += 4000;            
             kid.x -= fgSpeed*event.delta/10; 
@@ -193,13 +193,13 @@ var GameLogic = (function(){
             var cloud = helpers.createBitmap(queue.getResult(cloudtype), 
 				{x:1000, y:Math.floor(Math.random()*1000-1000), scaleX:scale, scaleY:scale});                									            
 			cloudIsIn[cloud]=false;
-            cloudCont.addChild(cloud); 
+            cont.cloud.addChild(cloud); 
         }        
-        for (var i = 0, arrayLength = cloudCont.children.length; i < arrayLength; i++) {
-            var kid = cloudCont.children[i];  
+        for (var i = 0, arrayLength = cont.cloud.children.length; i < arrayLength; i++) {
+            var kid = cont.cloud.children[i];  
 			kid.x -= cloudSpeed;   
             if (kid.x <= -500){
-              cloudCont.removeChildAt(i);
+              cont.cloud.removeChildAt(i);
               arrayLength -= 1;
               i -= 1;
             }
@@ -248,15 +248,15 @@ var GameLogic = (function(){
         cloud.filters = [new createjs.ColorFilter(0.3,0.3,0.3,1, 0,0,55,0)];
         var rect = cloud.getBounds();
         cloud.cache(rect.x,rect.y,rect.width,rect.height);
-        thunderCont.addChild(cloud); 
+        cont.thunder.addChild(cloud); 
     }
     
     function updateThunderClouds(event){        
-        for (var i = 0, arrayLength = thunderCont.children.length; i < arrayLength; i++) {
-            var kid = thunderCont.children[i];  
+        for (var i = 0, arrayLength = cont.thunder.children.length; i < arrayLength; i++) {
+            var kid = cont.thunder.children[i];  
              kid.x -= cloudSpeed;   
             if (kid.x <= -500){
-              thunderCont.removeChildAt(i);
+              cont.thunder.removeChildAt(i);
               arrayLength -= 1;
               i -= 1;
             }
@@ -268,8 +268,8 @@ var GameLogic = (function(){
                 var birdHit=false;
                 var spotX=0;
                 var spotY=0;
-                for (var i = 0, max = attackBirdCont.children.length; i < max; i++) {
-                    var bird = attackBirdCont.children[i];
+                for (var i = 0, max = cont.attackBird.children.length; i < max; i++) {
+                    var bird = cont.attackBird.children[i];
                     if(bird.x<(kid.x+rect.width*kid.scaleX+50) 
                         && bird.x > kid.x-100 
                         && bird.y < CatzRocket.catzRocketContainer.y
@@ -298,7 +298,7 @@ var GameLogic = (function(){
                 lightning.graphics.lineTo(kid.x+(spotX-kid.x)*2/3-50,kid.y+(spotY-kid.y)*2/3);
                 lightning.graphics.lineTo(spotX,spotY);
                 lightning.graphics.endStroke();
-                lightningCont.addChild(lightning);
+                cont.lightning.addChild(lightning);
                 createjs.Tween.get(lightning).to({alpha:0},300);
                 createjs.Sound.play("lightningBolt");
                 createjs.Tween.get(gameView)
@@ -314,7 +314,7 @@ var GameLogic = (function(){
     }
     
     function setParallax(int){
-        parallaxCont.removeAllChildren();
+        cont.parallax.removeAllChildren();
         var name="bgParallax "+int;		
         var bgParallax = helpers.createBitmap(queue.getResult(name), {y:-200});                                
         var bgParallax2 = helpers.createBitmap(queue.getResult(name), {x:2460, y:-200});                
@@ -323,7 +323,7 @@ var GameLogic = (function(){
             bgParallax.y=100;
             bgParallax2.y=100;
         }
-        parallaxCont.addChild(bgParallax,bgParallax2);
+        cont.parallax.addChild(bgParallax,bgParallax2);
     }
     
     function generateTrack(){
@@ -349,7 +349,7 @@ var GameLogic = (function(){
     function updateDirector(event){
         directorTimer+=event.delta;
         if (onTrack){
-            if(diCont.getNumChildren()===0){
+            if(cont.diamond.getNumChildren()===0){
                 onTrack =false;                
                 if(Tracks[currentLevel].length===currentTrack){
                     currentTrack=0;
@@ -431,7 +431,7 @@ var GameLogic = (function(){
     }
     
     function updateOnlookers(event){
-        var arrayLength = onlookerCont.children.length;        
+        var arrayLength = cont.onlooker.children.length;        
         if(arrayLength<3){   
             var xOffset = 0;
             function addOnlooker(onlooker){            
@@ -444,7 +444,7 @@ var GameLogic = (function(){
                 var variant = "MobHill"+Math.floor(Math.random()*2+1);				
                 var hill = helpers.createBitmap(queue.getResult(variant), {y:95});                			               
                 oCont.addChild(onlooker, hill);
-                onlookerCont.addChild(oCont);
+                cont.onlooker.addChild(oCont);
             }
             
 			var onlooker;
@@ -467,10 +467,10 @@ var GameLogic = (function(){
         }        
         
         for (var i = 0; i < arrayLength; i++) {
-            var oC = onlookerCont.children[i];            
+            var oC = cont.onlooker.children[i];            
             oC.x -= diSpeed/2*event.delta;    
             if (oC.x <= -400){
-              onlookerCont.removeChildAt(i);
+              cont.onlooker.removeChildAt(i);
               arrayLength = arrayLength - 1;
               i = i - 1;
             }         
@@ -482,11 +482,11 @@ var GameLogic = (function(){
     }
 
     function updateDiamonds(event){        
-        for (var i = 0, arrayLength = diCont.children.length; i < arrayLength; i++) {
-            var kid = diCont.children[i];			
+        for (var i = 0, arrayLength = cont.diamond.children.length; i < arrayLength; i++) {
+            var kid = cont.diamond.children[i];			
             kid.x -= diSpeed*event.delta;    											
             if (kid.x <= -100){
-              diCont.removeChildAt(i);
+              cont.diamond.removeChildAt(i);
               arrayLength -= 1;
               i -= 1;
             }   
@@ -507,7 +507,7 @@ var GameLogic = (function(){
 						gameStats.score += 1000;
 						CatzRocket.frenzyCount+=50.5;                    
 					}								
-					diCont.removeChildAt(i);
+					cont.diamond.removeChildAt(i);
 					arrayLength -= 1;
 					i -= 1;
 					diamondSound.play();                					
@@ -552,19 +552,19 @@ var GameLogic = (function(){
         
     function upWind(){
         wind = -0.73*grav;
-        windCont.removeAllChildren();
+        cont.wind.removeAllChildren();
         var windSprite1 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
 				{x:50, y:50, scaleX:-1, scaleY:-1, rotation:10});                       
 		var windSprite2 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
 				{x:200, y:300, scaleX:-1, scaleY:-1, rotation:10});        
 		var windSprite3 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
 				{x:500, y:300, scaleX:-1, scaleY:-1, rotation:10});        
-        windCont.addChild(windSprite1,windSprite2,windSprite3);
+        cont.wind.addChild(windSprite1,windSprite2,windSprite3);
 	}
          
     function downWind(){
         wind = 2*grav;
-        windCont.removeAllChildren();
+        cont.wind.removeAllChildren();
 		var windSprite1 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
 				{x:50, y:50, rotation:10});				
         var windSprite2 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
@@ -572,24 +572,24 @@ var GameLogic = (function(){
 		var windSprite3 = helpers.createSprite(SpriteSheetData.wind, "cycle", 
 				{x:700, y:400, rotation:10});
 				        
-        windCont.addChild(windSprite1,windSprite2,windSprite3);
+        cont.wind.addChild(windSprite1,windSprite2,windSprite3);
     }
     
     function noWind(){
         wind = 0;
-        windCont.removeAllChildren();
+        cont.wind.removeAllChildren();
     }
     
     function spawnGoose(x,y){
 		var goose = helpers.createSprite(SpriteSheetData.enemybirds, "goose", 
 			{x:x, y:y, scaleX:0.8, scaleY:0.8});        
-        gooseCont.addChild(goose);
+        cont.goose.addChild(goose);
     }
     
     function spawnSeagull(x,y){
         var seagull = helpers.createSprite(SpriteSheetData.enemybirds, "seagull", 
 			{x:x, y:y, scaleX:0.8, scaleY:0.8});
-        sgCont.addChild(seagull);
+        cont.sg.addChild(seagull);
     }
     
     function spawnAttackBird(type,x,y){        
@@ -599,13 +599,13 @@ var GameLogic = (function(){
         if(type==="duck"){
             attackBird.scaleX=-attackBird.scaleX;
         }
-        attackBirdCont.addChild(attackBird);
+        cont.attackBird.addChild(attackBird);
         collisionCheckDebug.addChild(attackBird.shape);
     }
     
     function updateAttackBird(event){        
-        for (var i = 0, arrayLength = attackBirdCont.children.length; i < arrayLength; i++) {
-            var kid = attackBirdCont.children[i];
+        for (var i = 0, arrayLength = cont.attackBird.children.length; i < arrayLength; i++) {
+            var kid = cont.attackBird.children[i];
             kid.update(CatzRocket.catzRocketContainer.x,CatzRocket.catzRocketContainer.y,event);
             moveAndCollisionCheck(kid,event);
             kid.updateCircle();
@@ -959,10 +959,10 @@ var GameLogic = (function(){
         currentLevel=0;        
         CatzRocket.rocket.x=0;
         CatzRocket.rocket.alpha=1;
-        lightningCont.removeAllChildren();
-        attackBirdCont.removeAllChildren();
-        diCont.removeAllChildren();
-        onlookerCont.removeAllChildren();
+        cont.lightning.removeAllChildren();
+        cont.attackBird.removeAllChildren();
+        cont.diamond.removeAllChildren();
+        cont.onlooker.removeAllChildren();
         setParallax(currentLevel);
         directorState=directorStateEnum.Normal;        
         noWind();        
@@ -996,7 +996,7 @@ var GameLogic = (function(){
         CatzRocket.catz.gotoAndPlay("no shake");        
         CatzRocket.catzVelocity = 0;
         bg.y = -1200;
-        starCont.y=0;
+        cont.star.y=0;
         var instance = createjs.Sound.play("catzRocketCrash");
         instance.volume=0.5;
         onTrack=false;        
@@ -1025,11 +1025,11 @@ var GameLogic = (function(){
             rocketSong.play({loop:-1});        
         CatzRocket.hideSnake();
         if(!debugOptions.debugMode){
-            collisionCheckDebug.alpha=0;
+            cont.collisionCheckDebug.alpha=0;
             debugText.alpha=0;
         }
         stage.removeChild(House.houseView);
-        stage.addChild(gameView, windCont, muteButton, hud, hudPointer, CatzRocket.glass, diamondCounterText,debugText);        
+        stage.addChild(gameView, cont.wind, muteButton, hud, hudPointer, CatzRocket.glass, diamondCounterText,debugText);        
         createjs.Ticker.off("tick", houseListener);            
 		gameListener = createjs.Ticker.on("tick", GameLogic.update,this);    
         createjs.Ticker.setFPS(30);                    
