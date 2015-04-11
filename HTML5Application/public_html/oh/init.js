@@ -62,8 +62,9 @@ var InitializeStage = (function(){
                     {id:"mouseHobo", src:"assets/new assets/img/mouseover hobo.png"},
                     {id:"mouseRocket", src:"assets/new assets/img/mouseover rocket.png"},
                     {id:"mouseTimmy", src:"assets/new assets/img/mouseover timmy.png"},
-                    {id:"mousePriest", src:"assets/new assets/img/mouseover priest.png"},
+                    {id:"mouseCatz", src:"assets/new assets/img/mouseover catz.png"},
                     {id:"mouseCatparty", src:"assets/new assets/img/mouseover cat party.png"},
+					{id:"mouseCatparty", src:"assets/new assets/img/mouseover cat party.png"},
                     {id:"supportingCharacter", src:"assets/new assets/sprites/supporting characters.png"},
                     {id:"fgTree1", src:"assets/new assets/img/tree 4.png"},
                     {id:"rocketCatz", src:"assets/new assets/sprites/catzOnly.png"},
@@ -293,6 +294,9 @@ var InitializeStage = (function(){
         
 		House.mouseRocket = helpers.createBitmap(queue.getResult("mouseRocket"), 
 			{x:207, y:338, alpha:0});        		        
+			
+		House.mouseCatz = helpers.createBitmap(queue.getResult("mouseCatz"), 
+			{x:107, y:28, alpha:0, scaleX:0.5, scaleY:0.5});        		        
                 				        
         House.catz = helpers.createSprite(SpriteSheetData.cat, "cycle", 
 			{x:360, y:270, scaleX:0.8, scaleY:0.8});		                                    		
@@ -352,7 +356,7 @@ var InitializeStage = (function(){
             House.wick, House.house, House.hobo, House.timmy, House.priest, House.characterExclamation, 
             House.wickExclamation, House.catzSpeach, House.characterSpeach, House.choice1, 
             House.choice2, House.choice3,muteButton, House.mouseHobo, House.mouseTimmy, 
-            House.mousePriest, House.mouseRocket, House.wickLight,House.oh, 
+            House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight,House.oh, 
             House.look, House.diamonds, House.diCont, House.lookingAtStarsButton,
             House.houseInfoCont, House.subtractedDiamondCont);
     }

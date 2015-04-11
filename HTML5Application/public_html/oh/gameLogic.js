@@ -68,9 +68,7 @@ var GameLogic = (function(){
             diSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
             cloudSpeed = (12.5+12.5* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
             fgSpeed = (7+7* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                  
-            parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                    
-            
-            CatzRocket.invincibilityCountDown(event.delta);
+            parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                                            
             
             if(gameStats.score<10)            
                 diamondCounterText.text="000"+gameStats.score;            
@@ -81,13 +79,11 @@ var GameLogic = (function(){
             else if(gameStats.score<10000)            
                 diamondCounterText.text=gameStats.score;            
             else            
-                diamondCounterText.text="alot";            
-            
-            CatzRocket.diamondFuelLossPerTime(event.delta);                      
+                diamondCounterText.text="alot";                                                    
             
             if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                
                 paused = true; 
-                alert(tutorialTexts.frenzy); 
+                alert(TutorialTexts.frenzy); 
                 setTimeout(function() { 
                     paused = false; 
                 }, 500);                
@@ -493,19 +489,17 @@ var GameLogic = (function(){
 			else {				
 				if(overlapCheckCircle(kid.x,kid.y,40)){										
 					if(kid.currentAnimation==="cycle"){	
-						gameStats.score += 1;
-						CatzRocket.diamondFuel +=0.09;					
-						CatzRocket.frenzyCount+=0.1;                    
+						gameStats.score += 1;						
+						CatzRocket.pickupDiamond(diamondEnum.shard);						
 					}
-					else if(kid.currentAnimation==="mediumCycle"){
-						CatzRocket.diamondFuel +=1.2;
+					else if(kid.currentAnimation==="mediumCycle"){					
 						gameStats.score += 10;
-						CatzRocket.frenzyCount+=5;                    
+						CatzRocket.pickupDiamond(diamondEnum.medium);						
+											
 					}
-					else if(kid.currentAnimation==="greatCycle"){
-						CatzRocket.diamondFuel +=3;
-						gameStats.score += 1000;
-						CatzRocket.frenzyCount+=50.5;                    
+					else if(kid.currentAnimation==="greatCycle"){						
+						gameStats.score += 1000;						
+						CatzRocket.pickupDiamond(diamondEnum.great);						
 					}								
 					cont.diamond.removeChildAt(i);
 					arrayLength -= 1;
@@ -953,21 +947,16 @@ var GameLogic = (function(){
         createjs.Tween.get(CatzRocket.rocket).to({x:800},800);
     }
     
-    function crash(){  
-        CatzRocket.diamondFuel = 2;        
+    function crash(){		   
         currentTrack=0;
-        currentLevel=0;        
-        CatzRocket.rocket.x=0;
-        CatzRocket.rocket.alpha=1;
+        currentLevel=0;                
         cont.lightning.removeAllChildren();
         cont.attackBird.removeAllChildren();
         cont.diamond.removeAllChildren();
         cont.onlooker.removeAllChildren();
         setParallax(currentLevel);
         directorState=directorStateEnum.Normal;        
-        noWind();        
-        CatzRocket.catz.alpha = 1;
-        CatzRocket.glass.gotoAndPlay("still");
+        noWind();                        
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(House.houseView);
@@ -979,22 +968,11 @@ var GameLogic = (function(){
         houseListener = createjs.Ticker.on("tick", gameLogic.houseTick,this);
         House.wick.x=-100;
         House.wick.removeAllEventListeners();
-        House.wick.gotoAndPlay("still");
-        createjs.Tween.removeAllTweens(CatzRocket.catzRocketContainer);
-        createjs.Tween.removeAllTweens(House.houseView);
-        if(CatzRocket.isHit)        
-            House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
-        else        
-            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
+        House.wick.gotoAndPlay("still");        
+        createjs.Tween.removeAllTweens(House.houseView);        
         if(debugOptions.trustFund && gameStats.score<20000)        
             gameStats.score=20000;        
-        CatzRocket.reset();                
-        CatzRocket.catzRocketContainer.x = 300;
-        CatzRocket.catzRocketContainer.y = 200;
-        CatzRocket.heightOffset=0;
-        CatzRocket.catzRocketContainer.rotation =0;        
-        CatzRocket.catz.gotoAndPlay("no shake");        
-        CatzRocket.catzVelocity = 0;
+        CatzRocket.reset();                        
         bg.y = -1200;
         cont.star.y=0;
         var instance = createjs.Sound.play("catzRocketCrash");
@@ -1014,6 +992,11 @@ var GameLogic = (function(){
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
             .call((function(){House.activateWick(gameLogic.gotoGameView);}));
+			
+		if(CatzRocket.isHit)        
+            House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
+        else        
+            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
         stage.update();     
     }
 	
@@ -1022,8 +1005,7 @@ var GameLogic = (function(){
         House.cricketsSound.stop();
         //if song hasn't started yet
         if(rocketSong.getPosition()<100)        
-            rocketSong.play({loop:-1});        
-        CatzRocket.hideSnake();
+            rocketSong.play({loop:-1});                
         if(!debugOptions.debugMode){
             cont.collisionCheckDebug.alpha=0;
             debugText.alpha=0;
@@ -1034,11 +1016,9 @@ var GameLogic = (function(){
         createjs.Ticker.off("tick", houseListener);            
 		gameListener = createjs.Ticker.on("tick", GameLogic.update,this);    
         createjs.Ticker.setFPS(30);                    
+        CatzRocket.start();
         
-        stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
-        stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
-        GameLogic.jump = false;
-        CatzRocket.catzVelocity=-20;
+        GameLogic.jump = false;        
         paused = false;      
         
         if(!gameStats.hasBeenFirst.round) {
