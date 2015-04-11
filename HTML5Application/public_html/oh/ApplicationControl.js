@@ -20,6 +20,7 @@ var
 	hudPointer,        
 	houseListener,
 	leaves,	       
+	lightningColor = "#99ccff",
 	muteButton,        	
 	newBounds,
 	norm,
