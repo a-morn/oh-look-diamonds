@@ -178,14 +178,13 @@ var InitializeStage = (function(){
         House.diamondHouseArray["hoboCatHouse"] = House.hoboCatHouse;
         
         House.rehab = helpers.createSprite(SpriteSheetData.dHouse, "catnip treatment facility", 
-            {x:583, y:355, scaleX:1.5, scaleY:1.5, alpha:0});       
+            {x:583, y:355, scaleX:1.5, scaleY:1.5, alpha:0});     
                         
         House.diamondHouseCont.addChild(House.rehab);
         House.diamondHouseArray["rehab"] = House.rehab;
         
         House.orphanage = helpers.createSprite(SpriteSheetData.dHouse, "orphanage", 
             {x:500, y:381, scaleX:1.5, scaleY:1.5, alpha:0});               
-                       
         House.diamondHouseCont.addChild(House.orphanage);
         House.diamondHouseArray["orphanage"] = House.orphanage;
         
@@ -421,7 +420,7 @@ var InitializeStage = (function(){
             {x:588+158, y:50, regX:191,regY:54});               
         
         CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", 
-            {regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});  				
+            {regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});  	
                 
         leaves = helpers.createSprite(SpriteSheetData.leaves, "cycle", 
 			{alpha:0});							                
