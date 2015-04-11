@@ -1,42 +1,36 @@
 function AttackBird(sheet,current) {
-    this.initialize(sheet,current);
+    this.Sprite_constructor(sheet,current);
+	this.setup(current);
 }
-//inheritance
-AttackBird.prototype = new createjs.Sprite();
-AttackBird.prototype.BirdInit = AttackBird.prototype.initialize;
 
-//props
-AttackBird.prototype.state = "normal";
-AttackBird.prototype.velocityX = 0;
-AttackBird.prototype.velocityY = 0;
-AttackBird.prototype.acceleration = 3;
-AttackBird.prototype.topSpeed2 = 3;
-AttackBird.prototype.rad = 25;
-AttackBird.prototype.shape = new createjs.Shape();
-AttackBird.prototype.temperature = 0;
-AttackBird.prototype.weight = 0;
-AttackBird.prototype.BirdProperties = {
-	"chicken":  {acceleration: 0,  topSpeed2: 100000, weight: 0.2},
-	"falcon":   {acceleration: 8, topSpeed2: 100000, weight:0.3}, 
-	"crow":     {acceleration: 5,  topSpeed2: 100000, weight:0.5}, 
-	"bat":      {acceleration: 7,  topSpeed2: 100000, weight:0.1}, 
-	"duck":     {acceleration: 5, topSpeed2: 100000, weight:0.2}, 
-	"seagull":  {acceleration: 3, topSpeed2: 100000, weight:0.1}, 
-	"glasses":  {acceleration: 11, topSpeed2: 100000, weight:1}
-};
+var p = createjs.extend(AttackBird, createjs.Sprite);
                
 //constructor
-AttackBird.prototype.initialize = function (sheet,current) {
-    this.BirdInit(sheet,current);
-    this.topSpeed2 = this.BirdProperties[current].topSpeed2;
-    this.weight = this.BirdProperties[current].weight;
-    this.acceleration = this.BirdProperties[current].acceleration;
+p.setup = function (current) {    
+	var prop = {
+		chicken:  {acceleration: 0,  topSpeed2: 100000, weight: 0.2},
+		falcon:   {acceleration: 8, topSpeed2: 100000, weight:0.3}, 
+		crow:     {acceleration: 5,  topSpeed2: 100000, weight:0.5}, 
+		bat:      {acceleration: 7,  topSpeed2: 100000, weight:0.1}, 
+		duck:     {acceleration: 5, topSpeed2: 100000, weight:0.2}, 
+		seagull:  {acceleration: 3, topSpeed2: 100000, weight:0.1}, 
+		glasses:  {acceleration: 11, topSpeed2: 100000, weight:1}
+	}[current];
+			
+    this.topSpeed2 = prop.topSpeed2;
+    this.weight = prop.weight;
+    this.acceleration = prop.acceleration;
     this.falconTimer=0;
     this.target=0;
     this.shape = new createjs.Shape();
     this.shape.graphics.beginFill("red").dc(0, 0, this.rad);
     this.scaleX = 0.5;
     this.scaleY = 0.5;
+	this.state = "normal";
+	this.velocityX = 0;
+	this.velocityY = 0;
+	this.rad = 25;	
+	this.temperature = 0;
 };
 
 AttackBird.prototype.update = function (rocketX, rocketY, event) {
@@ -159,3 +153,5 @@ AttackBird.prototype.setGrilled = function(){
     var instance = createjs.Sound.play("grilled");
     instance.volume=1;
 };
+
+createjs.promote(AttackBird, "Sprite");
