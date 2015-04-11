@@ -1,6 +1,5 @@
 var InitializeStage = (function(){
-	var is = {},	
-	lightningColor = "#99ccff",
+	var is = {},		
 	manifest,
 	progressBar;		
 	

@@ -330,7 +330,7 @@ var GameLogic = (function(){
         var result = [];
         var displacementX = 800;        
         if(gameStats.Difficulty>=0){
-            for(j=0, max1=Tracks[currentLevel][currentTrack].length;j<max1;j++){
+            for(j=0, max1=Tracks[currentLevel][currentTrack].length;j<max1;j++){				
                 var element = $.extend(true, [], TrackParts[Tracks[currentLevel][currentTrack][j].difficulty][Tracks[currentLevel][currentTrack][j].name]);
                  for (i=0, max2=element.length;i<max2;i++){
                     element[i].x+=displacementX;
@@ -494,16 +494,16 @@ var GameLogic = (function(){
 				if(overlapCheckCircle(kid.x,kid.y,40)){										
 					if(kid.currentAnimation==="cycle"){	
 						gameStats.score += 1;
-						CatzRocket.diamondFuel +=0.05;					
+						CatzRocket.diamondFuel +=0.09;					
 						CatzRocket.frenzyCount+=0.1;                    
 					}
 					else if(kid.currentAnimation==="mediumCycle"){
-						CatzRocket.diamondFuel +=1;
+						CatzRocket.diamondFuel +=1.2;
 						gameStats.score += 10;
 						CatzRocket.frenzyCount+=5;                    
 					}
 					else if(kid.currentAnimation==="greatCycle"){
-						CatzRocket.diamondFuel +=1;
+						CatzRocket.diamondFuel +=3;
 						gameStats.score += 1000;
 						CatzRocket.frenzyCount+=50.5;                    
 					}								
@@ -593,14 +593,14 @@ var GameLogic = (function(){
     }
     
     function spawnAttackBird(type,x,y){        
-        var attackBird = new AttackBird(new createjs.SpriteSheet(SpriteSheetData.attackbirds),type);
+        var attackBird = new AttackBird(new createjs.SpriteSheet(SpriteSheetData.enemybirds),type);
         attackBird.x = x;
         attackBird.y = y;
         if(type==="duck"){
             attackBird.scaleX=-attackBird.scaleX;
         }
         cont.attackBird.addChild(attackBird);
-        collisionCheckDebug.addChild(attackBird.shape);
+        cont.collisionCheckDebug.addChild(attackBird.shape);
     }
     
     function updateAttackBird(event){        
