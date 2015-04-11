@@ -491,18 +491,18 @@ var House = (function(){
     
     house.gotoHouseViewWithRocket = function(gameStats, diamondCounterText){                
         house.gotoHouseView(gameStats, diamondCounterText);
-        if(catzRocket.state===14)
+        if(CatzRocket.state===14)
         {;
             house.crashRocket.x=315;
             house.crashRocket.y = -90;
 
         }
         else{
-        house.crashRocket.x=315-400*Math.cos(catzRocket.catzRocketContainer.rotation*6.28/360);
-        house.crashRocket.y =310-400*Math.sin(catzRocket.catzRocketContainer.rotation*6.28/360);
+        house.crashRocket.x=315-400*Math.cos(CatzRocket.catzRocketContainer.rotation*6.28/360);
+        house.crashRocket.y =310-400*Math.sin(CatzRocket.catzRocketContainer.rotation*6.28/360);
         }
         house.crashRocket.alpha=1;
-        house.crashRocket.rotation=catzRocket.catzRocketContainer.rotation;        
+        house.crashRocket.rotation=CatzRocket.catzRocketContainer.rotation;        
         createjs.Tween.get(house.crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)

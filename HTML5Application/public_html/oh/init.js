@@ -172,25 +172,25 @@ var InitializeStage = (function(){
                                 
         House.diamondHouseCont = new createjs.Container();
         House.hoboCatHouse = helpers.createSprite(SpriteSheetData.dHouse, "hoboHouse", 
-			{x:430, y:375, scaleX:0.8, scaleY:0.8, alpha:0,rotation:-8}); 				               
+            {x:430, y:378, scaleX:1, scaleY:1, alpha:0,rotation:-8});                              
                 
         House.diamondHouseCont.addChild(House.hoboCatHouse);
         House.diamondHouseArray["hoboCatHouse"] = House.hoboCatHouse;
         
         House.rehab = helpers.createSprite(SpriteSheetData.dHouse, "catnip treatment facility", 
-			{x:583, y:357, scaleX:1.5, scaleY:1.5, alpha:0});		
+            {x:583, y:355, scaleX:1.5, scaleY:1.5, alpha:0});       
                         
         House.diamondHouseCont.addChild(House.rehab);
         House.diamondHouseArray["rehab"] = House.rehab;
         
         House.orphanage = helpers.createSprite(SpriteSheetData.dHouse, "orphanage", 
-			{x:500, y:381, scaleX:1.5, scaleY:1.5, alpha:0});				
+            {x:500, y:381, scaleX:1.5, scaleY:1.5, alpha:0});               
                        
         House.diamondHouseCont.addChild(House.orphanage);
         House.diamondHouseArray["orphanage"] = House.orphanage;
         
         House.university = helpers.createSprite(SpriteSheetData.dHouse, "university", 
-			{x:700, y:305, rotation:5, alpha:0});
+            {x:700, y:305, rotation:5, alpha:0});
 
         House.diamondHouseCont.addChild(House.university);
         House.diamondHouseArray["university"] = House.university;
@@ -376,7 +376,7 @@ var InitializeStage = (function(){
         cont.fgTop.addChild(fgGroundTop1,fgGroundTop2);         		 			
         diamondShardCounter = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
 			{scaleX:0.8, scaleY:0.8, y: -830});    		
-        diamondCounterText = helpers.createText("", "22px Courier New", "#fff",  {x:608+108, y:422-17});		                                
+        diamondCounterText = helpers.createText("", "22px Courier New", "#fff",  {x:608+118, y:52});		                                
         CatzRocket.catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {});                
         CatzRocket.rocketFlame = helpers.createSprite(SpriteSheetData.flame, "cycle", 
 			{x:190, y:200, regX:40, regY:-37, alpha:0});							                
@@ -415,13 +415,13 @@ var InitializeStage = (function(){
 			{regX:150, regY:200, alpha:0});												       				
         		
         hud = helpers.createBitmap(queue.getResult("hud"), 
-			{x:550+107, y:345+2});                			        
+            {x:588+107, y:-6});                                 
         
         hudPointer = helpers.createBitmap(queue.getResult("hudPointer"), 
-			{x:550+191, y:350+54, regX:191,regY:54});        		
-		
-		CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", 
-			{regX:150, regY:200, alpha:0, scaleX:0.85, scaleY:0.85, x:533, y:341});					
+            {x:588+158, y:50, regX:191,regY:54});               
+        
+        CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", 
+            {regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});  				
                 
         leaves = helpers.createSprite(SpriteSheetData.leaves, "cycle", 
 			{alpha:0});							                

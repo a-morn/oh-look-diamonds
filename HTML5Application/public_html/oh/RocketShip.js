@@ -785,7 +785,6 @@ var RocketShip = (function(){
         }
         stage.removeChild(house.houseView);
         stage.addChild(gameView, windCont, muteButton, hud, hudPointer, catzRocket.glass, diamondCounterText,debugText);
-        muteButton.x=645;
         //createjs.Ticker.removeAllEventListeners();  
         createjs.Ticker.off("tick", houseListener);    
         gameListener = createjs.Ticker.on("tick", update,this);    
