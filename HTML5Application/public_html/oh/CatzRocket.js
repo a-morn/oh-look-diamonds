@@ -499,7 +499,7 @@ var CatzRocket = (function(){
             if(catzRocket.catzState === catzRocket.catzStateEnum.Normal){
                 catzRocket.diamondFuel -= 0.25;
                 catzRocket.catzVelocity-=2;
-                catzRocket.changeState(catzRocket.catzStateEnum.Uploop);
+                changeState(catzRocket.catzStateEnum.Uploop);
             }
             else if(catzRocket.catzState === catzRocket.catzStateEnum.Frenzy){
                 catzRocket.catzVelocity-=2;

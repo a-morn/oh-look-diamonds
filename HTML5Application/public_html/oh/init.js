@@ -121,7 +121,7 @@ var InitializeStage = (function(){
         createBG();
         createHouseView();
         createGameView();
-        stage.addChild(bg,cont.star);
+        stage.addChild(bg, cont.star);
         stage.enableMouseOver();		
         House.gotoHouseViewFirstTime(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
             muteButton, gameListener, rocketSong);		
@@ -350,7 +350,8 @@ var InitializeStage = (function(){
         House.houseView.y=1500;
         bg.y=0;
         cont.star.y=1000;
-        bg.addEventListener("click",showOh);
+		if(!debugOptions.noHouseView)
+			bg.addEventListener("click",showOh);
         House.houseView.addChild(House.university, House.rehab, House.bgHill, House.orphanage, 
             House.hoboCatHouse,House.crashRocket, House.catz, 
             House.wick, House.house, House.hobo, House.timmy, House.priest, House.characterExclamation, 
@@ -373,19 +374,20 @@ var InitializeStage = (function(){
         cont.parallax.addChild(bgParallax,bgParallax2);
         var fgGround1 = helpers.createBitmap(queue.getResult("fgGround"), {x:0, y: 300});        				
         var fgGround2 = helpers.createBitmap(queue.getResult("fgGround"), {x:2000, y: 300});                
+		var fgGround3 = helpers.createBitmap(queue.getResult("fgGround"), {x:4000, y: 300});                
         var fgGroundTop1 = helpers.createBitmap(queue.getResult("fgGroundTop"), {y: -830});        			
         var fgGroundTop2 = helpers.createBitmap(queue.getResult("fgGroundTop"), {x:2000, y: -830});    			
-        cont.fg.addChild(fgGround1, fgGround2);  
-        cont.fgTop.addChild(fgGroundTop1,fgGroundTop2);         		 			
+		var fgGroundTop3 = helpers.createBitmap(queue.getResult("fgGroundTop"), {x:4000, y: -830});    			
+        cont.fg.addChild(fgGround1, fgGround2, fgGround3);  
+        cont.fgTop.addChild(fgGroundTop1,fgGroundTop2, fgGroundTop3);         		 			
         diamondShardCounter = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
 			{scaleX:0.8, scaleY:0.8, y: -830});    		
         diamondCounterText = helpers.createText("", "22px Courier New", "#fff",  {x:608+118, y:52});		                                
-        CatzRocket.catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {});                
+        CatzRocket.catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {y:5});                
         CatzRocket.rocketFlame = helpers.createSprite(SpriteSheetData.flame, "cycle", 
 			{x:190, y:200, regX:40, regY:-37, alpha:0});							                
         CatzRocket.catzRocketContainer.x = 260;
-        CatzRocket.catzRocketContainer.y = 200;
-        CatzRocket.catz.y = 5;
+        CatzRocket.catzRocketContainer.y = 200;        
         CatzRocket.catzRocketContainer.regY = 100;
         CatzRocket.catzRocketContainer.regX = 150;
         CatzRocket.catz.currentFrame = 0;  
@@ -546,7 +548,7 @@ var InitializeStage = (function(){
         createjs.Tween.get(House.diamonds).to({alpha:1},3000);        
     }
 		
-	function goDown(){
+	function goDown(){		
         bg.removeAllEventListeners();
         createjs.Tween.get(House.houseView).to({y:0},4000,createjs.Ease.quadInOut);
         createjs.Tween.get(bg).to({y:-1200},4000,createjs.Ease.quadInOut);

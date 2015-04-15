@@ -298,7 +298,7 @@ var House = (function(){
                     }
                     createjs.Tween.removeAllTweens(house.wick);
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
-                            .call(function () {house.activateWick();});
+                            .call(house.activateWick);
                     //To shift to idle speach. Should be implemented smarter.
                     characterdialogID[currentCharacter]+=100;                
                 }                
