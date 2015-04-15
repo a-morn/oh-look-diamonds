@@ -4,8 +4,292 @@
 		"selected_items":
 		[
 			[
+				"st",
+				"state	(str)"
+			],
+			[
+				"set",
+				"setValues"
+			],
+			[
+				"sel",
+				"selectedCont	(?)"
+			],
+			[
+				"se",
+				"selectPosOnStartDrag	{}"
+			],
+			[
+				"sele",
+				"selectPosOnStartDrag	{}"
+			],
+			[
+				"sprite",
+				"sprite"
+			],
+			[
+				"ad",
+				"addChild	(?)"
+			],
+			[
+				"crea",
+				"createDisplaySprite()"
+			],
+			[
+				"sca",
+				"scaleY"
+			],
+			[
+				"scale",
+				"scaleX"
+			],
+			[
+				"cur",
+				"currentAnimation"
+			],
+			[
+				"selec",
+				"selectedCont	(?)"
+			],
+			[
+				"re",
+				"rect	(?)"
+			],
+			[
+				"gra",
+				"graphics"
+			],
+			[
+				"gr",
+				"graphic	(?)"
+			],
+			[
+				"add",
+				"addChild"
+			],
+			[
+				"sl",
+				"selectBox	{}"
+			],
+			[
+				"le",
+				"levelViewScale	(num)"
+			],
+			[
+				"dra",
+				"dragBox(evt)"
+			],
+			[
+				"leve",
+				"levelView	(?)"
+			],
+			[
+				"dr",
+				"drawSelectBox()"
+			],
+			[
 				"sta",
-				"state"
+				"stageX"
+			],
+			[
+				"get",
+				"getSortedDisplayObjectArray()"
+			],
+			[
+				"len",
+				"length"
+			],
+			[
+				"levelVi",
+				"levelViewScale	(num)"
+			],
+			[
+				"ge",
+				"getElementById"
+			],
+			[
+				"bgCo",
+				"bgCoordinates	{}"
+			],
+			[
+				"cu",
+				"currentAnimation	(?)"
+			],
+			[
+				"Y",
+				"YOriginPosInGame	(num)"
+			],
+			[
+				"lev",
+				"levelLength	(num)"
+			],
+			[
+				"he",
+				"height"
+			],
+			[
+				"W",
+				"width"
+			],
+			[
+				"s",
+				"sort(compare?)"
+			],
+			[
+				"bird",
+				"bird	(?)"
+			],
+			[
+				"levelE",
+				"levelEditCanvas"
+			],
+			[
+				"level",
+				"levelString	(str)"
+			],
+			[
+				"font",
+				"font-family"
+			],
+			[
+				"gre",
+				"greatDiamond"
+			],
+			[
+				"grea",
+				"greatCycle"
+			],
+			[
+				"rem",
+				"removeAllChildren"
+			],
+			[
+				"di",
+				"diCont()"
+			],
+			[
+				"e",
+				"easy	{}"
+			],
+			[
+				"Tr",
+				"TrackParts	{}"
+			],
+			[
+				"for",
+				"for	for (…) {…} (Improved Native For-Loop)"
+			],
+			[
+				"co",
+				"constellationCont	(?)"
+			],
+			[
+				"bi",
+				"birdCont"
+			],
+			[
+				"ce",
+				"createBird"
+			],
+			[
+				"S",
+				"SpriteSheetData"
+			],
+			[
+				"cre",
+				"createSprite"
+			],
+			[
+				"creat",
+				"createDiamond"
+			],
+			[
+				"loo",
+				"loopText"
+			],
+			[
+				"Pre",
+				"pressMove"
+			],
+			[
+				"c",
+				"createjs"
+			],
+			[
+				"b",
+				"beginFill"
+			],
+			[
+				"Sp",
+				"spriteSheetData"
+			],
+			[
+				"a",
+				"aTrackPartsJSON"
+			],
+			[
+				"fg",
+				"fgGround"
+			],
+			[
+				"g",
+				"groundClone"
+			],
+			[
+				"bg",
+				"bgClone"
+			],
+			[
+				"pr",
+				"progressBar"
+			],
+			[
+				"R",
+				"mouseRocket"
+			],
+			[
+				"q",
+				"queue"
+			],
+			[
+				"create",
+				"createClickableSprite"
+			],
+			[
+				"scaleY",
+				"mScaleY"
+			],
+			[
+				"mo",
+				"mouseoverBitmap"
+			],
+			[
+				"org",
+				"orgX"
+			],
+			[
+				"ti",
+				"timmy"
+			],
+			[
+				"t",
+				"timmy"
+			],
+			[
+				"o",
+				"onlooker"
+			],
+			[
+				"Click",
+				"ClickableSprite"
+			],
+			[
+				"C",
+				"ClickableSprite"
+			],
+			[
+				"proto",
+				"prototype"
 			],
 			[
 				"h",
@@ -68,18 +352,6 @@
 				"TerminalVelocity"
 			],
 			[
-				"o",
-				"outOfFuel"
-			],
-			[
-				"g",
-				"glass"
-			],
-			[
-				"c",
-				"catzState"
-			],
-			[
 				"d",
 				"diamondFuel"
 			],
@@ -112,10 +384,6 @@
 				"hoboCatHouse"
 			],
 			[
-				"scale",
-				"scaleX"
-			],
-			[
 				"w",
 				"weight"
 			],
@@ -130,28 +398,32 @@
 			[
 				"B",
 				"BirdProperties"
-			],
-			[
-				"pr",
-				"prototype"
 			]
 		]
 	},
 	"buffers":
 	[
 		{
-			"file": "HTML5Application/public_html/oh/GameProgression.js",
+			"file": "HTML5Application/public_html/oh/leveleditor.html",
 			"settings":
 			{
-				"buffer_size": 6211,
+				"buffer_size": 1895,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/Tracks.js",
+			"file": "HTML5Application/public_html/oh/LevelEditor.js",
 			"settings":
 			{
-				"buffer_size": 3494,
+				"buffer_size": 9590,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/OhLDStyle.css",
+			"settings":
+			{
+				"buffer_size": 1037,
 				"line_ending": "Windows"
 			}
 		},
@@ -164,10 +436,26 @@
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/attackBirds.js",
+			"file": "HTML5Application/public_html/oh/index.html",
 			"settings":
 			{
-				"buffer_size": 5829,
+				"buffer_size": 1693,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/levelEditor/init.js",
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/House.js",
+			"settings":
+			{
+				"buffer_size": 33855,
 				"line_ending": "Windows"
 			}
 		},
@@ -175,15 +463,39 @@
 			"file": "HTML5Application/public_html/oh/RocketShip.js",
 			"settings":
 			{
-				"buffer_size": 80653,
+				"buffer_size": 80627,
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/CatzRocket.js",
+			"file": "HTML5Application/public_html/oh/init.js",
 			"settings":
 			{
-				"buffer_size": 26681,
+				"buffer_size": 29298,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/gameLogic.js",
+			"settings":
+			{
+				"buffer_size": 44884,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/helpers.js",
+			"settings":
+			{
+				"buffer_size": 1779,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/ApplicationControl.js",
+			"settings":
+			{
+				"buffer_size": 2149,
 				"line_ending": "Windows"
 			}
 		},
@@ -196,18 +508,10 @@
 			}
 		},
 		{
-			"file": "HTML5Application/public_html/oh/House.js",
+			"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 			"settings":
 			{
-				"buffer_size": 35816,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/dialog.js",
-			"settings":
-			{
-				"buffer_size": 11597,
+				"buffer_size": 10891,
 				"line_ending": "Windows"
 			}
 		}
@@ -218,6 +522,18 @@
 		"height": 375.0,
 		"selected_items":
 		[
+			[
+				"p",
+				"Package Control: Install Package"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
+			[
+				"",
+				"Package Control: Install Package"
+			],
 			[
 				"P",
 				"Package Control: Install Package"
@@ -239,15 +555,11 @@
 				"Web Inspector"
 			],
 			[
-				"pa",
-				"Package Control: Install Package"
-			],
-			[
 				"packag",
 				"Package Control: Install Package"
 			]
 		],
-		"width": 336.0
+		"width": 386.0
 	},
 	"console":
 	{
@@ -264,11 +576,21 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Rasmus/Desktop/xss.html",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/CatzRocket.js",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/helpers.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/ApplicationControl.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/attackBirds.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/index.html",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/House.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/Tracks.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/LevelEditor.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/dialog.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/CatzRocket.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/TrackParts.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/GameProgression.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/ClickableSprite.js",
+		"/C/Users/Rasmus/Desktop/xss.html",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/constellation.xlsx",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/Catz story mode.docx",
 		"/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
@@ -276,7 +598,6 @@
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/ohlookdiamonds.sublime-project",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Node.sublime-build",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
@@ -292,7 +613,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 0.0,
+		"height": 92.0,
 		"where_history":
 		[
 			""
@@ -303,6 +624,81 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"SELECT(",
+			"startPr",
+			"select",
+			"update",
+			".on",
+			"on.",
+			"Event",
+			"addE",
+			"Cont.add",
+			"Cont.on",
+			"createSelectBox",
+			"setEventListenersStateNormal",
+			"setEve",
+			"evt",
+			"pageX",
+			"startPre",
+			"pressMove",
+			"pressmove",
+			"selectedCont.",
+			"currentAnimation",
+			"pressmove",
+			" selectWithBox",
+			"selectWit",
+			"sele",
+			"dragB",
+			"greatD",
+			"greate",
+			"this",
+			"graphic",
+			"levelView",
+			"createDiamond",
+			"width",
+			">>>",
+			"catzRc",
+			"diamondCounte",
+			"diamondCounterTe",
+			"spriteSheetData",
+			"house.",
+			"rehab",
+			"muteButton",
+			">>>>",
+			">>>>>",
+			">>>>",
+			">>>>>>",
+			"outfuelstate",
+			"320",
+			"console",
+			"createLe",
+			"bgOffset",
+			"bird",
+			"diCont",
+			"diCOnt",
+			"function eraseAndImport(evt){\n	objCont.removeAllChildren();\n}",
+			"diCont",
+			"createB",
+			"createBird",
+			"spawnAttackBird",
+			"attackb",
+			"fgTopCont.x",
+			"<br",
+			"<br>",
+			"cons",
+			"#",
+			"updateDiamond",
+			"		loopText = new createjs.Text(\"0\", \"32px Fauna One\", \"#000000\");\n		loopText.text = \"L\";\n		loopText.x = 170;\n		loopText.y = 2;\n		loopText.on(\"click\", createLoop);",
+			"\n				if(kid.currentAnimation===\"greatCycle\")\n				{\n					type=\"greatDiamond\";\n				}",
+			"createjs.Te",
+			"diamond",
+			"		if (evt.currentTarget.currentAnimation === \"cycle\")\n		{\n			diamond = helpers.createSprite(SpriteSheetData.mediumDiamond, \"mediumCycle\", \n			{x: x, y: y});\n		}",
+			"createjs.Ticker",
+			"queue",
+			"stage",
+			"rocketShip",
+			"hobo",
+			"onlookers",
 			"catzState",
 			"stateEnum",
 			"statenum",
@@ -355,82 +751,7 @@
 			"mouseCatz",
 			"mouseCa",
 			"house",
-			"highlight",
-			"ouseCatz",
-			"mouseH",
-			"mouse ho",
-			"mouseover",
-			"mouse",
-			"addEvent",
-			"catz.add",
-			"house",
-			"queue",
-			"eatejs.Sound.pla",
-			"meow",
-			"houseInfo",
-			"<<<<<<<",
-			"HEAD",
-			"house.houseInfoHighlight",
-			"addE",
-			"wick.rem",
-			"activateWick",
-			"calculateapproval",
-			"wick.addEventListener(\"mouse",
-			"wick",
-			"wick.x",
-			"wick",
-			"catzFellof",
-			"catz.",
-			"catz.x",
-			"catz.",
-			"catzRocket.heightOffset",
-			"catzRocket.height",
-			"changeState",
-			"debugText",
-			" catzRocket.getHit",
-			" catzRocket.changeState(catzStateEnum.FellOffRocket);",
-			"Fell",
-			"hospital",
-			"rehab",
-			"diamondFuel",
-			"diamondfuel=",
-			"diamondfuel =",
-			"hudpointer.x",
-			"hudp",
-			"eventlistener(\"",
-			"eventlistener(\"m",
-			"eventlistener(\"cl",
-			"eventliste",
-			"up",
-			"rocket",
-			"muteButton.x",
-			"hud",
-			"hud.a",
-			"diamondCo",
-			"muteButton.x",
-			"sound",
-			"diamondCountertext.x",
-			"text",
-			"debugtext.x",
-			"debugtex",
-			"578",
-			"house.diamondHouseCont",
-			"catnip",
-			"\"house\"",
-			"isGround",
-			"track",
-			"gameStats",
-			"spawnAttackBird",
-			"AttackBird(",
-			"mediumDiamond",
-			"pick",
-			"infiniteFuel",
-			"debugtext",
-			"catzRocket.diamondFuel",
-			"diamondFuel",
-			"newBounds",
-			",\n",
-			", \"acc\": *"
+			"highlight"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -438,6 +759,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"SpriteSheetData",
+			"bgCoordinates.offset",
 			""
 		],
 		"reverse": false,
@@ -449,67 +772,94 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 13,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "HTML5Application/public_html/oh/GameProgression.js",
+					"file": "HTML5Application/public_html/oh/leveleditor.html",
 					"settings":
 					{
-						"buffer_size": 6211,
+						"buffer_size": 1895,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								482,
+								314
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"syntax": "Packages/HTML/HTML.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 25.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "HTML5Application/public_html/oh/Tracks.js",
+					"file": "HTML5Application/public_html/oh/LevelEditor.js",
 					"settings":
 					{
-						"buffer_size": 3494,
+						"buffer_size": 9590,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								6130,
+								6130
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2957.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 2,
+					"file": "HTML5Application/public_html/oh/OhLDStyle.css",
+					"settings":
+					{
+						"buffer_size": 1037,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								457,
+								457
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CSS/CSS.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 237.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
 					"file": "HTML5Application/public_html/oh/TrackParts.js",
 					"settings":
 					{
@@ -520,6 +870,86 @@
 						"selection":
 						[
 							[
+								15175,
+								15175
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2181.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "HTML5Application/public_html/oh/index.html",
+					"settings":
+					{
+						"buffer_size": 1693,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								544,
+								491
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "HTML5Application/public_html/oh/levelEditor/init.js",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "HTML5Application/public_html/oh/House.js",
+					"settings":
+					{
+						"buffer_size": 33855,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
 								0,
 								0
 							]
@@ -531,25 +961,81 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1876.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 3,
-					"file": "HTML5Application/public_html/oh/attackBirds.js",
+					"buffer": 7,
+					"file": "HTML5Application/public_html/oh/RocketShip.js",
 					"settings":
 					{
-						"buffer_size": 5829,
+						"buffer_size": 80627,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1125,
-								1125
+								13800,
+								13807
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3681.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "HTML5Application/public_html/oh/init.js",
+					"settings":
+					{
+						"buffer_size": 29298,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13525,
+								13439
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2502.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "HTML5Application/public_html/oh/gameLogic.js",
+					"settings":
+					{
+						"buffer_size": 44884,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								695,
+								695
 							]
 						],
 						"settings":
@@ -565,63 +1051,60 @@
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "HTML5Application/public_html/oh/RocketShip.js",
+					"buffer": 10,
+					"file": "HTML5Application/public_html/oh/helpers.js",
 					"settings":
 					{
-						"buffer_size": 80653,
+						"buffer_size": 1779,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								40089,
-								40098
+								1650,
+								1650
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 12204.0,
+						"translation.y": 103.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "HTML5Application/public_html/oh/CatzRocket.js",
+					"buffer": 11,
+					"file": "HTML5Application/public_html/oh/ApplicationControl.js",
 					"settings":
 					{
-						"buffer_size": 26681,
+						"buffer_size": 2149,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								20567,
-								20607
+								2147,
+								2147
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
-						"translation.x": 28.0,
-						"translation.y": 701.0,
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 6,
+					"buffer": 12,
 					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
 					"settings":
 					{
@@ -632,8 +1115,8 @@
 						"selection":
 						[
 							[
-								18448,
-								18448
+								27035,
+								27035
 							]
 						],
 						"settings":
@@ -643,63 +1126,34 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 5403.0,
+						"translation.y": 8250.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
-					"buffer": 7,
-					"file": "HTML5Application/public_html/oh/House.js",
+					"buffer": 13,
+					"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 					"settings":
 					{
-						"buffer_size": 35816,
+						"buffer_size": 10891,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								341,
-								341
+								8178,
+								8179
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "HTML5Application/public_html/oh/dialog.js",
-					"settings":
-					{
-						"buffer_size": 11597,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3469,
-								3468
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 164.0,
+						"translation.y": 4835.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -713,7 +1167,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 32.0
 	},
 	"layout":
 	{
@@ -740,11 +1194,11 @@
 	"menu_visible": true,
 	"output.exec":
 	{
-		"height": 27.0
+		"height": 28.0
 	},
 	"replace":
 	{
-		"height": 0.0
+		"height": 64.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -753,8 +1207,88 @@
 		"selected_items":
 		[
 			[
+				"le",
+				"HTML5Application/public_html/oh/levelEditor/LevelEditor.js"
+			],
+			[
+				"in",
+				"HTML5Application/public_html/oh/init.js"
+			],
+			[
+				"s",
+				"HTML5Application/public_html/oh/spriteSheetData.js"
+			],
+			[
+				"spri",
+				"HTML5Application/public_html/oh/spriteSheetData.js"
+			],
+			[
+				"sp",
+				"HTML5Application/public_html/oh/spriteSheetData.js"
+			],
+			[
+				"helper",
+				"HTML5Application/public_html/oh/helpers.js"
+			],
+			[
+				"he",
+				"HTML5Application/public_html/oh/helpers.js"
+			],
+			[
+				"hel",
+				"HTML5Application/public_html/oh/helpers.js"
+			],
+			[
+				"ho",
+				"HTML5Application/public_html/oh/House.js"
+			],
+			[
 				"r",
 				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"rok",
+				"HTML5Application/public_html/oh/RocketShip.js"
+			],
+			[
+				"h",
+				"HTML5Application/public_html/oh/House.js"
+			],
+			[
+				"",
+				"HTML5Application/public_html/oh/OhLDStyle.css"
+			],
+			[
+				"ind",
+				"HTML5Application/public_html/oh/index.html"
+			],
+			[
+				"l",
+				"HTML5Application/public_html/oh/LevelEditor.js"
+			],
+			[
+				"att",
+				"HTML5Application/public_html/oh/attackBirds.js"
+			],
+			[
+				"inde",
+				"HTML5Application/public_html/index.html"
+			],
+			[
+				"house",
+				"HTML5Application/public_html/oh/House.js"
+			],
+			[
+				"track",
+				"HTML5Application/public_html/oh/TrackParts.js"
+			],
+			[
+				"trac",
+				"HTML5Application/public_html/oh/Tracks.js"
+			],
+			[
+				"click",
+				"HTML5Application/public_html/oh/ClickableSprite.js"
 			],
 			[
 				"roc",
@@ -787,10 +1321,6 @@
 			[
 				"catzr",
 				"HTML5Application/public_html/oh/CatzRocket.js"
-			],
-			[
-				"",
-				"HTML5Application/public_html/oh/CatzRocket.js"
 			]
 		],
 		"width": 0.0
@@ -807,6 +1337,6 @@
 	"show_open_files": false,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 380.0,
+	"side_bar_width": 269.0,
 	"status_bar_visible": true
 }

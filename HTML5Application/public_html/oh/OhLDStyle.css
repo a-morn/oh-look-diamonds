@@ -21,17 +21,22 @@ a:visited {
     color: #ffffcc;
 }
 @media (max-width: 800px) {
-    canvas {
+    #mahCanvas {
         width: 100%;
     }
 }
 @media (min-width: 801px) {
-    canvas {
+    #mahCanvas  {
         width: 800px;
     }
 }
 
-#hideshow {
+#belowLevelEditor {
+    position:fixed;
+    left: 5px;
+}
+
+button {
     width: 200px;
     height: 25px;
     color: #ffc;

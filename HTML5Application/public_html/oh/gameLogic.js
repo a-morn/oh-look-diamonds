@@ -129,8 +129,9 @@ var GameLogic = (function(){
     function updateWorldContainer(event){
 		bg.y = -1100-(CatzRocket.catzRocketContainer.y)/2;
 		cont.star.y=100-(CatzRocket.catzRocketContainer.y)/2;
-		if(CatzRocket.catzRocketContainer.y<200 && CatzRocket.catzRocketContainer.y>-600)         
-			gameView.y=200-CatzRocket.catzRocketContainer.y;
+        if(CatzRocket.catzRocketContainer.y<200 && CatzRocket.catzRocketContainer.y>-600)  {
+            gameView.y=200-CatzRocket.catzRocketContainer.y;            
+        }       
     }
 
     function updateParallax(event){        
@@ -954,6 +955,8 @@ var GameLogic = (function(){
     }
     
     function crash(){  
+        gameView.scaleX=1;
+        gameView.scaleY=1;
         CatzRocket.diamondFuel = 2;        
         currentTrack=0;
         currentLevel=0;        

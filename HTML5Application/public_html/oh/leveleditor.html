@@ -7,12 +7,11 @@
     <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="OhLDStyle.css">    
     <link rel="icon" href="favicon.ico">
-    <script src = "http://code.createjs.com/createjs-2013.12.12.min.js"></script>    
+    <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
     <script src="dialog.js"></script>
-    <!script src="ApplicationControl.js"><!/script>  
     <script src="Tracks.js"></script>
     <script src="TrackParts.js"></script>
-    <script src="LevelEditor.js"></script>
+    <script src="levelEditor/LevelEditor.js"></script>
     <script src="spriteSheetData.js"></script>    
 	<script src="helpers.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>         		
@@ -26,6 +25,10 @@
             <button onclick="createMediumDiamond()">mediumDiamond</button>
             <button onclick="createGrandDiamond()">grandDiamond</button>
             <button onclick="createSeagull()">seagull</button>
+            <br>
+            <button onclick="deleteAll()">clear all</button>
+            <button onclick="deleteAllSelected()">clear selection</button>
+            <br>
             <br>
         </div>
         <div id="importArea">

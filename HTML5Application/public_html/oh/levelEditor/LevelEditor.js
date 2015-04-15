@@ -2,19 +2,30 @@ var progressBar,
 	stage,
 	queue,
 	canvas,
+	isSpriteMode = true,
 	levels,
-	levelViewScale = 0.3,
+	dbText,
+	selectBox = {
+		rect: null,
+		graphic: null
+	},
+	selectPosOnStartDrag = {
+		x: null,
+		y: null
+	},
 	bgCoordinates = {
 		width: 800,
 		height: 1800,
 		offset: -520
-	}
-fgCoordinates = {
-	height: 150,
-	width: 2000
-}
-YOriginPosInGame = 830,
+	},
+	fgCoordinates = {
+		height: 150,
+		width: 2000
+	},
+
+	YOriginPosInGame = 830,
 	levelLength = 10000,
+	levelViewScale = 0.5,
 	bgCont = new createjs.Container(),
 	objCont = new createjs.Container(),
 	selectedCont = new createjs.Container(),
@@ -120,8 +131,14 @@ function handleComplete() {
 	SpriteSheetData.setValues(queue);
 	populateDDL();
 	createLevelView();
+	initSelectBox();
+	setEventListeners();
 	//	createToolView();
-	stage.addChild(levelView);
+	dbText = helpers.createText("hej", "16px Fauna One", "#ffffcc", {
+		x: 30,
+		y: 38
+	});
+	stage.addChild(levelView, dbText);
 	stage.removeChild(progressBar);
 	createjs.Ticker.on("tick", onTick);
 	createjs.Ticker.setFPS(10);
@@ -129,6 +146,18 @@ function handleComplete() {
 }
 
 function createLevelView() {
+	createBG();
+	levelView.addChild(bgCont, objCont, selectedCont);
+	levelView.scaleX = levelViewScale;
+	levelView.scaleY = levelViewScale;
+	document.getElementById("levelEditCanvas").height =
+		(bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
+	document.getElementById("levelEditCanvas").width = levelLength * levelViewScale;
+}
+
+
+
+function createBG() {
 	for (i = 0, len = levelLength / bgCoordinates.width; i < len; i++) {
 		var bgClone = new createjs.Bitmap(queue.getResult("bg"));
 		bgClone.x = i * bgCoordinates.width;
@@ -139,21 +168,15 @@ function createLevelView() {
 		}
 		bgCont.addChild(bgClone);
 	}
-	for (i = 0, len = levelLength / fgCoordinates.width; i < len; i++) {
+	for (i = 0, len = levelLength / fgCoordinates.width + 1; i < len; i++) {
 		var fgClone = new createjs.Bitmap(queue.getResult("fgGround"));
 		fgClone.x = fgCoordinates.width * i;
-		fgClone.y = bgCoordinates.height + bgCoordinates.offset - fgCoordinates.height;
+		fgClone.y = 300 + YOriginPosInGame;
 		var topClone = new createjs.Bitmap(queue.getResult("fgGroundTop"));
 		topClone.x = fgCoordinates.width * i;
 		topClone.y = 0;
 		bgCont.addChild(fgClone, topClone);
 	}
-	levelView.addChild(bgCont, objCont);
-	levelView.scaleX = levelViewScale;
-	levelView.scaleY = levelViewScale;
-	document.getElementById("levelEditCanvas").height =
-		(bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
-	document.getElementById("levelEditCanvas").width = levelLength * levelViewScale;
 }
 
 function populateDDL() {
@@ -167,27 +190,33 @@ function populateDDL() {
 }
 
 
+function setEventListeners() {
+	bgCont.on("mousedown", createSelectBox);
+	bgCont.on("pressmove", dragBox);
+	bgCont.on("pressup", selectWithBox);
+	selectedCont.on("mousedown", startPressMove);
+	selectedCont.on("pressmove", pressMove);
+}
+
+function startPressMove(evt) {
+	selectPosOnStartDrag.x = evt.stageX / levelViewScale - selectedCont.x;
+	selectPosOnStartDrag.y = evt.stageY / levelViewScale - selectedCont.y;
+}
+
 function pressMove(evt) {
-	evt.currentTarget.x = evt.stageX / levelViewScale + 25;
-	evt.currentTarget.y = evt.stageY / levelViewScale + 25;
+	evt.currentTarget.x = evt.stageX / levelViewScale - selectPosOnStartDrag.x;
+	evt.currentTarget.y = evt.stageY / levelViewScale - selectPosOnStartDrag.y;
 	stage.update();
 }
 
 function deleteAllSelected(evt) {
-
+	selectedCont.removeAllChildren();
 }
 
-function changeDiamondSize(evt) {
-	var x = evt.currentTarget.x;
-	var y = evt.currentTarget.y;
-	if (evt.currentTarget.currentAnimation === "cycle") {
-		createDiamond(x, y, "medium");
-	} else if (evt.currentTarget.currentAnimation === "mediumCycle") {
-		createDiamond(x, y, "great");
-	} else {
-		createDiamond(x, y, "small");
-	}
-	evt.currentTarget.parent.removeChild(evt.currentTarget);
+function deleteAll() {
+	selectedCont.removeAllChildren();
+	objCont.removeAllChildren();
+
 }
 
 function changeBirdType(evt) {
@@ -206,72 +235,131 @@ function changeBirdType(evt) {
 	}
 }
 
-function dragBox(evt) {}
+function initSelectBox() {
+	selectBox.rect = new createjs.Rectangle(0, 0, 0, 0);
+	selectBox.graphic = new createjs.Shape();
 
-function SelectWithBox(evt) {}
+}
+
+function createSelectBox(evt) {
+	moveChildrenFromSelectedToObjCont();
+	selectBox.rect.setValues(evt.stageX / levelViewScale, evt.stageY / levelViewScale, 1, 1);
+	selectBox.graphic.graphics.clear();
+	selectBox.graphic.graphics.setStrokeStyle(1);
+	levelView.addChild(selectBox.graphic);
+	drawSelectBox();
+}
+
+
+function dragBox(evt) {
+	selectBox.graphic.graphics.clear();
+	selectBox.rect.width = evt.stageX / levelViewScale - selectBox.rect.x;
+	selectBox.rect.height = evt.stageY / levelViewScale - selectBox.rect.y;
+	drawSelectBox();
+}
+
+function drawSelectBox() {
+	selectBox.graphic.graphics.beginStroke("#ffffff").drawRect(
+		selectBox.rect.x, selectBox.rect.y, selectBox.rect.width, selectBox.rect.height);
+	stage.update();
+}
+
+function selectWithBox(evt) {
+	//remove selected items not in the box
+	moveChildrenFromSelectedToObjCont();
+	//add items in the box
+	for (var i = objCont.numChildren - 1; i >= 0; i--) {
+		var kid = objCont.getChildAt(i);
+		if (helpers.isInRectangle(kid.x, kid.y, selectBox.rect)) {
+			selectedCont.addChild(kid);
+		}
+	};
+	if (selectedCont.numChildren === 0) {
+
+		selectBox.graphic.graphics.clear();
+	} else {
+		selectBox.graphic.graphics.clear();
+		selectedCont.alpha = 0.5;
+	}
+}
+
+function selectItem(evt) {
+	if (evt.currentTarget.parent === objCont) {
+		moveChildrenFromSelectedToObjCont();
+		selectedCont.addChild(evt.currentTarget);
+		startPressMove(evt);
+	}
+}
+
+
+function moveChildrenFromSelectedToObjCont() {
+	for (var i = selectedCont.numChildren - 1; i >= 0; i--) {
+		var kid = selectedCont.getChildAt(i);
+		kid.x += selectedCont.x;
+		kid.y += selectedCont.y;
+		kid.alpha = 1;
+		objCont.addChild(kid);
+	};
+	selectedCont.x = 0;
+	selectedCont.y = 0;
+}
 
 function createSmallDiamond(event) {
-	var x = CurrentCenterX();
+	var x = currentCenterX();
 	var y = 500;
-	createDiamond(x, y, "small");;
+	createDisplayObject(x, y, "diamond", "cycle");;
 }
 
 function createMediumDiamond(event) {
-	var x = CurrentCenterX();
+	var x = currentCenterX();
 	var y = 500;
-	createDiamond(x, y, "medium");
+	createDisplayObject(x, y, "mediumDiamond", "mediumCycle");
 }
 
-function createGreatDiamond(event) {
-	var x = CurrentCenterX();
+function createGrandDiamond(event) {
+	var x = currentCenterX();
 	var y = 500;
-	createDiamond(x, y, "great");
+	createDisplayObject(x, y, "greatDiamond", "greatCycle");
 }
 
 function createSeagull(event) {
-	var x = CurrentCenterX();
+	var x = currentCenterX();
 	var y = 250;
-	createBird(x, y, "seagull");
+	createDisplayObject(x, y, "enemybirds", "seagull");
 }
 
-function createDiamond(x, y, type) {
-	if (type === "medium") {
-		diamond = helpers.createSprite(SpriteSheetData.mediumDiamond, "mediumCycle", {
-			x: x,
-			y: y
-		});
-	} else if (type === "great") {
-		diamond = helpers.createSprite(SpriteSheetData.greatDiamond, "greatCycle", {
-			x: x,
-			y: y
-		});
+function createDisplayObject(x, y, sprite, currentAnimation) {
+	if (isSpriteMode) {
+		var obj = createDisplaySprite(x, y, sprite, currentAnimation);
 	} else {
-		diamond = helpers.createSprite(SpriteSheetData.diamond, "cycle", {
-			x: x,
-			y: y
-		});
+		obj = createDisplayShape(x, y, sprite, currentAnimation);
 	}
-	objCont.addChild(diamond);
-	diamond.addEventListener("pressmove", pressMove);
-	diamond.addEventListener("dblclick", changeDiamondSize);
-	diamond.stop();
+	objCont.addChild(obj);
+	obj.on("mousedown", selectItem);
 }
 
-
-function createBird(x, y, typeOfBird) {
-	var bird = helpers.createSprite(SpriteSheetData.enemybirds, typeOfBird, {
+function createDisplaySprite(x, y, sprite, currentAnimation) {
+	var obj = helpers.createSprite(SpriteSheetData[sprite], currentAnimation, {
 		x: x,
-		y: y,
-		scaleX: 0.5,
-		scaleY: 0.5
+		y: y
 	});
-	bird.stop();
-	bird.on("dblclick", changeBirdType);
-	bird.on("pressmove", pressMove);
-	objCont.addChild(bird);
+
+	obj.stop();
+	if (sprite === "enemybirds") {
+		obj.on("dblclick", changeBirdType);
+		obj.scaleX = 0.5;
+		obj.scaleY = 0.5;
+	};
+	return obj;
+}
+
+function createDisplayShape() {
+
 }
 
 function onTick(evt) {
+	dbText.text = "sC.x : " + selectedCont.x + " sC.y : " + selectedCont.y +
+		"\nposOSD.x" + selectPosOnStartDrag.x + "posOSD.y" + selectPosOnStartDrag.y;
 	stage.update();
 }
 
@@ -293,9 +381,10 @@ function getObjType(kid) {
 function saveLevel() {
 	document.getElementById("levelText").innerHTML = "";
 	var stringBuilder = ["levelName:[\n"];
-	var objList = getSortedDisplayObjectArray();
-	for (j = 0, len = objList.length; j < len; j++) {
-		kid = objList.children[j];
+	moveChildrenFromSelectedToObjCont();
+	sortDisplayObjectArray();
+	for (j = 0, len = objCont.numChildren; j < len; j++) {
+		kid = objCont.getChildAt(j);
 		stringBuilder.push(displayObjectToString(kid));
 	}
 	levelString = stringBuilder.join("");
@@ -305,12 +394,10 @@ function saveLevel() {
 	document.getElementById("levelText").innerHTML = levelString;
 }
 
-function getSortedDisplayObjectArray() {
-	var objList = objCont.children.slice(0);
-	objList.sort(function(a, b) {
-		return (a.x <= b.x) ? a : b
+function sortDisplayObjectArray() {
+	objCont.children.sort(function(a, b) {
+		return (a.x >= b.x) ? 1 : -1;
 	});
-	return objList;
 }
 
 function displayObjectToString(obj) {
@@ -325,30 +412,13 @@ function displayObjectToString(obj) {
 		',"graphicType":"sprite"},\n';
 }
 
-function loadLevel() {
+function loadLevel(offsetX) {
 	var ddl = document.getElementById("importSelect");
 	var levelName = levels[ddl.selectedIndex];
 	if (TrackParts.easy.hasOwnProperty(levelName)) {
-		objCont.removeAllChildren();
 		for (var i = TrackParts.easy[levelName].length - 1; i >= 0; i--) {
 			var kid = TrackParts.easy[levelName][i];
-			switch (kid.type) {
-				case "diamond":
-					createDiamond(kid.x, YGameToEditor(kid.y), "small");
-					break;
-				case "mediumDiamond":
-					createDiamond(kid.x, YGameToEditor(kid.y), "medium");
-					break;
-				case "greatDiamond":
-					createDiamond(kid.x, YGameToEditor(kid.y), "great");
-					break;
-				case "attackBird":
-					createBird(kid.x, YGameToEditor(kid.y), kid.animation);
-					break;
-				case "thunder":
-					createThunder(kid.x, YGameToEditor(kid.y));
-					break;
-			}
+			createDisplayObject(kid.x + offsetX, YGameToEditor(kid.y), kid.type, kid.currentAnimation);
 		};
 	} else {
 		alert("Doesn't seem to exist");
@@ -356,13 +426,14 @@ function loadLevel() {
 }
 
 function eraseAndImport(evt) {
-	objCont.removeAllChildren();
-	loadLevel(0);
+	if (confirm("Do you want to load a new level? Unsaved progress will be lost?")) {
+		objCont.removeAllChildren();
+		loadLevel(0);
+	}
 }
 
 function addToImport(evt) {
-	objCont.removeAllChildren();
-	loadLevel(CurrentCenterX());
+	loadLevel(currentCenterX());
 }
 
 function YEditorToGame(y) {
@@ -373,6 +444,6 @@ function YGameToEditor(y) {
 	return y + YOriginPosInGame;
 }
 
-function CurrentCenterX() {
-	return window.pageXOffset / levelViewScale + 200;
+function currentCenterX() {
+	return window.scrollX / levelViewScale + 200;
 }
