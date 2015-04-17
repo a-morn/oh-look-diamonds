@@ -4,6 +4,78 @@
 		"selected_items":
 		[
 			[
+				"ca",
+				"catzToStartPos(evt)"
+			],
+			[
+				"get",
+				"getChildAt	(?)"
+			],
+			[
+				"se",
+				"selectedCont	(?)"
+			],
+			[
+				"sele",
+				"selectedCont	(?)"
+			],
+			[
+				"re",
+				"removeAllChildren	(?)"
+			],
+			[
+				"add",
+				"addChild	(?)"
+			],
+			[
+				"cur",
+				"currentTarget"
+			],
+			[
+				"off",
+				"off	(?)"
+			],
+			[
+				"pre",
+				"pressup	(?)"
+			],
+			[
+				"bg",
+				"bgCont	{}"
+			],
+			[
+				"db",
+				"dbCurrentEventListeners	{}"
+			],
+			[
+				"y",
+				"YOriginPosInGame"
+			],
+			[
+				"rem",
+				"removeAllTweens"
+			],
+			[
+				"sca",
+				"scaleY	(?)"
+			],
+			[
+				"catzR",
+				"catzRocketContainer	(?)"
+			],
+			[
+				"C",
+				"CatzRocket	{}"
+			],
+			[
+				"scale",
+				"scaleX	(?)"
+			],
+			[
+				"game",
+				"gameView	{}"
+			],
+			[
 				"st",
 				"state	(str)"
 			],
@@ -14,14 +86,6 @@
 			[
 				"sel",
 				"selectedCont	(?)"
-			],
-			[
-				"se",
-				"selectPosOnStartDrag	{}"
-			],
-			[
-				"sele",
-				"selectPosOnStartDrag	{}"
 			],
 			[
 				"sprite",
@@ -36,24 +100,8 @@
 				"createDisplaySprite()"
 			],
 			[
-				"sca",
-				"scaleY"
-			],
-			[
-				"scale",
-				"scaleX"
-			],
-			[
-				"cur",
-				"currentAnimation"
-			],
-			[
 				"selec",
 				"selectedCont	(?)"
-			],
-			[
-				"re",
-				"rect	(?)"
 			],
 			[
 				"gra",
@@ -62,10 +110,6 @@
 			[
 				"gr",
 				"graphic	(?)"
-			],
-			[
-				"add",
-				"addChild"
 			],
 			[
 				"sl",
@@ -90,10 +134,6 @@
 			[
 				"sta",
 				"stageX"
-			],
-			[
-				"get",
-				"getSortedDisplayObjectArray()"
 			],
 			[
 				"len",
@@ -158,10 +198,6 @@
 			[
 				"grea",
 				"greatCycle"
-			],
-			[
-				"rem",
-				"removeAllChildren"
 			],
 			[
 				"di",
@@ -236,10 +272,6 @@
 				"groundClone"
 			],
 			[
-				"bg",
-				"bgClone"
-			],
-			[
 				"pr",
 				"progressBar"
 			],
@@ -284,20 +316,12 @@
 				"ClickableSprite"
 			],
 			[
-				"C",
-				"ClickableSprite"
-			],
-			[
 				"proto",
 				"prototype"
 			],
 			[
 				"h",
 				"heightOffset"
-			],
-			[
-				"ca",
-				"catzRocket"
 			],
 			[
 				"sc",
@@ -404,114 +428,18 @@
 	"buffers":
 	[
 		{
-			"file": "HTML5Application/public_html/oh/leveleditor.html",
-			"settings":
-			{
-				"buffer_size": 1895,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/LevelEditor.js",
-			"settings":
-			{
-				"buffer_size": 9590,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/OhLDStyle.css",
-			"settings":
-			{
-				"buffer_size": 1037,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/TrackParts.js",
-			"settings":
-			{
-				"buffer_size": 55885,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/index.html",
-			"settings":
-			{
-				"buffer_size": 1693,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/levelEditor/init.js",
-			"settings":
-			{
-				"buffer_size": 0,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/House.js",
-			"settings":
-			{
-				"buffer_size": 33855,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/RocketShip.js",
-			"settings":
-			{
-				"buffer_size": 80627,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/init.js",
-			"settings":
-			{
-				"buffer_size": 29298,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/gameLogic.js",
-			"settings":
-			{
-				"buffer_size": 44884,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/helpers.js",
-			"settings":
-			{
-				"buffer_size": 1779,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/ApplicationControl.js",
-			"settings":
-			{
-				"buffer_size": 2149,
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "HTML5Application/public_html/oh/spriteSheetData.js",
-			"settings":
-			{
-				"buffer_size": 29975,
-				"line_ending": "Windows"
-			}
-		},
-		{
 			"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 			"settings":
 			{
-				"buffer_size": 10891,
+				"buffer_size": 10134,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/leveleditor.html",
+			"settings":
+			{
+				"buffer_size": 2238,
 				"line_ending": "Windows"
 			}
 		}
@@ -576,18 +504,29 @@
 	},
 	"file_history":
 	[
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/helpers.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/leveleditor.html",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/init.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/levelEditor/LevelManifest.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/levelEditor/LevelManifest",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/assets/new assets/sound/frenzy.mp3",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/about.html",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/ApplicationControl.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/helpers.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/gameLogic.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/House.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/index.html",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/TrackParts.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/OhLDStyle.css",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/levelEditor/init.js",
+		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/LevelEditor.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/attackBirds.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/index.html",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/House.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/Tracks.js",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/spriteSheetData.js",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/RocketShip.js",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/LevelEditor.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/dialog.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/CatzRocket.js",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/TrackParts.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/GameProgression.js",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/ClickableSprite.js",
 		"/C/Users/Rasmus/Desktop/xss.html",
@@ -595,7 +534,6 @@
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/Catz story mode.docx",
 		"/C/Users/Rasmus/Desktop/ext/src/inject/inject.js",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Web Inspector/swi.sublime-settings",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/index.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/swi.sublime-settings",
 		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/ohlookdiamonds.sublime-project",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings",
@@ -603,7 +541,6 @@
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Default/Default (Windows).sublime-keymap",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Default (Windows).sublime-keymap",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/JavaScript.sublime-settings",
-		"/C/Users/Rasmus/Documents/GitHub/OhLookDiamonds/HTML5Application/public_html/oh/about.html",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/User/Distraction Free.sublime-settings",
 		"/C/Users/Rasmus/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings"
 	],
@@ -613,7 +550,7 @@
 	},
 	"find_in_files":
 	{
-		"height": 92.0,
+		"height": 0.0,
 		"where_history":
 		[
 			""
@@ -624,6 +561,18 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"pressmove",
+			"()",
+			"catzRocket",
+			"selectItem",
+			"state",
+			"update()",
+			"dbTex",
+			"pressmove",
+			"update()",
+			"update",
+			"track",
+			"gameView",
 			"SELECT(",
 			"startPr",
 			"select",
@@ -739,19 +688,7 @@
 			"HOUSE.CAT",
 			"DIAMOND",
 			"HIGHLIGH",
-			"highlightCa",
-			"highlight",
-			"catzScream3",
-			"catzScream2",
-			"catzScream3",
-			"catzScream",
-			"createjs.Sound",
-			"catz.a",
-			"highlight",
-			"mouseCatz",
-			"mouseCa",
-			"house",
-			"highlight"
+			"highlightCa"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -772,132 +709,50 @@
 	"groups":
 	[
 		{
-			"selected": 13,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "HTML5Application/public_html/oh/leveleditor.html",
+					"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 					"settings":
 					{
-						"buffer_size": 1895,
+						"buffer_size": 10134,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								482,
-								314
+								3159,
+								3159
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 25.0,
+						"translation.y": 1269.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "HTML5Application/public_html/oh/LevelEditor.js",
+					"file": "HTML5Application/public_html/oh/leveleditor.html",
 					"settings":
 					{
-						"buffer_size": 9590,
+						"buffer_size": 2238,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6130,
-								6130
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2957.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "HTML5Application/public_html/oh/OhLDStyle.css",
-					"settings":
-					{
-						"buffer_size": 1037,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								457,
-								457
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/CSS/CSS.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 237.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "HTML5Application/public_html/oh/TrackParts.js",
-					"settings":
-					{
-						"buffer_size": 55885,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								15175,
-								15175
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 2181.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "HTML5Application/public_html/oh/index.html",
-					"settings":
-					{
-						"buffer_size": 1693,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								544,
-								491
+								1709,
+								1709
 							]
 						],
 						"settings":
@@ -907,253 +762,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 5,
-					"file": "HTML5Application/public_html/oh/levelEditor/init.js",
-					"settings":
-					{
-						"buffer_size": 0,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 6,
-					"file": "HTML5Application/public_html/oh/House.js",
-					"settings":
-					{
-						"buffer_size": 33855,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "HTML5Application/public_html/oh/RocketShip.js",
-					"settings":
-					{
-						"buffer_size": 80627,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13800,
-								13807
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 3681.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "HTML5Application/public_html/oh/init.js",
-					"settings":
-					{
-						"buffer_size": 29298,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								13525,
-								13439
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 2502.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "HTML5Application/public_html/oh/gameLogic.js",
-					"settings":
-					{
-						"buffer_size": 44884,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								695,
-								695
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "HTML5Application/public_html/oh/helpers.js",
-					"settings":
-					{
-						"buffer_size": 1779,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1650,
-								1650
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 103.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 11,
-					"file": "HTML5Application/public_html/oh/ApplicationControl.js",
-					"settings":
-					{
-						"buffer_size": 2149,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2147,
-								2147
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
-					"settings":
-					{
-						"buffer_size": 29975,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								27035,
-								27035
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 8250.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
-					"settings":
-					{
-						"buffer_size": 10891,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8178,
-								8179
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 4835.0,
+						"translation.y": 112.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -1207,12 +816,36 @@
 		"selected_items":
 		[
 			[
+				"in",
+				"HTML5Application/public_html/oh/init.js"
+			],
+			[
+				"lev",
+				"HTML5Application/public_html/oh/levelEditor/LevelEditor.js"
+			],
+			[
+				"leve",
+				"HTML5Application/public_html/oh/levelEditor/LevelEditor.js"
+			],
+			[
+				"fre",
+				"HTML5Application/public_html/oh/assets/new assets/sound/frenzy.mp3"
+			],
+			[
+				"",
+				"HTML5Application/public_html/oh/levelEditor/LevelEditor.js"
+			],
+			[
+				"l",
+				"HTML5Application/public_html/oh/leveleditor.html"
+			],
+			[
 				"le",
 				"HTML5Application/public_html/oh/levelEditor/LevelEditor.js"
 			],
 			[
-				"in",
-				"HTML5Application/public_html/oh/init.js"
+				"gam",
+				"HTML5Application/public_html/oh/gameLogic.js"
 			],
 			[
 				"s",
@@ -1255,16 +888,8 @@
 				"HTML5Application/public_html/oh/House.js"
 			],
 			[
-				"",
-				"HTML5Application/public_html/oh/OhLDStyle.css"
-			],
-			[
 				"ind",
 				"HTML5Application/public_html/oh/index.html"
-			],
-			[
-				"l",
-				"HTML5Application/public_html/oh/LevelEditor.js"
 			],
 			[
 				"att",

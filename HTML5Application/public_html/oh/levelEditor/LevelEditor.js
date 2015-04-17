@@ -22,7 +22,10 @@ var progressBar,
 		height: 150,
 		width: 2000
 	},
-
+	catzStartPos={
+		x:260,
+		y:1030
+	}
 	YOriginPosInGame = 830,
 	levelLength = 10000,
 	levelViewScale = 0.5,
@@ -30,6 +33,7 @@ var progressBar,
 	objCont = new createjs.Container(),
 	selectedCont = new createjs.Container(),
 	levelView = new createjs.Container(),
+	catzRocketContainer = new createjs.Container();
 	levelEditor = {};
 
 levelEditor.Init = function() {
@@ -41,85 +45,10 @@ levelEditor.Init = function() {
 	progressBar.x = canvas.width / 2 - 50;
 	progressBar.y = canvas.height / 2 - 10;
 	stage.addChild(progressBar);
-
-	manifest = [{
-		id: "enemybirds",
-		src: "assets/new assets/sprites/newBirds.png"
-	}, {
-		id: "diamond",
-		src: "assets/new assets/sprites/newDiamond3.png"
-	}, {
-		id: "mediumDiamond",
-		src: "assets/new assets/sprites/newDiamond2.png"
-	}, {
-		id: "greatDiamond",
-		src: "assets/new assets/sprites/newDiamond.png"
-	}, {
-		id: "diamondShardCounter",
-		src: "assets/new assets/img/DiamondIcon.png"
-	}, {
-		id: "bg",
-		src: "assets/new assets/img/background long.jpg"
-	}, {
-		id: "bgParallax 0",
-		src: "assets/new assets/img/background parallax.png"
-	}, {
-		id: "bgParallax 2",
-		src: "assets/new assets/img/background parallax 4.png"
-	}, {
-		id: "bgParallax 1",
-		src: "assets/new assets/img/background parallax 3.png"
-	}, {
-		id: "onlookers",
-		src: "assets/new assets/sprites/onlookers.png"
-	}, {
-		id: "cloud1",
-		src: "assets/new assets/img/cloud 1.png"
-	}, {
-		id: "cloud2",
-		src: "assets/new assets/img/cloud 2.png"
-	}, {
-		id: "cloud3",
-		src: "assets/new assets/img/cloud 3.png"
-	}, {
-		id: "cloud4",
-		src: "assets/new assets/img/cloud 4.png"
-	}, {
-		id: "cloud5",
-		src: "assets/new assets/img/cloud 5.png"
-	}, {
-		id: "mobHill1",
-		src: "assets/new assets/img/mob hill.png"
-	}, {
-		id: "mobHill2",
-		src: "assets/new assets/img/mob hill 2.png"
-	}, {
-		id: "fgGround",
-		src: "assets/new assets/img/fgGround.png"
-	}, {
-		id: "fgGroundTop",
-		src: "assets/new assets/img/fgGroundTop.png"
-	}, {
-		id: "fgTree1",
-		src: "assets/new assets/img/tree 4.png"
-	}, {
-		id: "rocketCatz",
-		src: "assets/new assets/sprites/catzOnly.png"
-	}, {
-		id: "rocket",
-		src: "assets/new assets/img/rocket.png"
-	}, {
-		id: "flame",
-		src: "assets/new assets/sprites/newFlame.png"
-	}, {
-		id: "star",
-		src: "assets/new assets/img/star.png"
-	}];
-
 	queue = new createjs.LoadQueue(true);
 	queue.on("progress", handleProgress);
 	queue.on("complete", handleComplete);
-	queue.loadManifest(manifest);
+	queue.loadManifest(LevelManifest);
 }
 
 function handleProgress(event) {
@@ -147,15 +76,14 @@ function handleComplete() {
 
 function createLevelView() {
 	createBG();
-	levelView.addChild(bgCont, objCont, selectedCont);
+	createCatz();
+	levelView.addChild(bgCont, objCont, selectedCont, catzRocketContainer);
 	levelView.scaleX = levelViewScale;
 	levelView.scaleY = levelViewScale;
 	document.getElementById("levelEditCanvas").height =
 		(bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
 	document.getElementById("levelEditCanvas").width = levelLength * levelViewScale;
 }
-
-
 
 function createBG() {
 	for (i = 0, len = levelLength / bgCoordinates.width; i < len; i++) {
@@ -177,6 +105,25 @@ function createBG() {
 		topClone.y = 0;
 		bgCont.addChild(fgClone, topClone);
 	}
+}
+
+function createCatz() {
+	CatzRocket.Init();
+	var catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {y:5});
+	catzToStartPos();
+	catzRocketContainer.regY = 100;
+	catzRocketContainer.regX = 150;
+	catz.currentFrame = 0;
+	catz.stop();
+
+	rocket = helpers.createBitmap(queue.getResult("rocket"), {
+		scaleX: 0.25,
+		scaleY: 0.25,
+		regX: -430,
+		regY: -320
+	});
+	catzRocketContainer.addChild(rocket, catz);
+	catzRocketContainer.on("pressmove", pressMoveCatz);
 }
 
 function populateDDL() {
@@ -209,6 +156,12 @@ function pressMove(evt) {
 	stage.update();
 }
 
+function pressMoveCatz(evt) {
+	evt.currentTarget.x = evt.stageX / levelViewScale;
+	evt.currentTarget.y = evt.stageY / levelViewScale;
+	stage.update();
+}
+
 function deleteAllSelected(evt) {
 	selectedCont.removeAllChildren();
 }
@@ -217,6 +170,12 @@ function deleteAll() {
 	selectedCont.removeAllChildren();
 	objCont.removeAllChildren();
 
+}
+
+function catzToStartPos()
+{
+	catzRocketContainer.x=catzStartPos.x;
+	catzRocketContainer.y=catzStartPos.y;
 }
 
 function changeBirdType(evt) {
