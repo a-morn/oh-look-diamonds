@@ -298,7 +298,7 @@ var House = (function(){
                     }
                     createjs.Tween.removeAllTweens(house.wick);
                     createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
-                            .call(function () {house.activateWick();});
+                            .call(house.activateWick);
                     //To shift to idle speach. Should be implemented smarter.
                     characterdialogID[currentCharacter]+=100;                
                 }                
@@ -333,17 +333,14 @@ var House = (function(){
         }
     };
 
-    house.highlightCatz = function()
-    {
-        if(!createjs.Tween.hasActiveTweens(house.catz))
-        {
-            house.mouseCatz.alpha=1;            
-        }
+    house.highlightCatz = function(){
+        if(!createjs.Tween.hasActiveTweens(house.catz))        {
+            house.mouseCatz.alpha=1;                    
+			console.log(123);}
     }
 
 
-    house.downlightCatz = function()
-    {
+    house.downlightCatz = function(){
         house.mouseCatz.alpha=0;
     }
     
@@ -491,32 +488,33 @@ var House = (function(){
     
     house.gotoHouseViewWithRocket = function(gameStats, diamondCounterText){                
         house.gotoHouseView(gameStats, diamondCounterText);
-        if(CatzRocket.state===14)
-        {;
+        if(CatzRocket.state===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
             house.crashRocket.x=315;
             house.crashRocket.y = -90;
-
         }
         else{
-        house.crashRocket.x=315-400*Math.cos(CatzRocket.catzRocketContainer.rotation*6.28/360);
-        house.crashRocket.y =310-400*Math.sin(CatzRocket.catzRocketContainer.rotation*6.28/360);
+			house.crashRocket.x=315-400*Math.cos(CatzRocket.catzRocketContainer.rotation*6.28/360);
+			house.crashRocket.y =310-400*Math.sin(CatzRocket.catzRocketContainer.rotation*6.28/360);
         }
+		
         house.crashRocket.alpha=1;
         house.crashRocket.rotation=CatzRocket.catzRocketContainer.rotation;        
-        createjs.Tween.get(house.crashRocket)
+		
+		createjs.Tween.get(house.crashRocket)
                 .to({x:315, y:310},200)
                 .wait(1500)
                 .to({x:315, y:310, rotation:-30},800, createjs.Ease.quadIn); 
+		
         house.catz.x = 360;
         house.catz.y = 370;
+		
         createjs.Tween.get(house.catz)
                 .wait(800)
                 .to({x:390, y:350, rotation:10},250)
                 .to({x:330, y:330, rotation:-10},250)
                 .to({x:390, y:310, rotation:10},250)
                 .to({x:330, y:290, rotation:-10},250)
-                .to({x:360, y:270, rotation:0},250)
-                ;
+                .to({x:360, y:270, rotation:0},250);
     };    
     
     house.gotoHouseViewWithoutRocket = function(gameStats, diamondCounterText){

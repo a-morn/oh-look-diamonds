@@ -19,6 +19,8 @@ var GameLogic = (function(){
 	paused = false,	
 	trackTimer = 0,	
 	wind=0,	
+	zoomOut = false,
+	zooming = false,
     containerDict = {
         "diamond" : cont.diamond,
         "mediumDiamond" : cont.diamond,
@@ -68,9 +70,7 @@ var GameLogic = (function(){
             diSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;            
             cloudSpeed = (12.5+12.5* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
             fgSpeed = (7+7* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                  
-            parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                    
-            
-            CatzRocket.invincibilityCountDown(event.delta);
+            parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                                            
             
             if(gameStats.score<10)            
                 diamondCounterText.text="000"+gameStats.score;            
@@ -81,13 +81,11 @@ var GameLogic = (function(){
             else if(gameStats.score<10000)            
                 diamondCounterText.text=gameStats.score;            
             else            
-                diamondCounterText.text="alot";            
-            
-            CatzRocket.diamondFuelLossPerTime(event.delta);                      
+                diamondCounterText.text="alot";                                                    
             
             if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                
                 paused = true; 
-                alert(tutorialTexts.frenzy); 
+                alert(TutorialTexts.frenzy); 
                 setTimeout(function() { 
                     paused = false; 
                 }, 500);                
@@ -127,11 +125,40 @@ var GameLogic = (function(){
     }
     
     function updateWorldContainer(event){
-		bg.y = -1100-(CatzRocket.catzRocketContainer.y)/2;
-		cont.star.y=100-(CatzRocket.catzRocketContainer.y)/2;
-        if(CatzRocket.catzRocketContainer.y<200 && CatzRocket.catzRocketContainer.y>-600)  {
-            gameView.y=200-CatzRocket.catzRocketContainer.y;            
-        }       
+		var yLimit;
+		if(!zooming && !zoomOut){
+			bg.y = -1100-(CatzRocket.catzRocketContainer.y)/3;
+			cont.star.y=100-(CatzRocket.catzRocketContainer.y)/3;
+		}		
+		if((!createjs.Tween.hasActiveTweens(gameView) && !createjs.Tween.hasActiveTweens(bg) && !createjs.Tween.hasActiveTweens(cont.star)) && !CatzRocket.isCrashed){
+			if(!zoomOut && CatzRocket.catzRocketContainer.y < 0 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){				
+				zooming = true;
+				createjs.Tween.get(gameView)
+					.to({scaleX:0.37, scaleY:0.37, y:300}, 500, createjs.Ease.linear)
+					.call(function () {zoomOut=true; zooming = false;});								
+					
+				createjs.Tween.get(bg)
+					.to({scaleX:1,scaleY:0.37, y:-200}, 500, createjs.Ease.linear);												
+					
+				createjs.Tween.get(cont.star)
+					.to({scaleX:0.37,scaleY:0.37, y:270}, 500, createjs.Ease.linear);					
+			}				
+			else if(zoomOut && CatzRocket.catzRocketContainer.y > 300 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){
+				zooming = true;				
+				createjs.Tween.get(gameView)
+					.to({scaleX:1,scaleY:1, y:0}, 500, createjs.Ease.linear)
+					.call(function () {zoomOut=false; zooming = false;});								
+				
+				createjs.Tween.get(bg)
+					.to({scaleX:1,scaleY:1, y:-1200}, 500, createjs.Ease.linear);												
+					
+				createjs.Tween.get(cont.star)
+					.to({scaleX:1,scaleY:1, y:1000}, 500, createjs.Ease.linear);																
+			}
+		}				
+				
+		if((CatzRocket.isCrashed || CatzRocket.catzRocketContainer.y < 200)&& !zoomOut)
+			gameView.y=200-CatzRocket.catzRocketContainer.y;		
     }
 
     function updateParallax(event){        
@@ -146,13 +173,13 @@ var GameLogic = (function(){
     function updateFg(event){
         if(Math.random()>0.98){		
             var tree = helpers.createBitmap(queue.getResult("fgTree1"), 
-				{x:1000, y:290});                						
+				{x:2200, y:290});                						
             cont.fg.addChild(tree);        
-        }        		
+        }        				
         for (var i = 0, arrayLength = cont.fg.children.length; i < arrayLength; i++) {
             var kid = cont.fg.children[i];        
             if (kid.x <= -3200)
-				kid.x = kid.x + 4000;            
+				kid.x += 6000;            
             kid.x = kid.x - fgSpeed*event.delta/10; 
             if((CatzRocket.catzRocketContainer.x-catzBounds.width)<(kid.x) && CatzRocket.catzRocketContainer.x > 
                     kid.x && (CatzRocket.catzRocketContainer.y-catzBounds.height) < kid.y
@@ -165,9 +192,9 @@ var GameLogic = (function(){
                 leaves.addEventListener("animationend",function(){hideLeaves();});
             }
         }                
-        if (arrayLength>2){
-            if(cont.fg.children[2].x < -100)            
-                cont.fg.removeChildAt(2);            
+        if (arrayLength>3){
+            if(cont.fg.children[3].x < -100)            
+                cont.fg.removeChildAt(3);            
         }
         
         if(leaves.alpha===1)        
@@ -178,23 +205,27 @@ var GameLogic = (function(){
         for (var i = 0, arrayLength = cont.fgTop.children.length; i < arrayLength; i++) {
             var kid = cont.fgTop.children[i];        
             if (kid.x <= -3200)            
-				kid.x += 4000;            
+				kid.x += 6000;            
             kid.x -= fgSpeed*event.delta/10; 
-        }   
+        }   		
     }
     
     function hideLeaves(){
         leaves.alpha=0;
     }
     
+	function spawnCloud(){
+		var cloudtype = "cloud"+Math.floor(Math.random()*5+1).toString();            
+		var scale = Math.random()*0.3+0.3;			
+		var cloud = helpers.createBitmap(queue.getResult(cloudtype), 
+			{x:2200, y:Math.floor(Math.random()*1000-1000), scaleX:scale, scaleY:scale});                									            
+		cloudIsIn[cloud]=false;
+		cont.cloud.addChild(cloud); 
+	}
+	
     function updateClouds(event){
         if(Math.random()>0.97){            
-            var cloudtype = "cloud"+Math.floor(Math.random()*5+1).toString();            
-            var scale = Math.random()*0.3+0.3;			
-            var cloud = helpers.createBitmap(queue.getResult(cloudtype), 
-				{x:1000, y:Math.floor(Math.random()*1000-1000), scaleX:scale, scaleY:scale});                									            
-			cloudIsIn[cloud]=false;
-            cont.cloud.addChild(cloud); 
+            spawnCloud()
         }        
         for (var i = 0, arrayLength = cont.cloud.children.length; i < arrayLength; i++) {
             var kid = cont.cloud.children[i];  
@@ -329,7 +360,7 @@ var GameLogic = (function(){
     
     function generateTrack(){
         var result = [];
-        var displacementX = 800;        
+        var displacementX = 2200;        
         if(gameStats.Difficulty>=0){
             for(j=0, max1=Tracks[currentLevel][currentTrack].length;j<max1;j++){				
                 var element = $.extend(true, [], TrackParts[Tracks[currentLevel][currentTrack][j].difficulty][Tracks[currentLevel][currentTrack][j].name]);
@@ -494,19 +525,17 @@ var GameLogic = (function(){
 			else {				
 				if(overlapCheckCircle(kid.x,kid.y,40)){										
 					if(kid.currentAnimation==="cycle"){	
-						gameStats.score += 1;
-						CatzRocket.diamondFuel +=0.09;					
-						CatzRocket.frenzyCount+=0.1;                    
+						gameStats.score += 1;						
+						CatzRocket.pickupDiamond(diamondEnum.shard);						
 					}
-					else if(kid.currentAnimation==="mediumCycle"){
-						CatzRocket.diamondFuel +=1.2;
+					else if(kid.currentAnimation==="mediumCycle"){					
 						gameStats.score += 10;
-						CatzRocket.frenzyCount+=5;                    
+						CatzRocket.pickupDiamond(diamondEnum.medium);						
+											
 					}
-					else if(kid.currentAnimation==="greatCycle"){
-						CatzRocket.diamondFuel +=3;
-						gameStats.score += 1000;
-						CatzRocket.frenzyCount+=50.5;                    
+					else if(kid.currentAnimation==="greatCycle"){						
+						gameStats.score += 1000;						
+						CatzRocket.pickupDiamond(diamondEnum.great);						
 					}								
 					cont.diamond.removeChildAt(i);
 					arrayLength -= 1;
@@ -954,23 +983,23 @@ var GameLogic = (function(){
         createjs.Tween.get(CatzRocket.rocket).to({x:800},800);
     }
     
+<<<<<<< HEAD
     function crash(){  
         gameView.scaleX=1;
         gameView.scaleY=1;
         CatzRocket.diamondFuel = 2;        
+=======
+    function crash(){		   
+>>>>>>> a1ae42f1d7386277fe8dd0b1fc28e17a557d4bbb
         currentTrack=0;
-        currentLevel=0;        
-        CatzRocket.rocket.x=0;
-        CatzRocket.rocket.alpha=1;
+        currentLevel=0;                
         cont.lightning.removeAllChildren();
         cont.attackBird.removeAllChildren();
         cont.diamond.removeAllChildren();
         cont.onlooker.removeAllChildren();
         setParallax(currentLevel);
         directorState=directorStateEnum.Normal;        
-        noWind();        
-        CatzRocket.catz.alpha = 1;
-        CatzRocket.glass.gotoAndPlay("still");
+        noWind();                        
         stage.removeAllEventListeners();
         stage.removeChild(gameView);
         stage.addChild(House.houseView);
@@ -982,24 +1011,17 @@ var GameLogic = (function(){
         houseListener = createjs.Ticker.on("tick", gameLogic.houseTick,this);
         House.wick.x=-100;
         House.wick.removeAllEventListeners();
-        House.wick.gotoAndPlay("still");
-        createjs.Tween.removeAllTweens(CatzRocket.catzRocketContainer);
-        createjs.Tween.removeAllTweens(House.houseView);
-        if(CatzRocket.isHit)        
-            House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
-        else        
-            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
+        House.wick.gotoAndPlay("still");        
+        createjs.Tween.removeAllTweens(House.houseView);        
         if(debugOptions.trustFund && gameStats.score<20000)        
             gameStats.score=20000;        
-        CatzRocket.reset();                
-        CatzRocket.catzRocketContainer.x = 300;
-        CatzRocket.catzRocketContainer.y = 200;
-        CatzRocket.heightOffset=0;
-        CatzRocket.catzRocketContainer.rotation =0;        
-        CatzRocket.catz.gotoAndPlay("no shake");        
-        CatzRocket.catzVelocity = 0;
+        CatzRocket.reset();                        
         bg.y = -1200;
+		bg.scaleX = 1;
+		bg.scaleY = 1;
         cont.star.y=0;
+		cont.star.scaleX = 1;
+		cont.star.scaleY = 1;
         var instance = createjs.Sound.play("catzRocketCrash");
         instance.volume=0.5;
         onTrack=false;        
@@ -1017,6 +1039,11 @@ var GameLogic = (function(){
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
             .call((function(){House.activateWick(gameLogic.gotoGameView);}));
+			
+		if(CatzRocket.isHit)        
+            House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
+        else        
+            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
         stage.update();     
     }
 	
@@ -1025,8 +1052,7 @@ var GameLogic = (function(){
         House.cricketsSound.stop();
         //if song hasn't started yet
         if(rocketSong.getPosition()<100)        
-            rocketSong.play({loop:-1});        
-        CatzRocket.hideSnake();
+            rocketSong.play({loop:-1});                
         if(!debugOptions.debugMode){
             cont.collisionCheckDebug.alpha=0;
             debugText.alpha=0;
@@ -1037,11 +1063,9 @@ var GameLogic = (function(){
         createjs.Ticker.off("tick", houseListener);            
 		gameListener = createjs.Ticker.on("tick", GameLogic.update,this);    
         createjs.Ticker.setFPS(30);                    
+        CatzRocket.start();
         
-        stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
-        stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
-        GameLogic.jump = false;
-        CatzRocket.catzVelocity=-20;
+        GameLogic.jump = false;        
         paused = false;      
         
         if(!gameStats.hasBeenFirst.round) {
