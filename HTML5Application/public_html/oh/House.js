@@ -26,6 +26,7 @@ var House = (function(){
         diCont : null,
         lookingAtStarsButton: null,
         wickLight: null,
+        wickClickBox: null,
         hoboCatHouse: null,
         rehab: null,
         orphanage: null,     
@@ -209,7 +210,6 @@ var House = (function(){
                         if(!gameStats.hasBeenFirst.houseWithSlots && (value === "rehab" || value === "orphanage")) {
                             setTimeout(function() { 
                                 paused = true; 
-                                alert(TutorialTexts.houseWithSlots); 
                                 setTimeout(function() { 
                                     paused = false; 
                                 }, 1000);
@@ -272,10 +272,12 @@ var House = (function(){
                             house.choices[1].removeAllEventListeners();
                             house.characterDialog(diamondCounterText);
                     }); 
+                    house.choices[i].addEventListener("mouseover", function(){house.choices[i].alpha=1});
+                    house.choices[i].addEventListener("mouseout", function(){house.choices[i].alpha=0.7});
                 }
                 for (var i=0, max1 = dialog.dialog[characterdialogID[currentCharacter]].Choices.length;i<max1;i++){                                                   
                     house.choices[i].text=dialog.dialog[characterdialogID[currentCharacter]].Choices[i].text;
-                    house.choices[i].alpha = 1;
+                    house.choices[i].alpha = 0.7;
                     house.choiceIDs[i] = dialog.dialog[characterdialogID[currentCharacter]].Choices[i].ChoiceID;      
                     addClickHandler(i);                                           
                 }                                                                     
@@ -297,7 +299,7 @@ var House = (function(){
                         createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
                     }
                     createjs.Tween.removeAllTweens(house.wick);
-                    createjs.Tween.get(house.wick).to({x:-210},1200,createjs.Ease.quadInOut)
+                    createjs.Tween.get(house.wick).to({x:-210},1200)
                             .call(house.activateWick);
                     //To shift to idle speach. Should be implemented smarter.
                     characterdialogID[currentCharacter]+=100;                
@@ -322,9 +324,8 @@ var House = (function(){
             createjs.Sound.play("wickSound");
             house.mouseRocket.alpha = 0;
             house.wickLight.alpha = 0;
-            house.wick.x=-225;
             house.wick.gotoAndPlay("cycle");
-            house.wick.removeAllEventListeners();   
+            house.wickClickBox.removeAllEventListeners();   
             house.house.removeAllEventListeners();       
             house.wick.addEventListener("animationend",function(){$("#mahCanvas").removeClass("match-cursor");});
             house.wick.addEventListener("animationend",GameLogic.gotoGameView);
@@ -335,7 +336,10 @@ var House = (function(){
 
     house.highlightCatz = function(){
         if(!createjs.Tween.hasActiveTweens(house.catz))        {
-            house.mouseCatz.alpha=1;                    
+            house.mouseCatz.alpha=1;   
+            house.catz.x=360;
+            house.catz.y=270; 
+            house.catz.rotation = 0;                
 			console.log(123);}
     }
 
@@ -365,8 +369,10 @@ var House = (function(){
     };
     
     house.highlightRocket = function(){
-        house.mouseRocket.alpha = 1;
-        house.wickLight.alpha = 0.7;
+        if(wickActive){
+            house.mouseRocket.alpha = 1;
+            house.wickLight.alpha = 0.7;
+        }
     };
     
     house.downlightRocket = function(){
@@ -469,7 +475,7 @@ var House = (function(){
         house.gotoHouseView(gameStats, diamondCounterText);
         $("#mahCanvas").removeClass("match-cursor");
         house.wick.x=-120;
-        house.wick.removeAllEventListeners();
+        house.wickClickBox.removeAllEventListeners();
         house.house.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
         stage.removeAllEventListeners();
@@ -543,9 +549,10 @@ var House = (function(){
     };           
     
     house.activateWick = function(){   
-        house.wick.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse();}));
-        house.wick.addEventListener("mouseover", house.highlightRocket);
-        house.wick.addEventListener("mouseout", house.downlightRocket);
+        house.wickClickBox.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse();}));
+        house.wickClickBox.addEventListener("mouseover", house.highlightRocket);
+        house.wickClickBox.addEventListener("mouseout", house.downlightRocket);
+        house.house.addEventListener("click",(function(){house.calculateApproval(); house.CloseHouseInfo(); house.lightFuse();}));
         house.house.addEventListener("mouseover", house.highlightRocket);
         house.house.addEventListener("mouseout", house.downlightRocket);                                
     };

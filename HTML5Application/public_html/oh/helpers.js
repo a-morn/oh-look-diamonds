@@ -32,6 +32,43 @@ var helpers = (function() {
 		return spr;
 	};
 
+	halp.createCircle = function(r,color,options)
+	{
+		var circle = new createjs.Shape();
+		var options = options || {};
+		var x = options.x || 0;
+		var y = options.y || 0;
+		circle.graphics.beginFill(color).drawCircle(x,y,r);
+		circle.scaleX = options.scaleX || 1;
+		circle.scaleY = options.scaleY || 1;
+		circle.regX = options.regX || spr.regX;
+		circle.regY = options.regY || spr.regY;
+		if (typeof options.alpha !== "undefined")
+			circle.alpha = options.alpha;
+		return circle;
+	}
+
+	halp.createSquare = function(w,color,options){
+		return halp.createRectangle(w, w, color, options);
+	}
+
+	halp.createRectangle = function(w,h,color,options)
+	{
+		var rect = new createjs.Shape();
+		var options = options || {};
+		var x = options.x || 0;
+		var y = options.y || 0;
+		rect.graphics.beginFill(color).drawRect(x,y,w,h);
+		rect.scaleX = options.scaleX || 1;
+		rect.scaleY = options.scaleY || 1;
+		rect.regX = options.regX || 0;
+		rect.regY = options.regY || 0;
+		rect.rotation = options.rotation || 0;
+		if (typeof options.alpha !== "undefined")
+			rect.alpha = options.alpha;
+		return rect;
+	}
+
 	halp.createText = function(msg, font, color, options) {
 		var text = new createjs.Text(msg, font, color);
 		var options = options || {};

@@ -4,8 +4,48 @@
 		"selected_items":
 		[
 			[
+				"crea",
+				"createHud()"
+			],
+			[
+				"hu",
+				"hudCont	(num)"
+			],
+			[
+				"ga",
+				"gameMouseUp()"
+			],
+			[
+				"ex",
+				"exitGameMode()"
+			],
+			[
+				"hud",
+				"hudCont	(?)"
+			],
+			[
+				"add",
+				"addChild"
+			],
+			[
 				"ca",
-				"catzToStartPos(evt)"
+				"canvasWidth	(num)"
+			],
+			[
+				"can",
+				"canvasHeight	(num)"
+			],
+			[
+				"cre",
+				"createRectangle(w, h, color, options)"
+			],
+			[
+				"S",
+				"Shape"
+			],
+			[
+				"game",
+				"gameClickScreen	(?)"
 			],
 			[
 				"get",
@@ -22,10 +62,6 @@
 			[
 				"re",
 				"removeAllChildren	(?)"
-			],
-			[
-				"add",
-				"addChild	(?)"
 			],
 			[
 				"cur",
@@ -72,10 +108,6 @@
 				"scaleX	(?)"
 			],
 			[
-				"game",
-				"gameView	{}"
-			],
-			[
 				"st",
 				"state	(str)"
 			],
@@ -94,10 +126,6 @@
 			[
 				"ad",
 				"addChild	(?)"
-			],
-			[
-				"crea",
-				"createDisplaySprite()"
 			],
 			[
 				"selec",
@@ -226,14 +254,6 @@
 			[
 				"ce",
 				"createBird"
-			],
-			[
-				"S",
-				"SpriteSheetData"
-			],
-			[
-				"cre",
-				"createSprite"
 			],
 			[
 				"creat",
@@ -431,7 +451,7 @@
 			"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 			"settings":
 			{
-				"buffer_size": 10134,
+				"buffer_size": 12368,
 				"line_ending": "Windows"
 			}
 		},
@@ -439,7 +459,39 @@
 			"file": "HTML5Application/public_html/oh/leveleditor.html",
 			"settings":
 			{
-				"buffer_size": 2238,
+				"buffer_size": 2299,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/gameLogic.js",
+			"settings":
+			{
+				"buffer_size": 45819,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/helpers.js",
+			"settings":
+			{
+				"buffer_size": 2882,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/spriteSheetData.js",
+			"settings":
+			{
+				"buffer_size": 29975,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "HTML5Application/public_html/oh/levelEditor/LevelManifest.js",
+			"settings":
+			{
+				"buffer_size": 1995,
 				"line_ending": "Windows"
 			}
 		}
@@ -561,6 +613,15 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"CatzRocket.c",
+			"updateDiamond",
+			"inGameMode",
+			"update(",
+			"CatzRocket.\ncatzRocketC",
+			"mousedown",
+			"update",
+			"statemo",
+			"mousedown",
 			"pressmove",
 			"()",
 			"catzRocket",
@@ -679,16 +740,7 @@
 			"update",
 			"houset",
 			"houseListener",
-			"crash",
-			"catzRocket.glass",
-			"crash",
-			"house.catz.x",
-			"catz.x",
-			"update",
-			"HOUSE.CAT",
-			"DIAMOND",
-			"HIGHLIGH",
-			"highlightCa"
+			"crash"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -717,15 +769,15 @@
 					"file": "HTML5Application/public_html/oh/levelEditor/LevelEditor.js",
 					"settings":
 					{
-						"buffer_size": 10134,
+						"buffer_size": 12368,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3159,
-								3159
+								9063,
+								9063
 							]
 						],
 						"settings":
@@ -734,7 +786,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 1269.0,
+						"translation.y": 4963.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -744,15 +796,15 @@
 					"file": "HTML5Application/public_html/oh/leveleditor.html",
 					"settings":
 					{
-						"buffer_size": 2238,
+						"buffer_size": 2299,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1709,
-								1709
+								811,
+								811
 							]
 						],
 						"settings":
@@ -762,7 +814,117 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 112.0,
+						"translation.y": 97.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "HTML5Application/public_html/oh/gameLogic.js",
+					"settings":
+					{
+						"buffer_size": 45819,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								42957,
+								42957
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 14982.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "HTML5Application/public_html/oh/helpers.js",
+					"settings":
+					{
+						"buffer_size": 2882,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1781,
+								1781
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 15.0,
+						"translation.y": 348.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "HTML5Application/public_html/oh/spriteSheetData.js",
+					"settings":
+					{
+						"buffer_size": 29975,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								18113,
+								18113
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5487.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "HTML5Application/public_html/oh/levelEditor/LevelManifest.js",
+					"settings":
+					{
+						"buffer_size": 1995,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1217,
+								1217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 177.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -815,6 +977,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"sprite",
+				"HTML5Application/public_html/oh/spriteSheetData.js"
+			],
 			[
 				"in",
 				"HTML5Application/public_html/oh/init.js"

@@ -143,12 +143,12 @@ var InitializeStage = (function(){
 
         House.hobo = helpers.createSprite(SpriteSheetData.hobo, "cycle", 
 			{x:-110, y:225, regX:-210, regY:-180});        		        
-                       
+
         House.timmy = helpers.createSprite(SpriteSheetData.supportingCharacter, "timmy", 
-			{x:83, y:362, scaleX:0.8, scaleY:0.8, alpha:0});        		        		
+			{x:83, y:362, scaleX:0.8, scaleY:0.8, alpha:0});        		
                 
         House.priest = helpers.createSprite(SpriteSheetData.supportingCharacter, "priest", 
-			{x:52, y:330, scaleX:0.8, scaleY:0.8, alpha:0});        		        				
+			{x:52, y:330, scaleX:0.8, scaleY:0.8, alpha:0});        		
 
 		House.oh = helpers.createBitmap(queue.getResult("ohlookdiamonds"), 
 			{x:90, y:-1460, alpha:0, sourceRect:new createjs.Rectangle(0,0,227,190)});                                        
@@ -293,10 +293,10 @@ var InitializeStage = (function(){
         House.mouseChar = {"hoboCat":House.mouseHobo, "timmy":House.mouseTimmy, "priest" : House.mousePriest};
         
 		House.mouseRocket = helpers.createBitmap(queue.getResult("mouseRocket"), 
-			{x:207, y:338, alpha:0});        		        
+			{x:211, y:338, alpha:0});        		        
 			
 		House.mouseCatz = helpers.createBitmap(queue.getResult("mouseCatz"), 
-			{x:107, y:28, alpha:0, scaleX:0.5, scaleY:0.5});        		        
+			{x:116, y:56, alpha:0, scaleX:0.5, scaleY:0.5});        		        
                 				        
         House.catz = helpers.createSprite(SpriteSheetData.cat, "cycle", 
 			{x:360, y:270, scaleX:0.8, scaleY:0.8});		                                    		
@@ -309,6 +309,8 @@ var InitializeStage = (function(){
         House.wickLight.x = 174;
         House.wickLight.y = 319;
         House.wickLight.alpha = 0;
+
+        House.wickClickBox = helpers.createRectangle(85, 85, "white", {x:155,y:300,alpha:0.01});
         
 		House.characterSpeach = helpers.createText("", "16px Fauna One", "#ffffcc", 
 			{x:10, y:230, alpha:0});               
@@ -323,14 +325,22 @@ var InitializeStage = (function(){
 			{x:193, y:305, alpha:0});        													
         
         House.choice1 = helpers.createText("", "20px Fauna One", "#ffcc00", 
-			{x:350, y:150, alpha:0});        																	
+			{x:350, y:150, alpha:0});    
+
+        House.choice1.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0});  																	
         
 		House.choice2 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:120, alpha:0});        													
 	
+
+        House.choice2.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0}); 
+
 		House.choice3 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:180, alpha:0});        													        
                 
+
+        House.choice3.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0}); 
+
         House.choices = [House.choice1, House.choice2,House.choice3];
         
         House.hoboCatSound1 = createjs.Sound.play("hoboCatSound1");
@@ -357,7 +367,7 @@ var InitializeStage = (function(){
             House.wick, House.house, House.hobo, House.timmy, House.priest, House.characterExclamation, 
             House.wickExclamation, House.catzSpeach, House.characterSpeach, House.choice1, 
             House.choice2, House.choice3,muteButton, House.mouseHobo, House.mouseTimmy, 
-            House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight,House.oh, 
+            House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight, House.wickClickBox,House.oh, 
             House.look, House.diamonds, House.diCont, House.lookingAtStarsButton,
             House.houseInfoCont, House.subtractedDiamondCont);
     }
@@ -550,9 +560,9 @@ var InitializeStage = (function(){
 		
 	function goDown(){		
         bg.removeAllEventListeners();
-        createjs.Tween.get(House.houseView).to({y:0},4000,createjs.Ease.quadInOut);
-        createjs.Tween.get(bg).to({y:-1200},4000,createjs.Ease.quadInOut);
-        createjs.Tween.get(cont.star).to({y:0},4000,createjs.Ease.quadInOut);
+        createjs.Tween.get(House.houseView).to({y:0},4000, createjs.Ease.quadInOut);
+        createjs.Tween.get(bg).to({y:-1200},4000, createjs.Ease.quadInOut);
+        createjs.Tween.get(cont.star).to({y:0},4000, createjs.Ease.quadInOut);
         createjs.Tween.get(House.hobo)
             .wait(7000)
             .to({x:-270, y:270, rotation:0},300)

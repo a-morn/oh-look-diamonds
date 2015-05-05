@@ -176,4 +176,3 @@ small gift as a token\n\
 of the Lords apprication.", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"blessings upon ye, child of the cat God"}}}
 };
-

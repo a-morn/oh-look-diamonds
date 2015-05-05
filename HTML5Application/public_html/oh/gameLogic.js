@@ -83,12 +83,7 @@ var GameLogic = (function(){
             else            
                 diamondCounterText.text="alot";                                                    
             
-            if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                
-                paused = true; 
-                alert(TutorialTexts.frenzy); 
-                setTimeout(function() { 
-                    paused = false; 
-                }, 500);                
+            if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                           
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
             }                                                
             if(debugOptions.infiniteFuel && CatzRocket.diamondFuel<1)            
@@ -983,14 +978,7 @@ var GameLogic = (function(){
         createjs.Tween.get(CatzRocket.rocket).to({x:800},800);
     }
     
-<<<<<<< HEAD
-    function crash(){  
-        gameView.scaleX=1;
-        gameView.scaleY=1;
-        CatzRocket.diamondFuel = 2;        
-=======
     function crash(){		   
->>>>>>> a1ae42f1d7386277fe8dd0b1fc28e17a557d4bbb
         currentTrack=0;
         currentLevel=0;                
         cont.lightning.removeAllChildren();
@@ -1063,19 +1051,15 @@ var GameLogic = (function(){
         createjs.Ticker.off("tick", houseListener);            
 		gameListener = createjs.Ticker.on("tick", GameLogic.update,this);    
         createjs.Ticker.setFPS(30);                    
-        CatzRocket.start();
+        CatzRocket.start(-20);
+
+        stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
+        stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
         
         GameLogic.jump = false;        
         paused = false;      
         
         if(!gameStats.hasBeenFirst.round) {
-            setTimeout(function() { 
-                paused = true; 
-                alert(TutorialTexts.fuel); 
-                setTimeout(function() { 
-                    paused = false; 
-                }, 1000);
-            }, 500);
             gameStats.hasBeenFirst.round = true;
         }        
         stage.update();                

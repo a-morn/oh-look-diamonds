@@ -2,8 +2,10 @@ var progressBar,
 	stage,
 	queue,
 	canvas,
+	inGameMode = false,
 	isSpriteMode = true,
 	levels,
+	grav = 12,
 	dbText,
 	selectBox = {
 		rect: null,
@@ -22,18 +24,21 @@ var progressBar,
 		height: 150,
 		width: 2000
 	},
-	catzStartPos={
-		x:260,
-		y:1030
-	}
+	catzStartPos = {
+		x: 260,
+		y: 1030
+	},
+	mousedown,
+	catzRocketXpos = 0,
 	YOriginPosInGame = 830,
-	levelLength = 10000,
+	levelLength = 13500,
 	levelViewScale = 0.5,
+	beginningZoneLength = 1000,
 	bgCont = new createjs.Container(),
 	objCont = new createjs.Container(),
 	selectedCont = new createjs.Container(),
 	levelView = new createjs.Container(),
-	catzRocketContainer = new createjs.Container();
+	gameClickScreen,
 	levelEditor = {};
 
 levelEditor.Init = function() {
@@ -67,26 +72,36 @@ function handleComplete() {
 		x: 30,
 		y: 38
 	});
-	stage.addChild(levelView, dbText);
+	stage.addChild(levelView, dbText, gameClickScreen);
 	stage.removeChild(progressBar);
 	createjs.Ticker.on("tick", onTick);
-	createjs.Ticker.setFPS(10);
+	createjs.Ticker.setFPS(30);
 	stage.update();
 }
 
 function createLevelView() {
 	createBG();
 	createCatz();
-	levelView.addChild(bgCont, objCont, selectedCont, catzRocketContainer);
+
+
+	levelView.addChild(bgCont, objCont, selectedCont, CatzRocket.catzRocketContainer);
 	levelView.scaleX = levelViewScale;
 	levelView.scaleY = levelViewScale;
-	document.getElementById("levelEditCanvas").height =
-		(bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
-	document.getElementById("levelEditCanvas").width = levelLength * levelViewScale;
+	var canvasHeight = (bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
+	var canvasWidth = levelLength * levelViewScale;
+	document.getElementById("levelEditCanvas").height = canvasHeight;
+	document.getElementById("levelEditCanvas").width = canvasWidth;
+	createGameClickScreen(canvasWidth, canvasHeight);
+}
+
+function createGameClickScreen(w, h) {
+	gameClickScreen = helpers.createRectangle(w, h, "ffffff", {
+		alpha: 0
+	});
 }
 
 function createBG() {
-	for (i = 0, len = levelLength / bgCoordinates.width; i < len; i++) {
+	for (i = 0, len = 2 + levelLength / bgCoordinates.width; i < len; i++) {
 		var bgClone = new createjs.Bitmap(queue.getResult("bg"));
 		bgClone.x = i * bgCoordinates.width;
 		bgClone.y = bgCoordinates.offset;
@@ -96,7 +111,7 @@ function createBG() {
 		}
 		bgCont.addChild(bgClone);
 	}
-	for (i = 0, len = levelLength / fgCoordinates.width + 1; i < len; i++) {
+	for (i = 0, len = levelLength / fgCoordinates.width; i < len; i++) {
 		var fgClone = new createjs.Bitmap(queue.getResult("fgGround"));
 		fgClone.x = fgCoordinates.width * i;
 		fgClone.y = 300 + YOriginPosInGame;
@@ -105,25 +120,55 @@ function createBG() {
 		topClone.y = 0;
 		bgCont.addChild(fgClone, topClone);
 	}
+	startLine=helpers.createRectangle(10,bgCoordinates.height-bgCoordinates.offset, "red", {x:beginningZoneLength})
+	bgCont.addChild(startLine);
 }
 
 function createCatz() {
 	CatzRocket.Init();
-	var catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {y:5});
-	catzToStartPos();
-	catzRocketContainer.regY = 100;
-	catzRocketContainer.regX = 150;
-	catz.currentFrame = 0;
-	catz.stop();
-
-	rocket = helpers.createBitmap(queue.getResult("rocket"), {
+	CatzRocket.catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {
+		y: 5
+	});
+	CatzRocket.catzRocketContainer.regY = 100;
+	CatzRocket.catzRocketContainer.regX = 150;
+	CatzRocket.catz.currentFrame = 0;
+	CatzRocket.rocketFlame = helpers.createSprite(SpriteSheetData.flame, "cycle", {
+		x: 190,
+		y: 200,
+		regX: 40,
+		regY: -37,
+		alpha: 0
+	});
+	CatzRocket.SnakeLine = new createjs.Shape();
+	CatzRocket.rocket = helpers.createBitmap(queue.getResult("rocket"), {
 		scaleX: 0.25,
 		scaleY: 0.25,
 		regX: -430,
 		regY: -320
 	});
-	catzRocketContainer.addChild(rocket, catz);
-	catzRocketContainer.on("pressmove", pressMoveCatz);
+	CatzRocket.rocketSound = createjs.Sound.play("rocketSound");
+	CatzRocket.rocketSound.volume = 0.1;
+	CatzRocket.rocketSound.stop();
+	for (var i = 0, snakeAmt = 11; i < snakeAmt; i++) {
+		var shape = new createjs.Shape();
+		var x = 260 - i * 5;
+		var r = 9;
+		shape.graphics.f("fffff").dc(x, 200, r);
+		shape.regY = 5;
+		shape.regX = 5;
+		CatzRocket.rocketSnake.addChild(shape);
+	}
+	CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", {
+		regX: 150,
+		regY: 200,
+		scaleX: 0.85,
+		scaleY: 0.85,
+		x: 670,
+		y: 158
+	});
+	CatzRocket.setCrashBorders(0, YOriginPosInGame + 450);
+	CatzRocket.catzRocketContainer.addChild(CatzRocket.rocket, CatzRocket.catz);
+	CatzRocket.catzRocketContainer.on("pressmove", pressMoveCatz);
 }
 
 function populateDDL() {
@@ -143,6 +188,8 @@ function setEventListeners() {
 	bgCont.on("pressup", selectWithBox);
 	selectedCont.on("mousedown", startPressMove);
 	selectedCont.on("pressmove", pressMove);
+	gameClickScreen.on("mousedown", gameMouseDown);
+	gameClickScreen.on("click", gameMouseUp);
 }
 
 function startPressMove(evt) {
@@ -172,10 +219,11 @@ function deleteAll() {
 
 }
 
-function catzToStartPos()
-{
-	catzRocketContainer.x=catzStartPos.x;
-	catzRocketContainer.y=catzStartPos.y;
+function catzToStartPosition() {
+	exitGameMode();
+	window.scrollTo(0, 0);
+	CatzRocket.catzRocketContainer.y = catzStartPos.y;
+	CatzRocket.catzRocketContainer.x = catzStartPos.x;
 }
 
 function changeBirdType(evt) {
@@ -264,26 +312,26 @@ function moveChildrenFromSelectedToObjCont() {
 }
 
 function createSmallDiamond(event) {
-	var x = currentCenterX();
-	var y = 500;
+	var x = currentCenterX()+Math.random()*100;
+	var y = 500+Math.random()*100;
 	createDisplayObject(x, y, "diamond", "cycle");;
 }
 
 function createMediumDiamond(event) {
-	var x = currentCenterX();
-	var y = 500;
+	var x = currentCenterX()+Math.random()*100;
+	var y = 500+Math.random()*100;
 	createDisplayObject(x, y, "mediumDiamond", "mediumCycle");
 }
 
 function createGrandDiamond(event) {
-	var x = currentCenterX();
-	var y = 500;
+	var x = currentCenterX()+Math.random()*100;
+	var y = 500+Math.random()*100;
 	createDisplayObject(x, y, "greatDiamond", "greatCycle");
 }
 
 function createSeagull(event) {
-	var x = currentCenterX();
-	var y = 250;
+	var x = currentCenterX()+Math.random()*100;
+	var y = 250+Math.random()*100;
 	createDisplayObject(x, y, "enemybirds", "seagull");
 }
 
@@ -312,14 +360,58 @@ function createDisplaySprite(x, y, sprite, currentAnimation) {
 	return obj;
 }
 
-function createDisplayShape() {
-
-}
+function createDisplayShape() {}
 
 function onTick(evt) {
-	dbText.text = "sC.x : " + selectedCont.x + " sC.y : " + selectedCont.y +
-		"\nposOSD.x" + selectPosOnStartDrag.x + "posOSD.y" + selectPosOnStartDrag.y;
+
+	dbText.text = catzRocketXpos;
+	if (inGameMode === true) {
+		gameUpdate(evt);
+	}
 	stage.update();
+}
+
+function gameUpdate(evt) {
+	CatzRocket.diamondFuel = 10;
+	CatzRocket.update(grav, 0, evt);
+	var mult = 1;
+	if (CatzRocket.hasFrenzy())
+		mult = 2;
+	catzRocketXpos += evt.delta * (0.3 + 0.3 * Math.cos((CatzRocket.catzRocketContainer.rotation) / 360 * 2 * Math.PI)) * mult;
+	CatzRocket.catzRocketContainer.x += catzRocketXpos;
+	var x = catzRocketXpos * levelViewScale - 200;
+	window.scrollTo(x, 0);
+	if (CatzRocket.isCrashed) {
+		exitGameMode();
+	}
+}
+
+function enterGameMode() {
+	catzRocketXpos = CatzRocket.catzRocketContainer.x - 200;
+	CatzRocket.heightOffset =
+		CatzRocket.catzRocketContainer.y - 400;
+	CatzRocket.start(CatzRocket.catzVelocity);
+	gameClickScreen.alpha = 0.05;
+	inGameMode = true;
+}
+
+
+function exitGameMode() {
+	CatzRocket.reset();
+	CatzRocket.catzRocketContainer.y = catzStartPos.y;
+	CatzRocket.catzRocketContainer.x = currentCenterX();
+	gameClickScreen.alpha = 0;
+	inGameMode = false;
+}
+
+function gameMouseDown() {
+	CatzRocket.catzUp();
+}
+
+function gameMouseUp() {
+	console.log("up");
+	mousedown = false;
+	CatzRocket.catzEndLoop();
 }
 
 function getObjType(kid) {
@@ -360,8 +452,9 @@ function sortDisplayObjectArray() {
 }
 
 function displayObjectToString(obj) {
+	var x = kid.x -beginningZoneLength;
 	return '{"x":' +
-		kid.x +
+		x+
 		', "y":' +
 		YEditorToGame(kid.y) +
 		',type:' +
@@ -377,7 +470,7 @@ function loadLevel(offsetX) {
 	if (TrackParts.easy.hasOwnProperty(levelName)) {
 		for (var i = TrackParts.easy[levelName].length - 1; i >= 0; i--) {
 			var kid = TrackParts.easy[levelName][i];
-			createDisplayObject(kid.x + offsetX, YGameToEditor(kid.y), kid.type, kid.currentAnimation);
+			createDisplayObject(kid.x + offsetX+beginningZoneLength, YGameToEditor(kid.y), kid.type, kid.currentAnimation);
 		};
 	} else {
 		alert("Doesn't seem to exist");
