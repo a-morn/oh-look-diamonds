@@ -748,4 +748,3 @@ var House = (function(){
     
     return house;
 }());
-

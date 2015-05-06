@@ -5,8 +5,11 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <link href='http://fonts.googleapis.com/css?family=Fauna+One' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="ohLDStyle.css">    
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="favicon.ico">	
+	<link rel="stylesheet" href="odometer-theme-car.css" />
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>         		
     <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
     <script src="dialog.js"></script>
     <script src="attackBirds.js"></script>
@@ -22,8 +25,8 @@
     <script src="tutorialTexts.js"></script>    
 	<script src="helpers.js"></script>
 	<script src="init.js"></script>
-	<script src="gameLogic.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>         		
+	<script src="gameLogic.js"></script>	
+	<script src="odometer.min.js"></script>    
     <script> 
     $(function(){
       $("#aboutOuter").load("about.html"); 
@@ -32,9 +35,17 @@
 	<!--<script type="text/javascript" charset="utf-8" src="cordova.js"></script>-->
 </head>
 <body onload ="StartGame();">
-    <p style="text-align:right">ALPHA<p>
-    <canvas id = "mahCanvas" width = "800" height = "450">        
-    </canvas>    
-    <div id="aboutOuter" class="noselect"></div>
+    <p style="text-align:right">ALPHA<p>	
+		<canvas id = "mahCanvas" width = "800" height = "450">        
+		</canvas>    
+		
+		<div class="progress">
+			<div class="progress-bar" role="progressbar" style="width: 0%;">					
+			</div>
+		</div>
+		<div class="odo"><div class="odometer">0<p></div>
+		
+		
+		<div id="aboutOuter" class="noselect"></div>	
 </body>
 </html>

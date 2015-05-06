@@ -21,6 +21,7 @@ var GameLogic = (function(){
 	wind=0,	
 	zoomOut = false,
 	zooming = false,
+	fuelBlinkTimer = 0,
     containerDict = {
         "diamond" : cont.diamond,
         "mediumDiamond" : cont.diamond,
@@ -73,15 +74,11 @@ var GameLogic = (function(){
             parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                                            
             
             if(gameStats.score<10)            
-                diamondCounterText.text="000"+gameStats.score;            
-            else if(gameStats.score<100)            
-                diamondCounterText.text="00"+gameStats.score;            
-            else if(gameStats.score<1000)            
-                diamondCounterText.text="0"+gameStats.score;            
-            else if(gameStats.score<10000)            
-                diamondCounterText.text=gameStats.score;            
-            else            
-                diamondCounterText.text="alot";                                                    
+                $('.odometer').html("00"+gameStats.score);            
+            else if(gameStats.score<100)            			
+				$('.odometer').html("0"+gameStats.score);            
+			else
+				$('.odometer').html(gameStats.score);            
             
             if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                           
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
@@ -504,8 +501,18 @@ var GameLogic = (function(){
         }
     }
     
-    function updatePointer(event){
-        hudPointer.rotation = Math.min(-30 + CatzRocket.diamondFuel*135/10,105);                
+    function updatePointer(){
+		$('.progress-bar').css('width', CatzRocket.diamondFuel*5+'%');				
+		if(CatzRocket.diamondFuel < 2){
+			if(fuelBlinkTimer > 10){
+				$('.progress-bar').toggleClass("background-red");
+				fuelBlinkTimer = 0;
+			}
+			fuelBlinkTimer++;
+		}
+		if(CatzRocket.diamondFuel >= 2)
+			$('.progress-bar').removeClass("background-red");
+        //hudPointer.rotation = Math.min(-30 + CatzRocket.diamondFuel*135/10,105);                
     }
 
     function updateDiamonds(event){        
@@ -1003,7 +1010,8 @@ var GameLogic = (function(){
         createjs.Tween.removeAllTweens(House.houseView);        
         if(debugOptions.trustFund && gameStats.score<20000)        
             gameStats.score=20000;        
-        CatzRocket.reset();                        
+        CatzRocket.reset();                        		
+		updatePointer();
         bg.y = -1200;
 		bg.scaleX = 1;
 		bg.scaleY = 1;

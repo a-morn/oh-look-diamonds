@@ -555,12 +555,12 @@ var CatzRocket = (function() {
         catzRocket.frenzyTimer = 0;
         catzRocket.frenzyCount = 0;
         changeState(catzRocket.catzStateEnum.Normal);
-        catzRocket.diamondFuel = 2;
-        catzRocket.rocket.x = 0;
-        catzRocket.rocket.alpha = 1;
-        catzRocket.catz.alpha = 1;
-        catzRocket.glass.gotoAndPlay("still");
-        catzRocket.catzRocketContainer.x = 300;
+		catzRocket.diamondFuel = 0;        
+		catzRocket.rocket.x=0;
+        catzRocket.rocket.alpha=1;
+		catzRocket.catz.alpha = 1;
+		catzRocket.glass.gotoAndPlay("still");	
+		catzRocket.catzRocketContainer.x = 300;
         catzRocket.catzRocketContainer.y = 200;
         catzRocket.heightOffset = 0;
         catzRocket.catzRocketContainer.rotation = 0;
@@ -573,7 +573,32 @@ var CatzRocket = (function() {
         catzRocket.isHit = false;
         catzRocket.isCrashed = false;
         catzRocket.hideSnake();
-        CatzRocket.catzVelocity = velocity;
+        CatzRocket.catzVelocity = velocity;	
+		catzRocket.diamondFuel = 2;        
+		stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
+        stage.addEventListener("stagemouseup", function(){mousedown = false; catzEndLoop();});    
+	}
+    
+    function catzEndLoop(){        
+        if(catzRocket.catzState!==catzRocket.catzStateEnum.Downloop
+                && catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady 
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Slammer 
+                && catzRocket.catzState!==catzRocket.catzStateEnum.SecondDownloop
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot
+                && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
+                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)        
+            changeState(catzRocket.catzStateEnum.Normal);        
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)        
+            changeState(catzRocket.catzStateEnum.Slingshot);        
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.Downloop)        
+            changeState(catzRocket.catzStateEnum.SlammerReady);        
+        else if (catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
+            changeState(catzRocket.catzStateEnum.Frenzy);        
+    };   
+    
+    function invincibilityCountDown(minusTime){
+        if(invincibilityCounter>0)        
+            invincibilityCounter-=minusTime;        
     }
 
     catzRocket.catzEndLoop = function() {

@@ -4,12 +4,12 @@ body {
     color: #ffffcc;    
 }
 
-canvas, #hideShow{
+canvas, #hideShow, .progress, .odo{
     display: block;
     margin: 0 auto;    
 }
 
-#aboutOuter{
+#aboutOuter, .progress, .odo{
     text-align: center;
 }
 
@@ -21,12 +21,12 @@ a:visited {
     color: #ffffcc;
 }
 @media (max-width: 800px) {
-    #mahCanvas {
+    canvas, .progress {
         width: 100%;
     }
 }
 @media (min-width: 801px) {
-    #mahCanvas  {
+    canvas , .progress{
         width: 800px;
     }
 }
@@ -64,4 +64,19 @@ button {
 
 .house-cursor {         
     cursor:url(assets/houseCursor.gif), auto;
+}
+
+.progress {
+	background-color : #1f1f1f; 		
+}
+.progress-bar {
+		background-color: #99ccff;		
+}
+
+.background-red {
+	background-color: #cc0000;
+}
+
+.odometer {
+    font-size: 40px;
 }
