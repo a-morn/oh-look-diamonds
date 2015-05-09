@@ -21,3 +21,21 @@ ThunderCloud.prototype.initialize = function(img)
     //ThunderCloud.prototype.width = width;
 };
 
+function Cloud(img) 
+{
+    this.initialize(img);
+}
+//inheritance
+Cloud.prototype = new createjs.Bitmap();
+Cloud.prototype.CloudInit = Cloud.prototype.initialize;
+
+//props
+Cloud.prototype.catzIsInside = false;
+
+//constructor
+Cloud.prototype.initialize = function(img) 
+{
+    this.CloudInit(img);
+    //ThunderCloud.prototype.height = height;
+    //ThunderCloud.prototype.width = width;
+};

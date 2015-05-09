@@ -200,11 +200,16 @@ var GameLogic = (function(){
     }
     
 	function spawnCloud(){
+
+ 
 		var cloudtype = "cloud"+Math.floor(Math.random()*5+1).toString();            
 		var scale = Math.random()*0.3+0.3;			
-		var cloud = helpers.createBitmap(queue.getResult(cloudtype), 
-			{x:2200, y:Math.floor(Math.random()*1000-1000), scaleX:scale, scaleY:scale});                									            
-		cloudIsIn[cloud]=false;
+        var cloud = new Cloud(queue.getResult(cloudtype));
+        cloud.scaleX = scale;
+        cloud.scaleY = scale;
+        cloud.x = 2200;
+        cloud.y = Math.floor(Math.random()*1000-1000);
+        cloud.catzIsInside=false;
 		cont.cloud.addChild(cloud); 
 	}
 	
@@ -223,8 +228,8 @@ var GameLogic = (function(){
             var rect = kid.getBounds();
             if(CatzRocket.catzRocketContainer.x<(kid.x+rect.width*kid.scaleX) && CatzRocket.catzRocketContainer.x > 
                     kid.x && CatzRocket.catzRocketContainer.y < (kid.y+rect.height*kid.scaleY)
-                    && CatzRocket.catzRocketContainer.y > kid.y && cloudIsIn[kid]===false){
-                cloudIsIn[kid] = true;
+                    && CatzRocket.catzRocketContainer.y > kid.y && kid.catzIsInside===false){
+                kid.catzIsInside = true;
                 smoke.alpha = 1;
                 smoke.rotation = CatzRocket.catzRocketContainer.rotation+270;
                 smoke.x = CatzRocket.catzRocketContainer.x;
@@ -232,12 +237,12 @@ var GameLogic = (function(){
                 smoke.gotoAndPlay("jump");
                 smoke.addEventListener("animationend",function(){hideSmoke();});
             }
-            else if(cloudIsIn[kid]===true
+            else if(kid.catzIsInside===true
                     && 
                     ((CatzRocket.catzRocketContainer.x-catzBounds.width/2)> (kid.x+rect.width*kid.scaleX)
                     || CatzRocket.catzRocketContainer.y-catzBounds.height/2 > (kid.y+rect.height*kid.scaleY)
                     || (CatzRocket.catzRocketContainer.y+catzBounds.height < kid.y))){
-                cloudIsIn[kid] = false;
+                kid.catzIsInside = false;
                 exitSmoke.alpha = 1;
                 exitSmoke.rotation = CatzRocket.catzRocketContainer.rotation;
                 exitSmoke.x = CatzRocket.catzRocketContainer.x;
@@ -252,7 +257,7 @@ var GameLogic = (function(){
             exitSmoke.x-=cloudSpeed;        
     }
     
-    function spawnThunderCloud(xPos,yPos){
+    function spawnThunderCloud(xPos,yPos, type){
         createjs.Sound.play("thunder");
         var cloudtype = Math.floor(Math.random()*5+1);
         cloudtype = "cloud"+cloudtype.toString();
