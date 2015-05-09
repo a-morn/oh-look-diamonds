@@ -5,14 +5,14 @@ body {
 }
 
 .highscore{
-	float:left		
+	float: right;
 }
 
-.highscore>p{
+.centered{
 	text-align: center;
 }
 
-canvas, .progress, .odo{
+canvas, .odo{
 	margin: 0 auto;
     display: block;       
 }
@@ -21,9 +21,7 @@ canvas, .progress, .odo{
 	margin: 30px auto;
 }
 
-#aboutOuter, .progress, .odo{
-    text-align: center;
-}
+#
 
 a:link {
     color: #ffffcc;
@@ -33,12 +31,12 @@ a:visited {
     color: #ffffcc;
 }
 @media (max-width: 800px) {
-    canvas, .progress {
+    canvas,.odo {
         width: 100%;
     }
 }
 @media (min-width: 801px) {
-    canvas , .progress{
+    canvas,.odo {
         width: 800px;
     }
 }
@@ -58,8 +56,7 @@ button {
 }
 
 .mute-is-not-muted {
-    vertical-align: bottom;
-    display: inline;
+    vertical-align: bottom; 
     background: url("../assets/sprites/mute button.png") 0 0;
     height: 64;
     width: 54;
@@ -67,6 +64,10 @@ button {
 
 .mute-is-muted{
     background: url("../assets/sprites/mute button.png") -64px 0;
+}
+
+.mute{
+	margin-top: 100px;
 }
 
 .noselect {
@@ -91,7 +92,13 @@ button {
 }
 
 .progress {
+	float:left;
 	background-color : #1f1f1f; 		
+	width: 40%;
+	height: 69px;
+}
+.counter {
+	float:left;
 }
 .progress-bar {
 		background-color: #99ccff;		
