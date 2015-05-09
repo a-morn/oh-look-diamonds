@@ -194,93 +194,7 @@ var InitializeStage = (function(){
             {x:700, y:305, rotation:5, alpha:0});
 
         House.diamondHouseCont.addChild(House.university);
-        House.diamondHouseArray["university"] = House.university;
-        
-        House.houseInfoCont = new createjs.Container();
-                
-        House.houseInfo["rehab"] = new createjs.Container();
-        House.houseInfo["rehab"].x = 390;
-        House.houseInfo["rehab"].y = 270;
-
-        var rGraphics = new createjs.Bitmap(queue.getResult("house popup"));
-        var rBox = new createjs.Shape();
-        rBox.graphics.beginFill("#ff0000").drawRect(0, 0, 100, 100);
-        rBox.alpha=0;
-        var rxBox = new createjs.Shape();
-        rxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
-        rxBox.addEventListener("click",(function(){House.houseInfo["rehab"].alpha = 0;}));
-        rxBox.alpha=0.01;
-        var rpBox = new createjs.Shape();
-        rpBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
-        rpBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.rehab.slots += 1;House.rsText.text = gameStats.rehab.slots;}}));
-        rpBox.alpha=0.01;
-        var rmBox = new createjs.Shape();
-        rmBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
-        rmBox.addEventListener("click",(function(){if(gameStats.rehab.slots>0)gameStats.rehab.slots -= 1; House.rsText.text = gameStats.rehab.slots;}));
-        rmBox.alpha=0.01;
-		
-        House.rsText = helpers.createText(gameStats.rehab.slots, "16px Fauna One", "#ffffcc", {x:30, y:38});        
-        
-        House.addOnRehabText1 = helpers.createText("Rehab", "16px Fauna One", "#000", {x:5, y:5});		       
-        
-        House.houseInfo["rehab"].addChild(rBox, rGraphics, rxBox, rpBox, rmBox, House.rsText, House.addOnRehabText1);
-        House.houseInfo["rehab"].alpha = 0;        
-        House.houseInfoCont.addChild(House.houseInfo["rehab"]);
-        
-        House.houseInfo["orphanage"] = new createjs.Container();
-        House.houseInfo["orphanage"].x = 500;
-        House.houseInfo["orphanage"].y = 280;
-        var oGraphics = new createjs.Bitmap(queue.getResult("house popup"));
-        var oBox = new createjs.Shape();
-        oBox.graphics.beginFill("#00ff00").drawRect(0, 0, 100, 100);
-        oBox.alpha=0;
-        var oxBox = new createjs.Shape();
-        oxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
-        oxBox.addEventListener("click",(function(){House.houseInfo["orphanage"].alpha = 0;}));
-        oxBox.alpha=0.01;
-        var opBox = new createjs.Shape();
-        opBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
-        opBox.alpha=.01;
-        opBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.orphanage.slots += 1;House.osText.text = gameStats.orphanage.slots;}}));
-        var omBox = new createjs.Shape();
-        omBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
-        omBox.alpha=0.01;
-        omBox.addEventListener("click",(function(){if(gameStats.orphanage.slots>0)gameStats.orphanage.slots -= 1;House.osText.text = gameStats.orphanage.slots;}));
-        House.osText = helpers.createText(gameStats.orphanage.slots, "16px Fauna One", "#ffffcc",  {x:30, y:38});		       		
-        
-        House.addOnTextOrphanage1 = helpers.createText("Orphanage", "16px Fauna One", "#000",  {x:5, y:5});
-				
-        
-        House.houseInfo["orphanage"].addChild(oBox, oGraphics, oxBox, opBox, omBox, House.osText, House.addOnTextOrphanage1);
-        House.houseInfo["orphanage"].alpha = 0; 
-        House.houseInfoCont.addChild(House.houseInfo["orphanage"]);
-        
-        House.houseInfo["university"] = new createjs.Container();
-        House.houseInfo["university"].x = 600;
-        House.houseInfo["university"].y = 330;
-        var uBox = new createjs.Shape();
-        uBox.graphics.beginFill("#0000ff").drawRect(0, 0, 100, 100);
-        uBox.alpha=0;
-        var uxBox = new createjs.Shape();
-        uxBox.graphics.beginFill("#ff0000").drawRect(86, 0, 22, 22);
-        uxBox.addEventListener("click",(function(){House.houseInfo["university"].alpha = 0;}));        
-        uxBox.alpha=0.01;
-        var uGraphics = new createjs.Bitmap(queue.getResult("house popup"));
-        var upBox = new createjs.Shape();
-        upBox.graphics.beginFill("#ffffff").drawRect(6, 32, 16, 16);
-        upBox.addEventListener("click",(function(){if(gameStats.bust ===0){gameStats.university.slots += 1; House.usText.text = gameStats.university.slots;}}));
-        upBox.alpha=0.01;
-        var umBox = new createjs.Shape();
-        umBox.graphics.beginFill("#000000").drawRect(6, 48, 16, 16);
-        umBox.addEventListener("click",(function(){if(gameStats.university.slots>0)gameStats.university.slots -= 1; House.usText.text = gameStats.university.slots;}));
-        umBox.alpha=0.01;
-        House.usText = helpers.createText(gameStats.orphanage.slots, "16px Fauna One", "#000",  {x:30, y:38});
-		
-        House.addOnTextUniversity1 = helpers.createText("School", "16px Fauna One", "#000",  {x:5, y:5});		       
-        
-        House.houseInfo["university"].addChild(uBox, uGraphics, uxBox, upBox, umBox, House.usText,House.addOnTextUniversity1);
-        House.houseInfo["university"].alpha = 0; 
-        House.houseInfoCont.addChild(House.houseInfo["university"]);
+        House.diamondHouseArray["university"] = House.university;                        
         
 		House.mouseHobo = helpers.createBitmap(queue.getResult("mouseHobo"), 
 			{x:110, y:316, alpha:0, scaleX:0.5, scaleY:0.5});                
@@ -369,8 +283,7 @@ var InitializeStage = (function(){
             House.wickExclamation, House.catzSpeach, House.characterSpeach, House.choice1, 
             House.choice2, House.choice3, House.mouseHobo, House.mouseTimmy, 
             House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight, House.wickClickBox,House.oh, 
-            House.look, House.diamonds, House.diCont, House.lookingAtStarsButton,
-            House.houseInfoCont, House.subtractedDiamondCont);
+            House.look, House.diamonds, House.diCont, House.lookingAtStarsButton, House.subtractedDiamondCont);
     }
 	
 	function createBG(){
@@ -564,8 +477,7 @@ var InitializeStage = (function(){
             .to({x:-130, y:260, rotation:0},300)
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
-            .call(House.addCharacterEvents,[diamondCounterText])
-            .call(House.addHouseEvents);
+            .call(House.addCharacterEvents);		
     }                  			
 	return is;
 }());

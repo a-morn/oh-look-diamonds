@@ -35,10 +35,9 @@
 	<!--<script type="text/javascript" charset="utf-8" src="cordova.js"></script>-->
 </head>
 <body>
-    <p style="text-align:right">ALPHA<p>	
+    <p style="position:absolute">ALPHA</p>		
 		<canvas id = "mahCanvas" width = "800" height = "450">        
-		</canvas>    
-		
+		</canvas>    		
 		<div class="progress">
 			<div class="progress-bar" role="progressbar" style="width: 0%;">					
 			</div>
@@ -48,7 +47,12 @@
             <div class="odometer">0<p></div>
             <button id="mute" class="mute-is-not-muted"/>
 		</div>
-		
+		<div class="odo">
+			<div class="highscore">
+				<p><b>Your highscore</b></p>
+				<p class="score"></p>
+			</div>
+		<div class="odometer">0<p></div>			
 		<div id="aboutOuter" class="noselect"></div>	
 </body>
 </html>

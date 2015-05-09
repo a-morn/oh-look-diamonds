@@ -52,9 +52,7 @@ var GameLogic = (function(){
 			rocketSong.play();            
         
         if(House.wickActive && House.wickExclamation.alpha <1)
-            House.wickExclamation.alpha += 0.01;        
-			
-        House.updateDisplayedScore(event, gameStats, diamondCounterText);
+            House.wickExclamation.alpha += 0.01;        			        
         
         debugText.text =                 
                 + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
@@ -72,13 +70,8 @@ var GameLogic = (function(){
             cloudSpeed = (12.5+12.5* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;
             fgSpeed = (7+7* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                  
             parallaxSpeed = (0.3+0.3* Math.cos((CatzRocket.catzRocketContainer.rotation)/360*2*Math.PI))*mult;                                            
-            
-            if(gameStats.score<10)            
-                $('.odometer').html("00"+gameStats.score);            
-            else if(gameStats.score<100)            			
-				$('.odometer').html("0"+gameStats.score);            
-			else
-				$('.odometer').html(gameStats.score);            
+                        
+			$('.odometer').html(gameStats.score);            
             
             if(!gameStats.hasBeenFirst.frenzy && CatzRocket.hasFrenzy()){                                                           
                 gameStats.hasBeenFirst.frenzy = true;                                                                   
@@ -1044,6 +1037,7 @@ var GameLogic = (function(){
     }
 	
 	gameLogic.gotoGameView = function(){
+		gameStats.score = 0;
         gameStats.currentRound += 1;
         House.cricketsSound.stop();
         //if song hasn't started yet

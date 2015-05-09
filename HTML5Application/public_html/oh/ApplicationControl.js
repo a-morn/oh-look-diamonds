@@ -29,6 +29,7 @@ var
 	//muteButton,        	
 	newBounds,
 	norm,
+	hsCookieName = "ohld-highscore",
 	polygonLine,
 	polygonVertices,	
 	rocketSong,
@@ -90,4 +91,3 @@ function StartGame(){
     }
 
 $(StartGame);
-	

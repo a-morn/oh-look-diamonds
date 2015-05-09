@@ -4,9 +4,21 @@ body {
     color: #ffffcc;    
 }
 
-canvas, #hideShow, .progress, .odo{
-    display: block;
-    margin: 0 auto;    
+.highscore{
+	float:left		
+}
+
+.highscore>p{
+	text-align: center;
+}
+
+canvas, .progress, .odo{
+	margin: 0 auto;
+    display: block;       
+}
+
+#hideShow {
+	margin: 30px auto;
 }
 
 #aboutOuter, .progress, .odo{
