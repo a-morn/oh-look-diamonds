@@ -50,7 +50,6 @@ var House = (function(){
         deltaRehab : 0,
         deltaUniversity : 0,
         bust : 0,  
-        wickExclamation : null,
         characterExclamation : null,
         choiceIDs : [],
         choices : [],
@@ -280,11 +279,7 @@ var House = (function(){
 					house.characterExclamation.alpha = 0;                    
 					wickActive = true;
 										
-					if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
-						createjs.Tween.removeAllTweens(house.wickExclamation);
-						createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
-					}
-					createjs.Tween.removeAllTweens(house.wick);
+				createjs.Tween.removeTweens(house.wick);
 					createjs.Tween.get(house.wick).to({x:-210},1200)
 							.call(house.activateWick);
 					//To shift to idle speach. Should be implemented smarter.
@@ -300,7 +295,7 @@ var House = (function(){
     
     
     house.buildAnimationFinished = function(){
-        createjs.Tween.removeAllTweens(house.houseView);
+        createjs.Tween.removeTweens(house.houseView);
         house.houseView.x=0;
         house.houseView.y=0;
     };
@@ -444,7 +439,7 @@ var House = (function(){
     
     house.gotoHouseViewWithRocket = function(gameStats, diamondCounterText){                
         house.gotoHouseView(gameStats, diamondCounterText);
-        if(CatzRocket.state===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
+        if(CatzRocket.catzState===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
             house.crashRocket.x=315;
             house.crashRocket.y = -90;
         }

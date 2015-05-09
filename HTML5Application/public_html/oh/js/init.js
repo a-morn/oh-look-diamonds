@@ -136,7 +136,7 @@ var InitializeStage = (function(){
 			{scaleX:0.8, scaleY:0.8, y:-20});                        
 
         House.hobo = helpers.createSprite(SpriteSheetData.hobo, "cycle", 
-			{x:-110, y:225, regX:-210, regY:-180});        		        
+			{x:-210, y:225, regX:-210, regY:-180});        		        
 
         House.timmy = helpers.createSprite(SpriteSheetData.supportingCharacter, "timmy", 
 			{x:83, y:362, scaleX:0.8, scaleY:0.8, alpha:0});        		
@@ -227,10 +227,7 @@ var InitializeStage = (function(){
 			{x:114, y:265, alpha:0});        				
         
         House.catzSpeach = helpers.createText("", "12px Fauna One", "#ffffcc", 
-			{x:350, y:180, alpha:0});        								
-        
-        House.wickExclamation = helpers.createText("<---- Fire up the rocket", "16px Fauna One", "#ffcc00", 
-			{x:193, y:305, alpha:0});        													
+			{x:350, y:180, alpha:0});        								    													
         
         House.choice1 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:150, alpha:0});    
@@ -273,7 +270,7 @@ var InitializeStage = (function(){
         House.houseView.addChild(House.university, House.rehab, House.bgHill, House.orphanage, 
             House.hoboCatHouse,House.crashRocket, House.catz, 
             House.wick, House.house, House.hobo, House.timmy, House.priest, House.characterExclamation, 
-            House.wickExclamation, House.catzSpeach, House.characterSpeach, House.choice1, 
+            House.catzSpeach, House.characterSpeach, House.choice1, 
             House.choice2, House.choice3, House.mouseHobo, House.mouseTimmy, 
             House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight, House.wickClickBox,House.oh, 
             House.look, House.diamonds, House.diCont, House.lookingAtStarsButton, House.subtractedDiamondCont);

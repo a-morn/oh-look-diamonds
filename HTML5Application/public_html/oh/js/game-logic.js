@@ -38,9 +38,16 @@ var GameLogic = (function(){
         Wind : 2,
         Thunder : 3
     },
-	directorState=directorStateEnum.Normal;           	  
+	directorState=directorStateEnum.Normal; 
+
+    gameLogic.timeAdjust = function(event){
+        if(event.delta>0.05){
+            event.delta=0.05;
+        }
+    }
     
-    gameLogic.houseTick = function(event){		
+    gameLogic.houseTick = function(event){	
+ //       gameLogic.timeAdjust(event);
         stage.update();
         if(House.characterSpeach.alpha > 0)        
             House.characterSpeach.alpha -= 0.015;        
@@ -48,18 +55,16 @@ var GameLogic = (function(){
         if(House.catzSpeach.alpha > 0)        
             House.catzSpeach.alpha -= 0.015;        
                 
-        if(House.wickExclamation.alpha > 0.8 && House.wickExclamation.alpha < 0.9 && rocketSong.getPosition()<100)
-			rocketSong.play();            
-        
-        if(House.wickActive && House.wickExclamation.alpha <1)
-            House.wickExclamation.alpha += 0.01;        			        
+        if(rocketSong.getPosition()<100)
+			rocketSong.play();            		        
         
         debugText.text =                                 
                 + "\nHoboDialogNo: " + House.hoboDialogNumber                        
                 + "\nbg.y: " + bg.y;
     }                                
 
-    gameLogic.update = function(event){         
+    gameLogic.update = function(event){     
+//        gameLogic.timeAdjust(event);
         if(!paused){                        
             var mult=1;
             if (CatzRocket.hasFrenzy())            
@@ -100,7 +105,8 @@ var GameLogic = (function(){
                 + "\nfrenzyReady: " + CatzRocket.frenzyReady
                 + "\nHoboDialogNo: " + House.hoboDialogNumber
                 +"\n\ncurrentDisplacement: "+currentDisplacement
-                +"\n\currentLevel"+currentLevel;
+                +"\n\currentLevel"+currentLevel
+                +"\nstate"+CatzRocket.catzState;
         
         
             stage.update(event); 
@@ -977,7 +983,7 @@ var GameLogic = (function(){
     
     function catzFellOfRocket(){
         stage.removeAllEventListeners();
-        createjs.Tween.removeAllTweens(CatzRocket.rocket);
+        createjs.Tween.removeTweens(CatzRocket.rocket);
         createjs.Tween.get(CatzRocket.rocket).to({x:800},800);
     }
     
@@ -996,17 +1002,15 @@ var GameLogic = (function(){
         stage.addChild(House.houseView);
         House.subtractedDiamondCont.removeAllChildren();
         stage.update();
-        House.wickExclamation.alpha= 0;
         createjs.Ticker.setFPS(20);
         createjs.Ticker.off("tick", gameListener);
         houseListener = createjs.Ticker.on("tick", gameLogic.houseTick,this);
         House.wick.x=-100;
         House.wick.removeAllEventListeners();
         House.wick.gotoAndPlay("still");        
-        createjs.Tween.removeAllTweens(House.houseView);        
+        createjs.Tween.removeTweens(House.houseView);        
         if(debugOptions.trustFund && gameStats.score<20000)        
-            gameStats.score=20000;        
-        CatzRocket.reset();                        		
+            gameStats.score=20000;                 		
 		updatePointer();
         bg.y = -1200;
 		bg.scaleX = 1;
@@ -1035,7 +1039,8 @@ var GameLogic = (function(){
 		if(CatzRocket.isHit)        
             House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
         else        
-            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);                       
+            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);  
+        CatzRocket.reset();                                 
         stage.update();     
     }
 	

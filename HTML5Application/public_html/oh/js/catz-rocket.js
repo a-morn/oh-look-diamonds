@@ -193,7 +193,7 @@ var CatzRocket = (function() {
         if (catzRocket.diamondFuel === 0) {
             mousedown = false;
 //            catzRocket.glass.gotoAndPlay("outOfFuel");
-            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             if (mightBeUpsideDown) {
                 if (catzRocket.catzRocketContainer.rotation <= -90 && catzRocket.catzRocketContainer.rotation >= -270) {
                     changeState(catzRocket.catzStateEnum.OutOfFuelUpsideDown);
@@ -254,7 +254,7 @@ var CatzRocket = (function() {
 
     function updateSlammer() {
         if (catzRocket.catzRocketContainer.rotation < -250) {
-            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             catzRocket.catzVelocity = catzRocket.limitVelocity;
             changeState(catzRocket.catzStateEnum.TerminalVelocity);
         }
@@ -264,7 +264,7 @@ var CatzRocket = (function() {
     function updateUploop(grav, wind, event) {
         updateBase(-(3.2 * grav - wind), event, false, false);
         if (catzRocket.catzRocketContainer.rotation < -60) {
-            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             tween = createjs.Tween.get(catzRocket.catzRocketContainer)
                 .to({
                     rotation: -270
@@ -285,7 +285,7 @@ var CatzRocket = (function() {
         if (catzRocket.catzRocketContainer.rotation < -60) {
             catzRocket.heightOffset += 110 * Math.sin((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI);
             changeState(catzRocket.catzStateEnum.SecondDownloop);
-            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             tween = createjs.Tween.get(catzRocket.catzRocketContainer, {
                     loop: true
                 })
@@ -310,7 +310,7 @@ var CatzRocket = (function() {
 
     function updateSlingshot() {
         if (catzRocket.catzRocketContainer.rotation < -400) {
-            createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
+            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             changeState(catzRocket.catzStateEnum.Normal);
             catzRocket.heightOffset -= 110 * Math.sin((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI);
             catzRocket.catzVelocity = -20;
@@ -550,7 +550,7 @@ var CatzRocket = (function() {
     };
 
     catzRocket.reset = function() {
-        createjs.Tween.removeAllTweens(CatzRocket.catzRocketContainer);
+        createjs.Tween.removeTweens(CatzRocket.catzRocketContainer);
         catzRocket.frenzyReady = false;
         catzRocket.frenzyTimer = 0;
         catzRocket.frenzyCount = 0;
@@ -576,33 +576,13 @@ var CatzRocket = (function() {
         CatzRocket.catzVelocity = velocity;	
 		catzRocket.diamondFuel = 2;        
 		stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
-        stage.addEventListener("stagemouseup", function(){mousedown = false; catzEndLoop();});    
+        stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
 	}
-    
-    function catzEndLoop(){        
-        if(catzRocket.catzState!==catzRocket.catzStateEnum.Downloop
-                && catzRocket.catzState!==catzRocket.catzStateEnum.SlammerReady 
-                && catzRocket.catzState!==catzRocket.catzStateEnum.Slammer 
-                && catzRocket.catzState!==catzRocket.catzStateEnum.SecondDownloop
-                && catzRocket.catzState!==catzRocket.catzStateEnum.Slingshot
-                && catzRocket.catzState!==catzRocket.catzStateEnum.Frenzy
-                && catzRocket.catzState!==catzRocket.catzStateEnum.FrenzyUploop)        
-            changeState(catzRocket.catzStateEnum.Normal);        
-        else if (catzRocket.catzState===catzRocket.catzStateEnum.SecondDownloop)        
-            changeState(catzRocket.catzStateEnum.Slingshot);        
-        else if (catzRocket.catzState===catzRocket.catzStateEnum.Downloop)        
-            changeState(catzRocket.catzStateEnum.SlammerReady);        
-        else if (catzRocket.catzState===catzRocket.catzStateEnum.FrenzyUploop)
-            changeState(catzRocket.catzStateEnum.Frenzy);        
-    };   
-    
-    function invincibilityCountDown(minusTime){
-        if(invincibilityCounter>0)        
-            invincibilityCounter-=minusTime;        
-    }
-
-    catzRocket.catzEndLoop = function() {
-        if (catzRocket.catzState !== catzRocket.catzStateEnum.Downloop && catzRocket.catzState !== catzRocket.catzStateEnum.SlammerReady && catzRocket.catzState !== catzRocket.catzStateEnum.Slammer && catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot && catzRocket.catzState !== catzRocket.catzStateEnum.Frenzy && catzRocket.catzState !== catzRocket.catzStateEnum.FrenzyUploop)
+     
+     catzRocket.catzEndLoop = function() {
+        if (catzRocket.catzState === catzRocket.catzStateEnum.Normal 
+            || catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity 
+            || catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
             changeState(catzRocket.catzStateEnum.Normal);
         else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondDownloop)
             changeState(catzRocket.catzStateEnum.Slingshot);
@@ -611,6 +591,11 @@ var CatzRocket = (function() {
         else if (catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop)
             changeState(catzRocket.catzStateEnum.Frenzy);
     };
+    
+    function invincibilityCountDown(minusTime){
+        if(invincibilityCounter>0)        
+            invincibilityCounter-=minusTime;        
+    }
 
     function invincibilityCountDown(minusTime) {
         if (invincibilityCounter > 0)

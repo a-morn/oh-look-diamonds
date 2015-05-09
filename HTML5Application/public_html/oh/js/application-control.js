@@ -8,7 +8,7 @@ var
 	diamondShardCounter,
 	diamondSound,
 	debugText,	
-	debugOptions = {noHouseView: false, debugMode: true, trustFund : false, infiniteFuel : true, godMode : false},
+	debugOptions = {noHouseView: false, debugMode: true, trustFund : false, infiniteFuel : false, godMode : false},
 	diamondEnum = {
         shard : 0,
         medium : 1,
