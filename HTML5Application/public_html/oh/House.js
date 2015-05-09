@@ -535,8 +535,7 @@ var House = (function(){
     house.BuildingAnimation = function(houseGraphic){
         houseGraphic.alpha=1;
         var oldx = houseGraphic.x;
-        var oldy = houseGraphic.y;
-        house.BuyingAnimation(house.hobo.x+210,house.hobo.y+130);
+        var oldy = houseGraphic.y;        
         createjs.Tween.get(houseGraphic)
                 .to({x:oldx-20,y:oldy+50})
                 .to({x:oldx,y:oldy},2000)
