@@ -8,7 +8,7 @@ var CatzRocket = (function() {
         isHit: false,
         isCrashed: false,
         flameColor: "#99ccff",
-        glass: null,
+        //glass: null,
         heightOffset: 0,
         frenzyCount: 0,
         frenzyTimer: 0,
@@ -192,7 +192,7 @@ var CatzRocket = (function() {
     function checkFuel(mightBeUpsideDown) {
         if (catzRocket.diamondFuel === 0) {
             mousedown = false;
-            catzRocket.glass.gotoAndPlay("outOfFuel");
+//            catzRocket.glass.gotoAndPlay("outOfFuel");
             createjs.Tween.removeAllTweens(catzRocket.catzRocketContainer);
             if (mightBeUpsideDown) {
                 if (catzRocket.catzRocketContainer.rotation <= -90 && catzRocket.catzRocketContainer.rotation >= -270) {
@@ -342,7 +342,7 @@ var CatzRocket = (function() {
             if (catzRocket.frenzyTimer > 1500) {
                 changeState(catzRocket.catzStateEnum.Normal);
                 catzRocket.catz.gotoAndPlay("no shake");
-                catzRocket.glass.gotoAndPlay("still");
+                //catzRocket.glass.gotoAndPlay("still");
                 catzRocket.rocket.alpha = 1;
                 catzRocket.frenzyCount = 0;
                 catzRocket.frenzyTimer = 0;
@@ -362,7 +362,7 @@ var CatzRocket = (function() {
                     } else {
                         changeState(catzRocket.catzStateEnum.Frenzy);
                     }
-                    catzRocket.glass.gotoAndPlay("frenzy");
+                    //catzRocket.glass.gotoAndPlay("frenzy");
                     catzRocket.isWounded = false;
                     catzRocket.frenzyTimer = 0;
                     catzRocket.frenzyReady = false;
@@ -503,7 +503,7 @@ var CatzRocket = (function() {
                 changeState(catzRocket.catzStateEnum.Slammer);
             }
         } else {
-            catzRocket.glass.gotoAndPlay("outOfFuel");
+            //catzRocket.glass.gotoAndPlay("outOfFuel");
         }
     };
 

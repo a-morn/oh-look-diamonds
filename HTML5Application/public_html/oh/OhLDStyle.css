@@ -45,6 +45,18 @@ button {
     outline: none
 }
 
+.mute-is-not-muted {
+    vertical-align: bottom;
+    display: inline;
+    background: url("assets/new assets/sprites/mute button.png") 0 0;
+    height: 64;
+    width: 54;
+}
+
+.mute-is-muted{
+    background: url("assets/new assets/sprites/mute button.png") -64px 0;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

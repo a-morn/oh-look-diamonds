@@ -93,7 +93,7 @@ var InitializeStage = (function(){
                     {id:"catzScream2", src:"assets/new assets/sound/cat_meow_wounded_1.mp3"},                    
                     {id:"wick", src:"assets/new assets/sprites/wick.png"},
                     {id:"wickSound", src:"assets/new assets/sound/wick.mp3"},
-                    {id:"mute", src:"assets/new assets/sprites/mute button.png"}
+                    //{id:"mute", src:"assets/new assets/sprites/mute button.png"}
                 ];
 
         queue = new createjs.LoadQueue(true);
@@ -124,16 +124,17 @@ var InitializeStage = (function(){
         stage.addChild(bg, cont.star);
         stage.enableMouseOver();		
         House.gotoHouseViewFirstTime(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
-            muteButton, gameListener, rocketSong);		
+             gameListener, rocketSong);		
         houseListener = createjs.Ticker.on("tick", GameLogic.houseTick,this);		
         stage.removeChild(progressBar);        
 		if(debugOptions.noHouseView)
 			GameLogic.gotoGameView();
     }
+
 	
 	function createHouseView(){        
-		muteButton = helpers.createSprite(SpriteSheetData.muteButton, "mute", {x:745});        
-        muteButton.addEventListener("click",switchMute);
+		//muteButton = helpers.createSprite(SpriteSheetData.muteButton, "mute", {x:745});        
+        //muteButton.addEventListener("click",switchMute);
                 
 		House.house = helpers.createBitmap(queue.getResult("house"), 
 			{scaleX:0.8, scaleY:0.8, y:-20});                
@@ -366,7 +367,7 @@ var InitializeStage = (function(){
             House.hoboCatHouse,House.crashRocket, House.catz, 
             House.wick, House.house, House.hobo, House.timmy, House.priest, House.characterExclamation, 
             House.wickExclamation, House.catzSpeach, House.characterSpeach, House.choice1, 
-            House.choice2, House.choice3,muteButton, House.mouseHobo, House.mouseTimmy, 
+            House.choice2, House.choice3, House.mouseHobo, House.mouseTimmy, 
             House.mousePriest, House.mouseRocket, House.mouseCatz, House.wickLight, House.wickClickBox,House.oh, 
             House.look, House.diamonds, House.diCont, House.lookingAtStarsButton,
             House.houseInfoCont, House.subtractedDiamondCont);
@@ -515,7 +516,7 @@ var InitializeStage = (function(){
             exitSmoke,smoke, CatzRocket.rocketFlame, CatzRocket.catzRocketContainer,
             cont.cloud,cont.lightning,cont.thunder,cont.fg, cont.fgTop,leaves, cont.collisionCheckDebug);
     }
-	
+
 	function setStars(){
         for(i=0;i<80;i++){
             var star = helpers.createBitmap(queue.getResult("star"), 
@@ -526,17 +527,6 @@ var InitializeStage = (function(){
                     .to({alpha:0},1000)
                     .to({alpha:1},1000);
             cont.star.addChild(star);
-        }
-    }
-	
-	function switchMute(){
-        if(createjs.Sound.getMute()){
-            createjs.Sound.setMute(false);
-            muteButton.gotoAndPlay("mute");
-        }
-        else{
-            createjs.Sound.setMute(true);
-            muteButton.gotoAndPlay("unmute");
         }
     }
 	

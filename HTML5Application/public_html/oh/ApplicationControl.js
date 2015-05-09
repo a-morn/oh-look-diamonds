@@ -21,12 +21,12 @@ var
 	flameVertices,
 	gameView,
 	gameListener,
-	hud,
-	hudPointer,        
+	//hud,
+	//hudPointer,        
 	houseListener,
 	leaves,	       
 	lightningColor = "#99ccff",
-	muteButton,        	
+	//muteButton,        	
 	newBounds,
 	norm,
 	polygonLine,
@@ -74,5 +74,20 @@ var
     };	
 	
 function StartGame(){    	    
+	$("#mute").click(switchMute);
 	InitializeStage.init(canvas, stage);    
 }
+
+  function switchMute(){
+        if(createjs.Sound.getMute()){
+            createjs.Sound.setMute(false);
+            $("#mute").toggleClass("mute-is-muted",false);
+        }
+        else{
+            createjs.Sound.setMute(true);
+            $("#mute").toggleClass("mute-is-muted",true);    
+        }
+    }
+
+$(StartGame);
+	
