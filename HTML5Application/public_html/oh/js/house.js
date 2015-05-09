@@ -362,8 +362,7 @@ var House = (function(){
             house.mouseCatz.alpha=1;   
             house.catz.x=360;
             house.catz.y=270; 
-            house.catz.rotation = 0;                
-			console.log(123);}
+            house.catz.rotation = 0;                			
     }
 
 
@@ -443,8 +442,7 @@ var House = (function(){
     };        
 
     house.meow = function(){
-        createjs.Sound.play("catzScream2");
-        console.log("meow");
+        createjs.Sound.play("catzScream2");        
     }
     
     house.gotoHouseViewFirstTime = function(gameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener){        
