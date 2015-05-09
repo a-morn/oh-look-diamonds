@@ -25,8 +25,8 @@ var InitializeStage = (function(){
                     {id: "mediumDiamond", src: "assets/sprites/newDiamond2.png"}, 
                     {id: "greatDiamond", src: "assets/sprites/newDiamond.png"}, 
                     {id: "rocketSilouette", src: "assets/img/catzRocketSilouette.png"}, 
-                    {id: "meow", src: "assets/meow.mp3"},                    
-                    {id: "diamondSound", src: "assets/diamondSound.mp3"},            
+                    {id: "meow", src: "assets/sound/meow.mp3"},                    
+                    {id: "diamondSound", src: "assets/sound/diamondSound.mp3"},            
                     {id: "diamondShardCounter", src: "assets/img/DiamondIcon.png"},                    
                     {id:"bg", src:"assets/img/background long.jpg"},                    
                     {id:"ohlookdiamonds", src:"assets/img/ohlookdiamonds.png"},                    
@@ -470,7 +470,8 @@ var InitializeStage = (function(){
             .to({x:-130, y:260, rotation:0},300)
             .to({x:-140, y:260, rotation:-5},300)
             .to({x:-110, y:225, rotation:0},300)
-            .call(House.addCharacterEvents);		
+            .call(House.addCharacterEvents)
+			.call(House.load);		
     }                  			
 	return is;
 }());

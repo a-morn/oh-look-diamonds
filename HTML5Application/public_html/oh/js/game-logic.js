@@ -54,9 +54,7 @@ var GameLogic = (function(){
         if(House.wickActive && House.wickExclamation.alpha <1)
             House.wickExclamation.alpha += 0.01;        			        
         
-        debugText.text =                 
-                + "\nHoboCatHouseBuilt "+ gameStats.HoboCatHouseBuilt 
-                + "\nBuilding orphanage "+ gameStats.BuildOrphanage
+        debugText.text =                                 
                 + "\nHoboDialogNo: " + House.hoboDialogNumber                        
                 + "\nbg.y: " + bg.y;
     }                                

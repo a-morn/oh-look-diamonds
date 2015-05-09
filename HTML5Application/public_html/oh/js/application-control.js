@@ -33,6 +33,7 @@ var
 	polygonLine,
 	polygonVertices,	
 	rocketSong,
+	sgCookieName = "ohld-save-game",
 	smoke,
 	squawkSound,
 	stage,
@@ -58,10 +59,22 @@ var
         kills : 0,
         bust : 0,
         currentRound: 0,        
-        hoboCatHouse : {built : false, builtOnRound : null} ,
-        orphanage : {built : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
-        rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
-        university: {built : false, builtOnRound : null, rocketUniversity:null, slots : 0},
+		buildings: {
+			hoboCatHouse : {built : false, builtOnRound : null} ,
+			orphanage : {built : false, builtOnRound : null, youthCenter : false, summerCamp : false, slots : 0},       
+			rehab: {built : false, isBuilding : false, builtOnRound : null , hospital : false, phychiatricWing : false, monastery : false, slots : 0},        
+			university: {built : false, builtOnRound : null, rocketUniversity:null, slots : 0}
+		},
+		dialogNumber: {
+			"priest" : 0,
+			"timmy" : 0,
+			"hoboCat" : "goodEvening",
+		},
+		dialogID: {
+			"priest" : 0,
+			"timmy" : 0,
+			"hoboCat" : 0,
+		},
         villagers: {approvalRating : 0},
         kittens: {approvalRating : 0},
         catParty: {approvalRating : 0},
@@ -79,15 +92,40 @@ function StartGame(){
 	InitializeStage.init(canvas, stage);    
 }
 
-  function switchMute(){
-        if(createjs.Sound.getMute()){
-            createjs.Sound.setMute(false);
-            $("#mute").toggleClass("mute-is-muted",false);
-        }
-        else{
-            createjs.Sound.setMute(true);
-            $("#mute").toggleClass("mute-is-muted",true);    
-        }
+function switchMute(){
+	if(createjs.Sound.getMute()){
+		createjs.Sound.setMute(false);
+		$("#mute").toggleClass("mute-is-muted",false);
+	}
+	else{
+		createjs.Sound.setMute(true);
+		$("#mute").toggleClass("mute-is-muted",true);    
+	}
+}
+
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
     }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}
 
 $(StartGame);
