@@ -94,13 +94,13 @@ var House = (function(){
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});        
         house.cricketsSound.volume=0.1;                    
 		var hobDiaNo = house.progressionCheck("hoboCat");     
-console.log(		hobDiaNo);
             if(hobDiaNo !== -1) {
                 currentCharacter = "hoboCat";
                 house.hobo.alpha = 1;
                 gameStats.dialogNumber["hoboCat"] = hobDiaNo;           
-                hoboActive = true;
-                house.characterExclamation.alpha=0.5;            
+                hoboActive = true;				
+				if(hobDiaNo!="goodEvening")
+					house.characterExclamation.alpha=0.5;            
                 gameStats.dialogID["hoboCat"] = 0;
             } 
             //If no hobo dialog, check for timmy dialog
@@ -269,8 +269,7 @@ console.log(		hobDiaNo);
 				else{
 					//END DIALOG                    
 					setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 500);                    
-					//house.wickExclamation.alpha=1; Replaced by match-cursor
-					characterActive[currentCharacter] = false;					
+					//house.wickExclamation.alpha=1; Replaced by match-cursor					
 					showRocket();
 					//To shift to idle speach. Should be implemented smarter.
 					gameStats.dialogID[currentCharacter]+=100;                
@@ -286,6 +285,7 @@ console.log(		hobDiaNo);
     };
     
 	function showRocket(){
+		characterActive[currentCharacter] = false;
 		house.characterExclamation.alpha = 0;                    
 		wickActive = true;
 							
@@ -385,8 +385,7 @@ console.log(		hobDiaNo);
         }
     };
     
-    house.addCharacterEvents = function(){        
-        house.characterExclamation.alpha=0.5;
+    house.addCharacterEvents = function(){                
         house.hobo.addEventListener("click",(function(){house.characterDialog();}));
         house.hobo.addEventListener("mouseover", house.highlightCharacter);
         house.hobo.addEventListener("mouseout", house.downlightCharacter);
@@ -402,6 +401,8 @@ console.log(		hobDiaNo);
         house.catz.addEventListener("click", house.meow);
         house.catz.addEventListener("mouseover", house.highlightCatz);
         house.catz.addEventListener("mouseout", house.downlightCatz);
+		
+		house.characterExclamation.alpha=0.5;
     };        
 
     house.meow = function(){
@@ -409,8 +410,7 @@ console.log(		hobDiaNo);
     }
     
 	house.load = function(){				
-	var sg = JSON.parse(readCookie(sgCookieName));		
-	console.log(sg);
+	var sg = JSON.parse(readCookie(sgCookieName));			
 	if(sg){
 		gameStats = sg;
 		for (var key in gameStats.buildings) {
@@ -508,13 +508,12 @@ console.log(		hobDiaNo);
         house.house.addEventListener("mouseout", house.downlightRocket);                                
     };               
     
-    house.BuildingAnimation = function(houseGraphic){
-		console.log("BuildingAni");
-        houseGraphic.alpha=1;
+    house.BuildingAnimation = function(houseGraphic){		        
         var oldx = houseGraphic.x;
         var oldy = houseGraphic.y;        
         createjs.Tween.get(houseGraphic)
                 .to({x:oldx-20,y:oldy+50})
+				.to({alpha:1})
                 .to({x:oldx,y:oldy},2000)
                 .call(house.buildAnimationFinished);
         createjs.Tween.get(house.houseView, {loop:true})
