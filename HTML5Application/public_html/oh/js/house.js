@@ -61,10 +61,7 @@ var House = (function(){
     var        
         deltaUniversity = 0,
         deltaOrph = 0,
-        deltaRehab = 0,   
-        startGameStats,                        
-                
-        gameStats,
+        deltaRehab = 0,                                  
         characterActive = {},        
         wickActive = false,
         hoboActive = true,
@@ -78,8 +75,7 @@ var House = (function(){
         characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive, "catz":catzActive};                
     };    	
 	
-    house.gotoHouseView = function(aGameStats, diamondCounterText){        
-        gameStats = aGameStats; 		
+    house.gotoHouseView = function(){                
 		var hs = readCookie(hsCookieName);		
 		var hsc = $('.score');		
 		if(!hsc.html() && hs)
@@ -90,15 +86,15 @@ var House = (function(){
 			createCookie(hsCookieName, gameStats.score);
 		}				
 				
-		$('.odometer').html(0);
-        startGameStats = $.extend( true, {}, gameStats );
+		$('.odometer').html(0);        
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
         house.priest.alpha = 0;
         house.displayedScore = gameStats.score;
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});        
         house.cricketsSound.volume=0.1;                    
-		var hobDiaNo = house.progressionCheck("hoboCat", gameStats);                           
+		var hobDiaNo = house.progressionCheck("hoboCat");     
+console.log(		hobDiaNo);
             if(hobDiaNo !== -1) {
                 currentCharacter = "hoboCat";
                 house.hobo.alpha = 1;
@@ -109,7 +105,7 @@ var House = (function(){
             } 
             //If no hobo dialog, check for timmy dialog
             else {  
-                var timmyDiaNo = house.progressionCheck("timmy", gameStats);
+                var timmyDiaNo = house.progressionCheck("timmy");
                 if(timmyDiaNo !== -1) {
                     currentCharacter = "timmy";
                     house.timmy.alpha = 1;
@@ -120,7 +116,7 @@ var House = (function(){
                 }
                 //If no timmy dialog, cehck for priest dialog
                 else {
-                    var priestDiaNo = house.progressionCheck("priest", gameStats);
+                    var priestDiaNo = house.progressionCheck("priest");
                     if(priestDiaNo !== -1) {
                         currentCharacter = "priest";
                         house.priest.alpha = 1;
@@ -139,11 +135,11 @@ var House = (function(){
             }                        			
     };
     
-    house.progressionCheck = function(cat, gameStats) {
+    house.progressionCheck = function(cat) {
         var catProgression = gameProgressionJSON[cat];
         for(var i=0, max1 = catProgression.length;i<max1;i++){                        
         conditionLoop:
-            if(!catProgression[i].HasHappend || catProgression[i].ShouldReoccur && 
+            if(!gameStats.HasHappend[cat][i] || catProgression[i].ShouldReoccur && 
                 catProgression[i].Chance>Math.random()){                                                
                 for(var j=0, max2=catProgression[i].Conditions.length; j<max2; j++)       {
                     var condition = catProgression[i].Conditions[j];
@@ -169,7 +165,7 @@ var House = (function(){
                         currentCharacter = cat;
                         characterActive[currentCharacter] = true;
                         wickActive = false;                        
-                        catProgression[i].HasHappend = "yes";
+                        gameStats.HasHappend[cat][i] = true;
                         return catProgression[i].ConversationNumber;
                     }
                 }
@@ -180,7 +176,7 @@ var House = (function(){
     
 
     
-    house.characterDialog = function(){             
+    house.characterDialog = function(){           		
         var dialog = dialogJSON[currentCharacter][gameStats.dialogNumber[currentCharacter]];           
 		var line = dialog.dialog[gameStats.dialogID[currentCharacter]];
         if(line){
@@ -206,8 +202,7 @@ var House = (function(){
 						}                        
 						gameStats.buildings[value].built = true;
 						gameStats.buildings[value].builtOnRound = gameStats.currentRound;                         
-						house.BuildingAnimation(house.diamondHouseArray[value]);                        
-						createCookie(sgCookieName, JSON.stringify(gameStats));
+						house.BuildingAnimation(house.diamondHouseArray[value]);                        						
 					}
 					
 					else if (stat === "addOn"){
@@ -275,24 +270,33 @@ var House = (function(){
 					//END DIALOG                    
 					setTimeout(function(){$("#mahCanvas").addClass("match-cursor");}, 500);                    
 					//house.wickExclamation.alpha=1; Replaced by match-cursor
-					characterActive[currentCharacter] = false;
-					house.characterExclamation.alpha = 0;                    
-					wickActive = true;
-										
-				createjs.Tween.removeTweens(house.wick);
-					createjs.Tween.get(house.wick).to({x:-210},1200)
-							.call(house.activateWick);
+					characterActive[currentCharacter] = false;					
+					showRocket();
 					//To shift to idle speach. Should be implemented smarter.
 					gameStats.dialogID[currentCharacter]+=100;                
+					createCookie(sgCookieName, JSON.stringify(gameStats));
 				}                
 			}        
 		}
         else{
             house.characterSpeach.text = dialog.idle.what;
             house.characterSpeach.alpha = 1;            
+			showRocket();
         }        
     };
     
+	function showRocket(){
+		house.characterExclamation.alpha = 0;                    
+		wickActive = true;
+							
+		if(!createjs.Tween.hasActiveTweens(house.wickExclamation)){
+			createjs.Tween.removeTweens(house.wickExclamation);
+			createjs.Tween.get(house.wickExclamation).wait(4000).to({alpha:1},4000);
+		}
+		createjs.Tween.removeTweens(house.wick);
+		createjs.Tween.get(house.wick).to({x:-210},1200)
+				.call(house.activateWick);
+	}
     
     house.buildAnimationFinished = function(){
         createjs.Tween.removeTweens(house.houseView);
@@ -381,17 +385,17 @@ var House = (function(){
         }
     };
     
-    house.addCharacterEvents = function(diamondCounterText){        
+    house.addCharacterEvents = function(){        
         house.characterExclamation.alpha=0.5;
-        house.hobo.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
+        house.hobo.addEventListener("click",(function(){house.characterDialog();}));
         house.hobo.addEventListener("mouseover", house.highlightCharacter);
         house.hobo.addEventListener("mouseout", house.downlightCharacter);
         
-        house.timmy.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
+        house.timmy.addEventListener("click",(function(){house.characterDialog();}));
         house.timmy.addEventListener("mouseover", house.highlightCharacter);
         house.timmy.addEventListener("mouseout", house.downlightCharacter);
         
-        house.priest.addEventListener("click",(function(){house.characterDialog(diamondCounterText);}));
+        house.priest.addEventListener("click",(function(){house.characterDialog();}));
         house.priest.addEventListener("mouseover", house.highlightCharacter);
         house.priest.addEventListener("mouseout", house.downlightCharacter);
 
@@ -406,6 +410,7 @@ var House = (function(){
     
 	house.load = function(){				
 	var sg = JSON.parse(readCookie(sgCookieName));		
+	console.log(sg);
 	if(sg){
 		gameStats = sg;
 		for (var key in gameStats.buildings) {
@@ -417,9 +422,9 @@ var House = (function(){
 	}				
 }
 	
-    house.gotoHouseViewFirstTime = function(aGameStats, stage, gameView,diamondCounterText, diamondShardCounter, muteButton, gameListener){        										
+    house.gotoHouseViewFirstTime = function(stage, gameView,diamondShardCounter, muteButton, gameListener){        										
         house.characterExclamation.alpha=0;        
-        house.gotoHouseView(aGameStats, diamondCounterText);
+        house.gotoHouseView();
         $("#mahCanvas").removeClass("match-cursor");
         house.wick.x=-120;
         house.wickClickBox.removeAllEventListeners();
@@ -430,16 +435,17 @@ var House = (function(){
             house.activateWick(gotoGameView);        
         house.hobo.x=-300;
         house.hobo.y=270;
-        stage.removeChild(gameView,diamondCounterText, diamondShardCounter,muteButton);
+        stage.removeChild(gameView,diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();
         createjs.Ticker.setFPS(20);
         createjs.Ticker.off("tick", gameListener);        		
     };
     
-    house.gotoHouseViewWithRocket = function(gameStats, diamondCounterText){                
-        house.gotoHouseView(gameStats, diamondCounterText);
-        if(CatzRocket.catzState===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
+    house.gotoHouseViewWithRocket = function(){                
+        house.gotoHouseView();
+        if(CatzRocket.state===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
+
             house.crashRocket.x=315;
             house.crashRocket.y = -90;
         }
@@ -468,8 +474,8 @@ var House = (function(){
                 .to({x:360, y:270, rotation:0},250);
     };    
     
-    house.gotoHouseViewWithoutRocket = function(gameStats, diamondCounterText){
-        house.gotoHouseView(gameStats, diamondCounterText);
+    house.gotoHouseViewWithoutRocket = function(){
+        house.gotoHouseView();
         house.catz.x=300-400*Math.cos(CatzRocket.catzRocketContainer.rotation*6.28/360);
         house.catz.y =370-400*Math.sin(CatzRocket.catzRocketContainer.rotation*6.28/360);
         house.catz.gotoAndPlay("flying");
@@ -503,6 +509,7 @@ var House = (function(){
     };               
     
     house.BuildingAnimation = function(houseGraphic){
+		console.log("BuildingAni");
         houseGraphic.alpha=1;
         var oldx = houseGraphic.x;
         var oldy = houseGraphic.y;        

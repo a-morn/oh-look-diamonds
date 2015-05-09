@@ -104,7 +104,16 @@ var InitializeStage = (function(){
         stage.update();
     }
 
-    function handleComplete(){           
+    function handleComplete(){           			
+		for (var key in gameStats.HasHappend) {
+			if (gameStats.HasHappend.hasOwnProperty(key)) {				
+				for(var i=0, max1 = gameProgressionJSON[key].length;i<max1;i++){
+					gameStats.HasHappend[key][i] = false;
+				}
+			}
+		}       				
+		
+		
         SpriteSheetData.setValues(queue);
 		dataDict = {
 			"diamond" : SpriteSheetData.diamond,
@@ -119,7 +128,7 @@ var InitializeStage = (function(){
         createGameView();
         stage.addChild(bg, cont.star);
         stage.enableMouseOver();		
-        House.gotoHouseViewFirstTime(gameStats, stage, gameView,diamondCounterText, diamondShardCounter,
+        House.gotoHouseViewFirstTime(stage, gameView, 
              gameListener, rocketSong);		
         houseListener = createjs.Ticker.on("tick", GameLogic.houseTick,this);		
         stage.removeChild(progressBar);        
@@ -451,24 +460,31 @@ var InitializeStage = (function(){
         createjs.Tween.get(House.diamonds).to({alpha:1},3000);        
     }
 		
+	function hoboWalk(){					
+		function w () {
+			createjs.Tween.get(House.hobo)				
+				.to({x:-270, y:270, rotation:0},300)
+				.to({x:-260, y:270, rotation:-5},300)
+				.to({x:-230, y:270, rotation:0},300)
+				.to({x:-200, y:270, rotation:-5},300)
+				.to({x:-170, y:270, rotation:0},300)
+				.to({x:-160, y:270, rotation:-5},300)
+				.to({x:-130, y:260, rotation:0},300)
+				.to({x:-140, y:260, rotation:-5},300)
+				.to({x:-110, y:225, rotation:0},300)
+				.call(House.addCharacterEvents);
+		}
+		if(!gameStats.HasHappend["hoboCat"][1])
+			setTimeout(w, 4000);
+		else{
+			w();
+		}
+	}
 	function goDown(){		
         bg.removeAllEventListeners();
-        createjs.Tween.get(House.houseView).to({y:0},4000, createjs.Ease.quadInOut);
+        createjs.Tween.get(House.houseView).to({y:0},4000, createjs.Ease.quadInOut).call(House.load).call(hoboWalk);
         createjs.Tween.get(bg).to({y:-1200},4000, createjs.Ease.quadInOut);
-        createjs.Tween.get(cont.star).to({y:0},4000, createjs.Ease.quadInOut);
-        createjs.Tween.get(House.hobo)
-            .wait(7000)
-            .to({x:-270, y:270, rotation:0},300)
-            .to({x:-260, y:270, rotation:-5},300)
-            .to({x:-230, y:270, rotation:0},300)
-            .to({x:-200, y:270, rotation:-5},300)
-            .to({x:-170, y:270, rotation:0},300)
-            .to({x:-160, y:270, rotation:-5},300)
-            .to({x:-130, y:260, rotation:0},300)
-            .to({x:-140, y:260, rotation:-5},300)
-            .to({x:-110, y:225, rotation:0},300)
-            .call(House.addCharacterEvents)
-			.call(House.load);		
+        createjs.Tween.get(cont.star).to({y:0},4000, createjs.Ease.quadInOut);        
     }                  			
 	return is;
 }());

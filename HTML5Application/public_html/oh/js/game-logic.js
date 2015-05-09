@@ -1040,10 +1040,11 @@ var GameLogic = (function(){
             .call((function(){House.activateWick(gameLogic.gotoGameView);}));
 			
 		if(CatzRocket.isHit)        
-            House.gotoHouseViewWithoutRocket(gameStats, diamondCounterText);        
+            House.gotoHouseViewWithoutRocket();        
         else        
-            House.gotoHouseViewWithRocket(gameStats, diamondCounterText);  
-        CatzRocket.reset();                                 
+        
+        House.gotoHouseViewWithRocket();                       
+		CatzRocket.reset();                                 
         stage.update();     
     }
 	

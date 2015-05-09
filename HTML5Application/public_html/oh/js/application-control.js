@@ -8,7 +8,8 @@ var
 	diamondShardCounter,
 	diamondSound,
 	debugText,	
-	debugOptions = {noHouseView: false, debugMode: true, trustFund : false, infiniteFuel : false, godMode : false},
+	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : false, godMode : false},
+
 	diamondEnum = {
         shard : 0,
         medium : 1,
@@ -68,13 +69,14 @@ var
 		dialogNumber: {
 			"priest" : 0,
 			"timmy" : 0,
-			"hoboCat" : "goodEvening",
+			"hoboCat" : 0,
 		},
 		dialogID: {
 			"priest" : 0,
 			"timmy" : 0,
 			"hoboCat" : 0,
 		},
+		HasHappend: {"priest" : [], "timmy" : [], "hoboCat" : []},
         villagers: {approvalRating : 0},
         kittens: {approvalRating : 0},
         catParty: {approvalRating : 0},
