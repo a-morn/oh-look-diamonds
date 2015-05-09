@@ -1054,7 +1054,9 @@ var GameLogic = (function(){
             debugText.alpha=0;
         }
         stage.removeChild(House.houseView);
-        stage.addChild(gameView, cont.wind, muteButton, hud, hudPointer, CatzRocket.glass, diamondCounterText,debugText); 
+        stage.addChild(gameView, cont.wind, muteButton, 
+            //hud, hudPointer, CatzRocket.glass, 
+            diamondCounterText,debugText); 
         muteButton.x=645;       
         createjs.Ticker.off("tick", houseListener);            
 		gameListener = createjs.Ticker.on("tick", GameLogic.update,this);    

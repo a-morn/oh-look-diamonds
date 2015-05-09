@@ -559,7 +559,7 @@ var CatzRocket = (function() {
 		catzRocket.rocket.x=0;
         catzRocket.rocket.alpha=1;
 		catzRocket.catz.alpha = 1;
-		catzRocket.glass.gotoAndPlay("still");	
+//		catzRocket.glass.gotoAndPlay("still");	
 		catzRocket.catzRocketContainer.x = 300;
         catzRocket.catzRocketContainer.y = 200;
         catzRocket.heightOffset = 0;

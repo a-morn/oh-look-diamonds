@@ -39,9 +39,9 @@ var InitializeStage = (function(){
                     {id:"cloud3", src:"assets/new assets/img/cloud 3.png"},
                     {id:"cloud4", src:"assets/new assets/img/cloud 4.png"},
                     {id:"cloud5", src:"assets/new assets/img/cloud 5.png"},                                        
-                    {id:"hud", src:"assets/new assets/img/HUD.png"},                                        
-                    {id:"hudPointer", src:"assets/new assets/img/HUDpointer.png"},                                        
-                    {id:"hudGlass", src:"assets/new assets/sprites/hudGlass.png"},                                        
+//                    {id:"hud", src:"assets/new assets/img/HUD.png"},                                        
+//                    {id:"hudPointer", src:"assets/new assets/img/HUDpointer.png"},                                        
+//                    {id:"hudGlass", src:"assets/new assets/sprites/hudGlass.png"},                                        
                     {id:"catzRocketCrash", src:"assets/new assets/sound/crash.mp3"},
                     {id:"wind", src:"assets/new assets/sound/wind.mp3"},
                     {id:"klonk1", src:"assets/new assets/sound/klonk1.mp3"},
@@ -429,14 +429,14 @@ var InitializeStage = (function(){
         exitSmoke = helpers.createSprite(SpriteSheetData.smoke, "right", 
 			{regX:150, regY:200, alpha:0});												       				
         		
-        hud = helpers.createBitmap(queue.getResult("hud"), 
-            {x:588+107, y:-6});                                 
+ //       hud = helpers.createBitmap(queue.getResult("hud"), 
+//            {x:588+107, y:-6});                                 
         
-        hudPointer = helpers.createBitmap(queue.getResult("hudPointer"), 
-            {x:588+158, y:50, regX:191,regY:54});               
+//        hudPointer = helpers.createBitmap(queue.getResult("hudPointer"), 
+//            {x:588+158, y:50, regX:191,regY:54});               
         
-        CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", 
-            {regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});  	
+//        CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", 
+//            {regX:150, regY:200, scaleX:0.85, scaleY:0.85, x:670, y:158});  	
                 
         leaves = helpers.createSprite(SpriteSheetData.leaves, "cycle", 
 			{alpha:0});							                
