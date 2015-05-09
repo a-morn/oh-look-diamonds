@@ -580,7 +580,7 @@ var CatzRocket = (function() {
 	}
      
      catzRocket.catzEndLoop = function() {
-        if (catzRocket.catzState === catzRocket.catzStateEnum.Normal 
+        if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop
             || catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity 
             || catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
             changeState(catzRocket.catzStateEnum.Normal);

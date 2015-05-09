@@ -232,19 +232,19 @@ var InitializeStage = (function(){
         House.choice1 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:150, alpha:0});    
 
-        House.choice1.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0});  																	
+        House.choice1.hitArea = helpers.createRectangle(150,30,"white",{x:-50, y:0});  																	
         
 		House.choice2 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:120, alpha:0});        													
 	
 
-        House.choice2.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0}); 
+        House.choice2.hitArea = helpers.createRectangle(150,30,"white",{x:-50, y:0}); 
 
 		House.choice3 = helpers.createText("", "20px Fauna One", "#ffcc00", 
 			{x:350, y:180, alpha:0});        													        
                 
 
-        House.choice3.hitArea = helpers.createRectangle(100,30,"white",{x:0, y:0}); 
+        House.choice3.hitArea = helpers.createRectangle(150,30,"white",{x:-50, y:0}); 
 
         House.choices = [House.choice1, House.choice2,House.choice3];
         
