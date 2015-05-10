@@ -38,18 +38,7 @@ var House = (function(){
         hoboCatSound1: null,
         hoboCatSound2: null,
         catzSound1: null,
-        catzSound2: null,                                      
-        rsText : null,
-        osText : null,
-        usText : null,
-        addOnTextOrphanage1 : null,
-        addOnRehabText1 : null,
-        addOnTextUniversity1: null,
-        displayedScore : null,
-        deltaOrph : 0,
-        deltaRehab : 0,
-        deltaUniversity : 0,
-        bust : 0,  
+        catzSound2: null,                                                      
         characterExclamation : null,
         choiceIDs : [],
         choices : [],
@@ -75,64 +64,55 @@ var House = (function(){
         characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive, "catz":catzActive};                
     };    	
 	
-    house.gotoHouseView = function(){                
-		var hs = readCookie(hsCookieName);		
-		var hsc = $('.score');		
-		if(!hsc.html() && hs)
-			hsc.html(hs);					
-		
-		if(!hs || hs < gameStats.score){
-			hsc.html(gameStats.score);
-			createCookie(hsCookieName, gameStats.score);
-		}				
-				
-		$('.odometer').html(0);        
+    house.gotoHouseView = function(){                		
+		Cookie.saveAndSetHS(gameStats.score);
+						
         house.hobo.alpha = 0;
         house.timmy.alpha = 0;
-        house.priest.alpha = 0;
-        house.displayedScore = gameStats.score;
+        house.priest.alpha = 0;        
         house.cricketsSound = createjs.Sound.play("crickets",{loop:-1});        
         house.cricketsSound.volume=0.1;                    
 		var hobDiaNo = house.progressionCheck("hoboCat");     
-            if(hobDiaNo !== -1) {
-                currentCharacter = "hoboCat";
-                house.hobo.alpha = 1;
-                gameStats.dialogNumber["hoboCat"] = hobDiaNo;           
-                hoboActive = true;				
-				if(hobDiaNo!="goodEvening")
-					house.characterExclamation.alpha=0.5;            
-                gameStats.dialogID["hoboCat"] = 0;
-            } 
-            //If no hobo dialog, check for timmy dialog
-            else {  
-                var timmyDiaNo = house.progressionCheck("timmy");
-                if(timmyDiaNo !== -1) {
-                    currentCharacter = "timmy";
-                    house.timmy.alpha = 1;
-                    gameStats.dialogNumber["timmy"] = timmyDiaNo;
-                    timmyActive = true;                
-                    gameStats.dialogID["timmy"] = 0;
-                    house.characterExclamation.alpha=0.5;
-                }
-                //If no timmy dialog, cehck for priest dialog
-                else {
-                    var priestDiaNo = house.progressionCheck("priest");
-                    if(priestDiaNo !== -1) {
-                        currentCharacter = "priest";
-                        house.priest.alpha = 1;
-                        gameStats.dialogNumber["priest"] = priestDiaNo;
-                        priestActive = true;
-                        gameStats.dialogID["priest"] = 0;
-                        house.characterExclamation.alpha=0.5;
-                    }
+		if(hobDiaNo !== -1) {
+			currentCharacter = "hoboCat";
+			house.hobo.alpha = 1;
+			gameStats.dialogNumber["hoboCat"] = hobDiaNo;           
+			hoboActive = true;				
+			if(hobDiaNo!="goodEvening")
+				house.characterExclamation.alpha=0.5;            
+			gameStats.dialogID["hoboCat"] = 0;
+		} 
+		//If no hobo dialog, check for timmy dialog
+		else {  
+			var timmyDiaNo = house.progressionCheck("timmy");
+			if(timmyDiaNo !== -1) {
+				currentCharacter = "timmy";
+				house.timmy.alpha = 1;
+				gameStats.dialogNumber["timmy"] = timmyDiaNo;
+				timmyActive = true;                
+				gameStats.dialogID["timmy"] = 0;
+				house.characterExclamation.alpha=0.5;
+			}
+			//If no timmy dialog, cehck for priest dialog
+			else {
+				var priestDiaNo = house.progressionCheck("priest");
+				if(priestDiaNo !== -1) {
+					currentCharacter = "priest";
+					house.priest.alpha = 1;
+					gameStats.dialogNumber["priest"] = priestDiaNo;
+					priestActive = true;
+					gameStats.dialogID["priest"] = 0;
+					house.characterExclamation.alpha=0.5;
+				}
 
-                    else {
-                        house.hobo.alpha = 1;
-                        currentCharacter = "hoboCat";
-                        $("#mahCanvas").addClass("match-cursor");
-                    }
-                }
-            }                        			
+				else {
+					house.hobo.alpha = 1;
+					currentCharacter = "hoboCat";
+					$("#mahCanvas").addClass("match-cursor");
+				}
+			}
+		}               
+		gameStats.score = 0;		
     };
     
     house.progressionCheck = function(cat) {
@@ -184,8 +164,9 @@ var House = (function(){
 					var value = line.Triggers[i].Value;
 					var stat = line.Triggers[i].Stat;
 					
-					if(stat === "score")                    
-						gameStats.score += value;
+					if(stat === "score"){
+						//gameStats.score += value;
+					}
 					else if (stat=== "kills")                    
 						gameStats.kills += value;                    
 					
@@ -271,9 +252,8 @@ var House = (function(){
 					//house.wickExclamation.alpha=1; Replaced by match-cursor					
 					showRocket();
 					//To shift to idle speach. Should be implemented smarter.
-					gameStats.dialogID[currentCharacter]+=100;                
-					console.log(gameStats);
-					createCookie(sgCookieName, JSON.stringify(gameStats));
+					gameStats.dialogID[currentCharacter]+=100;                					
+					Cookie.save(gameStats);					
 				}                
 			}        
 		}
@@ -418,8 +398,7 @@ var House = (function(){
     }
     
 	house.load = function(){				
-	var sg = JSON.parse(readCookie(sgCookieName));			
-	console.log(sg);
+	var sg = Cookie.load();				
 	if(sg){
 		gameStats = sg;
 		for (var key in gameStats.buildings) {

@@ -48,6 +48,7 @@ var GameLogic = (function(){
     
     gameLogic.houseTick = function(event){	
  //       gameLogic.timeAdjust(event);
+		$('.odometer').html(gameStats.score);        
         stage.update();
         if(House.characterSpeach.alpha > 0)        
             House.characterSpeach.alpha -= 0.015;        
