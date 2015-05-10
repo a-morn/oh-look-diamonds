@@ -1042,8 +1042,7 @@ var GameLogic = (function(){
 		if(CatzRocket.isHit)        
             House.gotoHouseViewWithoutRocket();        
         else        
-        
-        House.gotoHouseViewWithRocket();                       
+            House.gotoHouseViewWithRocket();                       
 		CatzRocket.reset();                                 
         stage.update();     
     }

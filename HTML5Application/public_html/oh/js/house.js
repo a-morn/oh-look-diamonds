@@ -444,7 +444,7 @@ var House = (function(){
     
     house.gotoHouseViewWithRocket = function(){                
         house.gotoHouseView();
-        if(CatzRocket.state===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
+        if(CatzRocket.catzState===CatzRocket.catzStateEnum.OutOfFuelUpsideDown){
 
             house.crashRocket.x=315;
             house.crashRocket.y = -90;

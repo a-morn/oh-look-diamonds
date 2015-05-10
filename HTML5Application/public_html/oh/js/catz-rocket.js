@@ -173,7 +173,7 @@ var CatzRocket = (function() {
         updateRocketSnake();
     };
 
-    function updateBase(gravWindSum, event, canChangeToTerminal, fellOff) {
+    function updateBase(gravWindSum, event, canChangeToTerminal, fellOff, rotate) {
         catzRocket.catzVelocity += (gravWindSum) * event.delta / 1000;
         catzRocket.heightOffset += 20 * catzRocket.catzVelocity * event.delta / 1000;
         if (catzRocket.catzVelocity >= catzRocket.limitVelocity) {
@@ -181,7 +181,7 @@ var CatzRocket = (function() {
             if (canChangeToTerminal)
                 changeState(catzRocket.catzStateEnum.TerminalVelocity);
         }
-        if (!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer)) {
+        if (rotate && !createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer)) {
             if (!fellOff || catzRocket.catzRocketContainer.rotation <= -270 || catzRocket.catzRocketContainer.rotation > -90)
                 catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity / 40) * 360 / 3.14;
             else if (catzRocket.catzRocketContainer.rotation <= -180 && catzRocket.catzRocketContainer.rotation > -270)
@@ -207,30 +207,30 @@ var CatzRocket = (function() {
     }
 
     function updateNormal(grav, wind, event) {
-        updateBase(grav + wind, event, true, false);
+        updateBase(grav + wind, event, true, false,true);
         checkFuel(false);
     }
 
     function updateFellOff(grav, wind, event) {
-        updateBase(grav + wind, event, false, false);
+        updateBase(grav + wind, event, false, false,true);
     }
 
     function updateOutOfFuel(grav, wind, event) {
-        updateBase(grav + wind, event, false, true);
+        updateBase(grav + wind, event, false, true,true);
         if (catzRocket.diamondFuel > 0)
             changeState(catzRocket.catzStateEnum.Normal);
     }
 
     function updateOutOfFuelUpsideDown(grav, wind, event) {
-        updateBase(grav + wind, event, false, true);
+        updateBase(grav + wind, event, false, true, false);
     }
 
     function updateFrenzy2(grav, wind, event) {
-        updateBase(0.5 * (grav + wind), event, false, false);
+        updateBase(0.5 * (grav + wind), event, false, false,true);
     }
 
     function updateFrenzyUploop(grav, wind, event) {
-        updateBase(-0.5 * (2.3 * grav - wind), event, false, false);
+        updateBase(-0.5 * (2.3 * grav - wind), event, false, false,true);
     }
 
     function updateTerminal(event) {
@@ -240,7 +240,7 @@ var CatzRocket = (function() {
     }
 
     function updateEmergency(grav, wind, event) {
-        updateBase(-10 * grav - 3.7 * wind, event, false, false);
+        updateBase(-10 * grav - 3.7 * wind, event, false, false,true);
         if (catzRocket.catzRocketContainer.rotation < 0)
             changeState(catzRocket.catzStateEnum.Uploop);
         checkFuel(false);
@@ -262,7 +262,7 @@ var CatzRocket = (function() {
     }
 
     function updateUploop(grav, wind, event) {
-        updateBase(-(3.2 * grav - wind), event, false, false);
+        updateBase(-(3.2 * grav - wind), event, false, false,true);
         if (catzRocket.catzRocketContainer.rotation < -60) {
             createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             tween = createjs.Tween.get(catzRocket.catzRocketContainer)
@@ -279,7 +279,7 @@ var CatzRocket = (function() {
     }
 
     function updateSecondUploop(grav, wind, event) {
-        updateBase(-(5.5 * grav - 2 * wind), event, false, false);
+        updateBase(-(5.5 * grav - 2 * wind), event, false, false,true);
         if (!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
             catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity / 40) * 360 / 3.14;
         if (catzRocket.catzRocketContainer.rotation < -60) {
@@ -574,7 +574,7 @@ var CatzRocket = (function() {
         catzRocket.isCrashed = false;
         catzRocket.hideSnake();
         CatzRocket.catzVelocity = velocity;	
-		catzRocket.diamondFuel = 2;        
+		catzRocket.diamondFuel = 1.7;        
 		stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
         stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
 	}
