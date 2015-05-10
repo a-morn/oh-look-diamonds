@@ -574,7 +574,7 @@ var CatzRocket = (function() {
         catzRocket.isCrashed = false;
         catzRocket.hideSnake();
         CatzRocket.catzVelocity = velocity;	
-		catzRocket.diamondFuel = 1.7;        
+		catzRocket.diamondFuel = 2;        
 		stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
         stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
 	}
