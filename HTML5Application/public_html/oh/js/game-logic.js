@@ -1001,6 +1001,7 @@ var GameLogic = (function(){
         stage.removeChild(gameView);
         stage.addChild(House.houseView);
         House.subtractedDiamondCont.removeAllChildren();
+        House.removeCharacterEvents();
         stage.update();
         createjs.Ticker.setFPS(20);
         createjs.Ticker.off("tick", gameListener);
@@ -1037,7 +1038,8 @@ var GameLogic = (function(){
         createjs.Tween.get(House.wick)
             .wait(2000)
             .to({x:-210},1500,createjs.Ease.quadInOut)
-            .call((function(){House.activateWick(gameLogic.gotoGameView);}));
+            .call((function(){House.activateWick(gameLogic.gotoGameView);}))
+            .call(House.addCharacterEvents);
 			
 		if(CatzRocket.isHit)        
             House.gotoHouseViewWithoutRocket();        
