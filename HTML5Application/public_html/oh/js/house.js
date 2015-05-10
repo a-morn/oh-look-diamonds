@@ -272,6 +272,7 @@ var House = (function(){
 					showRocket();
 					//To shift to idle speach. Should be implemented smarter.
 					gameStats.dialogID[currentCharacter]+=100;                
+					console.log(gameStats);
 					createCookie(sgCookieName, JSON.stringify(gameStats));
 				}                
 			}        
@@ -418,6 +419,7 @@ var House = (function(){
     
 	house.load = function(){				
 	var sg = JSON.parse(readCookie(sgCookieName));			
+	console.log(sg);
 	if(sg){
 		gameStats = sg;
 		for (var key in gameStats.buildings) {

@@ -53,10 +53,7 @@ var GameLogic = (function(){
             House.characterSpeach.alpha -= 0.015;        
         
         if(House.catzSpeach.alpha > 0)        
-            House.catzSpeach.alpha -= 0.015;        
-                
-        if(rocketSong.getPosition()<100)
-			rocketSong.play();            		        
+            House.catzSpeach.alpha -= 0.015;                                
         
         debugText.text =                                 
                 + "\nHoboDialogNo: " + House.hoboDialogNumber                        

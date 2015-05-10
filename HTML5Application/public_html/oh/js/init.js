@@ -270,7 +270,7 @@ var InitializeStage = (function(){
         
         House.subtractedDiamondCont = new createjs.Container();
         rocketSong = createjs.Sound.play("palladiumAlloySong");
-        rocketSong.stop();
+        rocketSong.stop();		
         House.houseView.y=1500;
         bg.y=0;
         cont.star.y=1000;
