@@ -114,40 +114,41 @@ var GameLogic = (function(){
     }
     
     function updateWorldContainer(event){
-		var yLimit;
-		if(!zooming && !zoomOut){
-			bg.y = -1100-(CatzRocket.catzRocketContainer.y)/3;
-			cont.star.y=100-(CatzRocket.catzRocketContainer.y)/3;
-		}		
-		if((!createjs.Tween.hasActiveTweens(gameView) && !createjs.Tween.hasActiveTweens(bg) && !createjs.Tween.hasActiveTweens(cont.star)) && !CatzRocket.isCrashed){
-			if(!zoomOut && CatzRocket.catzRocketContainer.y < 0 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){				
-				zooming = true;
-				createjs.Tween.get(gameView)
-					.to({scaleX:0.37, scaleY:0.37, y:300}, 500, createjs.Ease.linear)
-					.call(function () {zoomOut=true; zooming = false;});								
-					
-				createjs.Tween.get(bg)
-					.to({scaleX:1,scaleY:0.37, y:-200}, 500, createjs.Ease.linear);												
-					
-				createjs.Tween.get(cont.star)
-					.to({scaleX:0.37,scaleY:0.37, y:270}, 500, createjs.Ease.linear);					
-			}				
-			else if(zoomOut && CatzRocket.catzRocketContainer.y > 300 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){
-				zooming = true;				
-				createjs.Tween.get(gameView)
-					.to({scaleX:1,scaleY:1, y:0}, 500, createjs.Ease.linear)
-					.call(function () {zoomOut=false; zooming = false;});								
-				
-				createjs.Tween.get(bg)
-					.to({scaleX:1,scaleY:1, y:-1200}, 500, createjs.Ease.linear);												
-					
-				createjs.Tween.get(cont.star)
-					.to({scaleX:1,scaleY:1, y:1000}, 500, createjs.Ease.linear);																
-			}
-		}				
-				
-		if((CatzRocket.isCrashed || CatzRocket.catzRocketContainer.y < 200)&& !zoomOut)
-			gameView.y=200-CatzRocket.catzRocketContainer.y;		
+        var zoomDuration = 1000;
+        var zoomOutLimit=0.37;
+
+        if((!createjs.Tween.hasActiveTweens(gameView) && !createjs.Tween.hasActiveTweens(bg) && !createjs.Tween.hasActiveTweens(cont.star)) && !CatzRocket.isCrashed){
+            if(!zoomOut && CatzRocket.catzRocketContainer.y < 0 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){               
+                zooming = true;
+                createjs.Tween.get(gameView)
+                    .to({scaleX:zoomOutLimit, scaleY:zoomOutLimit}, zoomDuration, createjs.Ease.linear)
+                    .call(function () {zoomOut=true; zooming = false;});                                
+                    
+                createjs.Tween.get(bg)
+                    .to({scaleX:1,scaleY:zoomOutLimit}, zoomDuration, createjs.Ease.linear);                                                
+                    
+                createjs.Tween.get(cont.star)
+                    .to({scaleX:zoomOutLimit,scaleY:zoomOutLimit}, zoomDuration, createjs.Ease.linear);                 
+            }               
+            else if(zoomOut && CatzRocket.catzRocketContainer.y > 300 && CatzRocket.catzState === CatzRocket.catzStateEnum.Normal){
+                zooming = true;             
+                createjs.Tween.get(gameView)
+                    .to({scaleX:1,scaleY:1}, zoomDuration, createjs.Ease.linear)
+                    .call(function () {zoomOut=false; zooming = false;});                               
+                
+                createjs.Tween.get(bg)
+                    .to({scaleX:1,scaleY:1}, zoomDuration, createjs.Ease.linear);                                               
+                    
+                createjs.Tween.get(cont.star)
+                    .to({scaleX:1,scaleY:1}, zoomDuration, createjs.Ease.linear);                                                               
+            }
+        }               
+                
+        var catzCameraPos = Math.min(CatzRocket.catzRocketContainer.y,200);
+        var zoomPercent=(gameView.scaleY-zoomOutLimit)/(1-zoomOutLimit);
+        bg.y = (-1100-catzCameraPos/3)*zoomPercent-200*(1-zoomPercent); 
+        cont.star.y=(100-catzCameraPos/3)*zoomPercent-270*(1-zoomPercent);
+        gameView.y=(200-catzCameraPos)*zoomPercent+300*(1-zoomPercent);
     }
 
     function updateParallax(event){        
@@ -349,6 +350,7 @@ var GameLogic = (function(){
             bgParallax.y=100;
             bgParallax2.y=100;
         }
+        createjs.Tween.get(gameView).to({alpha:0},500).to({alpha:1},500)
         cont.parallax.addChild(bgParallax,bgParallax2);
     }
     
@@ -1007,6 +1009,7 @@ var GameLogic = (function(){
         createjs.Ticker.off("tick", gameListener);
         houseListener = createjs.Ticker.on("tick", gameLogic.houseTick,this);
         House.wick.x=-100;
+        House.mouseRocket.alpha = 0;
         House.wick.removeAllEventListeners();
         House.wick.gotoAndPlay("still");        
         createjs.Tween.removeTweens(House.houseView);        
