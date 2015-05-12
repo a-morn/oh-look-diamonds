@@ -518,6 +518,7 @@ var House = (function(){
     house.deactivateWick = function(){    
         house.wick.x=-100;
         house.mouseRocket.alpha = 0;
+        house.wickLight.alpha = 0;
         house.wick.gotoAndPlay("still");   
         house.wickClickBox.removeAllEventListeners();
         house.wick.removeAllEventListeners();
