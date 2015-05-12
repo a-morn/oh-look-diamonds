@@ -127,7 +127,8 @@ var House = (function(){
                         if(condition.OperatorType === "LargerThan" && gameStats.score<=condition.Score)                                                    
 							break conditionLoop;                                                    
                         else if(condition.OperatorType === "LessThan" && gameStats.score>=condition.Score)                                                    
-							break conditionLoop;                                                    
+							break conditionLoop;                 
+						console.log("Score cond passed");
                     }
                     else if(condition.ConditionType === "buildingState"){                     						
                         if(condition.state === "builtOnRound" &&
@@ -135,6 +136,7 @@ var House = (function(){
 						   break conditionLoop;                                                  
                         else if(gameStats.buildings[condition.building][condition.state] !== condition.on)                        
                             break conditionLoop;                        
+						console.log("Building state cond passed");
                     }
                     
                     else if (condition.ConditionType === "state" && gameStats[condition.state] !== condition.on)                    
@@ -380,9 +382,7 @@ var House = (function(){
 
         house.catz.addEventListener("click", house.meow);
         house.catz.addEventListener("mouseover", house.highlightCatz);
-        house.catz.addEventListener("mouseout", house.downlightCatz);
-		
-		house.characterExclamation.alpha=0.5;
+        house.catz.addEventListener("mouseout", house.downlightCatz);				
     };        
 
     house.removeCharacterEvents = function(){

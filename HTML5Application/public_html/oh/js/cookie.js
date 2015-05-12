@@ -28,7 +28,7 @@ var Cookie = (function (){
 	}
 	
 	co.saveAndSetHS = function (score){
-		var hs = readCookie(hsCookieName);		
+		var hs = readCookie(hsCookieName);				
 		var hsc = $('.score');		
 		if(!hsc.html() && hs)
 			hsc.html(hs);					
@@ -39,10 +39,12 @@ var Cookie = (function (){
 		}						
 	};
 	co.load = function(){
+		console.log(JSON.parse(readCookie(sgCookieName)));
 		return JSON.parse(readCookie(sgCookieName));
 	}
 	
 	co.save = function(gs){
+		console.log(gs);
 		createCookie(sgCookieName, JSON.stringify(gs));
 	}
 	return co;

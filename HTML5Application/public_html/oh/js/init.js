@@ -472,7 +472,8 @@ var InitializeStage = (function(){
 				.to({x:-130, y:260, rotation:0},300)
 				.to({x:-140, y:260, rotation:-5},300)
 				.to({x:-110, y:225, rotation:0},300)
-				.call(House.addCharacterEvents);
+				.call(House.addCharacterEvents)
+				.call(function(){House.characterExclamation.alpha=0.5;});
 		}
 		if(!gameStats.HasHappend["hoboCat"][1])
 			setTimeout(w, 4000);

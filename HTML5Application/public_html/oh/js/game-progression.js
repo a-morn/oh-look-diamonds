@@ -7,28 +7,28 @@ var gameProgressionJSON = {"hoboCat":
         "ConversationNumber": "goodEvening"
         },
 	
-		//0
+		//1
         {"Conditions":[{"ConditionType": "Score","Score": 20, "OperatorType": "LargerThan"},
-            {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
+            {"ConditionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": "20Diamonds"
         },
-        //1
+        //2
         {"Conditions":[{"ConditionType": "Score","Score": 0, "OperatorType": "LargerThan"},
-            {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
+            {"ConditionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": "aDiamond"
         },                
-        //2
+        //3
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},
-                {"CondtitionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
+                {"ConditionType": "buildingState", "state": "built", "building": "hoboCatHouse", "on":false}],                
         "ShouldReoccur":false,
         "Chance":1,
         "ConversationNumber": "hoboCatHouseBuilt"
         },
-		//3
+		//4
         {"Conditions":[{"ConditionType": "Score", "Score": 19, "OperatorType": "LargerThan"},           
             {"ConditionType": "buildingState", "state": "built", "building":"orphanage", "on":false},            
             {"ConditionType": "buildingState", "state": "built", "building":"hoboCatHouse", "on":true}],               

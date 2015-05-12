@@ -511,7 +511,7 @@ var GameLogic = (function(){
     }
     
     function updatePointer(){
-		$('.progress-bar').css('width', CatzRocket.diamondFuel*5+'%');				
+		$('.progress-bar').css('width', CatzRocket.diamondFuel*10+'%');				
 		if(CatzRocket.diamondFuel < 2){
 			if(fuelBlinkTimer > 10){
 				$('.progress-bar').toggleClass("background-red");
@@ -1051,7 +1051,8 @@ var GameLogic = (function(){
             House.gotoHouseViewWithoutRocket();        
         else        
             House.gotoHouseViewWithRocket();                       
-		CatzRocket.reset();                                 
+		CatzRocket.reset();                 
+		updatePointer();
         stage.update();     
     }
 	
