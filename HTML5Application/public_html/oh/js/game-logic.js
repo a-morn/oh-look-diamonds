@@ -341,8 +341,15 @@ var GameLogic = (function(){
     }
     
     function setParallax(int){
+        createjs.Tween.get(gameView)
+            .to({alpha:0},800)
+            .call(function(){changeParallax(int)})
+            .to({alpha:1},800)
+    }
+
+    function changeParallax(int){
         cont.parallax.removeAllChildren();
-        var name="bgParallax "+int;		
+        var name="bgParallax "+int;     
         var bgParallax = helpers.createBitmap(queue.getResult(name), {y:-200});                                
         var bgParallax2 = helpers.createBitmap(queue.getResult(name), {x:2460, y:-200});                
         
@@ -350,7 +357,6 @@ var GameLogic = (function(){
             bgParallax.y=100;
             bgParallax2.y=100;
         }
-        createjs.Tween.get(gameView).to({alpha:0},500).to({alpha:1},500)
         cont.parallax.addChild(bgParallax,bgParallax2);
     }
     

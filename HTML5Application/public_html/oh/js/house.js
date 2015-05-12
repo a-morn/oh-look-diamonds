@@ -250,7 +250,7 @@ var House = (function(){
 							house.choice3.alpha = 0;
 							house.choices[0].removeAllEventListeners();
 							house.choices[1].removeAllEventListeners();
-							house.characterDialog()();
+							house.characterDialog();
 					}); 
 					house.choices[i].addEventListener("mouseover", function(){house.choices[i].alpha=1});
 					house.choices[i].addEventListener("mouseout", function(){house.choices[i].alpha=0.7});
