@@ -1014,10 +1014,7 @@ var GameLogic = (function(){
         createjs.Ticker.setFPS(20);
         createjs.Ticker.off("tick", gameListener);
         houseListener = createjs.Ticker.on("tick", gameLogic.houseTick,this);
-        House.wick.x=-100;
-        House.mouseRocket.alpha = 0;
-        House.wick.removeAllEventListeners();
-        House.wick.gotoAndPlay("still");        
+        House.deactivateWick();     
         createjs.Tween.removeTweens(House.houseView);        
         if(debugOptions.trustFund && gameStats.score<20000)        
             gameStats.score=20000;                 		

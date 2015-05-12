@@ -296,7 +296,7 @@ var House = (function(){
 		createjs.Tween.get(house.wick).to({x:-210},1200)
 				.call(house.activateWick);
 	}
-    
+     
     house.buildAnimationFinished = function(){
         createjs.Tween.removeTweens(house.houseView);
         house.houseView.x=0;
@@ -438,15 +438,15 @@ var House = (function(){
         house.house.removeAllEventListeners();
         house.wick.gotoAndPlay("still");
         stage.removeAllEventListeners();
-        if(wickActive)        
-            house.activateWick(gotoGameView);        
+        if(wickActive)
+            house.activateWick(gotoGameView);   
         house.hobo.x=-300;
         house.hobo.y=270;
         stage.removeChild(gameView,diamondShardCounter,muteButton);
         stage.addChild(house.houseView);
         stage.update();
         createjs.Ticker.setFPS(20);
-        createjs.Ticker.off("tick", gameListener);        		
+        createjs.Ticker.off("tick", gameListener);    		
     };
     
     house.gotoHouseViewWithRocket = function(){                
@@ -514,6 +514,15 @@ var House = (function(){
         house.house.addEventListener("mouseover", house.highlightRocket);
         house.house.addEventListener("mouseout", house.downlightRocket);                                
     };               
+
+    house.deactivateWick = function(){    
+        house.wick.x=-100;
+        house.mouseRocket.alpha = 0;
+        house.wick.gotoAndPlay("still");   
+        house.wickClickBox.removeAllEventListeners();
+        house.wick.removeAllEventListeners();
+        house.house.removeAllEventListeners();
+    }
     
     house.BuildingAnimation = function(houseGraphic){		        
         var oldx = houseGraphic.x;
