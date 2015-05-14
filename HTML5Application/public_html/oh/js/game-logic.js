@@ -553,7 +553,8 @@ var GameLogic = (function(){
 					cont.diamond.removeChildAt(i);
 					arrayLength -= 1;
 					i -= 1;
-					diamondSound.play();                					
+                    var instance = createjs.Sound.play("diamondSound");
+                     instance.volume=0.15;            					
 				}
 			}
         }   
