@@ -106,7 +106,8 @@ var GameLogic = (function(){
                 + "\nHoboDialogNo: " + House.hoboDialogNumber
                 +"\n\ncurrentDisplacement: "+currentDisplacement
                 +"\n\currentLevel"+currentLevel
-                +"\nstate"+CatzRocket.catzState;
+                +"\n\mousedown: "+mousedown
+                +"\nstate: "+CatzRocket.catzState;
         
         
             stage.update(event); 
@@ -1077,7 +1078,7 @@ var GameLogic = (function(){
         createjs.Ticker.setFPS(30);                    
         CatzRocket.start(-20);
 
-        stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
+        stage.addEventListener("stagemousedown", function(){mousedown = true; CatzRocket.catzUp();});    
         stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
         
         GameLogic.jump = false;        

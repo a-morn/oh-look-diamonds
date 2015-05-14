@@ -405,6 +405,7 @@ function exitGameMode() {
 }
 
 function gameMouseDown() {
+	mousedown = true;
 	CatzRocket.catzUp();
 }
 

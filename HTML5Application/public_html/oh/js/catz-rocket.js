@@ -191,7 +191,6 @@ var CatzRocket = (function() {
 
     function checkFuel(mightBeUpsideDown) {
         if (catzRocket.diamondFuel === 0) {
-            mousedown = false;
 //            catzRocket.glass.gotoAndPlay("outOfFuel");
             createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
             if (mightBeUpsideDown) {
@@ -489,7 +488,6 @@ var CatzRocket = (function() {
 
     catzRocket.catzUp = function() {
         if (catzRocket.diamondFuel > 0) {
-            mousedown = true;
             if (catzRocket.catzState === catzRocket.catzStateEnum.Normal) {
                 catzRocket.diamondFuel -= 0.25;
                 catzRocket.catzVelocity -= 2;
@@ -575,12 +573,11 @@ var CatzRocket = (function() {
         catzRocket.hideSnake();
         CatzRocket.catzVelocity = velocity;	
 		catzRocket.diamondFuel = 2;        
-		stage.addEventListener("stagemousedown", CatzRocket.catzUp);    
-        stage.addEventListener("stagemouseup", function(){mousedown = false; CatzRocket.catzEndLoop();});    
 	}
      
      catzRocket.catzEndLoop = function() {
         if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop
+            || catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop
             || catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity 
             || catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
             changeState(catzRocket.catzStateEnum.Normal);
