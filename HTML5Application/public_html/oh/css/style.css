@@ -12,7 +12,7 @@ body {
 	text-align: center;
 }
 
-canvas, .odo{
+#mahCanvas, .odo{
 	margin: 0 auto;
     display: block;       
 }
@@ -35,12 +35,12 @@ a:visited {
     color: #ffffcc;
 }
 @media (max-width: 800px) {
-    canvas,.odo {
+    #mahCanvas,.odo {
         width: 100%;
     }
 }
 @media (min-width: 801px) {
-    canvas,.odo {
+    #mahCanvas,.odo {
         width: 800px;
     }
 }
