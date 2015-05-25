@@ -94,9 +94,7 @@ titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"
         {"Who": "Hobo-Cat", "What": "How they gonna get\n\
 schooled now?", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
         {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"built", Value: "university"}, {Stat:"score", Value: -20}, {Stat:"catPartyApprovalRating", Value: -0.0005}], "End":false},
-        {"Who": "Hobo-Cat", "What": "Choose how many\n\
-cats that can enroll.\n\
-You got some time to\n\
+        {"Who": "Hobo-Cat", "What": "You got some time to\n\
 teach in between those\n\
 rocket rides, right kitten?", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true}        
     ], "idle":{"what":"vetenskap och konst"}},

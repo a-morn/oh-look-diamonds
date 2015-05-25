@@ -21,8 +21,7 @@ var InitializeStage = (function(){
 
         manifest = [                    
                     {id: "enemybirds", src: "assets/sprites/newBirds.png"},
-                    {id: "diamond", src: "assets/sprites/newDiamond3.png"}, 
-                    {id: "mediumDiamond", src: "assets/sprites/newDiamond2.png"}, 
+                    {id: "diamond", src: "assets/sprites/newDiamond3.png"},                     
                     {id: "greatDiamond", src: "assets/sprites/newDiamond.png"}, 
                     {id: "rocketSilouette", src: "assets/img/catzRocketSilouette.png"}, 
                     {id: "meow", src: "assets/sound/meow.mp3"},                    
@@ -116,8 +115,7 @@ var InitializeStage = (function(){
 		
         SpriteSheetData.setValues(queue);
 		dataDict = {
-			"diamond" : SpriteSheetData.diamond,
-			"mediumDiamond" : SpriteSheetData.mediumDiamond,
+			"diamond" : SpriteSheetData.diamond,			
 			"greatDiamond" : SpriteSheetData.greatDiamond,
 			"seagull" : SpriteSheetData.seagullSheet,
 			"goose" : SpriteSheetData.seagullSheet,

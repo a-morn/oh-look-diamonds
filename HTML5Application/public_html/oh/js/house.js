@@ -127,16 +127,14 @@ var House = (function(){
                         if(condition.OperatorType === "LargerThan" && gameStats.score<=condition.Score)                                                    
 							break conditionLoop;                                                    
                         else if(condition.OperatorType === "LessThan" && gameStats.score>=condition.Score)                                                    
-							break conditionLoop;                 
-						console.log("Score cond passed");
+							break conditionLoop;                 						
                     }
                     else if(condition.ConditionType === "buildingState"){                     						
                         if(condition.state === "builtOnRound" &&
 						((gameStats.buildings[condition.building][condition.state] + condition.on)>=gameStats.currentRound))                            
 						   break conditionLoop;                                                  
                         else if(gameStats.buildings[condition.building][condition.state] !== condition.on)                        
-                            break conditionLoop;                        
-						console.log("Building state cond passed");
+                            break conditionLoop;                        						
                     }
                     
                     else if (condition.ConditionType === "state" && gameStats[condition.state] !== condition.on)                    

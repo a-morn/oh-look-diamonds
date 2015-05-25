@@ -368,11 +368,6 @@ function createSmallDiamond(event) {
 	createDisplayObject(x, y, "diamond", "cycle");;
 }
 
-function createMediumDiamond(event) {
-	var x = currentCenterX()+Math.random()*100;
-	var y = 500+Math.random()*100;
-	createDisplayObject(x, y, "mediumDiamond", "mediumCycle");
-}
 
 function createGrandDiamond(event) {
 	var x = currentCenterX()+Math.random()*100;
@@ -469,9 +464,8 @@ function getObjType(kid) {
 	var type;
 	if (kid.currentAnimation === "cycle") {
 		type = "diamond";
-	} else if (kid.currentAnimation === "mediumCycle") {
-		type = "mediumDiamond";
-	} else if (kid.currentAnimation === "greatCycle") {
+	} 
+	else if (kid.currentAnimation === "greatCycle") {
 		type = "greatDiamond";
 	} else {
 		type = "attackBird";

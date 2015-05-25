@@ -9,11 +9,10 @@ var
 	diamondShardCounter,
 	diamondSound,
 	debugText,	
-	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : true, godMode : false},
+	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : false, godMode : false},
 
 	diamondEnum = {
-        shard : 0,
-        medium : 1,
+        shard : 0,        
         great : 2,        
     },
 	diamondCounterText,     

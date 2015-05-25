@@ -23,8 +23,7 @@ var GameLogic = (function(){
 	zooming = false,
 	fuelBlinkTimer = 0,
     containerDict = {
-        "diamond" : cont.diamond,
-        "mediumDiamond" : cont.diamond,
+        "diamond" : cont.diamond,        
         "greatDiamond" : cont.diamond,
         "seagull" : cont.sg,
         "goose" : cont.goose,
@@ -539,13 +538,9 @@ var GameLogic = (function(){
 						gameStats.score += 1;						
 						CatzRocket.pickupDiamond(diamondEnum.shard);						
 					}
-					else if(kid.currentAnimation==="mediumCycle"){					
-						gameStats.score += 10;
-						CatzRocket.pickupDiamond(diamondEnum.medium);						
-											
-					}
+					
 					else if(kid.currentAnimation==="greatCycle"){						
-						gameStats.score += 1000;						
+						gameStats.score += 10;						
 						CatzRocket.pickupDiamond(diamondEnum.great);						
 					}								
 					cont.diamond.removeChildAt(i);

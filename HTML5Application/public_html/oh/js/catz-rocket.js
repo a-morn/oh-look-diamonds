@@ -323,14 +323,10 @@ var CatzRocket = (function() {
                 case diamondEnum.shard:
                     CatzRocket.diamondFuel += 0.09;
                     CatzRocket.frenzyCount += 0.1;
-                    break;
-                case diamondEnum.medium:
-                    CatzRocket.diamondFuel += 1.2;
-                    CatzRocket.frenzyCount += 5;
-                    break;
+                    break;                
                 case diamondEnum.great:
-                    CatzRocket.diamondFuel += 3;
-                    CatzRocket.frenzyCount += 50.5;
+                    CatzRocket.diamondFuel += 1.5;
+                    CatzRocket.frenzyCount += 5;
                     break;
             }
     }
