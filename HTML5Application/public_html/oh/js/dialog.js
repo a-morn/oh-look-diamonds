@@ -1,4 +1,4 @@
-var dialogJSON = {"hoboCat": 
+﻿var dialogJSON = {"hoboCat": 
 {   
 "goodEvening":
     {"dialog":[

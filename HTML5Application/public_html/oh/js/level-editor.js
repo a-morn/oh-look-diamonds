@@ -5,6 +5,7 @@ var progressBar,
 	inGameMode = false,
 	isSpriteMode = true,
 	levels,
+	ctrlPressed = false,
 	grav = 12,
 	dbText,
 	selectBox = {
@@ -39,6 +40,8 @@ var progressBar,
 	selectedCont = new createjs.Container(),
 	levelView = new createjs.Container(),
 	gameClickScreen,
+	clipBoard,
+	clipOffset = 0,
 	levelEditor = {};
 
 levelEditor.Init = function() {
@@ -186,12 +189,55 @@ function setEventListeners() {
 	bgCont.on("mousedown", createSelectBox);
 	bgCont.on("pressmove", dragBox);
 	bgCont.on("pressup", selectWithBox);
+	$(window).keydown(handleKeyPress);
+	$(window).keyup(handleKeyUp);
 	selectedCont.on("mousedown", startPressMove);
 	selectedCont.on("pressmove", pressMove);
 	gameClickScreen.on("mousedown", gameMouseDown);
 	gameClickScreen.on("click", gameMouseUp);
 }
 
+function handleKeyPress(evt){
+	if (evt.ctrlKey){
+		ctrlPressed = true;
+	}
+	if((evt.keyCode===67 ||evt.keyCode===88) && ctrlPressed){
+		clipBoard = [];
+		clipOffset = 0;
+		var clipLeftMost = levelLength;
+		var clipRightMost = 0;
+		for (var i = selectedCont.children.length - 1; i >= 0; i--) {
+			kid = selectedCont.children[i];
+			kid.x-=selectedCont.x;
+			kid.y-=selectedCont.y;
+			clipBoard.push(createClone(kid));
+			clipRightMost = Math.max(selectedCont.children[i].x, clipRightMost);
+			clipLeftMost = Math.min(selectedCont.children[i].x, clipLeftMost);
+		};
+		if(evt.keyCode===67){
+			clipOffset = clipRightMost-clipLeftMost+10;
+		}
+	}
+	if(evt.keyCode===86 && ctrlPressed){
+		moveChildrenFromSelectedToObjCont();
+		for (var i = clipBoard.length - 1; i >= 0; i--) {
+			clipBoard[i].x+=clipOffset;
+			var clone = createClone(clipBoard[i]);
+			clone.alpha = 0.5;
+			selectedCont.addChild(clone);
+		};
+	}
+	if(evt.keyCode===88 || evt.keyCode=== 46)
+	{
+		selectedCont.removeAllChildren();
+	}
+}
+
+function handleKeyUp(evt){
+	if (evt.ctrlKey){
+		ctrlPressed = false;
+	}
+}
 function startPressMove(evt) {
 	selectPosOnStartDrag.x = evt.stageX / levelViewScale - selectedCont.x;
 	selectPosOnStartDrag.y = evt.stageY / levelViewScale - selectedCont.y;
@@ -208,8 +254,7 @@ function pressMoveCatz(evt) {
 	evt.currentTarget.y = evt.stageY / levelViewScale;
 	stage.update();
 }
-
-function deleteAllSelected(evt) {
+ function deleteAllSelected(evt) {
 	selectedCont.removeAllChildren();
 }
 
@@ -311,6 +356,12 @@ function moveChildrenFromSelectedToObjCont() {
 	selectedCont.y = 0;
 }
 
+function createClone(object){
+	var clone = object.clone(true);
+	clone.on("mousedown",selectItem);
+	return clone;
+}
+
 function createSmallDiamond(event) {
 	var x = currentCenterX()+Math.random()*100;
 	var y = 500+Math.random()*100;
@@ -364,7 +415,6 @@ function createDisplayShape() {}
 
 function onTick(evt) {
 
-	dbText.text = catzRocketXpos;
 	if (inGameMode === true) {
 		gameUpdate(evt);
 	}
