@@ -16,7 +16,14 @@
     <script src="js/level-manifest.js"></script>
     <script src="js/sprite-sheet-data.js"></script>    
 	<script src="js/helpers.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>         		
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>      
+<script>
+$(window).scroll(function(){
+    $('#belowLevelEditor').css({
+        'left': $(this).scrollLeft() + 15 
+         //Why this 15, because in the CSS, we have set left 15, so as we scroll, we would want this to remain at 15px left
+    });
+});	</script>
 </head>
 <body onload ="levelEditor.Init()">
     <canvas id = "levelEditCanvas" width = "8000" height = "650">        

@@ -4,11 +4,12 @@ var
 	catzBounds,
 	catzNorm,        
 	catzVertices,
+	ctx, //hs canvas
 	dataDict,        
 	diamondShardCounter,
 	diamondSound,
 	debugText,	
-	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : false, godMode : false},
+	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : true, godMode : false},
 
 	diamondEnum = {
         shard : 0,
@@ -29,12 +30,10 @@ var
 	lightningColor = "#99ccff",
 	//muteButton,        	
 	newBounds,
-	norm,
-	hsCookieName = "ohld-highscore",
+	norm,	
 	polygonLine,
 	polygonVertices,	
-	rocketSong,
-	sgCookieName = "ohld-save-game",
+	rocketSong,	
 	smoke,
 	squawkSound,
 	stage,
@@ -77,9 +76,9 @@ var
 			"hoboCat" : 0,
 		},
 		HasHappend: {"priest" : [], "timmy" : [], "hoboCat" : []},
-        villagers: {approvalRating : 0},
-        kittens: {approvalRating : 0},
-        catParty: {approvalRating : 0},
+        villagersApprovalRating : 0,
+        kittensApprovalRating : 0,
+        catPartyApprovalRating : 0,
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
@@ -91,7 +90,9 @@ var
 	
 function StartGame(){    	    
 	$("#mute").click(switchMute);
+	ctx = document.querySelector("#hs").getContext("2d"),
 	InitializeStage.init(canvas, stage);    
+	Cookie.saveAndSetHS(0);
 }
 
 function switchMute(){
@@ -105,29 +106,31 @@ function switchMute(){
 	}
 }
 
-function createCookie(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    document.cookie = name+"="+value+expires+"; path=/";
-}
-
-function readCookie(name) {
-	var nameEQ = name + "=";
-	var ca = document.cookie.split(';');
-	for(var i=0;i < ca.length;i++) {
-		var c = ca[i];
-		while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-	}
-	return null;
-}
-
-function eraseCookie(name) {
-	createCookie(name,"",-1);
-}
-
 $(StartGame);
+
+function paint(hs){
+var dashLen = 220, dashOffset = dashLen, speed = 5,
+    txt = hs+"", x = 0, i = 0;	
+ctx.clearRect(0, 0, 200, 57);
+ctx.font = "15px Arial, cursive"; 
+ctx.lineWidth = 1; ctx.lineJoin = "round"; 
+ctx.globalAlpha = 1;
+ctx.strokeStyle = "#ffffcc";
+ctx.fillStyle =	"#ffffcc";
+ctx.fillText('Most diamonds', 0, 20);
+ctx.font = "30px Just Another Hand, cursive"; 
+(function loop() {
+  ctx.clearRect(x, 20, 60, 40);
+  ctx.setLineDash([dashLen - dashOffset, dashOffset - speed]); // create a long dash mask
+  dashOffset -= speed;                                         // reduce dash length
+  ctx.strokeText(txt[i], x, 50);                              // stroke letter
+
+  if (dashOffset > 0) requestAnimationFrame(loop);             // animate
+  else {    
+	ctx.fillText(txt[i], x, 50);                              // fill final letter
+    dashOffset = dashLen;                                      // prep next char
+    x += ctx.measureText(txt[i++]).width + ctx.lineWidth * Math.random() + 5;
+    if (i < txt.length) requestAnimationFrame(loop);
+  }
+})();
+}

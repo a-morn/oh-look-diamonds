@@ -46,7 +46,7 @@ a:visited {
 }
 
 #belowLevelEditor {
-    position:fixed;
+    position:absolute;
     left: 5px;
 }
 
@@ -99,13 +99,19 @@ button {
 	float:left;
 	background-color : #1f1f1f; 		
 	width: 40%;
+	width: -moz-calc(50% - 25px);
+	width: -webkit-calc(50% - 25px);	
+	width: calc(50% - 25px);	
 	height: 69px;
 }
 .counter {
 	float:left;
 }
 .progress-bar {
-		background-color: #99ccff;		
+		background-color: #99ccff;				
+		-webkit-transition: width .2s ease-out;
+		-o-transition: width .2s ease-out;
+		transition: width .2s ease-out;
 }
 
 .background-red {
@@ -113,93 +119,5 @@ button {
 }
 
 .odometer {
-    font-size: 40px;
+    font-size: 40px;	
 }
-
-#experiment {
-    min-height: 400px;
-}
-
-.cube {
-    position: relative;
-    left: 35%;
-    top: 200px;
-}
-
-.cube p {
-    line-height: 14px;
-    font-size: 12px;
-}
-
-.cube h2 {
-    font-weight: bold;
-}
-
-.rightFace,
-.leftFace,
-.topFace div {    
-    width: 180px;
-    height: 180px;
-}
-
-.rightFace,
-.leftFace,
-.topFace {
-    position: absolute;	
-}
-
-.leftFace {
-    -webkit-transform: skew(0deg, 30deg);
-    -moz-transform: skew(0deg, 30deg);
-    -o-transform: skew(0deg, 30deg);
-    -ms-transform: skew(0deg, 30deg);
-    transform: skew(0deg, 30deg);    
-}
-
-.leftFace, .rightFace, .topFace>div{
-	border: 1px dashed #000;
-}
-
-.leftFace:hover {
-	background-color: #cc0000;	
-	border-color: #ffffcc;
-}
-
-.rightFace:hover {
-	background-color: #006666;
-	border-color: #ffffcc;
-}
-
-.topFace>div:hover {
-	background-color: #330033;
-	border-color: #ffffcc;
-}
-
-.rightFace {
-    -webkit-transform: skew(0deg, -30deg);
-    -moz-transform: skew(0deg, -30deg);
-    -o-transform: skew(0deg, -30deg);
-    -ms-transform: skew(0deg, -30deg);
-    transform: skew(0deg, -30deg);    
-    left: 180px;
-}
-
-.topFace div {
-    -webkit-transform: skew(0deg, -30deg) scale(1, 1.16);
-    -moz-transform: skew(0deg, -30deg) scale(1, 1.16);
-    -o-transform: skew(0deg, -30deg) scale(1, 1.16);
-    -ms-transform: skew(0deg, -30deg) scale(1, 1.16);
-    transform: skew(0deg, -30deg) scale(1, 1.16);    
-    font-size: 0.862em;
-}
-
-.topFace {
-    -webkit-transform: rotate(60deg);
-    -moz-transform: rotate(60deg);
-    -o-transform: rotate(60deg);
-    -ms-transform: rotate(60deg);
-    transform: rotate(60deg);
-    top: -141px;
-    left: 90px;
-}
-

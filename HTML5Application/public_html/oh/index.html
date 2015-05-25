@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">    
     <link rel="icon" href="assets/img/favicon.ico">	
 	<link rel="stylesheet" href="css/odometer-theme-car.css" />
+	<link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
 	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>         		
     <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
     <script src="js/dialog.js"></script>
@@ -26,6 +27,7 @@
 	<script src="js/helpers.js"></script>
 	<script src="js/init.js"></script>
 	<script src="js/game-logic.js"></script>	
+	<script src="js/cookie.js"></script>	
 	<script src="js/odometer.min.js"></script>    
     <script> 
     $(function(){
@@ -45,12 +47,11 @@
 				</div>
 			</div>
 			<div class ="counter">
-				<img src="assets/img/diamondIcon.png">
+				<img src="assets/img/DiamondIcon.png">
 				<div class="odometer">0<p></div>
 			</div>
 			<div class="highscore">
-				<p class="centered"><b>Highscore</b></p>
-				<p class="centered score"></p>
+				<canvas id="hs" width = "120" height = "57" aria-valuenow="-1"></canvas>				
 			</div>            
 		</div>		
 		<div class="centered mute">

@@ -49,7 +49,7 @@ Why don't we build 'em a home?", "Sound": "HoboCatSound1", "Choice" :true, "Choi
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":2, "End":false},
         {"Who": "Hobo-Cat", "What": "Guess those kittes \n\
 gotta fend for themselves", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5, "End":true},
-        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":4, "Triggers":[{Stat:"built", Value: "orphanage"}, {Stat:"score", Value: -20}], "End":false},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":4, "Triggers":[{Stat:"built", Value: "orphanage"}, {Stat:"score", Value: -20}, {Stat:"kittensApprovalRating", Value: 0.001}, {Stat:"catPartyApprovalRating", Value: -0.0001}], "End":false},
         {"Who": "Hobo-Cat", "What": "We can start\n\
 housing kittens straight away", "Sound": "HoboCatSound1", "Choice" :false, "NextID":5,"End":true},
                 {"Who": "Hobo-Cat", "What": "Add as many\n\
@@ -71,7 +71,7 @@ for them out here?", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
         {"Who": "Hobo-Cat", "What": "They're on their \n\
 own then", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
-        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"built", Value: "rehab"}, {Stat:"score", Value: -20}], "End":false},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"built", Value: "rehab"}, {Stat:"score", Value: -20}, {Stat:"villagersApprovalRating", Value: -0.001}, {Stat:"catPartyApprovalRating", Value: -0.0002}], "End":false},
         {"Who": "Hobo-Cat", "What": "Add some beds\n\
 and I'll lead them through\n\
 all twelve steps to\n\
@@ -93,7 +93,7 @@ titles for all!", "Sound": "HoboCatSound1", "Choice" :true, "Choices":[{"text":"
         {"Who": "Catz", "What": "meow...", "Sound": "catzSound1", "Choice" :false, "NextID":3, "End":false},
         {"Who": "Hobo-Cat", "What": "How they gonna get\n\
 schooled now?", "Sound": "HoboCatSound1", "Choice" :false, "NextID":6, "End":true},
-        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"built", Value: "university"}, {Stat:"score", Value: -20}], "End":false},
+        {"Who": "Catz", "What": "meow!", "Sound": "catzSound1", "Choice" :false, "NextID":5, "Triggers":[{Stat:"built", Value: "university"}, {Stat:"score", Value: -20}, {Stat:"catPartyApprovalRating", Value: -0.0005}], "End":false},
         {"Who": "Hobo-Cat", "What": "Choose how many\n\
 cats that can enroll.\n\
 You got some time to\n\
@@ -107,7 +107,7 @@ a full blown hospital!", "Choice":true, "Choices":[{"text":"no", "ChoiceID":1},{
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Hobo-Cat", "What": "better stay healthy\n\
 then...", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"rehab",Value: "hospital"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"rehab",Value: "hospital"}, {Stat:"score", Value: -20}, {Stat:"villagersApprovalRating", Value: 0.001}, {Stat:"catPartyApprovalRating", Value: -0.0008}], "End":false},
                 {"Who": "Hobo-Cat", "What": "medical care for all cats!", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"I feel healthier already"}},
 
@@ -137,7 +137,7 @@ that fancy new garden"}},
     {"dialog":[{"Who": "Timmy", "What": "can haz youth center for stray kitties?", "Choice":true, "Choices":[{"text":"no", "ChoiceID":1},{"text":"yes", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Timmy", "What": "oh no", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage", Value: "youthCenter"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage", Value: "youthCenter"}, {Stat:"score", Value: -20}, {Stat:"kittensApprovalRating", Value: 0.0015}], "End":false},
                 {"Who": "Timmy", "What": "yay!", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"can i have some more?"}},
     
@@ -145,7 +145,7 @@ that fancy new garden"}},
     {"dialog":[{"Who": "Timmy", "What": "can haz summer camp for stray kitties?", "Choice":true, "Choices":[{"text":"no", "ChoiceID":1},{"text":"yes", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Timmy", "What": "oh no", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage",Value: "summerCamp"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"orphanage",Value: "summerCamp"}, {Stat:"score", Value: -20}, {Stat:"kittensApprovalRating", Value: 0.002}], "End":false},
                 {"Who": "Timmy", "What": "hurray!", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"can i please some more?"}},
     
@@ -153,7 +153,7 @@ that fancy new garden"}},
     {"dialog":[{"Who": "Timmy", "What": "i can be rocketeer too?", "Choice":true, "Choices":[{"text":"there can be only one", "ChoiceID":1},{"text":"i'll teach you all I know", "ChoiceID":3}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":2, "End":false},
                 {"Who": "Timmy", "What": "oh no", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"university",Value: "rocketUniversity"}, {Stat:"score", Value: -20}], "End":false},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":4, "Triggers":[{"Stat":"addOn", "Building":"university",Value: "rocketUniversity"}, {Stat:"score", Value: -20}, {Stat:"catPartyApprovalRating", Value: -0.002}, {Stat:"kittensApprovalRating", Value: 0.003}], "End":false},
                 {"Who": "Timmy", "What": "i'll enroll to the Catz Rocket Institute Rocketeer Program asap", "Choice":false, "NextID":10, "End":true}],                 
             "idle":{"what":"the final frontier"}}},
 
@@ -170,7 +170,7 @@ we can lead them back to the\n\
 rightous path.", "Choice":true, "Choices":[{"text":"no", "ChoiceID":4},{"text":"yes", "ChoiceID":6}], "NextID":1, "End":false},
                 {"Who": "Catz", "What": "meow...", "Choice":false, "NextID":5, "End":false},
                 {"Who": "Priest", "What": "may the Cat God forgive you", "Choice":false, "NextID":10, "End":true},
-                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":7, "Triggers":[{"Stat":"addOn", "Building":"rehab", Value: "monastery"}, {Stat:"score", Value: 20}], "End":false},
+                {"Who": "Catz", "What": "meow!", "Choice":false, "NextID":7, "Triggers":[{"Stat":"addOn", "Building":"rehab", Value: "monastery"}, {Stat:"score", Value: 20}, {Stat:"villagersApprovalRating", Value: 0.001}], "End":false},
                 {"Who": "Priest", "What": "Excellent! Please take this\n\
 small gift as a token\n\
 of the Lords apprication.", "Choice":false, "NextID":10, "End":true}],                 
