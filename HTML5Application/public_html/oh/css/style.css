@@ -108,7 +108,10 @@ button {
 	float:left;
 }
 .progress-bar {
-		background-color: #99ccff;		
+		background-color: #99ccff;				
+		-webkit-transition: width .2s ease-out;
+		-o-transition: width .2s ease-out;
+		transition: width .2s ease-out;
 }
 
 .background-red {

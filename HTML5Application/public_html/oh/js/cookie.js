@@ -29,14 +29,17 @@ var Cookie = (function (){
 	
 	co.saveAndSetHS = function (score){
 		var hs = readCookie(hsCookieName);				
-		var hsc = $('.score');		
-		if(!hsc.html() && hs)
-			hsc.html(hs);					
+		var hsc = $('#hs');				
+		if(hsc.attr("aria-valuenow")==-1 && hs){			
+			hsc.attr("aria-valuenow", hs);					
+			paint(hs);			
+		}			
 			
-		if(!hs || hs < score){
-			hsc.html(score);
+		if(!hs || hs < score){		
+			hsc.attr("aria-valuenow", hs);						
+			paint(score);
 			createCookie(hsCookieName, score);			
-		}						
+		}							
 	};
 	co.load = function(){
 		console.log(JSON.parse(readCookie(sgCookieName)));
