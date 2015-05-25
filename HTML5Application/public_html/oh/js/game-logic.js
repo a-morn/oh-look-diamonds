@@ -469,32 +469,32 @@ var GameLogic = (function(){
             var xOffset = 0;
             function addOnlooker(onlooker){            
                 var oCont = new createjs.Container();
-                oCont.x=800 + xOffset;
+                oCont.x=2000 + xOffset;
                 xOffset+= 300;
                 oCont.y= 180;
-                onlooker.x=30;
+                onlooker.x=180;
                 onlooker.y=0;
-                var variant = "MobHill"+Math.floor(Math.random()*2+1);				
+                var variant = "mobHill"+Math.floor(Math.random()*2+1);								
                 var hill = helpers.createBitmap(queue.getResult(variant), {y:95});                			               
                 oCont.addChild(onlooker, hill);
                 cont.onlooker.addChild(oCont);
             }
             
 			var onlooker;
-            if(Math.random()>1 - gameStats.kittens.approvalRating){
-                onlooker = helpers.createSprite("orphans", {});								
+            if(Math.random()> 1- gameStats.kittensApprovalRating){			            
+                onlooker = helpers.createSprite(SpriteSheetData.onlookers, "orphans", {});								
                 addOnlooker(onlooker);
             }
-            if(Math.random()< -gameStats.catParty.approvalRating){
-                onlooker = helpers.createSprite("cat party", {});												
+            if(Math.random()< -gameStats.catPartyApprovalRating){
+                onlooker = helpers.createSprite(SpriteSheetData.onlookers,"cat party", {});												
                 addOnlooker(onlooker);
             }
-            if(Math.random()< -gameStats.villagers.approvalRating){
-                onlooker = helpers.createSprite("angry mob", {});												
+            if(Math.random()< -gameStats.villagersApprovalRating){
+                onlooker = helpers.createSprite(SpriteSheetData.onlookers,"angry mob", {});												
                 addOnlooker(onlooker);
             }
-            if(Math.random()< gameStats.villagers.approvalRating){
-				onlooker = helpers.createSprite("loving mob", {});												                
+            if(Math.random()> 1-gameStats.villagersApprovalRating){
+				onlooker = helpers.createSprite(SpriteSheetData.onlookers,"loving mob", {});												                
                 addOnlooker(onlooker);
             }                        
         }        

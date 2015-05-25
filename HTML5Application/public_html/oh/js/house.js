@@ -64,7 +64,7 @@ var House = (function(){
         characterActive = {"hoboCat":hoboActive, "timmy":timmyActive, "priest":priestActive, "catz":catzActive};                
     };    	
 	
-    house.gotoHouseView = function(){                		
+    house.gotoHouseView = function(){                				
 		Cookie.saveAndSetHS(gameStats.score);
 						
         house.hobo.alpha = 0;
@@ -190,8 +190,7 @@ var House = (function(){
 					else if (stat === "addOn"){
 						var building = line.Triggers[i].Building;
 						house.diamondHouseArray[building].gotoAndPlay(value);
-						gameStats.buildings[building][value]= true;                        
-						house.UpdateAddOnStat();
+						gameStats.buildings[building][value]= true;                        						
 					}
 					else                    
 						gameStats[line.Triggers[i].Stat]= value;                                                                    

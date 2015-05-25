@@ -31,7 +31,7 @@ var Cookie = (function (){
 		var hs = readCookie(hsCookieName);				
 		var hsc = $('#hs');				
 		if(hsc.attr("aria-valuenow")==-1 && hs){			
-			hsc.attr("aria-valuenow", hs);					
+			hsc.attr("aria-valuenow", hs);								
 			paint(hs);			
 		}			
 			
@@ -41,13 +41,11 @@ var Cookie = (function (){
 			createCookie(hsCookieName, score);			
 		}							
 	};
-	co.load = function(){
-		console.log(JSON.parse(readCookie(sgCookieName)));
+	co.load = function(){		
 		return JSON.parse(readCookie(sgCookieName));
 	}
 	
-	co.save = function(gs){
-		console.log(gs);
+	co.save = function(gs){		
 		createCookie(sgCookieName, JSON.stringify(gs));
 	}
 	return co;

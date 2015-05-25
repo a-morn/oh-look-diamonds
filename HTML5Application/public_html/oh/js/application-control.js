@@ -9,7 +9,7 @@ var
 	diamondShardCounter,
 	diamondSound,
 	debugText,	
-	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : false, godMode : false},
+	debugOptions = {noHouseView: false, debugMode: false, trustFund : false, infiniteFuel : true, godMode : false},
 
 	diamondEnum = {
         shard : 0,
@@ -76,9 +76,9 @@ var
 			"hoboCat" : 0,
 		},
 		HasHappend: {"priest" : [], "timmy" : [], "hoboCat" : []},
-        villagers: {approvalRating : 0},
-        kittens: {approvalRating : 0},
-        catParty: {approvalRating : 0},
+        villagersApprovalRating : 0,
+        kittensApprovalRating : 0,
+        catPartyApprovalRating : 0,
         Difficulty : 0,
         hasBeenFirst: {
             round : false,
