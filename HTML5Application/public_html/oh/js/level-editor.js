@@ -215,7 +215,7 @@ function handleKeyPress(evt){
 			clipLeftMost = Math.min(selectedCont.children[i].x, clipLeftMost);
 		};
 		if(evt.keyCode===67){
-			clipOffset = clipRightMost-clipLeftMost+10;
+			clipOffset = clipRightMost-clipLeftMost+50;
 		}
 	}
 	if(evt.keyCode===86 && ctrlPressed){
@@ -498,15 +498,17 @@ function sortDisplayObjectArray() {
 
 function displayObjectToString(obj) {
 	var x = kid.x -beginningZoneLength;
+	var graphicType = getObjType(kid) === "attackBird" ? "attackBird": "sprite" ;
 	return '{"x":' +
 		x+
-		', "y":' +
+		', "y"' +
 		YEditorToGame(kid.y) +
-		',type:' +
+		',type:"' +
 		getObjType(kid) +
-		',"animation":' +
+		'","animation":"' +
 		kid.currentAnimation +
-		',"graphicType":"sprite"},\n';
+		'" ,"graphicType":"'+
+		graphicType+'"},\n';
 }
 
 function loadLevel(offsetX) {
