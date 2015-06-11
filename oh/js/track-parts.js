@@ -1,7 +1,7 @@
 var TrackParts = {
     "easy" : 
             { 
-                "w1lvl1":
+                "w1lvl1!":
                 [					                
 					{"x":0,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
 					{"x":30,"y":180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
@@ -28,77 +28,21 @@ var TrackParts = {
 					{"x":2070,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
 					{"x":2100,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                    
 					
-					{"x":3000,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":3030,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":3030,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":3050,"y":80,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},         
-					{"x":3070,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":3070,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":3100,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                    
+					{"x":2000,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":2030,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":2030,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
+					{"x":2050,"y":110,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},        
+					{"x":2070,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":2070,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":2100,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                    
 					
-					{"x":4000,"y":120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":4030,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":4030,"y":90,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":4050,"y":120,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},    
-					{"x":4070,"y":90,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":4070,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":4100,"y":120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                       
-					
-					{"x":5000,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":5030,"y":180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":5030,"y":120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":5050,"y":150,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},
-					{"x":5070,"y":120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":5070,"y":180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":5100,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                    
-					
-					{"x":6000,"y":180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":6030,"y":210,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":6030,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":6050,"y":180,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},       
-					{"x":6070,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":6070,"y":210,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":6100,"y":180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					
-					
-					{"x":7000,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":7030,"y":170,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":7030,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":7050,"y":140,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},    					
-					{"x":7070,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":7070,"y":170,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":7100,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                       
-					
-					{"x":8000,"y":130,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":8030,"y":160,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":8030,"y":100,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":8050,"y":130,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},
-					{"x":8070,"y":100,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":8070,"y":160,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":8100,"y":130,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                           
-					
-					{"x":9000,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":9030,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":9030,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":9050,"y":110,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},      
-					{"x":9070,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":9070,"y":140,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":9100,"y":110,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                     
-					
-					{"x":10000,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":10030,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":10030,"y":20,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":10050,"y":50,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},        
-					{"x":10070,"y":20,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":10070,"y":80,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":10100,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},                    					                    
-					
-					{"x":11000,"y":10,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":11030,"y":40,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":11030,"y":-20,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
-					{"x":11050,"y":10,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},
-					{"x":11070,"y":-20,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":11070,"y":40,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":11100,"y":10,"type":"diamond","animation":"cycle", "graphicType":"sprite"}                    					                    
+					{"x":4000,"y":20,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":4030,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":4030,"y":-10,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
+					{"x":4050,"y":20,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},    
+					{"x":4070,"y":-10,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":4070,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
+					{"x":4100,"y":20,"type":"diamond","animation":"cycle", "graphicType":"sprite"}            					                    
                 ],
                 				
 				"w1lvl2":
@@ -364,21 +308,27 @@ var TrackParts = {
                     {"x":	10791.4098309	, "y":	-75.03864139	,type:"diamond","animation":"cycle","graphicType":"sprite"},
                     {"x":	10856.1211905	, "y":	-56.01061641	,type:"greatDiamond","animation":"greatCycle","graphicType":"sprite"},               															
 					
-					{"x":11100,"y":150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},										
-					{"x":11100,"y":-450,"type":"diamond","animation":"cycle", "graphicType":"sprite"},										
-					{"x":11400,"y":50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},										
-					{"x":11400,"y":-350,"type":"diamond","animation":"cycle", "graphicType":"sprite"},										
-					{"x":11700,"y":-50,"type":"diamond","animation":"cycle", "graphicType":"sprite"},										
-					{"x":11700,"y":-250,"type":"diamond","animation":"cycle", "graphicType":"sprite"},	
+					{"x":11100,"y":150,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},										
+					{"x":11100,"y":-450,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},										
+					{"x":11400,"y":50,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},										
+					{"x":11400,"y":-350,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},										
+					{"x":11700,"y":-50,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},										
+					{"x":11700,"y":-250,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},	
 					
-					{"x":12000,"y":-150,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":12030,"y":-120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":12030,"y":-180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},					
+					{"x":12000,"y":-150,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},
+					{"x":12030,"y":-120,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},
+					{"x":12030,"y":-180,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},					
 					{"x":12050,"y":-150,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},   
-					{"x":12070,"y":-180,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":12070,"y":-120,"type":"diamond","animation":"cycle", "graphicType":"sprite"},
-					{"x":12100,"y":-150,"type":"diamond","animation":"cycle", "graphicType":"sprite"}     
+					{"x":12070,"y":-180,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},
+					{"x":12070,"y":-120,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"},
+					{"x":12100,"y":-150,"type":"greatDiamond","animation":"greatCycle", "graphicType":"sprite"}     
                 ],
+				
+				"w1lvl1":[ //w2lvl1
+					{"x":514.0206557884812, "y":49.2189986249432,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},
+					{"x":1030.7334615699947, "y":-327.76085234060884,"type":"attackBird","animation":"seagull","graphicType":"sprite"},
+					{"x":946.8189763976261, "y":-91.78824791032821,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"}
+				],
 				
                 "horizontalLine":
                 [

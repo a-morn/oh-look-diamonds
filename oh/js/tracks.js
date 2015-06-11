@@ -25,10 +25,7 @@ var Tracks =
         //Learn birds 
         //level 1
         [
-        {"difficulty":"hard", "name":"seagull"},
-        {"difficulty":"easy", "name":"horizontalLine"},
-        {"difficulty":"easy", "name":"downSlope"},
-        {"difficulty":"easy", "name":"horizontalLine"}        
+			{"difficulty":"easy", "name":"w2lvl1"}       
         ],
         
         //Learn clouds 
