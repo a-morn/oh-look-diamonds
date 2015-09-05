@@ -1,17 +1,17 @@
 <!DOCTYP html>
 <html>
 <head>
-    <title>OhLD</title>   
+    <title>OhLD</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
     <link href='http://fonts.googleapis.com/css?family=Fauna+One' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">    
-    <link rel="icon" href="assets/img/favicon.ico">	
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="icon" href="assets/img/favicon.ico">
 	<link rel="stylesheet" href="css/odometer-theme-car.css" />
 	<link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'>
-	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>         		
-    <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>
     <script src="js/dialog.js"></script>
     <script src="js/attack-birds.js"></script>
     <script src="js/thunder-clouds.js"></script>
@@ -22,28 +22,27 @@
     <script src="js/sprite-sheet-data.js"></script>
     <script src="js/house.js"></script>
     <script src="js/game-progression.js"></script>
-    <script src="js/application-control.js"></script>    
-    <script src="js/tutorial-texts.js"></script>    
+    <script src="js/application-control.js"></script>
+    <script src="js/tutorial-texts.js"></script>
 	<script src="js/helpers.js"></script>
 	<script src="js/init.js"></script>
-	<script src="js/game-logic.js"></script>	
-	<script src="js/cookie.js"></script>	
-	<script src="js/odometer.min.js"></script>    
-    <script> 
+	<script src="js/game-logic.js"></script>
+	<script src="js/cookie.js"></script>
+	<script src="js/odometer.min.js"></script>
+    <script>
     $(function(){
-      $("#aboutOuter").load("about.html"); 
+      $("#aboutOuter").load("about.html");
     });
-    </script>	
+    </script>
 	<!--<script type="text/javascript" charset="utf-8" src="cordova.js"></script>-->
 </head>
 <body>
-    <p style="position:absolute">ALPHA</p>		
-		<canvas id = "mahCanvas" width = "800" height = "450">        
-		</canvas>    		
-		
-		<div class="odo centered">			
+    <p style="position:absolute">ALPHA</p>
+		<canvas id = "mahCanvas" width = "800" height = "450">
+		</canvas>
+		<div class="odo centered">
 			<div class="progress">
-				<div class="progress-bar" role="progressbar" style="width: 0%;">					
+				<div class="progress-bar" role="progressbar" style="width: 0%;">
 				</div>
 			</div>
 			<div class ="counter">
@@ -51,12 +50,14 @@
 				<div class="odometer">0<p></div>
 			</div>
 			<div class="highscore">
-				<canvas id="hs" width = "95" height = "57" aria-valuenow="-1"></canvas>				
-			</div>            
-		</div>		
+				<canvas id="hs" width = "95" height = "57" aria-valuenow="-1"></canvas>
+			</div>
+		</div>
 		<div class="centered mute">
 			<button id="mute" class="mute-is-not-muted"></button>
 		</div>
 		<div id="aboutOuter" class="centered"></div>
+    <!-- inject:vendor -->
+    <!-- endinject -->
 </body>
 </html>
