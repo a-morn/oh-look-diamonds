@@ -9,4 +9,4 @@
 Run on [localhost:8080](http://localhost:8080)
 
 **Deployment**
-[oh.look.diamonds](http://oh.look.diamonds)
+[oh.look.diamonds](http://oh.look.diamonds) (not kept up to date)
