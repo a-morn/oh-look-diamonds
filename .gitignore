@@ -1,12 +1,9 @@
-bower_components
-node_modules
-.sublime-project
-.sublime-workspace
-
 #################
 ## Eclipse
 #################
 
+bower_components
+node_modules
 *.pydevproject
 .project
 .metadata
