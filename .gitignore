@@ -2,6 +2,8 @@
 ## Eclipse
 #################
 
+bower_components
+node_modules
 *.pydevproject
 .project
 .metadata
