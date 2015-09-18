@@ -1,12 +1,12 @@
 **oh look diamonds - or how we tried to learn js**
 
-***Build***
+**Build**
 `npm install`
 `bower install`
 
-***Run***
+**Run**
 `gulp`
-Run on [http://localhost:8080](localhost:8080)
+Run on [localhost:8080](http://localhost:8080)
 
-***Deployment***
-[http://oh.look.diamonds](oh.look.diamonds)
+**Deployment**
+[oh.look.diamonds](http://oh.look.diamonds)
