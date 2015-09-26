@@ -21,6 +21,8 @@ ThunderCloud.prototype.initialize = function(img)
     //ThunderCloud.prototype.width = width;
 };
 
+
+
 function Cloud(img) 
 {
     this.initialize(img);

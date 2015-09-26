@@ -326,7 +326,7 @@ var TrackParts = {
 				
 				"w1lvl1":[ //w2lvl1
 					{"x":514.0206557884812, "y":49.2189986249432,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"},
-					{"x":1030.7334615699947, "y":-327.76085234060884,"type":"attackBird","animation":"seagull","graphicType":"sprite"},
+					{"x":1030.7334615699947, "y":-327.76085234060884,"type":"attackBird","animation":"seagull","graphicType":"attackBird"},
 					{"x":946.8189763976261, "y":-91.78824791032821,"type":"greatDiamond","animation":"greatCycle","graphicType":"sprite"}
 				],
 				

@@ -17,6 +17,11 @@ body {
     display: block;       
 }
 
+#importSelect{
+	background-color: #1f1f1f;
+	color: #ffc;
+}
+
 #hideShow {
 	margin: 30px auto;
 }

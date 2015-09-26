@@ -1,7 +1,7 @@
 var InitializeStage = (function(){
 	var is = {},		
 	manifest,
-	progressBar;		
+	progressBar;
 	
 	is.init = function(){			
 		canvas = $("#mahCanvas")[0]		
@@ -9,7 +9,7 @@ var InitializeStage = (function(){
         CatzRocket.Init();        
         House.init();        		
         stage.mouseEventsEnabled = true;
-        
+
         if ('ontouchstart' in document.documentElement)
             createjs.Touch.enable(stage);                   
         
@@ -18,84 +18,11 @@ var InitializeStage = (function(){
         progressBar.x = canvas.width/2-50;        
         progressBar.y = canvas.height/2-10;                               
         stage.addChild(progressBar);
-
-        manifest = [                    
-                    {id: "enemybirds", src: "assets/sprites/newBirds.png"},
-                    {id: "diamond", src: "assets/sprites/newDiamond3.png"},                     
-                    {id: "greatDiamond", src: "assets/sprites/newDiamond.png"}, 
-                    {id: "rocketSilouette", src: "assets/img/catzRocketSilouette.png"}, 
-                    {id: "meow", src: "assets/sound/meow.mp3"},                    
-                    {id: "diamondSound", src: "assets/sound/diamondSound.mp3"},            
-                    {id: "diamondShardCounter", src: "assets/img/DiamondIcon.png"},                    
-                    {id:"bg", src:"assets/img/background long.jpg"},                    
-                    {id:"ohlookdiamonds", src:"assets/img/ohlookdiamonds.png"},                    
-                    {id:"bgParallax 0", src:"assets/img/background parallax.png"},                    
-                    {id:"bgParallax 2", src:"assets/img/background parallax 4.png"},                    
-                    {id:"bgParallax 1", src:"assets/img/background parallax 3.png"},                    
-                    {id:"onlookers", src:"assets/sprites/onlookers.png"},                    
-                    {id:"cloud1", src:"assets/img/cloud 1.png"},
-                    {id:"cloud2", src:"assets/img/cloud 2.png"},
-                    {id:"cloud3", src:"assets/img/cloud 3.png"},
-                    {id:"cloud4", src:"assets/img/cloud 4.png"},
-                    {id:"cloud5", src:"assets/img/cloud 5.png"},                                        
-                    {id:"catzRocketCrash", src:"assets/sound/crash.mp3"},
-                    {id:"wind", src:"assets/sound/wind.mp3"},
-                    {id:"klonk1", src:"assets/sound/klonk1.mp3"},
-                    {id:"klonk2", src:"assets/sound/klonk2.mp3"},
-                    {id:"klonk3", src:"assets/sound/klonk3.mp3"},
-                    {id:"klonk4", src:"assets/sound/klonk4.mp3"},
-                    {id:"mobHill1", src:"assets/img/mob hill.png"},
-                    {id:"mobHill2", src:"assets/img/mob hill 2.png"},
-                    {id:"lightningBolt", src:"assets/sound/lightning_bolt.mp3"},
-                    {id:"thunder", src:"assets/sound/thunder.mp3"},
-                    {id:"crickets", src:"assets/sound/crickets.mp3"},
-                    {id:"grilled", src:"assets/sound/grilled.mp3"},
-                    {id:"squawk1", src:"assets/sound/squawk1.mp3"},
-                    {id:"squawk2", src:"assets/sound/squawk2.mp3"},
-                    {id:"squawk3", src:"assets/sound/squawk3.mp3"},
-                    {id:"fgGround", src:"assets/img/fgGround.png"},
-                    {id:"fgGroundTop", src:"assets/img/fgGroundTop.png"},
-                    {id:"mouseHobo", src:"assets/img/mouseover hobo.png"},
-                    {id:"mouseRocket", src:"assets/img/mouseover rocket.png"},
-                    {id:"mouseTimmy", src:"assets/img/mouseover timmy.png"},
-                    {id:"mouseCatz", src:"assets/img/mouseover catz.png"},
-                    {id:"mouseCatparty", src:"assets/img/mouseover cat party.png"},
-					{id:"mouseCatparty", src:"assets/img/mouseover cat party.png"},
-                    {id:"supportingCharacter", src:"assets/sprites/supporting characters.png"},
-                    {id:"fgTree1", src:"assets/img/tree 4.png"},
-                    {id:"rocketCatz", src:"assets/sprites/catzOnly.png"},
-                    {id:"rocket", src:"assets/img/rocket.png"},
-                    {id:"flame", src:"assets/sprites/newFlame.png"},                    
-                    {id:"star", src:"assets/img/star.png"},
-                    {id:"house", src:"assets/img/house no hill.png"},
-                    {id:"far right hill", src:"assets/img/far right hill.png"},
-                    {id:"house popup", src:"assets/img/house popup.png"},
-                    {id:"hobo", src:"assets/sprites/hoboCat.png"},                   
-                    {id:"smokepuffs", src:"assets/sprites/smokepuffs.png"},
-                    {id:"diamondhouse", src:"assets/sprites/diamond house progression.png"},
-                    {id:"leaves", src:"assets/sprites/leaves.png"},
-                    {id:"cat", src:"assets/sprites/lookingAtDiamondsSilouette.png"},
-                    {id:"palladiumAlloySong", src:"assets/sound/pallaydiumAlloySongShort.mp3"},
-                    {id:"hoboCatSound1", src:"assets/sound/catz 1.mp3"},
-                    {id:"catzSound1", src:"assets/sound/catz 3.mp3"},
-                    {id:"uploopSound", src:"assets/sound/uploop.mp3"},
-                    {id:"downloopSound", src:"assets/sound/downloop.mp3"},
-                    {id:"secondUploopSound", src:"assets/sound/secondUploop.mp3"},
-                    {id:"secondDownloopSound", src:"assets/sound/secondDownloop.mp3"},
-                    {id:"slingshotSound", src:"assets/sound/slingshot.mp3"},
-                    {id:"frenzySound", src:"assets/sound/frenzy.mp3"},
-                    {id:"emeregencyBoostSound", src:"assets/sound/emergencyBoost.mp3"},
-                    {id:"miscSound", src:"assets/sound/misc.mp3"},
-                    {id:"catzScream2", src:"assets/sound/cat_meow_wounded_1.mp3"},                    
-                    {id:"wick", src:"assets/sprites/wick.png"},
-                    {id:"wickSound", src:"assets/sound/wick.mp3"},                    
-                ];
-
         queue = new createjs.LoadQueue(true);
         queue.installPlugin(createjs.Sound);
         queue.on("progress", handleProgress);            
         queue.on("complete", handleComplete);
-        queue.loadManifest(manifest);         
+        queue.loadManifest(LevelManifest);         
     };
 
     function handleProgress(event){                
@@ -103,35 +30,52 @@ var InitializeStage = (function(){
         stage.update();
     }
 
-    function handleComplete(){           			
-		for (var key in gameStats.HasHappend) {
-			if (gameStats.HasHappend.hasOwnProperty(key)) {				
-				for(var i=0, max1 = gameProgressionJSON[key].length;i<max1;i++){
-					gameStats.HasHappend[key][i] = false;
-				}
-			}
-		}       				
-		
-		
+    function handleComplete(){           
+        stage.removeChild(progressBar);   
+        initBase();      			
+        GameLogic.tracks = Tracks;
+        GameLogic.trackParts = TrackParts;
+        if(debugOptions.noHouseView)
+            GameLogic.gotoGameView();
+        else
+            initHouseViewAndStart();
+    }
+
+    function initBase(){
         SpriteSheetData.setValues(queue);
-		dataDict = {
-			"diamond" : SpriteSheetData.diamond,			
-			"greatDiamond" : SpriteSheetData.greatDiamond,
-			"seagull" : SpriteSheetData.seagullSheet,
-			"goose" : SpriteSheetData.seagullSheet,
-			"hawk" : SpriteSheetData.enemybirds,        
-		};
+        dataDict = {
+            "diamond" : SpriteSheetData.diamond,            
+            "greatDiamond" : SpriteSheetData.greatDiamond,
+            "seagull" : SpriteSheetData.seagullSheet,
+            "goose" : SpriteSheetData.seagullSheet,
+            "hawk" : SpriteSheetData.enemybirds,        
+        };  
         createBG();
-        createHouseView();
         createGameView();
         stage.addChild(bg, cont.star);
-        stage.enableMouseOver();		
+        stage.enableMouseOver();   
+
+    }
+
+    function initHouseViewAndStart(){
+                for (var key in gameStats.HasHappend) {
+        if (gameStats.HasHappend.hasOwnProperty(key)) {             
+                for(var i=0, max1 = gameProgressionJSON[key].length;i<max1;i++){
+                    gameStats.HasHappend[key][i] = false;
+                }
+            }
+        }                       
+        createHouseView();
         House.gotoHouseViewFirstTime(stage, gameView, 
-             gameListener, rocketSong);		
-        houseListener = createjs.Ticker.on("tick", GameLogic.houseTick,this);		
-        stage.removeChild(progressBar);        
-		if(debugOptions.noHouseView)
-			GameLogic.gotoGameView();
+             gameListener, rocketSong);   
+        houseListener = createjs.Ticker.on("tick", GameLogic.houseTick,this);       
+    }
+
+    is.CreateViewsAndStartCustomLevel = function(tracks, trackParts){
+        initBase();
+        GameLogic.tracks = tracks;
+        GameLogic.trackParts = trackParts;
+        GameLogic.gotoGameView(); 
     }
 
 	
@@ -303,10 +247,11 @@ var InitializeStage = (function(){
         cont.fgTop.addChild(fgGroundTop1,fgGroundTop2, fgGroundTop3);         		 			
         diamondShardCounter = helpers.createBitmap(queue.getResult("diamondShardCounter"), 
 			{scaleX:0.8, scaleY:0.8, y: -830});    		
-        diamondCounterText = helpers.createText("", "22px Courier New", "#fff",  {x:608+118, y:52});		                                
+        diamondCounterText = helpers.createText("", "22px Courier New", "#fff",  {x:608+118, y:52});		                           
         CatzRocket.catz = helpers.createSprite(SpriteSheetData.rocket, "no shake", {y:5});                
         CatzRocket.rocketFlame = helpers.createSprite(SpriteSheetData.flame, "cycle", 
 			{x:190, y:200, regX:40, regY:-37, alpha:0});							                
+
         CatzRocket.catzRocketContainer.x = 260;
         CatzRocket.catzRocketContainer.y = 200;        
         CatzRocket.catzRocketContainer.regY = 100;
@@ -335,8 +280,7 @@ var InitializeStage = (function(){
         CatzRocket.SnakeLine = new createjs.Shape();
                 
         smoke = helpers.createSprite(SpriteSheetData.smoke, "jump", 
-			{regX:150, regY:350, alpha:0});												       
-        
+			{regX:150, regY:350, alpha:0});											
         exitSmoke = helpers.createSprite(SpriteSheetData.smoke, "right", 
 			{regX:150, regY:200, alpha:0});												       				
         		
@@ -422,9 +366,9 @@ var InitializeStage = (function(){
         gameView = new createjs.Container();                
         
         gameView.addChild(cont.parallax, cont.onlooker, CatzRocket.rocketSnake,CatzRocket.SnakeLine,
-            cont.sg, cont.hawk, cont.goose, cont.attackBird, cont.diamond,
+            cont.attackBird, cont.diamond,
             exitSmoke,smoke, CatzRocket.rocketFlame, CatzRocket.catzRocketContainer,
-            cont.cloud,cont.lightning,cont.thunder,cont.fg, cont.fgTop,leaves, cont.collisionCheckDebug);
+            cont.cloud,cont.lightning,cont.thunder,cont.fg, cont.fgTop,leaves, cont.collisionCheckDebug, cont.select);
     }
 
 	function setStars(){

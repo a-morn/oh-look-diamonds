@@ -31,7 +31,7 @@ gulp.task('copyHtml', ['clean'], function(){
 });
 
 gulp.task('copyJs', ['clean'], function(){
-  return gulp.src('src/js/*.js')
+  return gulp.src(['src/js/*.js'])
     .pipe(concat('main.js'))
     .pipe(gulp.dest('dist/js'));
 });
