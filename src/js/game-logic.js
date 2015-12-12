@@ -55,9 +55,7 @@ var GameLogic = (function() {
             levelDesignConts = [cont.diamond,
                 cont.thunder,
                 cont.attackBird
-            ],
-
-            directorState = directorStateEnum.Normal;
+            ];
 
         gameLogic.timeAdjust = function(event) {
             if (event.delta > 0.05) {
@@ -734,49 +732,6 @@ var GameLogic = (function() {
                     }
                 }
             }
-            switch (directorState) {
-                case directorStateEnum.Normal:
-                    break;
-                case directorStateEnum.Birds:
-                    var rand = Math.random();
-                    var y;
-                    if (rand > 0.99) {
-                        y = Math.random() * 700 - 500;
-                        spawnGoose(1000, y);
-                        for (var i = 1; i < 6; i++) {
-                            spawnGoose(1000 + 50 * i, y + i * 50);
-                            spawnGoose(1000 + 50 * i, y - i * 50);
-                        }
-                    } else if (rand > 0.98) {
-                        y = Math.random() * 700 - 500;
-                        for (var i = 0; i < 10; i++) {
-                            spawnGoose(1000 + 100 * i, y);
-                        }
-                    } else if (rand > 0.97) {
-                        spawnSeagull(1000, -500 + Math.random() * 700);
-                        spawnSeagull(1000, -500 + Math.random() * 700);
-                    }
-                    break;
-                case directorStateEnum.Thunder:
-                    var rand = Math.random();
-                    if (rand > 0.98) {
-                        spawnThunderCloud(1000, Math.floor(Math.random() * 1000 - 1000));
-                    }
-                    break;
-                case directorStateEnum.Wind:
-                    var rand = Math.random();
-                    if (rand > 0.98) {
-                        upWind();
-                    } else if (rand > 0.96) {
-                        downWind();
-                    }
-                    break;
-            }
-            if (directorTimer > 7000) {
-                noWind();
-                directorState = 0;
-                directorTimer = 0;
-            }
         }
 
         function updateOnlookers(event) {
@@ -869,40 +824,6 @@ var GameLogic = (function() {
                 }
             }
         }
-
-        /*function updateScatterDiamonds(event){
-            if(currentTrack<2)
-                var thres = 0.95;        
-            else if(currentTrack<4)
-                thres = 0.90;        
-            else if(currentTrack<6)
-                thres = 0.8;       
-            else
-                thres = 0.7;
-            
-            if(Math.random()>thres){
-                var diamond = helpers.createSprite(SpriteSheetData.diamond, "cycle", 
-                    {x:800, y:Math.pow(35*Math.random(),2)-1000, scaleX:0.75, scaleY:0.75});                                                
-                scatterDiamondsCont.addChild(diamond);
-            }        
-            for (var i = 0, arrayLength = scatterDiamondsCont.children.length; i < arrayLength; i++) {
-                var kid = scatterDiamondsCont.children[i];
-                kid.x -= diSpeed*event.delta;    
-                if (kid.x <= -100){
-                  scatterDiamondsCont.removeChildAt(i);
-                  arrayLength -= 1;
-                  i -= 1;
-                }                               
-                if(overlapCheckCircle(kid.x,kid.y,40)){
-                    gameStats.score += 1;
-                    CatzRocket.frenzyCount+=7.5;
-                    arrayLength = arrayLength - 1;
-                    diamondSound.play();
-                    CatzRocket.diamondFuel +=1;
-                    scatterDiamondsCont.removeChildAt(i);
-                }
-            }   
-        }*/
 
         function upWind() {
             wind = -0.73 * grav;
@@ -1317,7 +1238,6 @@ var GameLogic = (function() {
             cont.diamond.removeAllChildren();
             cont.onlooker.removeAllChildren();
             setParallax(currentLevel);
-            directorState = directorStateEnum.Normal;
             noWind();
             updatePointer();
             bg.y = -1200;
