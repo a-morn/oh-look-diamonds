@@ -39,7 +39,7 @@ app.config(['$stateProvider', '$urlRouterProvider',
           setTimeout(function() {
             $(window).scroll(function() {
               $('#belowLevelEditor').css({
-                'left': $(ths).scrollLeft() + 15
+                'left': $(this).scrollLeft() + 15
               });
             });  
           });
