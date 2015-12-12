@@ -16,9 +16,34 @@ app.config(['$stateProvider', '$urlRouterProvider',
             }, 500);
           },
       })
-        .state('lvleditor', {
-          url: '/lvleditor',
-          templateUrl: 'leveleditor.html'
+      .state('lvleditor', {
+        url: '/lvleditor',
+        templateUrl: 'leveleditor.html',
+        onEnter: function() {
+          setTimeout(levelEditor.Init, 2500);
+          setTimeout(function() {
+            $(window).scroll(function() {
+              $('#belowLevelEditor').css({
+                'left': $(this).scrollLeft() + 15
+              });
+            });
+          }, 2500);
+        }
+      })
+      .state('wizard', {
+        url: '/wizard',
+        templateUrl: 'wizard.html',
+        onEnter: function() {
+          console.log('wiz');
+          setTimeout(WizardVersion.Init, 2500);
+          setTimeout(function() {
+            $(window).scroll(function() {
+              $('#belowLevelEditor').css({
+                'left': $(ths).scrollLeft() + 15
+              });
+            });  
+          });
+        }
       })
     }
   ]
