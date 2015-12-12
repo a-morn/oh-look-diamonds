@@ -1,0 +1,55 @@
+<canvas id = "levelEditCanvas" width = "8000" height = "650">        
+</canvas>
+<div id="belowLevelEditor">
+  <div>        
+     <p style="position:absolute">ALPHA</p>      
+      <canvas id = "mahCanvas" width = "800" height = "450">        
+      </canvas>           
+
+      <div class="odo centered">          
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: 0%;">                    
+          </div>
+        </div>
+        <div class ="counter">
+          <img src="assets/img/DiamondIcon.png">
+          <div class="odometer">0<p></div>
+        </div>
+        <div class="highscore">
+          <canvas id="hs" width = "120" height = "57" aria-valuenow="-1"></canvas>                
+        </div>            
+      </div>      
+      <div class="centered mute">
+        <button id="mute" class="mute-is-not-muted"></button>
+      </div>
+      <div id="aboutOuter" class="centered"></div>   
+  </div>
+  <div id="actionMenu">
+    <button onclick="createSmallDiamond()">diamond</button>            
+    <button onclick="createGrandDiamond()">grandDiamond</button>
+    <button onclick="createSeagull()">seagull</button>
+    <br>
+    <button onclick="deleteAll()">clear all</button>
+    <button onclick="deleteAllSelected()">clear selection</button>
+    <button onclick="catzToStartPosition()">catz reset</button>
+    <button onclick="enterGameMode()">reset level</button>
+    <br>
+    <br>
+  </div>
+  <div id="importArea">
+    <button onclick="saveLevel()">export</button>
+    <button onclick="saveLevel()">export to JSON</button>
+    <button onclick="StartGameFromLevelEditor()">run</button>
+    <br>
+    <textarea rows="5" cols="60" id="levelText"> 
+    </textarea>
+  </div>
+  <div id="exportArea">
+    <br>
+    <br> 
+    <select id="importSelect"></select>
+    <button onclick="eraseAndImport()">import</button>
+    <button onclick="addToImport()">add in to position</button>
+  </div>
+  <div id="aboutOuter" class="centered"></div>
+</div>
