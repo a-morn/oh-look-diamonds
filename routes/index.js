@@ -12,9 +12,11 @@ router.get('/', function(req, res, next) {
 
 router.post('/level', function(req, res, next) {
   var level = new Level(req.body);
-
+  console.log(req.body);
   level.save(function(err, level) {
-    if(err) { return next(err);}
+      if(err) {
+	  console.log(err);
+	  return next(err);}
 
     res.json(level);
   });

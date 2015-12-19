@@ -5,8 +5,8 @@ angular
 MainController.$inject = ['$scope', 'levels'];
 
 function MainController($scope, levels) {
-  $scope.save = function() {
-    levels.save({ title: 'best level', background: 1 });
+    $scope.save = function() {	
+	levels.save({ title: 'bestlevl4lyfe', background: 1, levelEntities: LevelManager.GetCurrent() })
   }
 }
   

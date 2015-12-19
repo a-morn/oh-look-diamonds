@@ -55,7 +55,7 @@ var GameLogic = (function() {
             levelDesignConts = [cont.diamond,
                 cont.thunder,
                 cont.attackBird
-            ],
+			       ];
 
         gameLogic.timeAdjust = function(event) {
             if (event.delta > 0.05) {
