@@ -36,17 +36,20 @@ router.post('/level', function(req, res, next) {
 });
 
 router.put('/level/:level', function(req, res, next) {
+    console.log(req.body);
+    console.log(req.level);
     var updatedLevel = new Level(req.body);
+    console.log(updatedLevel);
     req.level.background = updatedLevel.background;
-    req.level.levelEntities = updatedLevel.LevelEntities;
-
+    req.level.levelEntities = updatedLevel.levelEntities;
+    console.log(req.level);    
     req.level.save(function(err, level) {
-      if(err) {
+	if(err) {
 	  console.log(err);
 	  return next(err);}
 
-    res.json(level);
-  });
+	res.json(level);
+    });
 });
 
 module.exports = router;

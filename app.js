@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
 require('./models/Levels');
-require('./models/LevelEntities');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
