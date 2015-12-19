@@ -5,6 +5,20 @@ var mongoose = require('mongoose');
 var Level = mongoose.model('Level');
 var LevelEntity = mongoose.model('LevelEntity');
 
+router.param('level', function(req, res, next, id){
+    var query = Level.findById(id);
+    query.exec(function(err, level){
+	if(err){
+	    return next(err);
+	}
+	if(!level){
+	    return next(new Error('couldnt find level!'));
+	}
+	req.level = level;
+	return next();
+    });
+});
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
@@ -12,8 +26,21 @@ router.get('/', function(req, res, next) {
 
 router.post('/level', function(req, res, next) {
   var level = new Level(req.body);
-  console.log(req.body);
   level.save(function(err, level) {
+      if(err) {
+	  console.log(err);
+	  return next(err);}
+
+    res.json(level);
+  });
+});
+
+router.put('/level/:level', function(req, res, next) {
+    var updatedLevel = new Level(req.body);
+    req.level.background = updatedLevel.background;
+    req.level.levelEntities = updatedLevel.LevelEntities;
+
+    req.level.save(function(err, level) {
       if(err) {
 	  console.log(err);
 	  return next(err);}
