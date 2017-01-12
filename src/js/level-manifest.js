@@ -85,4 +85,72 @@ var LevelManifest = [{
 }, {
 	id: "star",
 	src: "assets/img/star.png"
+}, {
+	id:"house", 
+	src:"assets/img/house no hill.png"
+}, {
+	id:"far right hill", src:"assets/img/far right hill.png"
+}, {
+	id:"house popup", 
+	src:"assets/img/house popup.png"
+}, {
+	id:"hobo", 
+	src:"assets/sprites/hoboCat.png"
+}, {
+	id:"smokepuffs", 
+	src:"assets/sprites/smokepuffs.png"
+}, {
+	id:"diamondhouse", 
+	src:"assets/sprites/diamond house progression.png"
+}, {
+	id:"leaves", 
+	src:"assets/sprites/leaves.png"
+}, {
+	id:"cat", 
+	src:"assets/sprites/lookingAtDiamondsSilouette.png"
+}, {
+	id:"palladiumAlloySong", 
+	src:"assets/sound/pallaydiumAlloySongShort.mp3"
+}, {
+	id:"hoboCatSound1", 
+	src:"assets/sound/catz 1.mp3"
+}, {
+	id:"catzSound1", 
+	src:"assets/sound/catz 3.mp3"
+}, {
+	id:"uploopSound", 
+	src:"assets/sound/uploop.mp3"
+}, {
+	id:"downloopSound", 
+	src:"assets/sound/downloop.mp3"
+}, {
+	id:"secondUploopSound", 
+	src:"assets/sound/secondUploop.mp3"
+}, {
+	id:"secondDownloopSound", 
+	src:"assets/sound/secondDownloop.mp3"
+}, {
+	id:"slingshotSound", 
+	src:"assets/sound/slingshot.mp3"
+}, {
+	id:"frenzySound", 
+	src:"assets/sound/frenzy.mp3"
+}, {
+	id:"emeregencyBoostSound", 
+	src:"assets/sound/emergencyBoost.mp3"
+}, {
+	id:"miscSound", 
+	src:"assets/sound/misc.mp3"
+}, {
+	id:"catzScream2", 
+	src:"assets/sound/cat_meow_wounded_1.mp3"
+}, {
+	id:"wick", 
+	src:"assets/sprites/wick.png"
+}, {
+	id:"wickSound", 
+	src:"assets/sound/wick.mp3"
+}, {
+	id:"supportingCharacter",
+	src:"assets/sprites/supporting characters.png"
 }];

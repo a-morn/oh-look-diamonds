@@ -1,48 +1,48 @@
-var progressBar,
-	stage,
-	queue,
-	canvas,
-	inGameMode = false,
-	isSpriteMode = true,
-	levels,
-	ctrlPressed = false,
-	grav = 12,
-	dbText,
-	selectBox = {
-		rect: null,
-		graphic: null
-	},
-	selectPosOnStartDrag = {
-		x: null,
-		y: null
-	},
-	bgCoordinates = {
-		width: 800,
-		height: 1800,
-		offset: -520
-	},
-	fgCoordinates = {
-		height: 150,
-		width: 2000
-	},
-	catzStartPos = {
-		x: 260,
-		y: 1030
-	},
-	mousedown,
-	catzRocketXpos = 0,
-	YOriginPosInGame = 830,
-	levelLength = 13500,
-	levelViewScale = 0.5,
-	beginningZoneLength = 1000,
-	bgCont = new createjs.Container(),
-	objCont = new createjs.Container(),
-	selectedCont = new createjs.Container(),
-	levelView = new createjs.Container(),
-	gameClickScreen,
-	clipBoard,
-	clipOffset = 0,
-	levelEditor = {};
+var progressBar;
+var stage;
+var queue;
+var canvas;
+var inGameMode = false;
+var isSpriteMode = true;
+var levels;
+var ctrlPressed = false;
+var grav = 12;
+var dbText;
+var selectBox = {
+	rect: null,
+	graphic: null
+};
+
+var bgCoordinates = {
+	width: 800,
+	height: 1800,
+	offset: -520
+};
+
+var fgCoordinates = {
+	height: 150,
+	width: 2000
+};
+
+var catzStartPos = {
+	x: 260,
+	y: 1030
+};
+
+var mousedown;
+var catzRocketXpos = 0;
+var YOriginPosInGame = 830;
+var levelLength = 13500;
+var levelViewScale = 0.5;
+var beginningZoneLength = 1000;
+var bgCont = new createjs.Container();
+var objCont = new createjs.Container();
+GameLogic.SelectedCont = new createjs.Container();
+var levelView = new createjs.Container();
+var gameClickScreen;
+var clipBoard;
+var clipOffset = 0;
+var levelEditor = {};
 
 levelEditor.Init = function() {
 	canvas = $("#levelEditCanvas")[0];
@@ -87,7 +87,7 @@ function createLevelView() {
 	createCatz();
 
 
-	levelView.addChild(bgCont, objCont, selectedCont, CatzRocket.catzRocketContainer);
+	levelView.addChild(bgCont, objCont, GameLogic.SelectedCont, CatzRocket.catzRocketContainer);
 	levelView.scaleX = levelViewScale;
 	levelView.scaleY = levelViewScale;
 	var canvasHeight = (bgCoordinates.height + bgCoordinates.offset) * levelViewScale;
@@ -161,14 +161,6 @@ function createCatz() {
 		shape.regX = 5;
 		CatzRocket.rocketSnake.addChild(shape);
 	}
-	CatzRocket.glass = helpers.createSprite(SpriteSheetData.hudGlass, "still", {
-		regX: 150,
-		regY: 200,
-		scaleX: 0.85,
-		scaleY: 0.85,
-		x: 670,
-		y: 158
-	});
 	CatzRocket.setCrashBorders(0, YOriginPosInGame + 450);
 	CatzRocket.catzRocketContainer.addChild(CatzRocket.rocket, CatzRocket.catz);
 	CatzRocket.catzRocketContainer.on("pressmove", pressMoveCatz);
@@ -191,8 +183,8 @@ function setEventListeners() {
 	bgCont.on("pressup", selectWithBox);
 	$(window).keydown(handleKeyPress);
 	$(window).keyup(handleKeyUp);
-	selectedCont.on("mousedown", startPressMove);
-	selectedCont.on("pressmove", pressMove);
+	GameLogic.SelectedCont.on("mousedown", startPressMove);
+	GameLogic.SelectedCont.on("pressmove", pressMove);
 	gameClickScreen.on("mousedown", gameMouseDown);
 	gameClickScreen.on("click", gameMouseUp);
 }
@@ -206,13 +198,13 @@ function handleKeyPress(evt){
 		clipOffset = 0;
 		var clipLeftMost = levelLength;
 		var clipRightMost = 0;
-		for (var i = selectedCont.children.length - 1; i >= 0; i--) {
-			kid = selectedCont.children[i];
-			kid.x-=selectedCont.x;
-			kid.y-=selectedCont.y;
+		for (var i = GameLogic.SelectedCont.children.length - 1; i >= 0; i--) {
+			kid = GameLogic.SelectedCont.children[i];
+			kid.x-=GameLogic.SelectedCont.x;
+			kid.y-=GameLogic.SelectedCont.y;
 			clipBoard.push(createClone(kid));
-			clipRightMost = Math.max(selectedCont.children[i].x, clipRightMost);
-			clipLeftMost = Math.min(selectedCont.children[i].x, clipLeftMost);
+			clipRightMost = Math.max(GameLogic.SelectedCont.children[i].x, clipRightMost);
+			clipLeftMost = Math.min(GameLogic.SelectedCont.children[i].x, clipLeftMost);
 		};
 		if(evt.keyCode===67){
 			clipOffset = clipRightMost-clipLeftMost+50;
@@ -224,12 +216,12 @@ function handleKeyPress(evt){
 			clipBoard[i].x+=clipOffset;
 			var clone = createClone(clipBoard[i]);
 			clone.alpha = 0.5;
-			selectedCont.addChild(clone);
+			GameLogic.SelectedCont.addChild(clone);
 		};
 	}
 	if(evt.keyCode===88 || evt.keyCode=== 46)
 	{
-		selectedCont.removeAllChildren();
+		GameLogic.SelectedCont.removeAllChildren();
 	}
 }
 
@@ -239,8 +231,8 @@ function handleKeyUp(evt){
 	}
 }
 function startPressMove(evt) {
-	selectPosOnStartDrag.x = evt.stageX / levelViewScale - selectedCont.x;
-	selectPosOnStartDrag.y = evt.stageY / levelViewScale - selectedCont.y;
+	selectPosOnStartDrag.x = evt.stageX / levelViewScale - GameLogic.SelectedCont.x;
+	selectPosOnStartDrag.y = evt.stageY / levelViewScale - GameLogic.SelectedCont.y;
 }
 
 function pressMove(evt) {
@@ -255,11 +247,11 @@ function pressMoveCatz(evt) {
 	stage.update();
 }
  function deleteAllSelected(evt) {
-	selectedCont.removeAllChildren();
+	GameLogic.SelectedCont.removeAllChildren();
 }
 
 function deleteAll() {
-	selectedCont.removeAllChildren();
+	GameLogic.SelectedCont.removeAllChildren();
 	objCont.removeAllChildren();
 
 }
@@ -323,37 +315,37 @@ function selectWithBox(evt) {
 	for (var i = objCont.numChildren - 1; i >= 0; i--) {
 		var kid = objCont.getChildAt(i);
 		if (helpers.isInRectangle(kid.x, kid.y, selectBox.rect)) {
-			selectedCont.addChild(kid);
+			GameLogic.SelectedCont.addChild(kid);
 		}
 	};
-	if (selectedCont.numChildren === 0) {
+	if (GameLogic.SelectedCont.numChildren === 0) {
 
 		selectBox.graphic.graphics.clear();
 	} else {
 		selectBox.graphic.graphics.clear();
-		selectedCont.alpha = 0.5;
+		GameLogic.SelectedCont.alpha = 0.5;
 	}
 }
 
 function selectItem(evt) {
 	if (evt.currentTarget.parent === objCont) {
 		moveChildrenFromSelectedToObjCont();
-		selectedCont.addChild(evt.currentTarget);
+		GameLogic.SelectedCont.addChild(evt.currentTarget);
 		startPressMove(evt);
 	}
 }
 
 
 function moveChildrenFromSelectedToObjCont() {
-	for (var i = selectedCont.numChildren - 1; i >= 0; i--) {
-		var kid = selectedCont.getChildAt(i);
-		kid.x += selectedCont.x;
-		kid.y += selectedCont.y;
+	for (var i = GameLogic.SelectedCont.numChildren - 1; i >= 0; i--) {
+		var kid = GameLogic.SelectedCont.getChildAt(i);
+		kid.x += GameLogic.SelectedCont.x;
+		kid.y += GameLogic.SelectedCont.y;
 		kid.alpha = 1;
 		objCont.addChild(kid);
 	};
-	selectedCont.x = 0;
-	selectedCont.y = 0;
+	GameLogic.SelectedCont.x = 0;
+	GameLogic.SelectedCont.y = 0;
 }
 
 function createClone(object){
@@ -473,9 +465,16 @@ function getObjType(kid) {
 	return type;
 }
 
+function getObjGraphicType(objType){
+	return {
+		diamond: "sprite",
+		greatDiamond: "sprite",
+		attackBird: "attackBird",
+		thunderCloud :"thunderCloud"
+	}[objType];
+}
 
-function saveLevel() {
-	document.getElementById("levelText").innerHTML = "";
+function getLevelToString(){
 	var stringBuilder = ["levelName:[\n"];
 	moveChildrenFromSelectedToObjCont();
 	sortDisplayObjectArray();
@@ -486,6 +485,33 @@ function saveLevel() {
 	levelString = stringBuilder.join("");
 	levelString = levelString.substring(0, levelString.length - 2); //slice off the last comma
 	levelString += "\n]";
+	return levelString;
+}
+
+function getLevelToJson(){
+	var levelArray = [];
+	moveChildrenFromSelectedToObjCont();
+	sortDisplayObjectArray();
+	for (j = 0, len = objCont.numChildren; j < len; j++) {
+		kid = objCont.getChildAt(j);
+		levelArray.push(displayObjectToJson(kid));
+	}
+	return levelArray;
+}
+
+function getTestLevelTrackParts(){
+	return  {
+    "easy" :{ 
+                levelName: getLevelToJson()
+            }
+        }
+
+}
+
+
+function saveLevel() {
+	document.getElementById("levelText").innerHTML = "";
+	levelString = getLevelToString();
 	//window.alert(levelString);
 	document.getElementById("levelText").innerHTML = levelString;
 }
@@ -498,17 +524,27 @@ function sortDisplayObjectArray() {
 
 function displayObjectToString(obj) {
 	var x = kid.x -beginningZoneLength;
-	var graphicType = getObjType(kid) === "attackBird" ? "attackBird": "sprite" ;
+	var objType = getObjType(kid);
 	return '{"x":' +
 		x+
 		', "y"' +
 		YEditorToGame(kid.y) +
 		',type:"' +
-		getObjType(kid) +
+		objType +
 		'","animation":"' +
 		kid.currentAnimation +
 		'" ,"graphicType":"'+
-		graphicType+'"},\n';
+		getObjGraphicType(objType)+'"},\n';
+}
+
+function displayObjectToJson(obj){
+	var x = kid.x -beginningZoneLength;
+	return { 
+		x: x,
+		y: YEditorToGame(kid.y),
+		type: getObjType(kid),
+		animation: kid.currentAnimation,
+		graphicType: getObjGraphicType(getObjType(kid))}
 }
 
 function loadLevel(offsetX) {
