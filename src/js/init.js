@@ -372,7 +372,7 @@ var InitializeStage = (function(){
     }
 
 	function setStars(){
-        for(i=0;i<80;i++){
+        for(let i=0;i<80;i++){
             var star = helpers.createBitmap(queue.getResult("star"), 
 				{x:Math.random()*2200, y:Math.random()*1450-1000});                			
             var delay = Math.random()*2000;                        

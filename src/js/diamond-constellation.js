@@ -1,4 +1,4 @@
-diamondConstellation = 
+const diamondConstellation = 
     [
 {"x":	156		,"y":	80	,"frame": 	0	,"scale":	0.3	},
 {"x":	198		,"y":	195	,"frame": 	5	,"scale":	0.35	},

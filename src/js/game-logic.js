@@ -254,7 +254,7 @@ var GameLogic = (function() {
                 "falcon",
                 "glasses"
             ];
-            for (i = types.length - 1; i >= 0; i--) {
+            for (let i = types.length - 1; i >= 0; i--) {
                 if (evt.currentTarget.currentAnimation === types[i]) {
                     var newType = types[(i + 1) % (types.length)];
                     evt.currentTarget.gotoAndPlay(newType);
@@ -678,10 +678,10 @@ var GameLogic = (function() {
             var result = [];
             var displacementX = 2200;
             if (gameStats.Difficulty >= 0) {
-                for (j = 0,
+                for (let j = 0,
                     max1 = gameLogic.tracks[currentLevel][currentTrack].length; j < max1; j++) {
                     var element = $.extend(true, [], gameLogic.trackParts[gameLogic.tracks[currentLevel][currentTrack][j].difficulty][gameLogic.tracks[currentLevel][currentTrack][j].name]);
-                    for (i = 0,
+                    for (let i = 0,
                         max2 = element.length; i < max2; i++) {
                         element[i].x += displacementX;
                         element[i].y;
@@ -716,7 +716,7 @@ var GameLogic = (function() {
                     onTrack = true;
                     gameStats.Difficulty++;
                     track = generateTrack();
-                    for (i = 0,
+                    for (let i = 0,
                         max = track.length; i < max; i++) {
                         if (track[i].graphicType === "thunderCloud") {
                             spawnThunderCloud(track[i].x, track[i].y - 200);

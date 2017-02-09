@@ -104,7 +104,7 @@ function createGameClickScreen(w, h) {
 }
 
 function createBG() {
-	for (i = 0, len = 2 + levelLength / bgCoordinates.width; i < len; i++) {
+	for (let i = 0, len = 2 + levelLength / bgCoordinates.width; i < len; i++) {
 		var bgClone = new createjs.Bitmap(queue.getResult("bg"));
 		bgClone.x = i * bgCoordinates.width;
 		bgClone.y = bgCoordinates.offset;
@@ -114,7 +114,7 @@ function createBG() {
 		}
 		bgCont.addChild(bgClone);
 	}
-	for (i = 0, len = levelLength / fgCoordinates.width; i < len; i++) {
+	for (let i = 0, len = levelLength / fgCoordinates.width; i < len; i++) {
 		var fgClone = new createjs.Bitmap(queue.getResult("fgGround"));
 		fgClone.x = fgCoordinates.width * i;
 		fgClone.y = 300 + YOriginPosInGame;
@@ -271,7 +271,7 @@ function changeBirdType(evt) {
 		"falcon",
 		"glasses"
 	];
-	for (i = types.length - 1; i >= 0; i--) {
+	for (let i = types.length - 1; i >= 0; i--) {
 		if (evt.currentTarget.currentAnimation === types[i]) {
 			evt.currentTarget.gotoAndStop(types[i + 1]);
 			return;
@@ -478,7 +478,7 @@ function getLevelToString(){
 	var stringBuilder = ["levelName:[\n"];
 	moveChildrenFromSelectedToObjCont();
 	sortDisplayObjectArray();
-	for (j = 0, len = objCont.numChildren; j < len; j++) {
+	for (let j = 0, len = objCont.numChildren; j < len; j++) {
 		kid = objCont.getChildAt(j);
 		stringBuilder.push(displayObjectToString(kid));
 	}
@@ -492,7 +492,7 @@ function getLevelToJson(){
 	var levelArray = [];
 	moveChildrenFromSelectedToObjCont();
 	sortDisplayObjectArray();
-	for (j = 0, len = objCont.numChildren; j < len; j++) {
+	for (let j = 0, len = objCont.numChildren; j < len; j++) {
 		kid = objCont.getChildAt(j);
 		levelArray.push(displayObjectToJson(kid));
 	}

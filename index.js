@@ -3,7 +3,7 @@ var serveStatic = require('serve-static');
 
 var app = express();
 
-app.use(serveStatic('src'));
+app.use(serveStatic('dist'));
 app.listen(3000);
 
 
