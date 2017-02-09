@@ -3,6 +3,9 @@ oh look diamonds - or how we tried to learn js
 ##Install
 `npm install`
 
+##Build
+`npm run build`
+
 ##Run
 `npm start`
 
