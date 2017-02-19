@@ -1,3 +1,6 @@
+import TrackParts from './track-parts.js';
+import GameLogic from './game-logic.js';
+
 var progressBar;
 var stage;
 var queue;
@@ -37,14 +40,12 @@ var levelViewScale = 0.5;
 var beginningZoneLength = 1000;
 var bgCont = new createjs.Container();
 var objCont = new createjs.Container();
-GameLogic.SelectedCont = new createjs.Container();
 var levelView = new createjs.Container();
 var gameClickScreen;
 var clipBoard;
 var clipOffset = 0;
-var levelEditor = {};
 
-levelEditor.Init = function() {
+export function StartEditor () {
 	canvas = $("#levelEditCanvas")[0];
 	stage = new createjs.Stage(canvas);
 	stage.mouseMoveOutside = true;
@@ -87,7 +88,7 @@ function createLevelView() {
 	createCatz();
 
 
-	levelView.addChild(bgCont, objCont, GameLogic.SelectedCont, CatzRocket.catzRocketContainer);
+	levelView.addChild(bgCont, objCont, CatzRocket.catzRocketContainer);
 	levelView.scaleX = levelViewScale;
 	levelView.scaleY = levelViewScale;
 	var canvasHeight = (bgCoordinates.height + bgCoordinates.offset) * levelViewScale;

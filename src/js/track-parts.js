@@ -1,4 +1,4 @@
-var TrackParts = {
+export default {
     "easy" : 
             { 
                 "w1lvl1!":

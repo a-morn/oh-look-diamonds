@@ -1,5 +1,4 @@
-var Tracks = 
-[
+export default [
     //world 1    
     [
         //level 1

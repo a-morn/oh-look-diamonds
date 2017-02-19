@@ -11,36 +11,8 @@
     <link rel="stylesheet" href="css/odometer-theme-car.css" />
     <link href='http://fonts.googleapis.com/css?family=Just+Another+Hand' rel='stylesheet' type='text/css'> 
     <link rel="icon" href="assets/img/favicon.ico">
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>                 
-    <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
-    <script src="js/dialog.js"></script>
-    <script src="js/attack-birds.js"></script>
-    <script src="js/thunder-clouds.js"></script>
-    <script src="js/level-editor.js"></script>
-    <script src="js/manifest.js"></script>
-    <script src="js/diamond-constellation.js"></script>
-    <script src="js/track-parts.js"></script>
-    <script src="js/catz-rocket.js"></script>
-    <script src="js/sprite-sheet-data.js"></script>
-    <script src="js/house.js"></script>
-    <script src="js/game-progression.js"></script>
-    <script src="js/application-control.js"></script>  
-    <script src="js/tutorial-texts.js"></script>    
-    <script src="js/helpers.js"></script>
-    <script src="js/init.js"></script>
-    <script src="js/game-logic.js"></script>    
-    <script src="js/cookie.js"></script>    
-    <script src="js/odometer.min.js"></script>         
-    <script>
-    $(window).scroll(function(){
-        $('#belowLevelEditor').css({
-            'left': $(this).scrollLeft() + 15 
-         //Why this 15, because in the CSS, we have set left 15, so as we scroll, we would want this to remain at 15px left
-     });
-    });	</script>
 </head>
-<body onload ="levelEditor.Init()">
-
+<body onLoad="StartEditor()">
     <canvas id = "levelEditCanvas" width = "8000" height = "650">        
     </canvas>
     <div id="belowLevelEditor">
@@ -80,12 +52,9 @@
             <br>
         </div>
         <div id="importArea">
-<<<<<<< HEAD:src/leveleditor.html
             <button onclick="saveLevel()">export</button>
-=======
             <button onclick="saveLevel()">export to JSON</button>
             <button onclick="StartGameFromLevelEditor()">run</button>
->>>>>>> efc3c44... wizardversion, sorry om jag breakar nått men måste få in detta:oh/leveleditor.html
             <br>
             <textarea rows="5" cols="60" id="levelText"> 
             </textarea>
@@ -98,5 +67,16 @@
         </div>
         <div id="aboutOuter" class="centered"></div>
     </div>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>                 
+    <script src = "http://code.createjs.com/createjs-2014.12.12.min.js"></script>    
+    <script src="bundle.js"></script>    
+    <script src="odometer.min.js"></script>         
+    <script>
+    $(window).scroll(function(){
+        $('#belowLevelEditor').css({
+            'left': $(this).scrollLeft() + 15 
+         //Why this 15, because in the CSS, we have set left 15, so as we scroll, we would want this to remain at 15px left
+     });
+    });	</script>
 </body>
 </html>

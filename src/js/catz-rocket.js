@@ -1,607 +1,657 @@
-var CatzRocket = (function() {
-    var catzRocket = {
-        catzRocketContainer: null,
-        silouette: null,
-        diamondFuel: 2,
-        maxDiamondFuel: 10,
-        isWounded: false,
-        isHit: false,
-        isCrashed: false,
-        flameColor: "#99ccff",
-        //glass: null,
-        heightOffset: 0,
-        frenzyCount: 0,
-        frenzyTimer: 0,
-        frenzyReady: false,
-        rocketSound: null,
-        xScreenPosition: 0,
-        yScreenPosition: 0,
-        catz: null,
-        rocket: null,
-        rocketFlame: null,
-        rocketSnake: new createjs.Container(),
-        SnakeLine: null,
-        catzVelocity: -2,
-        limitVelocity: 30,
-        rocketSounds: [
-            null,
-            "uploopSound",
-            "downloopSound",
-            "secondUploopSound",
-            "secondDownloopSound",
-            "slingshotSound",
-            "wind",
-            "emeregencyBoostSound",
-            null,
-            "miscSound",
-            "frenzySound",
-            null,
-            "catzScream3",
-            null,
-            null
-        ],
-        fuelConsumption: [
-            0,
-            2,
-            0.7,
-            3,
-            0.8,
-            1,
-            0,
-            3.5,
-            0.7,
-            0.7,
-            0,
-            0,
-            0,
-            0,
-            0
-        ],
-        catzState: 0,
-        catzStateEnum: {
-            Normal: 0,
-            Uploop: 1,
-            Downloop: 2,
-            SecondUploop: 3,
-            SecondDownloop: 4,
-            Slingshot: 5,
-            TerminalVelocity: 6,
-            EmergencyBoost: 7,
-            SlammerReady: 8,
-            Slammer: 9,
-            Frenzy: 10,
-            FrenzyUploop: 11,
-            FellOffRocket: 12,
-            OutOfFuel: 13,
-            OutOfFuelUpsideDown: 14
-        },
-        crashBorder : {
-            top: -1000,
-            bottom: 450
-        }
-    };
+import * as Helpers from './helpers.js';
+import * as SpriteSheetData from './sprite-sheet-data.js';
+import DebugOptions from './debug-options.js';
 
-    var invincibilityCounter = 0;
+export const rocketSnake = new createjs.Container();
+export let snakeLine;
+export let catzBounds;
+export let catzRocketContainer;
+export let rocketFlame = null;
+export let catzVelocity = -20;
+export let diamondFuel = 2;
+export let frenzyReady = false;
+export let catzState = 0;
+export let isCrashed = false;
+export let rocket = null;
+export const catzStateEnum = {
+	Normal: 0,
+	Uploop: 1,
+	Downloop: 2,
+	SecondUploop: 3,
+	SecondDownloop: 4,
+	Slingshot: 5,
+	TerminalVelocity: 6,
+	EmergencyBoost: 7,
+	SlammerReady: 8,
+	Slammer: 9,
+	Frenzy: 10,
+	FrenzyUploop: 11,
+	FellOffRocket: 12,
+	OutOfFuel: 13,
+	OutOfFuelUpsideDown: 14
+};
 
-    catzRocket.Init = function() {
-        catzRocket.catzRocketContainer = new createjs.Container();
-    };
+let silouette = null;
+let diamondEnum;
+const maxDiamondFuel = 10;
+let isWounded = false;
+let isHit = false;
+const	flameColor = "#99ccff";
+let heightOffset = 0;
+let frenzyCount = 0;
+let frenzyTimer = 0;
+let rocketSound = null;
+let xScreenPosition = 0;
+let yScreenPosition = 0;
+let catz = null;
 
-    catzRocket.setCrashBorders = function(top, bottom) {
-        catzRocket.crashBorder.top = top;
-        catzRocket.crashBorder.bottom = bottom;
-    }
+const limitVelocity = 30;
+const	rocketSounds = [
+	null,
+	"uploopSound",
+	"downloopSound",
+	"secondUploopSound",
+	"secondDownloopSound",
+	"slingshotSound",
+	"wind",
+	"emeregencyBoostSound",
+	null,
+	"miscSound",
+	"frenzySound",
+	null,
+	"catzScream3",
+	null,
+	null
+];
+const fuelConsumption = [
+	0,
+	2,
+	0.7,
+	3,
+	0.8,
+	1,
+	0,
+	3.5,
+	0.7,
+	0.7,
+	0,
+	0,
+	0,
+	0,
+	0
+];
+const crashBorder = {
+	top: -1000,
+	bottom: 450
+}
 
-    catzRocket.update = function(grav, wind, event) {
-        invincibilityCountDown(event.delta);
-        diamondFuelLossPerTime(event.delta);
-        switch (catzRocket.catzState) {
-            case catzRocket.catzStateEnum.Normal:
-                {
-                    updateNormal(grav, wind, event);
-                    break;
-                }
-            case catzRocket.catzStateEnum.FellOffRocket:
-                {
-                    updateFellOff(grav, wind, event);
-                    break;
-                }
-            case catzRocket.catzStateEnum.OutOfFuel:
-                {
-                    updateOutOfFuel(grav, wind, event);
-                    break;
-                }
-            case catzRocket.catzStateEnum.OutOfFuelUpsideDown:
-                updateOutOfFuelUpsideDown(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.Frenzy:
-                updateFrenzy2(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.FrenzyUploop:
-                updateFrenzyUploop(grav, wind, event)
-                break;
-            case catzRocket.catzStateEnum.TerminalVelocity:
-                updateTerminal(event);
-                break;
-            case catzRocket.catzStateEnum.EmergencyBoost:
-                updateEmergency(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.Uploop:
-                updateUploop(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.Downloop:
-            case catzRocket.catzStateEnum.SlammerReady:
-                updateDownloop(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.Slammer:
-                updateSlammer();
-                break;
-            case catzRocket.catzStateEnum.SecondUploop:
-                updateSecondUploop(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.SecondDownloop:
-                updateSecondDownloop(grav, wind, event);
-                break;
-            case catzRocket.catzStateEnum.Slingshot:
-                updateSlingshot();
-        }
+let invincibilityCounter = 0;
 
-        if (catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot && catzRocket.catzState !== catzRocket.catzStateEnum.OutOfFuelUpsideDown) {
-            catzRocket.xScreenPosition = 200 +
-                Math.cos((catzRocket.catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI) * 160;
-            catzRocket.yScreenPosition = 200 +
-                Math.sin((catzRocket.catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI) * 210;
-        } else if (catzRocket.catzState !== catzRocket.catzStateEnum.OutOfFuelUpsideDown) {
-            catzRocket.xScreenPosition = 255 +
-                Math.cos((catzRocket.catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI) * 80;
-            catzRocket.yScreenPosition = 200 +
-                Math.sin((catzRocket.catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI) * 100;
-        }
+export function init(data, queue) {
+	diamondEnum = data.diamondEnum;
+	catzRocketContainer = new createjs.Container();
 
-        if (catzRocket.isWounded && !createjs.Tween.hasActiveTweens(catzRocket.catz))
-            catzRocket.catz.x = -50;
-        else if (!catzRocket.isWounded &&
-            !createjs.Tween.hasActiveTweens(catzRocket.catz))
-            catzRocket.catz.x = 0;
-        if (catzRocket.catzRocketContainer.y > catzRocket.crashBorder.bottom || catzRocket.catzRocketContainer.y < catzRocket.crashBorder.top)
-            catzRocket.isCrashed = true;
-        catzRocket.catzRocketContainer.x = catzRocket.xScreenPosition;
-        catzRocket.catzRocketContainer.y = catzRocket.yScreenPosition + catzRocket.heightOffset;
-        catzRocket.diamondFuel -= catzRocket.fuelConsumption[catzRocket.catzState] * event.delta / 1000;
-        catzRocket.diamondFuel = Math.max(catzRocket.diamondFuel, 0);
-        updateFrenzy(event);
-        updateRocketSnake();
-    };
+	catz = Helpers.createSprite(SpriteSheetData.rocket, "no shake", {y:5});								
+	rocketFlame = Helpers.createSprite(SpriteSheetData.flame, "cycle", 
+{x:190, y:200, regX:40, regY:-37, alpha:0});															
 
-    function updateBase(gravWindSum, event, canChangeToTerminal, fellOff, rotate) {
-        catzRocket.catzVelocity += (gravWindSum) * event.delta / 1000;
-        catzRocket.heightOffset += 20 * catzRocket.catzVelocity * event.delta / 1000;
-        if (catzRocket.catzVelocity >= catzRocket.limitVelocity) {
-            catzRocket.catzVelocity = catzRocket.limitVelocity;
-            if (canChangeToTerminal)
-                changeState(catzRocket.catzStateEnum.TerminalVelocity);
-        }
-        if (rotate && !createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer)) {
-            if (!fellOff || catzRocket.catzRocketContainer.rotation <= -270 || catzRocket.catzRocketContainer.rotation > -90)
-                catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity / 40) * 360 / 3.14;
-            else if (catzRocket.catzRocketContainer.rotation <= -180 && catzRocket.catzRocketContainer.rotation > -270)
-                catzRocket.catzRocketContainer.rotation = -Math.atan(catzRocket.catzVelocity / 40) * 360 / 3.14;
-        }
-    }
-
-    function checkFuel(mightBeUpsideDown) {
-        if (catzRocket.diamondFuel === 0) {
-//            catzRocket.glass.gotoAndPlay("outOfFuel");
-            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
-            if (mightBeUpsideDown) {
-                if (catzRocket.catzRocketContainer.rotation <= -90 && catzRocket.catzRocketContainer.rotation >= -270) {
-                    changeState(catzRocket.catzStateEnum.OutOfFuelUpsideDown);
-                    isHit = true;
-                } else
-                    changeState(catzRocket.catzStateEnum.OutOfFuel);
-
-            } else
-                changeState(catzRocket.catzStateEnum.OutOfFuel);
-        }
-    }
-
-    function updateNormal(grav, wind, event) {
-        updateBase(grav + wind, event, true, false,true);
-        checkFuel(false);
-    }
-
-    function updateFellOff(grav, wind, event) {
-        updateBase(grav + wind, event, false, false,true);
-    }
-
-    function updateOutOfFuel(grav, wind, event) {
-        updateBase(grav + wind, event, false, true,true);
-        if (catzRocket.diamondFuel > 0)
-            changeState(catzRocket.catzStateEnum.Normal);
-    }
-
-    function updateOutOfFuelUpsideDown(grav, wind, event) {
-        updateBase(grav + wind, event, false, true, false);
-    }
-
-    function updateFrenzy2(grav, wind, event) {
-        updateBase(0.5 * (grav + wind), event, false, false,true);
-    }
-
-    function updateFrenzyUploop(grav, wind, event) {
-        updateBase(-0.5 * (2.3 * grav - wind), event, false, false,true);
-    }
-
-    function updateTerminal(event) {
-        catzRocket.heightOffset += 20 * catzRocket.catzVelocity * event.delta / 1000;
-        catzRocket.catzRocketContainer.rotation = -280;
-        checkFuel(false);
-    }
-
-    function updateEmergency(grav, wind, event) {
-        updateBase(-10 * grav - 3.7 * wind, event, false, false,true);
-        if (catzRocket.catzRocketContainer.rotation < 0)
-            changeState(catzRocket.catzStateEnum.Uploop);
-        checkFuel(false);
-    }
-
-    function updateDownloop(grav, wind, event) {
-        catzRocket.catzVelocity += ((2 - 8 * Math.sin(catzRocket.catzRocketContainer.rotation)) *
-            grav + 6 * wind) * event.delta / 1000 + 0.4;
-        checkFuel(true);
-    }
-
-    function updateSlammer() {
-        if (catzRocket.catzRocketContainer.rotation < -250) {
-            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
-            catzRocket.catzVelocity = catzRocket.limitVelocity;
-            changeState(catzRocket.catzStateEnum.TerminalVelocity);
-        }
-        checkFuel(true);
-    }
-
-    function updateUploop(grav, wind, event) {
-        updateBase(-(3.2 * grav - wind), event, false, false,true);
-        if (catzRocket.catzRocketContainer.rotation < -60) {
-            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
-            tween = createjs.Tween.get(catzRocket.catzRocketContainer)
-                .to({
-                    rotation: -270
-                }, 1000)
-                .to({
-                    rotation: -330
-                }, 350)
-                .call(catzRocket.catzRelease);
-            changeState(catzRocket.catzStateEnum.Downloop);
-        }
-        checkFuel(false);
-    }
-
-    function updateSecondUploop(grav, wind, event) {
-        updateBase(-(5.5 * grav - 2 * wind), event, false, false,true);
-        if (!createjs.Tween.hasActiveTweens(catzRocket.catzRocketContainer))
-            catzRocket.catzRocketContainer.rotation = Math.atan(catzRocket.catzVelocity / 40) * 360 / 3.14;
-        if (catzRocket.catzRocketContainer.rotation < -60) {
-            catzRocket.heightOffset += 110 * Math.sin((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI);
-            changeState(catzRocket.catzStateEnum.SecondDownloop);
-            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
-            tween = createjs.Tween.get(catzRocket.catzRocketContainer, {
-                    loop: true
-                })
-                .to({
-                    rotation: -270
-                }, 500)
-                .to({
-                    rotation: -420
-                }, 500)
-                .call(catzRocket.playSecondDownloopSound);
-        }
-        checkFuel(false);
-    }
-
-    function updateSecondDownloop(grav, wind, event) {
-        if (wind >= 0)
-            catzRocket.heightOffset += (150 + 12 * wind) * event.delta / 1000;
-        else
-            catzRocket.heightOffset += (150 + 40 * wind) * event.delta / 1000;
-        checkFuel(true);
-    }
-
-    function updateSlingshot() {
-        if (catzRocket.catzRocketContainer.rotation < -400) {
-            createjs.Tween.removeTweens(catzRocket.catzRocketContainer);
-            changeState(catzRocket.catzStateEnum.Normal);
-            catzRocket.heightOffset -= 110 * Math.sin((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI);
-            catzRocket.catzVelocity = -20;
-        }
-        checkFuel(true);
-    }
-
-    catzRocket.pickupDiamond = function(size) {
-        if (catzRocket.diamondFuel < 10 && catzRocket.catzState != catzRocket.catzStateEnum.Frenzy)
-            switch (size) {
-                case diamondEnum.shard:
-                    CatzRocket.diamondFuel += 0.09;
-                    CatzRocket.frenzyCount += 0.1;
-                    break;                
-                case diamondEnum.great:
-                    CatzRocket.diamondFuel += 1.5;
-                    CatzRocket.frenzyCount += 5;
-                    break;
-            }
-    }
-
-    function updateFrenzy(event) {
-        if (catzRocket.catzState === catzRocket.catzStateEnum.Frenzy) {
-            catzRocket.frenzyTimer += event.delta;
-            if (catzRocket.frenzyTimer > 1500) {
-                changeState(catzRocket.catzStateEnum.Normal);
-                catzRocket.catz.gotoAndPlay("no shake");
-                //catzRocket.glass.gotoAndPlay("still");
-                catzRocket.rocket.alpha = 1;
-                catzRocket.frenzyCount = 0;
-                catzRocket.frenzyTimer = 0;
-            }
-            catzRocket.frenzyReady = false;
-        } else if (catzRocket.frenzyReady === true) {
-            catzRocket.frenzyTimer += event.delta;
-            if (catzRocket.frenzyTimer > 500) {
-                if (catzRocket.catzState === catzRocket.catzStateEnum.SecondDownloop) {
-                    changeState(catzRocket.catzStateEnum.Slingshot);
-                } else if (catzRocket.catzState !== catzRocket.catzStateEnum.Downloop &&
-                    catzRocket.catzState !== catzRocket.catzStateEnum.SlammerReady &&
-                    catzRocket.catzState !== catzRocket.catzStateEnum.Slammer &&
-                    catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot) {
-                    if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop || catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop) {
-                        changeState(catzRocket.catzStateEnum.FrenzyUploop);
-                    } else {
-                        changeState(catzRocket.catzStateEnum.Frenzy);
-                    }
-                    //catzRocket.glass.gotoAndPlay("frenzy");
-                    catzRocket.isWounded = false;
-                    catzRocket.frenzyTimer = 0;
-                    catzRocket.frenzyReady = false;
-                }
-            }
-        } else if (!catzRocket.hasFrenzy() && catzRocket.frenzyCount > 0) {
-            if (catzRocket.diamondFuel >= catzRocket.maxDiamondFuel) {
-                catzRocket.diamondFuel = catzRocket.maxDiamondFuel / 2;
-                catzRocket.catz.gotoAndPlay("frenzy ready");
-                catzRocket.rocket.alpha = 0;
-                catzRocket.frenzyReady = true;
-                catzRocket.isWounded = false;
-                catzRocket.frenzyTimer = 0;
-            }
-        }
-    };
-
-    function updateRocketSnake() {
-        var arrayLength = catzRocket.rocketSnake.children.length;
-        for (var i = arrayLength - 1; i > 0; i--) {
-            var kid = catzRocket.rocketSnake.children[i];
-            kid.x = catzRocket.rocketSnake.children[i - 1].x - 2 * Math.cos(6.28 * catzRocket.catzRocketContainer.rotation / 360);
-            kid.y = catzRocket.rocketSnake.children[i - 1].y;
-        }
-        if (catzRocket.catzState !== catzRocket.catzStateEnum.SecondDownloop && catzRocket.catzState !== catzRocket.catzStateEnum.Slingshot) {
-            catzRocket.rocketSnake.children[0].x = -60 +
-                Math.cos((catzRocket.catzRocketContainer.rotation + 101) / 360 * 2 * Math.PI) * 176;
-            catzRocket.rocketSnake.children[0].y =
-                Math.sin((catzRocket.catzRocketContainer.rotation + 100) / 360 * 2 * Math.PI) * 232 + catzRocket.heightOffset;
-            catzRocket.rocketFlame.x = catzRocket.catzRocketContainer.x;
-            catzRocket.rocketFlame.y = catzRocket.catzRocketContainer.y;
-        } else {
-            catzRocket.rocketSnake.children[0].x = -5 +
-                Math.cos((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI) * 100;
-            catzRocket.rocketSnake.children[0].y =
-                Math.sin((catzRocket.catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI) * 120 + catzRocket.heightOffset;
-            catzRocket.rocketFlame.x = catzRocket.catzRocketContainer.x;
-            catzRocket.rocketFlame.y = catzRocket.catzRocketContainer.y;
-        }
-        catzRocket.SnakeLine.graphics = new createjs.Graphics();
-        catzRocket.SnakeLine.x = 260;
-        catzRocket.SnakeLine.y = 200;
-        for (var i = arrayLength - 1; i > 0; i--) {
-            var kid = catzRocket.rocketSnake.children[i];
-            catzRocket.SnakeLine.graphics.setStrokeStyle(arrayLength * 2 - i * 2, 1);
-            catzRocket.SnakeLine.graphics.beginStroke(catzRocket.flameColor);
-            catzRocket.SnakeLine.graphics.moveTo(kid.x - i * 5, kid.y);
-            catzRocket.SnakeLine.graphics.lineTo(catzRocket.rocketSnake.children[i - 1].x - (i - 1) * 5, catzRocket.rocketSnake.children[i - 1].y);
-            catzRocket.SnakeLine.graphics.endStroke();
-        }
-        catzRocket.rocketFlame.rotation = catzRocket.catzRocketContainer.rotation;
-
-    };
-
-    function showSnake() {
-        catzRocket.rocketSnake.children[0].x = -60 +
-            Math.cos((catzRocket.catzRocketContainer.rotation + 101) / 360 * 2 * Math.PI) * 176;
-        catzRocket.rocketSnake.children[0].y =
-            Math.sin((catzRocket.catzRocketContainer.rotation + 100) / 360 * 2 * Math.PI) * 232 + catzRocket.heightOffset;
-        catzRocket.rocketFlame.x = catzRocket.rocketSnake.children[0].x;
-        catzRocket.rocketFlame.y = catzRocket.rocketSnake.children[0].y;
-        catzRocket.rocketFlame.rotation = catzRocket.catzRocketContainer.rotation;
-
-        catzRocket.SnakeLine.alpha = 1;
-        catzRocket.rocketFlame.alpha = 1;
-        catzRocket.rocketFlame.gotoAndPlay("ignite");
-    };
-
-    catzRocket.hideSnake = function() {
-        catzRocket.rocketSnake.alpha = 0;
-        catzRocket.SnakeLine.alpha = 0;
-        catzRocket.rocketFlame.alpha = 0;
-    };
-
-    catzRocket.playSecondDownloopSound = function() {
-        catzRocket.rocketSound.stop();
-        catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[
-            catzRocket.catzStateEnum.SecondDownloop]);
-    };
-
-    catzRocket.catzRelease = function() {
-        if (catzRocket.isWounded) {
-            catzRocket.isWounded = false;
-            catzRocket.catz.x = 0;
-        }
-        if (catzRocket.catzState !== catzRocket.catzStateEnum.SlammerReady) {
-            catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation * 3.14 / 360) * 40;
-            changeState(catzRocket.catzStateEnum.SecondUploop);
-        } else {
-            changeState(catzRocket.catzStateEnum.Normal);
-            catzRocket.catzVelocity = Math.tan(catzRocket.catzRocketContainer.rotation * 3.14 / 360) * 40;
-        }
-    };
-
-    catzRocket.getHit = function(isInstaGib) {
-        if ((invincibilityCounter <= 0 || isInstaGib) && !catzRocket.hasFrenzy() && !catzRocket.isHit) {
-            var instance = createjs.Sound.play("catzScream2");
-            instance.volume = 0.5;
-
-            if (!catzRocket.isWounded && !isInstaGib) {
-                catzRocket.isWounded = true;
-                catzRocket.catz.gotoAndPlay("slipping");
-                createjs.Tween.get(catzRocket.catz)
-                    .to({
-                        y: 10,
-                        x: -25
-                    }, 100)
-                    .to({
-                        x: -50,
-                        y: 5
-                    }, 150)
-                    .call(catzRocket.catz.gotoAndPlay, ["no shake"]);
-                invincibilityCounter = 1000;
-                return false;
-            } else {
-                catzRocket.isHit = true;
-                changeState(catzRocket.catzStateEnum.FellOffRocket);
-                return true;
-            }
-        } else {
-            return false;
-        }
-    };
-
-    catzRocket.catzUp = function() {
-        if (catzRocket.diamondFuel > 0) {
-            if (catzRocket.catzState === catzRocket.catzStateEnum.Normal) {
-                catzRocket.diamondFuel -= 0.25;
-                catzRocket.catzVelocity -= 2;
-                changeState(catzRocket.catzStateEnum.Uploop);
-            } else if (catzRocket.catzState === catzRocket.catzStateEnum.Frenzy) {
-                catzRocket.catzVelocity -= 2;
-                changeState(catzRocket.catzStateEnum.FrenzyUploop);
-            } else if (catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity) {
-                changeState(catzRocket.catzStateEnum.EmergencyBoost);
-            } else if (catzRocket.catzState === catzRocket.catzStateEnum.SlammerReady && catzRocket.catzRocketContainer.rotation > -250) {
-                changeState(catzRocket.catzStateEnum.Slammer);
-            }
-        } else {
-            //catzRocket.glass.gotoAndPlay("outOfFuel");
-        }
-    };
-
-    function changeState(state) {
-        catzRocket.catzState = state;
-        if (state !== catzRocket.catzStateEnum.SlammerReady &&
-            state !== catzRocket.catzStateEnum.FrenzyUploop) {
-            catzRocket.rocketSound.stop();
-            if (catzRocket.rocketSounds[state] !== null) {
-                catzRocket.rocketSound = createjs.Sound.play(catzRocket.rocketSounds[state]);
-                catzRocket.rocketSound.volume = 0.5;
-            }
-        }
-        if (state === catzRocket.catzStateEnum.Normal || state === catzRocket.catzStateEnum.TerminalVelocity || state === catzRocket.catzStateEnum.OutOfFuel || state === catzRocket.catzStateEnum.OutOfFuelUpsideDown) {
-            catzRocket.hideSnake();
-            if (catzRocket.frenzyReady || state === catzRocket.catzStateEnum.TerminalVelocity)
-                catzRocket.catz.gotoAndPlay("shake");
-            else
-                catzRocket.catz.gotoAndPlay("no shake");
-        } else if (state !== catzRocket.catzStateEnum.FellOffRocket && !catzRocket.hasFrenzy()) {
-            if (catzRocket.SnakeLine.alpha === 0)
-                showSnake();
-            if (!catzRocket.frenzyReady)
-                catzRocket.catz.gotoAndPlay("shake");
-        } else if (state !== catzRocket.catzStateEnum.FellOffRocket) {
-            catzRocket.hideSnake();
-            catzRocket.catz.gotoAndPlay("frenzy");
-        } else {
-            catzRocket.hideSnake();
-            catzRocket.catz.gotoAndPlay("flying");
-        }
-    };
-
-    catzRocket.hasFrenzy = function() {
-        if (catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop || catzRocket.catzState === catzRocket.catzStateEnum.Frenzy) {
-            return true;
-        } else {
-            return false;
-        }
-    };
-
-    catzRocket.canCollide = function() {
-        return (catzRocket.catzState !== catzRocket.catzStateEnum.FellOffRocket && !catzRocket.hasFrenzy());
-    };
-
-    catzRocket.reset = function() {
-        createjs.Tween.removeTweens(CatzRocket.catzRocketContainer);
-        catzRocket.frenzyReady = false;
-        catzRocket.frenzyTimer = 0;
-        catzRocket.frenzyCount = 0;
-        changeState(catzRocket.catzStateEnum.Normal);
-		catzRocket.diamondFuel = 0;        
-		catzRocket.rocket.x=0;
-        catzRocket.rocket.alpha=1;
-		catzRocket.catz.alpha = 1;
-//		catzRocket.glass.gotoAndPlay("still");	
-		catzRocket.catzRocketContainer.x = 300;
-        catzRocket.catzRocketContainer.y = 200;
-        catzRocket.heightOffset = 0;
-        catzRocket.catzRocketContainer.rotation = 0;
-        catzRocket.catz.gotoAndPlay("no shake");
-        catzRocket.catzVelocity = -20;
-    };
-
-    catzRocket.start = function(velocity) {
-        catzRocket.isWounded = false;
-        catzRocket.isHit = false;
-        catzRocket.isCrashed = false;
-        catzRocket.hideSnake();
-        CatzRocket.catzVelocity = velocity;	
-		catzRocket.diamondFuel = 2;        
+	catzRocketContainer.x = 260;
+	catzRocketContainer.y = 200;				 
+	catzRocketContainer.regY = 100;
+	catzRocketContainer.regX = 150;
+	catz.currentFrame = 0;  
+					
+	rocket = Helpers.createBitmap(queue.getResult("rocket"), 
+		{scaleX:0.25, scaleY:0.25, regX:-430, regY:-320});							
+	catzRocketContainer.addChild(rocket, catz);
+	catzBounds = catzRocketContainer.getTransformedBounds();
+	
+	rocketSnake.x=0;
+	rocketSnake.y=0;												 
+					
+	for(let i = 0, snakeAmt = 11; i < snakeAmt; i++){
+		var shape = new createjs.Shape();
+		var x = 260-i*5;
+		var r = 9;
+		shape.graphics.f(data.lightningColor).dc(x, 200, r);
+		shape.regY=5;
+		shape.regX=5;
+		rocketSnake.addChild(shape);						 
 	}
-     
-     catzRocket.catzEndLoop = function() {
-        if (catzRocket.catzState === catzRocket.catzStateEnum.Uploop
-            || catzRocket.catzState === catzRocket.catzStateEnum.SecondUploop
-            || catzRocket.catzState === catzRocket.catzStateEnum.TerminalVelocity 
-            || catzRocket.catzState === catzRocket.catzStateEnum.EmergencyBoost)
-            changeState(catzRocket.catzStateEnum.Normal);
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.SecondDownloop)
-            changeState(catzRocket.catzStateEnum.Slingshot);
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.Downloop)
-            changeState(catzRocket.catzStateEnum.SlammerReady);
-        else if (catzRocket.catzState === catzRocket.catzStateEnum.FrenzyUploop)
-            changeState(catzRocket.catzStateEnum.Frenzy);
-    };
-    
-    function invincibilityCountDown(minusTime){
-        if(invincibilityCounter>0)        
-            invincibilityCounter-=minusTime;        
-    }
 
-    function invincibilityCountDown(minusTime) {
-        if (invincibilityCounter > 0)
-            invincibilityCounter -= minusTime;
-    }
+	snakeLine = new createjs.Shape();
+	rocketSound = createjs.Sound.play("rocketSound");
+	rocketSound.volume = 0.1;
+	rocketSound.stop();
+}
 
-    function diamondFuelLossPerTime(time) {
-        if (catzRocket.diamondFuel > 5)
-            catzRocket.diamondFuel -= time / 1000;
+export function setCrashBorders(top, bottom) {
+	crashBorder.top = top;
+	crashBorder.bottom = bottom;
+}
 
-        if (catzRocket.diamondFuel > 10)
-            catzRocket.diamondFuel -= time / 20;
-    };
+export function update(grav, wind, event) {
+	invincibilityCountDown(event.delta);
+	diamondFuelLossPerTime(event.delta);
+	if (DebugOptions.infiniteFuel && diamondFuel < 1) {
+			diamondFuel = 1;
+	}
+	switch (catzState) {
+		case catzStateEnum.Normal:
+			updateNormal(grav, wind, event);
+			break;
+		case catzStateEnum.FellOffRocket:
+			updateFellOff(grav, wind, event);
+			break;
+		case catzStateEnum.OutOfFuel:
+			updateOutOfFuel(grav, wind, event);
+			break;
+		case catzStateEnum.OutOfFuelUpsideDown:
+				updateOutOfFuelUpsideDown(grav, wind, event);
+				break;
+		case catzStateEnum.Frenzy:
+				updateFrenzy2(grav, wind, event);
+				break;
+		case catzStateEnum.FrenzyUploop:
+				updateFrenzyUploop(grav, wind, event)
+				break;
+		case catzStateEnum.TerminalVelocity:
+				updateTerminal(event);
+				break;
+		case catzStateEnum.EmergencyBoost:
+				updateEmergency(grav, wind, event);
+				break;
+		case catzStateEnum.Uploop:
+				updateUploop(grav, wind, event);
+				break;
+		case catzStateEnum.Downloop:
+		case catzStateEnum.SlammerReady:
+				updateDownloop(grav, wind, event);
+				break;
+		case catzStateEnum.Slammer:
+				updateSlammer();
+				break;
+		case catzStateEnum.SecondUploop:
+				updateSecondUploop(grav, wind, event);
+				break;
+		case catzStateEnum.SecondDownloop:
+				updateSecondDownloop(grav, wind, event);
+				break;
+		case catzStateEnum.Slingshot:
+				updateSlingshot();
+	}
 
-    return catzRocket;
-}());
+	if (catzState !== catzStateEnum.SecondDownloop
+		&& catzState !== catzStateEnum.Slingshot
+		&& catzState !== catzStateEnum.OutOfFuelUpsideDown) {
+		xScreenPosition = 200 +
+			Math.cos((catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI)
+			* 160;
+			yScreenPosition = 200 +
+				Math.sin((catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI)
+				* 210;
+	} else if (catzState !== catzStateEnum.OutOfFuelUpsideDown) {
+			xScreenPosition = 255 +
+				Math.cos((catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI)
+				* 80;
+			yScreenPosition = 200 +
+				Math.sin((catzRocketContainer.rotation + 90) / 360 * 2 * Math.PI)
+				* 100;
+	}
+
+	if (isWounded && !createjs.Tween.hasActiveTweens(catz))
+		catz.x = -50;
+	else if (!isWounded &&
+		!createjs.Tween.hasActiveTweens(catz))
+		catz.x = 0;
+	
+	if (catzRocketContainer.y > crashBorder.bottom || catzRocketContainer.y < crashBorder.top)
+		isCrashed = true;
+	catzRocketContainer.x = xScreenPosition;
+	catzRocketContainer.y = yScreenPosition + heightOffset;
+	diamondFuel -= fuelConsumption[catzState] * event.delta / 1000;
+	diamondFuel = Math.max(diamondFuel, 0);
+	updateFrenzy(event);
+	updateRocketSnake();
+};
+
+export function hideSnake() {
+	rocketSnake.alpha = 0;
+	snakeLine.alpha = 0;
+	rocketFlame.alpha = 0;
+}
+
+export function playSecondDownloopSound() {
+	rocketSound.stop();
+	rocketSound = createjs.Sound.play(rocketSounds[
+			catzStateEnum.SecondDownloop]);
+}
+
+export function catzRelease() {
+	if (isWounded) {
+			isWounded = false;
+			catz.x = 0;
+	}
+	if (catzState !== catzStateEnum.SlammerReady) {
+			catzVelocity = Math.tan(catzRocketContainer.rotation * 3.14 / 360) * 40;
+			changeState(catzStateEnum.SecondUploop);
+	} else {
+			changeState(catzStateEnum.Normal);
+			catzVelocity = Math.tan(catzRocketContainer.rotation * 3.14 / 360) * 40;
+	}
+}
+
+export function getHit(isInstaGib) {
+	if ((invincibilityCounter <= 0 || isInstaGib) && !hasFrenzy() && !isHit) {
+			var instance = createjs.Sound.play("catzScream2");
+			instance.volume = 0.5;
+
+			if (!isWounded && !isInstaGib) {
+					isWounded = true;
+					catz.gotoAndPlay("slipping");
+					createjs.Tween.get(catz)
+							.to({
+									y: 10,
+									x: -25
+							}, 100)
+							.to({
+									x: -50,
+									y: 5
+							}, 150)
+							.call(catz.gotoAndPlay, ["no shake"]);
+					invincibilityCounter = 1000;
+					return false;
+			} else {
+					isHit = true;
+					changeState(catzStateEnum.FellOffRocket);
+					return true;
+			}
+	} else {
+			return false;
+	}
+}
+
+export function catzUp() {
+		if (diamondFuel > 0) {
+				if (catzState === catzStateEnum.Normal) {
+						diamondFuel -= 0.25;
+						catzVelocity -= 2;
+						changeState(catzStateEnum.Uploop);
+				} else if (catzState === catzStateEnum.Frenzy) {
+						catzVelocity -= 2;
+						changeState(catzStateEnum.FrenzyUploop);
+				} else if (catzState === catzStateEnum.TerminalVelocity) {
+						changeState(catzStateEnum.EmergencyBoost);
+				} else if (catzState === catzStateEnum.SlammerReady && catzRocketContainer.rotation > -250) {
+						changeState(catzStateEnum.Slammer);
+				}
+		} else {
+				//glass.gotoAndPlay("outOfFuel");
+		}
+}
+
+export function hasFrenzy() {
+		if (catzState === catzStateEnum.FrenzyUploop || catzState === catzStateEnum.Frenzy) {
+				return true;
+		} else {
+				return false;
+		}
+}
+
+export function canCollide() {
+		return (catzState !== catzStateEnum.FellOffRocket && !hasFrenzy());
+}
+
+export function reset() {
+	createjs.Tween.removeTweens(catzRocketContainer);
+	frenzyReady = false;
+	frenzyTimer = 0;
+	frenzyCount = 0;
+	changeState(catzStateEnum.Normal);
+	diamondFuel = 0;        
+	rocket.x=0;
+	rocket.alpha=1;
+	catz.alpha = 1;
+	catzRocketContainer.x = 300;
+	catzRocketContainer.y = 200;
+	heightOffset = 0;
+	catzRocketContainer.rotation = 0;
+	catz.gotoAndPlay("no shake");
+	catzVelocity = -20;
+}
+
+export function start(velocity) {
+		isWounded = false;
+		isHit = false;
+		isCrashed = false;
+		hideSnake();
+		catzVelocity = velocity;	
+diamondFuel = 2;        
+}
+ 
+ export function catzEndLoop() {
+		if (catzState === catzStateEnum.Uploop
+				|| catzState === catzStateEnum.SecondUploop
+				|| catzState === catzStateEnum.TerminalVelocity 
+				|| catzState === catzStateEnum.EmergencyBoost)
+				changeState(catzStateEnum.Normal);
+		else if (catzState === catzStateEnum.SecondDownloop)
+				changeState(catzStateEnum.Slingshot);
+		else if (catzState === catzStateEnum.Downloop)
+				changeState(catzStateEnum.SlammerReady);
+		else if (catzState === catzStateEnum.FrenzyUploop)
+				changeState(catzStateEnum.Frenzy);
+}
+
+export function pickupDiamond(size) {
+	if (diamondFuel < 10 && catzState != catzStateEnum.Frenzy) {
+		switch (size) {
+			case diamondEnum.shard:
+				diamondFuel += 0.09;
+				frenzyCount += 0.1;
+				break;                
+			case diamondEnum.great:
+				diamondFuel += 1.5;
+				frenzyCount += 5;
+				break;
+		}
+	}
+}
+
+function updateBase(gravWindSum, event, canChangeToTerminal, fellOff, rotate) {
+		catzVelocity += (gravWindSum) * event.delta / 1000;
+		heightOffset += 20 * catzVelocity * event.delta / 1000;
+		if (catzVelocity >= limitVelocity) {
+				catzVelocity = limitVelocity;
+				if (canChangeToTerminal)
+						changeState(catzStateEnum.TerminalVelocity);
+		}
+		if (rotate && !createjs.Tween.hasActiveTweens(catzRocketContainer)) {
+				if (!fellOff || catzRocketContainer.rotation <= -270 || catzRocketContainer.rotation > -90)
+						catzRocketContainer.rotation = Math.atan(catzVelocity / 40) * 360 / 3.14;
+				else if (catzRocketContainer.rotation <= -180 && catzRocketContainer.rotation > -270)
+						catzRocketContainer.rotation = -Math.atan(catzVelocity / 40) * 360 / 3.14;
+		}
+}
+
+function checkFuel(mightBeUpsideDown) {
+		if (diamondFuel === 0) {
+//            glass.gotoAndPlay("outOfFuel");
+		} else {
+				changeState(catzStateEnum.Normal);
+				catzVelocity = Math.tan(catzRocketContainer.rotation * 3.14 / 360) * 40;
+		}
+};
+
+function checkFuel(mightBeUpsideDown) {
+		if (diamondFuel === 0) {
+//            glass.gotoAndPlay("outOfFuel");
+				createjs.Tween.removeTweens(catzRocketContainer);
+				if (mightBeUpsideDown) {
+						if (catzRocketContainer.rotation <= -90 && catzRocketContainer.rotation >= -270) {
+								changeState(catzStateEnum.OutOfFuelUpsideDown);
+								isHit = true;
+						} else
+								changeState(catzStateEnum.OutOfFuel);
+
+				} else
+						changeState(catzStateEnum.OutOfFuel);
+		}
+}
+
+function updateNormal(grav, wind, event) {
+		updateBase(grav + wind, event, true, false,true);
+		checkFuel(false);
+}
+
+function updateFellOff(grav, wind, event) {
+		updateBase(grav + wind, event, false, false,true);
+}
+
+function updateOutOfFuel(grav, wind, event) {
+		updateBase(grav + wind, event, false, true,true);
+		if (diamondFuel > 0)
+				changeState(catzStateEnum.Normal);
+}
+
+function updateOutOfFuelUpsideDown(grav, wind, event) {
+		updateBase(grav + wind, event, false, true, false);
+}
+
+function updateFrenzy2(grav, wind, event) {
+		updateBase(0.5 * (grav + wind), event, false, false,true);
+}
+
+function updateFrenzyUploop(grav, wind, event) {
+		updateBase(-0.5 * (2.3 * grav - wind), event, false, false,true);
+}
+
+function updateTerminal(event) {
+		heightOffset += 20 * catzVelocity * event.delta / 1000;
+		catzRocketContainer.rotation = -280;
+		checkFuel(false);
+}
+
+function updateFrenzy(event) {
+		if (catzState === catzStateEnum.Frenzy) {
+				frenzyTimer += event.delta;
+				if (frenzyTimer > 1500) {
+						changeState(catzStateEnum.Normal);
+						catz.gotoAndPlay("no shake");
+						//glass.gotoAndPlay("still");
+						rocket.alpha = 1;
+						frenzyCount = 0;
+						frenzyTimer = 0;
+				}
+				frenzyReady = false;
+		} else if (frenzyReady === true) {
+				frenzyTimer += event.delta;
+				if (frenzyTimer > 500) {
+						if (catzState === catzStateEnum.SecondDownloop) {
+								changeState(catzStateEnum.Slingshot);
+						} else if (catzState !== catzStateEnum.Downloop &&
+								catzState !== catzStateEnum.SlammerReady &&
+								catzState !== catzStateEnum.Slammer &&
+								catzState !== catzStateEnum.Slingshot) {
+								if (catzState === catzStateEnum.Uploop || catzState === catzStateEnum.SecondUploop) {
+										changeState(catzStateEnum.FrenzyUploop);
+								} else {
+										changeState(catzStateEnum.Frenzy);
+								}
+								//glass.gotoAndPlay("frenzy");
+								isWounded = false;
+								frenzyTimer = 0;
+								frenzyReady = false;
+						}
+				}
+		} else if (!hasFrenzy() && frenzyCount > 0) {
+				if (diamondFuel >= maxDiamondFuel) {
+						diamondFuel = maxDiamondFuel / 2;
+						catz.gotoAndPlay("frenzy ready");
+						rocket.alpha = 0;
+						frenzyReady = true;
+						isWounded = false;
+						frenzyTimer = 0;
+				}
+		}
+}
+
+function updateRocketSnake() {
+		var arrayLength = rocketSnake.children.length;
+		for (var i = arrayLength - 1; i > 0; i--) {
+				var kid = rocketSnake.children[i];
+				kid.x = rocketSnake.children[i - 1].x - 2 * Math.cos(6.28 * catzRocketContainer.rotation / 360);
+				kid.y = rocketSnake.children[i - 1].y;
+		}
+		if (catzState !== catzStateEnum.SecondDownloop && catzState !== catzStateEnum.Slingshot) {
+				rocketSnake.children[0].x = -60 +
+						Math.cos((catzRocketContainer.rotation + 101) / 360 * 2 * Math.PI) * 176;
+				rocketSnake.children[0].y =
+						Math.sin((catzRocketContainer.rotation + 100) / 360 * 2 * Math.PI) * 232 + heightOffset;
+				rocketFlame.x = catzRocketContainer.x;
+				rocketFlame.y = catzRocketContainer.y;
+		} else {
+				rocketSnake.children[0].x = -5 +
+						Math.cos((catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI) * 100;
+				rocketSnake.children[0].y =
+						Math.sin((catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI) * 120 + heightOffset;
+				rocketFlame.x = catzRocketContainer.x;
+				rocketFlame.y = catzRocketContainer.y;
+		}
+		snakeLine.graphics = new createjs.Graphics();
+		snakeLine.x = 260;
+		snakeLine.y = 200;
+		for (var i = arrayLength - 1; i > 0; i--) {
+				var kid = rocketSnake.children[i];
+				snakeLine.graphics.setStrokeStyle(arrayLength * 2 - i * 2, 1);
+				snakeLine.graphics.beginStroke(flameColor);
+				snakeLine.graphics.moveTo(kid.x - i * 5, kid.y);
+				snakeLine.graphics.lineTo(rocketSnake.children[i - 1].x - (i - 1) * 5, rocketSnake.children[i - 1].y);
+				snakeLine.graphics.endStroke();
+		}
+		rocketFlame.rotation = catzRocketContainer.rotation;
+
+};
+
+function showSnake() {
+		rocketSnake.children[0].x = -60 +
+				Math.cos((catzRocketContainer.rotation + 101) / 360 * 2 * Math.PI) * 176;
+		rocketSnake.children[0].y =
+				Math.sin((catzRocketContainer.rotation + 100) / 360 * 2 * Math.PI) * 232 + heightOffset;
+		rocketFlame.x = rocketSnake.children[0].x;
+		rocketFlame.y = rocketSnake.children[0].y;
+		rocketFlame.rotation = catzRocketContainer.rotation;
+
+		snakeLine.alpha = 1;
+		rocketFlame.alpha = 1;
+		rocketFlame.gotoAndPlay("ignite");
+};
+
+function changeState(state) {
+		catzState = state;
+		if (state !== catzStateEnum.SlammerReady &&
+				state !== catzStateEnum.FrenzyUploop) {
+				rocketSound.stop();
+				if (rocketSounds[state] !== null) {
+						rocketSound = createjs.Sound.play(rocketSounds[state]);
+						rocketSound.volume = 0.5;
+				}
+		}
+		if (state === catzStateEnum.Normal || state === catzStateEnum.TerminalVelocity || state === catzStateEnum.OutOfFuel || state === catzStateEnum.OutOfFuelUpsideDown) {
+				hideSnake();
+				if (frenzyReady || state === catzStateEnum.TerminalVelocity)
+						catz.gotoAndPlay("shake");
+				else
+						catz.gotoAndPlay("no shake");
+		} else if (state !== catzStateEnum.FellOffRocket && !hasFrenzy()) {
+				if (snakeLine.alpha === 0)
+						showSnake();
+				if (!frenzyReady)
+						catz.gotoAndPlay("shake");
+		} else if (state !== catzStateEnum.FellOffRocket) {
+				hideSnake();
+				catz.gotoAndPlay("frenzy");
+		} else {
+				hideSnake();
+				catz.gotoAndPlay("flying");
+		}
+};
+
+function invincibilityCountDown(minusTime){
+		if(invincibilityCounter>0)        
+				invincibilityCounter-=minusTime;        
+}
+
+function invincibilityCountDown(minusTime) {
+		if (invincibilityCounter > 0)
+				invincibilityCounter -= minusTime;
+}
+
+function diamondFuelLossPerTime(time) {
+		if (diamondFuel > 5)
+				diamondFuel -= time / 1000;
+
+		if (diamondFuel > 10)
+				diamondFuel -= time / 20;
+};
+
+function updateUploop(grav, wind, event) {
+	updateBase(-(3.2 * grav - wind), event, false, false,true);
+	if(catzRocketContainer.rotation < -60) {
+		createjs.Tween.removeTweens(catzRocketContainer);
+		createjs.Tween.get(catzRocketContainer)
+			.to({
+				rotation: -270
+			}, 1000)
+			.to({
+				rotation: -330
+			}, 350)
+			.call(catzRelease);
+		changeState(catzStateEnum.Downloop);
+	}
+	checkFuel(false);
+}
+
+function updateEmergency(grav, wind, event) {
+	updateBase(-10 * grav - 3.7 * wind, event, false, false,true);
+	if (catzRocketContainer.rotation < 0)
+		changeState(catzStateEnum.Uploop);
+	checkFuel(false);
+}
+
+function updateDownloop(grav, wind, event) {
+	catzVelocity += ((2 - 8 * Math.sin(catzRocketContainer.rotation)) *
+		grav + 6 * wind) * event.delta / 1000 + 0.4;
+	checkFuel(true);
+}
+
+function updateSlammer() {
+	if (catzRocketContainer.rotation < -250) {
+		createjs.Tween.removeTweens(catzRocketContainer);
+		catzVelocity = limitVelocity;
+		changeState(catzStateEnum.TerminalVelocity);
+	}
+	checkFuel(true);
+}
+
+function updateSecondUploop(grav, wind, event) {
+	updateBase(-(5.5 * grav - 2 * wind), event, false, false,true);
+	if (!createjs.Tween.hasActiveTweens(catzRocketContainer))
+		catzRocketContainer.rotation = Math.atan(catzVelocity / 40) * 360 / 3.14;
+	if (catzRocketContainer.rotation < -60) {
+		heightOffset += 110 * Math.sin((catzRocketContainer.rotation + 110) / 360 * 2 * Math.PI);
+		changeState(catzStateEnum.SecondDownloop);
+		createjs.Tween.removeTweens(catzRocketContainer);
+		createjs.Tween.get(catzRocketContainer, {
+				loop: true
+			})
+			.to({
+				rotation: -270
+			}, 500)
+			.to({
+				rotation: -420
+			}, 500)
+			.call(playSecondDownloopSound);
+	}
+	checkFuel(false);
+}
+
+function updateSlingshot() {
+	if (catzRocketContainer.rotation < -400) {
+		createjs.Tween.removeTweens(catzRocketContainer);
+		changeState(catzStateEnum.Normal);
+		heightOffset -= 110 * Math.sin((catzRocketContainer.rotation + 110)
+			/ 360 * 2 * Math.PI);
+		catzVelocity = -20;
+	}
+	checkFuel(true);
+}
+
+function updateSecondDownloop(grav, wind, event) {
+	if (wind >= 0)
+		heightOffset += (150 + 12 * wind) * event.delta / 1000;
+	else
+		heightOffset += (150 + 40 * wind) * event.delta / 1000;
+	
+	checkFuel(true);
+}

@@ -1,4 +1,4 @@
-var gameProgressionJSON = {"hoboCat": 
+export default {"hoboCat": 
     [
 		//0
 		{"Conditions":[{"ConditionType": "Score","Score": -1, "OperatorType": "LargerThan"}],                

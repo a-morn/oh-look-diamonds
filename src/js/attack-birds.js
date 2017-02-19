@@ -1,9 +1,9 @@
- function AttackBird(sheet, current) {
+export function AttackBird(sheet, current) {
     this.Sprite_constructor(sheet, current);
     this.setup(current);
 }
 
-var AttackBirdProps = {
+export const AttackBirdProps = {
         chicken: {
             acceleration: 0,
             topSpeed2: 100000,
