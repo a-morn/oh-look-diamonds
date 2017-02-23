@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "build": "babel src/ -d dist/ --source-maps"
+    "clean": "rm -rf dist/js",
+    "babel": "babel src/ -d dist/ --source-maps",
+    "webpack": "webpack"
   },
   "repository": {
     "type": "git",
@@ -24,6 +26,8 @@
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
-    "babel-preset-es2015": "^6.22.0"
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.22.0",
+    "webpack": "^2.2.1"
   }
 }

@@ -1,4 +1,5 @@
-﻿var dialogJSON = {"hoboCat": 
+﻿export default
+{"hoboCat": 
 {   
 "goodEvening":
     {"dialog":[

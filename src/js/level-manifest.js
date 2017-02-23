@@ -1,4 +1,4 @@
-var LevelManifest = [{
+export default [{
 	id: "enemybirds",
 	src: "assets/sprites/newBirds.png"
 }, {

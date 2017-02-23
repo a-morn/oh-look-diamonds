@@ -1,4 +1,4 @@
-function ThunderCloud(img) 
+export function ThunderCloud(img) 
 {
     this.initialize(img);
 }
@@ -23,7 +23,7 @@ ThunderCloud.prototype.initialize = function(img)
 
 
 
-function Cloud(img) 
+export function Cloud(img) 
 {
     this.initialize(img);
 }

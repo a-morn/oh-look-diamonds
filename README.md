@@ -1,9 +1,19 @@
 oh look diamonds - or how we tried to learn js
 ==============================================
 ##Install
+
 `npm install`
 
+##Dependencies
+
+* node
+
+##Build
+
+`npm run build`
+
 ##Run
+
 `npm start`
 
 ##Deployment
