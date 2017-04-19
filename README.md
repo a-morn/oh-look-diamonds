@@ -12,6 +12,10 @@ oh look diamonds - or how we tried to learn js
 
 `npm run build`
 
+##Lint
+
+`npm run lint`
+
 ##Run
 
 `npm start`

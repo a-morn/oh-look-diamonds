@@ -1,4 +1,5 @@
 export default {
+	/* eslint-disable no-undef */
 	attackBird : new createjs.Container(),
 	cloud : new createjs.Container(),
 	collisionCheckDebug : new createjs.Container(),
@@ -12,4 +13,5 @@ export default {
 	select : new createjs.Container(),
 	thunder : new createjs.Container(),
 	wind : new createjs.Container()
+	/* eslint-enable no-undef */
 };
