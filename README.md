@@ -1,25 +1,27 @@
 oh look diamonds - or how we tried to learn js
 ==============================================
-##Install
+
+## Install
 
 `npm install`
 
-##Dependencies
+## Dependencies
 
 * node
 
-##Build
+## Build
 
 `npm run build`
 
-##Lint
+## Lint
 
 `npm run lint`
 
-##Run
+## Run
 
 `npm start`
 
-##Deployment
+## Deployment
+
 [oh.look.diamonds](http://oh.look.diamonds) (not kept up to date)
 [ohld.look.diamonds](http://oldohld.herokuapp.com/oh/) (first commit)
