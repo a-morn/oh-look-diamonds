@@ -1,8 +1,8 @@
 export default {
 	noHouseView: false,
-	debugMode: true,
+	debugMode: false,
 	trustFund: false, 
-	infiniteFuel: true, 
+	infiniteFuel: false, 
 	godMode: false,
 	logEvents: true
-}
+};

@@ -1,21 +1,21 @@
-const co ={};
-const	hsCookieName = "ohld-highscore";
-const	sgCookieName = "ohld-save-game";
+const	hsCookieName = 'ohld-highscore';
+const	sgCookieName = 'ohld-save-game';
 	
 export function saveAndSetHS(score, cb){
 	var hs = readCookie(hsCookieName);				
-	var hsc = $('#hs');				
-	if(hsc.attr("aria-valuenow")==-1 && hs){			
-		hsc.attr("aria-valuenow", hs);								
+	var hsc = $('#hs');	//eslint-disable-line no-undef
+	if(hsc.attr('aria-valuenow')==-1 && hs){			
+		hsc.attr('aria-valuenow', hs);								
 		cb(hs);			
 	}			
 		
 	if(!hs || hs < score){		
-		hsc.attr("aria-valuenow", hs);						
+		hsc.attr('aria-valuenow', hs);						
 		cb(score);
 		createCookie(hsCookieName, score);			
 	}							
-};
+}
+
 export function load(){		
 	return JSON.parse(readCookie(sgCookieName));
 }
@@ -24,17 +24,19 @@ export function save(gs){
 	createCookie(sgCookieName, JSON.stringify(gs));
 }
 function createCookie(name,value,days) {
+	let expires;
 	if (days) {
-			var date = new Date();
-			date.setTime(date.getTime()+(days*24*60*60*1000));
-			var expires = "; expires="+date.toGMTString();
+		const date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		expires = date.toGMTString();
+	} else {
+		expires = '';
 	}
-	else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
+	document.cookie = name+'='+value+expires+'; path=/';
 }
 
 function readCookie(name) {
-	var nameEQ = name + "=";
+	var nameEQ = name + '=';
 	var ca = document.cookie.split(';');
 	for(var i=0;i < ca.length;i++) {
 		var c = ca[i];
@@ -43,8 +45,3 @@ function readCookie(name) {
 	}
 	return null;
 }
-
-function eraseCookie(name) {
-	createCookie(name,"",-1);
-}
-
