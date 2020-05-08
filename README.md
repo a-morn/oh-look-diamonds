@@ -1,27 +1,23 @@
-oh look diamonds - or how we tried to learn js
-==============================================
+# oh look diamonds - or how we tried to learn js
 
-## Install
+## Description
+
+Originally written in 2014-2015 by Albin Mörner and Rasmus. Refactored in 2020. Live at [oh.look.diamonds](http://oh.look.diamonds)
+
+## Development
+
+### Install
 
 `npm install`
 
-## Dependencies
+### Start
 
-* node
+`npm run start`
 
-## Build
+## CI
 
-`npm run build`
+Github Actions.
 
-## Lint
+## Infra
 
-`npm run lint`
-
-## Run
-
-`npm start`
-
-## Deployment
-
-[oh.look.diamonds](http://oh.look.diamonds) (not kept up to date)
-[ohld.look.diamonds](http://oldohld.herokuapp.com/oh/) (first commit)
+AWS S3, AWS Cloudfront.
