@@ -2,7 +2,7 @@
 
 ## Description
 
-Originally written in 2014-2015 by Albin Mörner and Rasmus. Refactored in 2020. Live at [oh.look.diamonds](http://oh.look.diamonds)
+Originally written in 2014-2015 by Albin Mörner and Rasmus Öhman Bruno. Refactored in 2020. Live at [oh.look.diamonds](http://oh.look.diamonds)
 
 ## Development
 
