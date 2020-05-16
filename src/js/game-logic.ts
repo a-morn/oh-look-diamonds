@@ -291,35 +291,35 @@ export function init(data: {
       return acc
     }, {})
 
-  const bgParallax = helpers.createBitmap(queue.getResult('bgParallax 0'), {
+  const bgParallax = helpers.createBitmap(queue.getResult('bg-parallax-0'), {
     x: 0,
     y: -200,
   })
-  const bgParallax2 = helpers.createBitmap(queue.getResult('bgParallax 0'), {
+  const bgParallax2 = helpers.createBitmap(queue.getResult('bg-parallax-0'), {
     x: 2460,
     y: -200,
   })
   parallaxContainer.addChild(bgParallax, bgParallax2)
-  const fgGround1 = helpers.createBitmap(queue.getResult('fgGround'), {
+  const fgGround1 = helpers.createBitmap(queue.getResult('fg-ground'), {
     x: 0,
     y: 300,
   })
-  const fgGround2 = helpers.createBitmap(queue.getResult('fgGround'), {
+  const fgGround2 = helpers.createBitmap(queue.getResult('fg-ground'), {
     x: 2000,
     y: 300,
   })
-  const fgGround3 = helpers.createBitmap(queue.getResult('fgGround'), {
+  const fgGround3 = helpers.createBitmap(queue.getResult('fg-ground'), {
     x: 4000,
     y: 300,
   })
-  const fgGroundTop1 = helpers.createBitmap(queue.getResult('fgGroundTop'), {
+  const fgGroundTop1 = helpers.createBitmap(queue.getResult('fg-ground-top'), {
     y: -830,
   })
-  const fgGroundTop2 = helpers.createBitmap(queue.getResult('fgGroundTop'), {
+  const fgGroundTop2 = helpers.createBitmap(queue.getResult('fg-ground-top'), {
     x: 2000,
     y: -830,
   })
-  const fgGroundTop3 = helpers.createBitmap(queue.getResult('fgGroundTop'), {
+  const fgGroundTop3 = helpers.createBitmap(queue.getResult('fg-ground-top'), {
     x: 4000,
     y: -830,
   })
@@ -352,7 +352,7 @@ export function init(data: {
   collisionCheckDebugContainer.addChild(polygonLine)
 
   {
-    const diamondSound = createjs.Sound.play('diamondSound')
+    const diamondSound = createjs.Sound.play('diamond-sound')
     diamondSound.volume = 0.2
     diamondSound.stop()
   }
@@ -584,7 +584,7 @@ function moveAndCollisionCheck(
 
 function changeParallax(int: number): void {
   parallaxContainer.removeAllChildren()
-  const name = `bgParallax ${int}`
+  const name = `bg-parallax-${int}`
   const bgParallax = helpers.createBitmap(queue.getResult(name), {
     y: -200,
   })
@@ -873,7 +873,7 @@ function updateParallax(event: createjs.Event): void {
 
 function updateFg(event: createjs.Event): void {
   if (Math.random() > 0.98) {
-    const tree = helpers.createBitmap(queue.getResult('fgTree1'), {
+    const tree = helpers.createBitmap(queue.getResult('fg-tree-1'), {
       x: 2200,
       y: 290,
     })
@@ -1065,7 +1065,7 @@ function updateThunderClouds(): void {
         },
         300
       )
-      createjs.Sound.play('lightningBolt')
+      createjs.Sound.play('lightning-bolt')
       createjs.Tween.get(gameView)
         .to(
           {
@@ -1313,7 +1313,7 @@ function updateDiamonds(event: createjs.Event): void {
         catzRocket.pickupDiamond(diamondEnum.great)
       }
       diamondContainer.removeChildAt(i)
-      const instance = createjs.Sound.play('diamondSound')
+      const instance = createjs.Sound.play('diamond-sound')
       instance.volume = 0.15
     }
   }
@@ -1545,7 +1545,7 @@ function resetGameView(): void {
 }
 
 function crash(): void {
-  const instance = createjs.Sound.play('catzRocketCrash')
+  const instance = createjs.Sound.play('catz-rocket-crash')
   instance.volume = 0.5
 
   resetGameView()

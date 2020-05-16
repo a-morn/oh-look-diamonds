@@ -172,7 +172,7 @@ export function setValues(queue: createjs.LoadQueue): void {
 
   spriteSheets.supportingCharacter = {
     framerate: 24,
-    images: [queue.getResult('supportingCharacter')],
+    images: [queue.getResult('supporting-character')],
     frames: [
       [0, 0, 128, 256, 0, 0, 0],
       [128, 0, 128, 256, 0, 0, 0],
@@ -389,7 +389,7 @@ export function setValues(queue: createjs.LoadQueue): void {
 
   spriteSheets.hudGlass = {
     framerate: 24,
-    images: [queue.getResult('hudGlass')],
+    images: [queue.getResult('hud-glass')],
     frames: [
       [0, 0, 128, 128, 0, -196, -14],
       [128, 0, 128, 128, 0, -196, -14],
@@ -408,7 +408,7 @@ export function setValues(queue: createjs.LoadQueue): void {
 
   spriteSheets.rocket = {
     framerate: 24,
-    images: [queue.getResult('rocketCatz')],
+    images: [queue.getResult('rocket-catz')],
     frames: [
       [0, 0, 256, 128, 0, 0, -68],
       [256, 0, 256, 128, 0, 0, -68],

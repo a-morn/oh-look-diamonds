@@ -76,16 +76,16 @@ let rocketFlame: createjs.Sprite
 const limitVelocity = 30
 const rocketSounds = {
   [catzStateEnum.Normal]: null,
-  [catzStateEnum.Uploop]: 'uploopSound',
-  [catzStateEnum.Downloop]: 'downloopSound',
-  [catzStateEnum.SecondUploop]: 'secondUploopSound',
-  [catzStateEnum.SecondDownloop]: 'secondDownloopSound',
-  [catzStateEnum.Slingshot]: 'slingshotSound',
+  [catzStateEnum.Uploop]: 'uploop-sound',
+  [catzStateEnum.Downloop]: 'downloop-sound',
+  [catzStateEnum.SecondUploop]: 'second-uploop-sound',
+  [catzStateEnum.SecondDownloop]: 'second-downloop-sound',
+  [catzStateEnum.Slingshot]: 'slingshot-sound',
   [catzStateEnum.TerminalVelocity]: 'wind',
-  [catzStateEnum.EmergencyBoost]: 'emergencyBoostSound',
+  [catzStateEnum.EmergencyBoost]: 'emergency-boost-sound',
   [catzStateEnum.SlammerReady]: null,
-  [catzStateEnum.Slammer]: 'miscSound',
-  [catzStateEnum.Frenzy]: 'frenzySound',
+  [catzStateEnum.Slammer]: 'misc-sound',
+  [catzStateEnum.Frenzy]: 'frenzy-sound',
   [catzStateEnum.FrenzyUploop]: null,
   [catzStateEnum.FellOffRocket]: 'catzScream3',
   [catzStateEnum.OutOfFuel]: null,
@@ -125,7 +125,7 @@ export function init(queue: createjs.LoadQueue): void {
     regY: -320,
   })
 
-  rocketSound = createjs.Sound.play('rocketSound')
+  rocketSound = createjs.Sound.play('uploop-sound')
   rocketSound.volume = 0.1
   rocketSound.stop()
 
@@ -762,7 +762,7 @@ export function getHit(isInstaGib: boolean): boolean {
     !hasFrenzy() &&
     !catzRocket.isHit
   ) {
-    const instance = createjs.Sound.play('catzScream2')
+    const instance = createjs.Sound.play('catz-scream-2')
     instance.volume = 0.5
 
     if (!catzRocket.isWounded && !isInstaGib) {

@@ -4,7 +4,6 @@ import init from './js/initialize-stage'
 // import './css/odometer-theme-car.css'
 import './css/style.css'
 import 'odometer'
-import './assets/img/DiamondIcon.png'
 
 const muteElement = document.querySelector('.mute')
 const startButtonContainerElement = document.querySelector(

@@ -57,13 +57,13 @@ button {
 
 .mute-is-not-muted {
   vertical-align: bottom;
-  background: url('../assets/sprites/mute button.png') 0 0;
+  background: url('../assets/sprites/mute-button.png') 0 0;
   height: 64px;
   width: 54px;
 }
 
 .mute-is-muted {
-  background: url('../assets/sprites/mute button.png') -64px 0;
+  background: url('../assets/sprites/mute-button.png') -64px 0;
 }
 
 .noselect {
@@ -80,11 +80,11 @@ button {
 }
 
 .talk-cursor {
-  cursor: url(../assets/img/talkCursor.gif), auto;
+  cursor: url(../assets/img/talk-cursor.gif), auto;
 }
 
 .house-cursor {
-  cursor: url(../assets/img/houseCursor.gif), auto;
+  cursor: url(../assets/img/house-cursor.gif), auto;
 }
 
 .progress {

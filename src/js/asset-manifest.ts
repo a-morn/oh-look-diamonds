@@ -1,12 +1,10 @@
-/* eslint global-require: 0 */
-
 export default [
   {
     id: 'enemybirds',
     src: 'assets/sprites/newBirds.png',
   },
   {
-    id: 'rocketCatz',
+    id: 'rocket-catz',
     src: 'assets/sprites/catzOnly.png',
   },
   {
@@ -15,31 +13,35 @@ export default [
   },
   {
     id: 'diamond',
-    src: 'assets/sprites/newDiamond3.png',
+    src: 'assets/sprites/new-diamond-3.png',
   },
   {
     id: 'mediumDiamond',
-    src: 'assets/sprites/newDiamond2.png',
+    src: 'assets/sprites/new-diamond-2.png',
   },
   {
     id: 'greatDiamond',
-    src: 'assets/sprites/newDiamond.png',
+    src: 'assets/sprites/new-diamond.png',
   },
   {
     id: 'diamondShardCounter',
-    src: 'assets/img/DiamondIcon.png',
+    src: 'assets/img/diamond-icon.png',
   },
   {
     id: 'bg',
-    src: 'assets/img/background long.jpg',
+    src: 'assets/img/background-long.jpg',
   },
   {
-    id: 'bgParallax 0',
-    src: 'assets/img/background parallax.png',
+    id: 'bg-parallax-0',
+    src: 'assets/img/background-parallax.png',
   },
   {
-    id: 'bgParallax 1',
-    src: 'assets/img/background parallax 3.png',
+    id: 'bg-parallax-1',
+    src: 'assets/img/background-parallax-3.png',
+  },
+  {
+    id: 'bg-parallax-2',
+    src: 'assets/img/background-parallax-4.png',
   },
   {
     id: 'onlookers',
@@ -67,39 +69,39 @@ export default [
   },
   {
     id: 'hud',
-    src: 'assets/img/HUD.png',
+    src: 'assets/img/hud.png',
   },
   {
-    id: 'hudPointer',
-    src: 'assets/img/HUDpointer.png',
+    id: 'hud-pointer',
+    src: 'assets/img/hud-pointer.png',
   },
   {
-    id: 'hudGlass',
-    src: 'assets/sprites/hudGlass.png',
+    id: 'hud-glass',
+    src: 'assets/sprites/hud-glass.png',
   },
   {
-    id: 'mobHill1',
-    src: 'assets/img/mob hill.png',
+    id: 'mob-hill-1',
+    src: 'assets/img/mob-hill.png',
   },
   {
-    id: 'mobHill2',
-    src: 'assets/img/mob hill 2.png',
+    id: 'mob-hill-2',
+    src: 'assets/img/mob-hill-2.png',
   },
   {
-    id: 'fgGround',
-    src: 'assets/img/fgGround.png',
+    id: 'fg-ground',
+    src: 'assets/img/fg-ground.png',
   },
   {
-    id: 'fgGroundTop',
-    src: 'assets/img/fgGroundTop.png',
+    id: 'fg-ground-top',
+    src: 'assets/img/fg-ground-top.png',
   },
   {
-    id: 'fgTree1',
-    src: 'assets/img/tree 4.png',
+    id: 'fg-tree-1',
+    src: 'assets/img/tree-4.png',
   },
   {
-    id: 'rocketCatz',
-    src: 'assets/sprites/catzOnly.png',
+    id: 'rocket-catz',
+    src: 'assets/sprites/catz-only.png',
   },
   {
     id: 'rocket',
@@ -107,7 +109,7 @@ export default [
   },
   {
     id: 'flame',
-    src: 'assets/sprites/newFlame.png',
+    src: 'assets/sprites/new-flame.png',
   },
   {
     id: 'star',
@@ -115,15 +117,15 @@ export default [
   },
   {
     id: 'house',
-    src: 'assets/img/house no hill.png',
+    src: 'assets/img/house-no-hill.png',
   },
   {
-    id: 'far right hill',
-    src: 'assets/img/far right hill.png',
+    id: 'far-right-hill',
+    src: 'assets/img/far-right-hill.png',
   },
   {
     id: 'house popup',
-    src: 'assets/img/house popup.png',
+    src: 'assets/img/house-popup.png',
   },
   {
     id: 'hobo',
@@ -146,40 +148,40 @@ export default [
     src: 'assets/sprites/lookingAtDiamondsSilouette.png',
   },
   {
-    id: 'uploopSound',
+    id: 'uploop-sound',
     src: 'assets/sound/uploop.mp3',
   },
   {
-    id: 'downloopSound',
+    id: 'downloop-sound',
     src: 'assets/sound/downloop.mp3',
   },
   {
-    id: 'secondUploopSound',
-    src: 'assets/sound/secondUploop.mp3',
+    id: 'second-uploop-sound',
+    src: 'assets/sound/second-uploop.mp3',
   },
   {
-    id: 'secondDownloopSound',
-    src: 'assets/sound/secondDownloop.mp3',
+    id: 'second-downloop-sound',
+    src: 'assets/sound/second-downloop.mp3',
   },
   {
-    id: 'slingshotSound',
+    id: 'slingshot-sound',
     src: 'assets/sound/slingshot.mp3',
   },
   {
-    id: 'frenzySound',
+    id: 'frenzy-sound',
     src: 'assets/sound/frenzy.mp3',
   },
   {
-    id: 'emergencyBoostSound',
-    src: 'assets/sound/emergencyBoost.mp3',
+    id: 'emergency-boost-sound',
+    src: 'assets/sound/emergency-boost.mp3',
   },
   {
-    id: 'miscSound',
+    id: 'misc-sound',
     src: 'assets/sound/misc.mp3',
   },
   {
-    id: 'catzScream2',
-    src: 'assets/sound/cat_meow_wounded_1.mp3',
+    id: 'catz-scream-2',
+    src: 'assets/sound/cat-meow-wounded-1.mp3',
   },
   {
     id: 'klonk-1',
@@ -222,8 +224,8 @@ export default [
     src: 'assets/sound/crickets.mp3',
   },
   {
-    id: 'supportingCharacter',
-    src: 'assets/sprites/supporting characters.png',
+    id: 'supporting-character',
+    src: 'assets/sprites/supporting-characters.png',
   },
   { id: 'oh-look-diamonds', src: 'assets/img/oh-look-diamonds.png' },
   { id: 'mouseover-rocket', src: 'assets/img/mouseover-rocket.png' },
@@ -235,5 +237,13 @@ export default [
   {
     id: 'lullaby-for-rocketeers',
     src: 'assets/sound/lullaby-for-rocketeers-loop.mp3',
+  },
+  {
+    id: 'diamond-sound',
+    src: 'assets/sound/diamond-sound.mp3',
+  },
+  {
+    id: 'lightning-bolt',
+    src: 'assets/sound/lightning-bolt.mp3',
   },
 ]

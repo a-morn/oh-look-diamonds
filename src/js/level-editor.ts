@@ -89,10 +89,10 @@ function createBG() {
     bgCont.addChild(bgClone)
   }
   for (let i = 0, len = levelLength / fgCoordinates.width; i < len; i += 1) {
-    const fgClone = new createjs.Bitmap(queue.getResult('fgGround'))
+    const fgClone = new createjs.Bitmap(queue.getResult('fg-ground'))
     fgClone.x = fgCoordinates.width * i
     fgClone.y = 300 + YOriginPosInGame
-    const topClone = new createjs.Bitmap(queue.getResult('fgGroundTop'))
+    const topClone = new createjs.Bitmap(queue.getResult('fg-ground-top'))
     topClone.x = fgCoordinates.width * i
     topClone.y = 0
     bgCont.addChild(fgClone, topClone)

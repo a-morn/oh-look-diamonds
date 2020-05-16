@@ -165,7 +165,7 @@ function buildingAnimation(houseGraphic: createjs.Sprite): void {
 
 function lightFuse(): void {
   if (wickActive) {
-    createjs.Sound.play('wickSound')
+    createjs.Sound.play('wick-sound')
     mouseRocket.alpha = 0
     wickLight.alpha = 0
     wick.gotoAndPlay('cycle')
@@ -486,7 +486,7 @@ function downlightCharacter(): void {
 }
 
 function meow(): void {
-  createjs.Sound.play('catzScream2')
+  createjs.Sound.play('catz-scream-2')
 }
 
 function highlightCatz(): void {
@@ -632,7 +632,7 @@ export function init(data: {
     y: -20,
   })
 
-  bgHill = helpers.createBitmap(data.queue.getResult('far right hill'), {
+  bgHill = helpers.createBitmap(data.queue.getResult('far-right-hill'), {
     scaleX: 0.8,
     scaleY: 0.8,
     y: -20,
