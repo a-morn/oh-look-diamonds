@@ -1,7 +1,8 @@
-import { hasFrenzy } from './logic'
 import * as helpers from '../helpers'
 import * as spriteSheetData from '../sprite-sheet-data'
-import * as logic from './logic'
+import { CatzStateEnum, hasFrenzy } from './utils'
+
+const FLAME_COLOR = '#99ccff' as const
 
 export const catzRocketContainer = new createjs.Container()
 catzRocketContainer.x = 260
@@ -10,27 +11,22 @@ catzRocketContainer.regY = 100
 catzRocketContainer.regX = 150
 
 const rocketSounds = {
-  [logic.CatzStateEnum.Normal]: null,
-  [logic.CatzStateEnum.Uploop]: 'uploop-sound',
-  [logic.CatzStateEnum.Downloop]: 'downloop-sound',
-  [logic.CatzStateEnum.SecondUploop]: 'second-uploop-sound',
-  [logic.CatzStateEnum.SecondDownloop]: 'second-downloop-sound',
-  [logic.CatzStateEnum.Slingshot]: 'slingshot-sound',
-  [logic.CatzStateEnum.TerminalVelocity]: 'wind',
-  [logic.CatzStateEnum.EmergencyBoost]: 'emergency-boost-sound',
-  [logic.CatzStateEnum.SlammerReady]: null,
-  [logic.CatzStateEnum.Slammer]: 'misc-sound',
-  [logic.CatzStateEnum.Frenzy]: 'frenzy-sound',
-  [logic.CatzStateEnum.FrenzyUploop]: null,
-  [logic.CatzStateEnum.FellOffRocket]: 'catzScream3',
-  [logic.CatzStateEnum.OutOfFuel]: null,
-  [logic.CatzStateEnum.OutOfFuelUpsideDown]: null,
+  [CatzStateEnum.Normal]: null,
+  [CatzStateEnum.Uploop]: 'uploop-sound',
+  [CatzStateEnum.Downloop]: 'downloop-sound',
+  [CatzStateEnum.SecondUploop]: 'second-uploop-sound',
+  [CatzStateEnum.SecondDownloop]: 'second-downloop-sound',
+  [CatzStateEnum.Slingshot]: 'slingshot-sound',
+  [CatzStateEnum.TerminalVelocity]: 'wind',
+  [CatzStateEnum.EmergencyBoost]: 'emergency-boost-sound',
+  [CatzStateEnum.SlammerReady]: null,
+  [CatzStateEnum.Slammer]: 'misc-sound',
+  [CatzStateEnum.Frenzy]: 'frenzy-sound',
+  [CatzStateEnum.FrenzyUploop]: null,
+  [CatzStateEnum.FellOffRocket]: 'catzScream3',
+  [CatzStateEnum.OutOfFuel]: null,
+  [CatzStateEnum.OutOfFuelUpsideDown]: null,
 } as const
-
-const crashBorder = {
-  top: -1000,
-  bottom: 450,
-}
 
 let rocketFlame: createjs.Sprite
 
@@ -61,8 +57,6 @@ export const sharedAssets = {
   catzBounds: null as null | createjs.Rectangle,
   catz: null as null | createjs.Sprite,
 }
-
-let previousState: logic.CatzStateEnum
 
 export const container = new createjs.Container()
 
@@ -110,18 +104,13 @@ export function init(queue: createjs.LoadQueue): void {
   )
 }
 
-export function setCrashBorders(top: number, bottom: number): void {
-  crashBorder.top = top
-  crashBorder.bottom = bottom
-}
-
 export function hideSnake(): void {
   sharedAssets.rocketSnake.alpha = 0
   sharedAssets.snakeLine.alpha = 0
   rocketFlameContainer.alpha = 0
 }
 
-function showSnake(): void {
+function showSnake(heightOffset: number): void {
   sharedAssets.rocketSnake.children[0].x =
     -60 +
     Math.cos(
@@ -133,7 +122,7 @@ function showSnake(): void {
       ((sharedAssets.catzRocketContainer.rotation + 100) / 360) * 2 * Math.PI
     ) *
       232 +
-    logic.state.heightOffset
+    heightOffset
   rocketFlameContainer.x = sharedAssets.rocketSnake.children[0].x
   rocketFlameContainer.y = sharedAssets.rocketSnake.children[0].y
   rocketFlameContainer.rotation = sharedAssets.catzRocketContainer.rotation
@@ -144,26 +133,32 @@ function showSnake(): void {
   sharedAssets.snakeLine.alpha = 1
 }
 
-export function catzRelease(): void {
+function loopDone(): void {
   if (sharedAssets.catz) {
     sharedAssets.catz.x = 0
   }
-  logic.catzRelease()
 }
 
 function playSecondDownloopSound(): void {
   if (sharedAssets.rocketSound) {
     sharedAssets.rocketSound.stop()
     sharedAssets.rocketSound = createjs.Sound.play(
-      rocketSounds[logic.CatzStateEnum.SecondDownloop]
+      rocketSounds[CatzStateEnum.SecondDownloop]
     )
   }
 }
 
-export function onChangeState(state: logic.CatzStateEnum): void {
+export function onChangeState(
+  previousState: CatzStateEnum,
+  currentState: CatzStateEnum,
+  wentIntoFrenzy: boolean,
+  frenzyReady: boolean,
+  heightOffest: number,
+  onLoopDone: () => void
+): void {
   if (
-    previousState === logic.CatzStateEnum.Uploop &&
-    state === logic.CatzStateEnum.Downloop
+    previousState === CatzStateEnum.Uploop &&
+    currentState === CatzStateEnum.Downloop
   ) {
     createjs.Tween.hasActiveTweens(sharedAssets.catzRocketContainer)
     createjs.Tween.get(sharedAssets.catzRocketContainer)
@@ -179,10 +174,13 @@ export function onChangeState(state: logic.CatzStateEnum): void {
         },
         350
       )
-      .call(catzRelease)
+      .call(() => {
+        onLoopDone()
+        loopDone()
+      })
   } else if (
-    previousState === logic.CatzStateEnum.SecondUploop &&
-    state === logic.CatzStateEnum.SecondDownloop
+    previousState === CatzStateEnum.SecondUploop &&
+    currentState === CatzStateEnum.SecondDownloop
   ) {
     createjs.Tween.hasActiveTweens(sharedAssets.catzRocketContainer)
     createjs.Tween.get(sharedAssets.catzRocketContainer, {
@@ -202,8 +200,8 @@ export function onChangeState(state: logic.CatzStateEnum): void {
       )
       .call(playSecondDownloopSound)
   } else if (
-    previousState === logic.CatzStateEnum.Frenzy &&
-    state === logic.CatzStateEnum.Normal
+    previousState === CatzStateEnum.Frenzy &&
+    currentState === CatzStateEnum.Normal
   ) {
     if (sharedAssets.catz) {
       sharedAssets.catz.gotoAndPlay('no shake')
@@ -212,37 +210,36 @@ export function onChangeState(state: logic.CatzStateEnum): void {
     if (sharedAssets.rocket) {
       sharedAssets.rocket.alpha = 1
     }
-  } else if (!hasFrenzy(previousState) && hasFrenzy(state)) {
-    /* todo: catz.gotoAndPlay('frenzy ready')
-      if (catzRocket.rocket) {
-        catzRocket.rocket.alpha = 0
-      } */
+  } else if (wentIntoFrenzy) {
+    if (sharedAssets.catz) {
+      sharedAssets.catz.gotoAndPlay('frenzy ready')
+    }
+    if (sharedAssets.rocket) {
+      sharedAssets.rocket.alpha = 0
+    }
   }
 
   if (
-    state !== logic.CatzStateEnum.SlammerReady &&
-    state !== logic.CatzStateEnum.FrenzyUploop
+    currentState !== CatzStateEnum.SlammerReady &&
+    currentState !== CatzStateEnum.FrenzyUploop
   ) {
     if (sharedAssets.rocketSound) {
       sharedAssets.rocketSound.stop()
     }
-    const sound = rocketSounds[state]
-    if (sound !== null) {
+    const sound = rocketSounds[currentState]
+    if (sound) {
       sharedAssets.rocketSound = createjs.Sound.play(sound)
       sharedAssets.rocketSound.volume = 0.5
     }
   }
   if (
-    state === logic.CatzStateEnum.Normal ||
-    state === logic.CatzStateEnum.TerminalVelocity ||
-    state === logic.CatzStateEnum.OutOfFuel ||
-    state === logic.CatzStateEnum.OutOfFuelUpsideDown
+    currentState === CatzStateEnum.Normal ||
+    currentState === CatzStateEnum.TerminalVelocity ||
+    currentState === CatzStateEnum.OutOfFuel ||
+    currentState === CatzStateEnum.OutOfFuelUpsideDown
   ) {
     hideSnake()
-    if (
-      logic.state.frenzyReady ||
-      state === logic.CatzStateEnum.TerminalVelocity
-    ) {
+    if (frenzyReady || currentState === CatzStateEnum.TerminalVelocity) {
       if (sharedAssets.catz) {
         sharedAssets.catz.gotoAndPlay('shake')
       }
@@ -250,18 +247,18 @@ export function onChangeState(state: logic.CatzStateEnum): void {
       sharedAssets.catz.gotoAndPlay('no shake')
     }
   } else if (
-    state !== logic.CatzStateEnum.FellOffRocket &&
-    !logic.hasFrenzy(state)
+    currentState !== CatzStateEnum.FellOffRocket &&
+    !hasFrenzy(currentState)
   ) {
     if (sharedAssets.snakeLine.alpha === 0) {
-      showSnake()
+      showSnake(heightOffest)
     }
-    if (!logic.state.frenzyReady) {
+    if (!frenzyReady) {
       if (sharedAssets.catz) {
         sharedAssets.catz.gotoAndPlay('shake')
       }
     }
-  } else if (state !== logic.CatzStateEnum.FellOffRocket) {
+  } else if (currentState !== CatzStateEnum.FellOffRocket) {
     hideSnake()
     if (sharedAssets.catz) {
       sharedAssets.catz.gotoAndPlay('frenzy')
@@ -272,8 +269,6 @@ export function onChangeState(state: logic.CatzStateEnum): void {
       sharedAssets.catz.gotoAndPlay('flying')
     }
   }
-
-  previousState = state
 }
 
 export function reset(): void {
@@ -288,9 +283,121 @@ export function reset(): void {
     sharedAssets.catzRocketContainer.y = 200
     sharedAssets.catz.gotoAndPlay('no shake')
   }
-  onChangeState(logic.CatzStateEnum.Normal)
+  onChangeState(
+    CatzStateEnum.Normal,
+    CatzStateEnum.Normal,
+    false,
+    false,
+    0,
+    () => undefined
+  )
 }
 
 export function start(): void {
   hideSnake()
+}
+
+export function updateRocketSnake(foo: boolean, heightOffset: number): void {
+  const [, ...rocketSnakeKeys] = [...sharedAssets.rocketSnake.children.keys()]
+  for (const i of rocketSnakeKeys) {
+    const kid = sharedAssets.rocketSnake.children[i]
+    kid.x =
+      sharedAssets.rocketSnake.children[i - 1].x -
+      2 * Math.cos((6.28 * sharedAssets.catzRocketContainer.rotation) / 360)
+    kid.y = sharedAssets.rocketSnake.children[i - 1].y
+  }
+
+  if (foo) {
+    sharedAssets.rocketSnake.children[0].x =
+      -60 +
+      Math.cos(
+        ((sharedAssets.catzRocketContainer.rotation + 101) / 360) * 2 * Math.PI
+      ) *
+        176
+    sharedAssets.rocketSnake.children[0].y =
+      Math.sin(
+        ((sharedAssets.catzRocketContainer.rotation + 100) / 360) * 2 * Math.PI
+      ) *
+        232 +
+      heightOffset
+    rocketFlameContainer.x = sharedAssets.catzRocketContainer.x
+    rocketFlameContainer.y = sharedAssets.catzRocketContainer.y
+  } else {
+    sharedAssets.rocketSnake.children[0].x =
+      -5 +
+      Math.cos(
+        ((sharedAssets.catzRocketContainer.rotation + 110) / 360) * 2 * Math.PI
+      ) *
+        100
+    sharedAssets.rocketSnake.children[0].y =
+      Math.sin(
+        ((sharedAssets.catzRocketContainer.rotation + 110) / 360) * 2 * Math.PI
+      ) *
+        120 +
+      heightOffset
+    rocketFlameContainer.x = sharedAssets.catzRocketContainer.x
+    rocketFlameContainer.y = sharedAssets.catzRocketContainer.y
+  }
+  sharedAssets.snakeLine.graphics = new createjs.Graphics()
+  sharedAssets.snakeLine.x = 260
+  sharedAssets.snakeLine.y = 200
+  for (const i of rocketSnakeKeys) {
+    const kid = sharedAssets.rocketSnake.children[i]
+    sharedAssets.snakeLine.graphics.setStrokeStyle(
+      sharedAssets.rocketSnake.children.length * 2 - i * 2,
+      1
+    )
+    sharedAssets.snakeLine.graphics.beginStroke(FLAME_COLOR)
+    sharedAssets.snakeLine.graphics.moveTo(kid.x - i * 5, kid.y)
+    sharedAssets.snakeLine.graphics.lineTo(
+      sharedAssets.rocketSnake.children[i - 1].x - (i - 1) * 5,
+      sharedAssets.rocketSnake.children[i - 1].y
+    )
+    sharedAssets.snakeLine.graphics.endStroke()
+  }
+  rocketFlameContainer.rotation = sharedAssets.catzRocketContainer.rotation
+}
+
+export function update(
+  previouseState: CatzStateEnum,
+  currentState: CatzStateEnum | undefined,
+  newXPosition: number | undefined,
+  newYPosition: number | undefined,
+  newRotation: number | undefined,
+  catzWounded: boolean,
+  frenzyReady: boolean,
+  heightOffset: number,
+  onLoopDone: () => void
+): void {
+  updateRocketSnake(true, heightOffset) // state !== CatzStateEnum.SecondDownloop && state !== CatzStateEnum.Slingshot
+  if (currentState) {
+    onChangeState(
+      previouseState,
+      currentState,
+      !hasFrenzy(previouseState) && hasFrenzy(currentState),
+      frenzyReady,
+      heightOffset,
+      onLoopDone
+    )
+  }
+
+  sharedAssets.catzRocketContainer.x =
+    newXPosition === undefined
+      ? sharedAssets.catzRocketContainer.x
+      : newXPosition
+  sharedAssets.catzRocketContainer.y =
+    newYPosition === undefined
+      ? sharedAssets.catzRocketContainer.y
+      : newYPosition
+  sharedAssets.catzRocketContainer.rotation =
+    newRotation === undefined
+      ? sharedAssets.catzRocketContainer.rotation
+      : newRotation
+
+  const catzInAnimation = createjs.Tween.hasActiveTweens(sharedAssets.catz)
+  if (catzWounded && !catzInAnimation && sharedAssets.catz) {
+    sharedAssets.catz.x = -50
+  } else if (catzWounded && !catzInAnimation && sharedAssets.catz) {
+    sharedAssets.catz.x = 0
+  }
 }

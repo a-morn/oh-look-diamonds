@@ -8,11 +8,6 @@ import debugOptions from './debug-options'
 import assetManifest from './asset-manifest'
 import { store } from './store'
 
-export enum DiamondEnum {
-  shard,
-  great,
-}
-
 function initBase(queue: createjs.LoadQueue, stage: createjs.Stage): void {
   spriteSheetData.setValues(queue)
   const bg = helpers.createBitmap(queue.getResult('bg'), { y: -1200 })
@@ -85,7 +80,7 @@ export default function init(
       house.updateAndStartHouseView(
         stage,
         catzRocket.state.isHit,
-        catzRocket.state.rocketRotation,
+        catzRocket.sharedAssets.catzRocketContainer.rotation,
         catzRocket.CatzStateEnum.OutOfFuelUpsideDown ===
           catzRocket.state.catzState
       )

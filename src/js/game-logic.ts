@@ -9,7 +9,7 @@ import { ACTION_TYPES, store } from './store'
 import { events, trigger } from './event-bus'
 import { trackParts, TrackPart } from './track-parts'
 import tracks from './tracks'
-import { DiamondEnum } from './initialize-stage'
+import { DiamondEnum } from './types'
 
 let gameListener: Function
 let gameView: createjs.Container
