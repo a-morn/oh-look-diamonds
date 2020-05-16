@@ -857,6 +857,11 @@ export function init(data: {
   }
 
   houseView.addChild(
+    look,
+    diamonds,
+    diCont,
+    oh,
+    starsContainer,
     university,
     rehab,
     bgHill,
@@ -881,12 +886,7 @@ export function init(data: {
     mouseChar.priest,
     mouseRocket,
     wickLight,
-    wickClickBox,
-    look,
-    diamonds,
-    diCont,
-    oh,
-    starsContainer
+    wickClickBox
   )
 }
 
