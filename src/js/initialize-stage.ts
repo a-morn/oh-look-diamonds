@@ -8,7 +8,7 @@ import debugOptions from './debug-options'
 import assetManifest from './asset-manifest'
 import { store } from './store'
 
-export enum diamondEnum {
+export enum DiamondEnum {
   shard,
   great,
 }
@@ -84,10 +84,10 @@ export default function init(
     } else {
       house.updateAndStartHouseView(
         stage,
-        catzRocket.catzRocket.isHit,
-        catzRocket.catzRocket.catzRocketContainer.rotation,
-        catzRocket.catzStateEnum.OutOfFuelUpsideDown ===
-          catzRocket.catzRocket.catzState
+        catzRocket.state.isHit,
+        catzRocket.state.rocketRotation,
+        catzRocket.CatzStateEnum.OutOfFuelUpsideDown ===
+          catzRocket.state.catzState
       )
     }
   }

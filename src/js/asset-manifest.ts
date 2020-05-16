@@ -1,11 +1,11 @@
 export default [
   {
     id: 'enemybirds',
-    src: 'assets/sprites/newBirds.png',
+    src: 'assets/sprites/new-birds.png',
   },
   {
     id: 'rocket-catz',
-    src: 'assets/sprites/catzOnly.png',
+    src: 'assets/sprites/catz-only.png',
   },
   {
     id: 'rocket',
@@ -129,7 +129,7 @@ export default [
   },
   {
     id: 'hobo',
-    src: 'assets/sprites/hoboCat.png',
+    src: 'assets/sprites/hobo-cat.png',
   },
   {
     id: 'smokepuffs',
@@ -137,7 +137,7 @@ export default [
   },
   {
     id: 'diamondhouse',
-    src: 'assets/sprites/diamond house progression.png',
+    src: 'assets/sprites/diamond-house-progression.png',
   },
   {
     id: 'leaves',
@@ -145,7 +145,7 @@ export default [
   },
   {
     id: 'cat',
-    src: 'assets/sprites/lookingAtDiamondsSilouette.png',
+    src: 'assets/sprites/looking-at-diamonds-silouette.png',
   },
   {
     id: 'uploop-sound',
@@ -185,31 +185,31 @@ export default [
   },
   {
     id: 'klonk-1',
-    src: 'assets/sound/klonk1.mp3',
+    src: 'assets/sound/klonk-1.mp3',
   },
   {
     id: 'klonk-2',
-    src: 'assets/sound/klonk2.mp3',
+    src: 'assets/sound/klonk-2.mp3',
   },
   {
     id: 'klonk-3',
-    src: 'assets/sound/klonk3.mp3',
+    src: 'assets/sound/klonk-3.mp3',
   },
   {
     id: 'klonk-4',
-    src: 'assets/sound/klonk4.mp3',
+    src: 'assets/sound/klonk-4.mp3',
   },
   {
     id: 'squawk-1',
-    src: 'assets/sound/squawk1.mp3',
+    src: 'assets/sound/squawk-1.mp3',
   },
   {
     id: 'squawk-2',
-    src: 'assets/sound/squawk2.mp3',
+    src: 'assets/sound/squawk-2.mp3',
   },
   {
     id: 'squawk-3',
-    src: 'assets/sound/squawk3.mp3',
+    src: 'assets/sound/squawk-3.mp3',
   },
   {
     id: 'wick',

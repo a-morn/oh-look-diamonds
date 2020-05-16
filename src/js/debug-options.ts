@@ -1,5 +1,5 @@
 export default {
-  noHouseView: false,
+  noHouseView: true,
   debugMode: false,
   trustFund: false,
   infiniteFuel: false,
