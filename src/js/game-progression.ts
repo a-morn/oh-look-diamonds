@@ -1,4 +1,4 @@
-import { catDialog, stat } from './dialog'
+import { catDialog } from './dialog'
 import {
   CAT_NAMES,
   HOUSE_NAMES,

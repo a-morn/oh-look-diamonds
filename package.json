@@ -8,7 +8,7 @@
     "start": "webpack-dev-server --content-base ./dist",
     "watch": "webpack --watch",
     "build:prod": "webpack --production",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.ts"
   },
   "repository": {
     "type": "git",
