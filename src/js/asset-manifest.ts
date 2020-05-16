@@ -232,4 +232,8 @@ export default [
   { id: 'mouseover-priest', src: 'assets/img/mouseover-priest.png' },
   { id: 'mouseover-timmy', src: 'assets/img/mouseover-timmy.png' },
   { id: 'rocket-silouette', src: 'assets/img/catz-rocket-silouette.png' },
+  {
+    id: 'lullaby-for-rocketeers',
+    src: 'assets/sound/lullaby-for-rocketeers-loop.mp3',
+  },
 ]

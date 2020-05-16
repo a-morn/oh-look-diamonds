@@ -5,7 +5,7 @@ import * as spriteSheetData from './sprite-sheet-data'
 import * as helpers from './helpers'
 import { on, events } from './event-bus'
 import debugOptions from './debug-options'
-import levelManifest from './level-manifest'
+import assetManifest from './asset-manifest'
 import { store } from './store'
 
 export enum diamondEnum {
@@ -76,7 +76,7 @@ export default function init(
   queue.on('progress', handleProgress as (event: Object) => void) // eslint-disable-line
   queue.on('complete', handleComplete)
 
-  queue.loadManifest(levelManifest)
+  queue.loadManifest(assetManifest)
 
   const onCrash = (): void => {
     if (debugOptions.noHouseView) {

@@ -101,6 +101,7 @@ let trackTimer = 0
 let wind = 0
 let zoomOut = false
 let fuelBlinkTimer = 0
+let rocketSong: createjs.AbstractSoundInstance
 
 const attackBirdContainer = new createjs.Container()
 const cloudContainer = new createjs.Container()
@@ -270,6 +271,9 @@ export function init(data: {
   stage: createjs.Stage
   queue: createjs.LoadQueue
 }): void {
+  rocketSong = createjs.Sound.play('lullaby-for-rocketeers') // eslint-disable-line no-undef
+  rocketSong.stop()
+
   debugText = data.debugText
   bg = data.bg
   stage = data.stage
@@ -1651,6 +1655,11 @@ export function SetObjectEventListeners(turnOn: boolean): void {
 }
 
 export function gotoGameView(): void {
+  if (rocketSong.getPosition() < 100) {
+    rocketSong.play({
+      loop: -1,
+    })
+  }
   store.dispatch({ type: ACTION_TYPES.INCREMENT_ROUND })
   zoomOut = false
 
