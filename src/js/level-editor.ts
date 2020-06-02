@@ -107,8 +107,8 @@ function createBG() {
 }
 
 function pressMoveCatz(evt) {
-  evt.currentTarget.x = evt.stageX / levelViewScale // eslint-disable-line no-param-reassign
-  evt.currentTarget.y = evt.stageY / levelViewScale // eslint-disable-line no-param-reassign
+  evt.currentTarget.x = evt.stageX / levelViewScale 
+  evt.currentTarget.y = evt.stageY / levelViewScale 
   stage.update()
 }
 
@@ -320,9 +320,9 @@ function handleKeyUp(evt) {
 }
 
 function pressMove(evt) {
-  evt.currentTarget.x = // eslint-disable-line no-param-reassign
+  evt.currentTarget.x = 
     evt.stageX / levelViewScale - gameLogic.selectPosOnStartDrag.x
-  evt.currentTarget.y = // eslint-disable-line no-param-reassign
+  evt.currentTarget.y = 
     evt.stageY / levelViewScale - gameLogic.selectPosOnStartDrag.y
   stage.update()
 }

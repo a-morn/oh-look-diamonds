@@ -22,3 +22,28 @@ export function hasFrenzy(currentState: CatzStateEnum): boolean {
     currentState === CatzStateEnum.Frenzy
   )
 }
+
+export type State = {
+  invincibilityCounter: number
+  diamondFuel: number
+  catzState: CatzStateEnum
+  catzPreviousState: CatzStateEnum
+  catzVelocity: number
+  isHit: boolean
+  isWounded: boolean
+  frenzyTimer: number
+  frenzyCount: number
+  heightOffset: number
+  isCrashed: boolean
+  frenzyReady: boolean
+  positionX: number
+  positionY: number
+}
+
+export type UpdateResult = Partial<State> & {
+  newRotation?: number
+  newPosition?: {
+    x: number
+    y: number
+  }
+}

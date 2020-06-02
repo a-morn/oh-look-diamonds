@@ -1,25 +1,16 @@
-import * as logic from './logic'
+import { DiamondEnum } from 'js/types'
 import * as assets from './assets'
-import * as utils from './utils'
+import * as state from './state'
 
-export const { state, canCollide, pickupDiamond } = logic
-export const { init, container, sharedAssets } = assets
+export const { container, sharedAssets } = assets
+export const { sharedState } = state
 
-function updateCatzState(
-  newState: utils.CatzStateEnum | null | undefined
-): void {
-  if (newState) {
-    logic.state.catzPreviousState = logic.state.catzState
-    logic.state.catzState = newState
-  }
-}
-function loopDone(): void {
-  const newState = logic.loopDone(sharedAssets.catzRocketContainer.rotation)
-  updateCatzState(newState)
+export function init(queue: createjs.LoadQueue): void {
+  assets.init(queue)
 }
 
-export function start(startVelocity: number): void {
-  logic.start(startVelocity)
+export function start(): void {
+  state.start()
   assets.start()
 }
 
@@ -28,45 +19,40 @@ export function update(
   wind: number,
   event: createjs.Event
 ): void {
-  const updateResult = logic.update(
-    grav,
-    wind,
-    event.delta,
-    createjs.Tween.hasActiveTweens(assets.catzRocketContainer),
-    () => createjs.Tween.removeTweens(assets.catzRocketContainer),
-    sharedAssets.catzRocketContainer.y,
-    sharedAssets.catzRocketContainer.rotation
-  )
+  const newState = state.update(grav, wind, event)
 
-  updateCatzState(updateResult.newState)
-
-  // updateResult.newState
   assets.update(
-    logic.state.catzPreviousState,
-    logic.state.catzState,
-    updateResult.newPosition?.x,
-    updateResult.newPosition?.y,
-    updateResult.newRotation,
-    logic.state.isWounded,
-    logic.state.frenzyReady,
-    logic.state.heightOffset,
-    loopDone
+    state.sharedState.catzPreviousState,
+    state.sharedState.catzState,
+    newState.positionX,
+    newState.positionY,
+    newState.rotation,
+    state.sharedState.isWounded,
+    state.sharedState.frenzyReady,
+    state.sharedState.heightOffset,
+    state.loopDone
   )
 }
 
 export function reset(): void {
-  logic.reset()
+  state.reset()
   assets.reset()
 }
 
-export { CatzStateEnum, hasFrenzy } from './utils'
+export { CatzStateEnum, hasFrenzy } from './types'
 
 export function catzUp(): void {
-  const newState = logic.catzUp(sharedAssets.catzRocketContainer.rotation)
-  updateCatzState(newState)
+  state.catzUp()
 }
 
 export function catzEndLoop(): void {
-  const newState = logic.catzEndLoop()
-  updateCatzState(newState)
+  state.catzEndLoop()
+}
+
+export function canCollide(): boolean {
+  return state.canCollide()
+}
+
+export function pickupDiamond(size: DiamondEnum): void {
+  return state.pickupDiamond(size)
 }

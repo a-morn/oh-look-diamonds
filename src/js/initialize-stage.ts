@@ -79,10 +79,10 @@ export default function init(
     } else {
       house.updateAndStartHouseView(
         stage,
-        catzRocket.state.isHit,
+        catzRocket.sharedState.isHit,
         catzRocket.sharedAssets.catzRocketContainer.rotation,
         catzRocket.CatzStateEnum.OutOfFuelUpsideDown ===
-          catzRocket.state.catzState
+          catzRocket.sharedState.catzState
       )
     }
   }

@@ -1,6 +1,10 @@
+/*
+ * All rocket related assets are handled here
+ */
+
 import * as helpers from '../helpers'
 import * as spriteSheetData from '../sprite-sheet-data'
-import { CatzStateEnum, hasFrenzy } from './utils'
+import { CatzStateEnum, hasFrenzy } from './types'
 
 const FLAME_COLOR = '#99ccff' as const
 

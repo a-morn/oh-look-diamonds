@@ -9,7 +9,7 @@ import { ACTION_TYPES, store } from './store'
 import { events, trigger } from './event-bus'
 import { trackParts, TrackPart } from './track-parts'
 import tracks from './tracks'
-import { DiamondEnum } from './types'
+import { DiamondEnum, OnlookerTypeEnum } from './types'
 
 let gameListener: Function
 let gameView: createjs.Container
@@ -123,7 +123,7 @@ const containerDict = {
   attackBird: attackBirdContainer,
   thunderCloud: thunderContainer,
 } as const
-let levelViewScale = 1
+const levelViewScale = 1
 const levelDesignConts = [
   diamondContainer,
   thunderContainer,
@@ -160,13 +160,13 @@ function changeBirdType(evt: createjs.MouseEvent): boolean {
   const newIndex = (currentIndex + 1) % types.length
   const newType = types[newIndex]
   evt.currentTarget.gotoAndPlay(newType)
-  evt.currentTarget.acceleration = AttackBirdProps[newType].acceleration // eslint-disable-line no-param-reassign
-  evt.currentTarget.topSpeed2 = AttackBirdProps[newType].topSpeed2 // eslint-disable-line no-param-reassign
-  evt.currentTarget.weight = AttackBirdProps[newType].weight // eslint-disable-line no-param-reassign
-  evt.currentTarget.scale = AttackBirdProps[newType].scale // eslint-disable-line no-param-reassign
-  evt.currentTarget.scaleX = AttackBirdProps[newType].scale // eslint-disable-line no-param-reassign
-  evt.currentTarget.scaleY = AttackBirdProps[newType].scale // eslint-disable-line no-param-reassign
-  evt.currentTarget.rad = AttackBirdProps[newType].scale * 50 // eslint-disable-line no-param-reassign
+  evt.currentTarget.acceleration = AttackBirdProps[newType].acceleration
+  evt.currentTarget.topSpeed2 = AttackBirdProps[newType].topSpeed2
+  evt.currentTarget.weight = AttackBirdProps[newType].weight
+  evt.currentTarget.scale = AttackBirdProps[newType].scale
+  evt.currentTarget.scaleX = AttackBirdProps[newType].scale
+  evt.currentTarget.scaleY = AttackBirdProps[newType].scale
+  evt.currentTarget.rad = AttackBirdProps[newType].scale * 50
   stage.update()
   return false
 }
@@ -406,16 +406,16 @@ function collisionResolve(
   isGround: boolean
 ): void {
   if (isGround || catzRocket.canCollide()) {
-    bird.x += normX * normDist * 2 // eslint-disable-line no-param-reassign
-    bird.y += normY * normDist * 2 // eslint-disable-line no-param-reassign
-    normX *= sign(normDist) // eslint-disable-line no-param-reassign
-    normY *= sign(normDist) // eslint-disable-line no-param-reassign
+    bird.x += normX * normDist * 2
+    bird.y += normY * normDist * 2
+    normX *= sign(normDist)
+    normY *= sign(normDist)
     lastResolveNorm[0] = normX
     lastResolveNorm[1] = normY
     const reflect = -2.5 * (normX * bird.velocityX + normY * bird.velocityY)
-    bird.velocityX += reflect * normX // eslint-disable-line no-param-reassign
-    bird.velocityY += reflect * normY // eslint-disable-line no-param-reassign
-    catzRocket.state.catzVelocity -= (bird.weight * reflect * normY) / 150
+    bird.velocityX += reflect * normX
+    bird.velocityY += reflect * normY
+    catzRocket.sharedState.catzVelocity -= (bird.weight * reflect * normY) / 150
     /* catzRocketContainer */
     catzRocket.container.y -= (bird.weight * reflect * normY) / 400
     let rand = Math.floor(4 * Math.random() + 1)
@@ -428,7 +428,7 @@ function collisionResolve(
       squawkSound = createjs.Sound.play(name)
       squawkSound.volume = 0.15
     }
-  } else if (catzRocket.hasFrenzy(catzRocket.state.catzState)) {
+  } else if (catzRocket.hasFrenzy(catzRocket.sharedState.catzState)) {
     bird.setGrilled()
     store.dispatch({
       type: ACTION_TYPES.INCREMENT_KILLS,
@@ -546,8 +546,44 @@ function catzCollisionCheck(bird: IAttackBird): boolean {
       return false
     }
   }
-  if (!debugOptions.godMode && catzRocket.state.isHit) catzFellOfRocket()
+  if (!debugOptions.godMode && catzRocket.sharedState.isHit) catzFellOfRocket()
   return true
+}
+
+
+
+function moveBird(
+  bird: IAttackBird,
+  event: createjs.Event
+): {
+  dispX: number
+  dispY: number
+} {
+  const result = {
+    dispX: (bird.velocityX * event.delta) / 1000,
+    dispY: (bird.velocityY * event.delta) / 1000
+  }
+  if (result.dispX > bird.rad / 2 || result.dispY > bird.rad / 2) {
+    const noSteps = Math.floor(
+      Math.min((2 * Math.max(result.dispX, result.dispY)) / bird.rad, 4)
+    )
+    Array(noSteps)
+      .fill(null)
+      .forEach(() => {
+        bird.x += dispX / noSteps
+        bird.y += dispY / noSteps
+        isCollide = collisionCheck(bird)
+        if (isCollide) {
+          dispX = (bird.velocityX * event.delta) / 1000
+          dispY = (bird.velocityY * event.delta) / 1000
+        }
+      })
+  } else {
+    bird.x += dispX
+    bird.y += dispY
+    isCollide = collisionCheck(bird)
+  }
+  return isCollide
 }
 
 function moveAndCollisionCheck(
@@ -564,8 +600,8 @@ function moveAndCollisionCheck(
     Array(noSteps)
       .fill(null)
       .forEach(() => {
-        bird.x += dispX / noSteps // eslint-disable-line no-param-reassign
-        bird.y += dispY / noSteps // eslint-disable-line no-param-reassign
+        bird.x += dispX / noSteps
+        bird.y += dispY / noSteps
         isCollide = collisionCheck(bird)
         if (isCollide) {
           dispX = (bird.velocityX * event.delta) / 1000
@@ -573,8 +609,8 @@ function moveAndCollisionCheck(
         }
       })
   } else {
-    bird.x += dispX // eslint-disable-line no-param-reassign
-    bird.y += dispY // eslint-disable-line no-param-reassign
+    bird.x += dispX
+    bird.y += dispY
     isCollide = collisionCheck(bird)
   }
   return isCollide
@@ -638,7 +674,7 @@ function flameCollisionCheck(bird: IAttackBird): boolean {
   return false
 }
 
-export function DeleteSelected(): void {
+export function deleteSelected(): void {
   selectContainer.removeAllChildren()
   stage.update()
 }
@@ -659,72 +695,7 @@ export function cutCopy(isCopy: boolean): void {
   if (isCopy) {
     clipOffset = clipRightMost - clipLeftMost + 50
   } else {
-    DeleteSelected()
-  }
-  stage.update()
-}
-
-export function Paste(): void {
-  moveChildrenFromSelectedToObjCont()
-  for (let i = clipBoard.length - 1; i >= 0; i -= 1) {
-    clipBoard[i].x += clipOffset
-    const clone = createClone(clipBoard[i])
-    clone.alpha = 0.5
-    selectContainer.addChild(clone)
-  }
-  stage.update()
-}
-
-export function PressMove(evt: createjs.MouseEvent): void {
-  evt.currentTarget.x = evt.stageX / levelViewScale - selectPosOnStartDrag.x // eslint-disable-line no-param-reassign
-  evt.currentTarget.y = evt.stageY / levelViewScale - selectPosOnStartDrag.y // eslint-disable-line no-param-reassign
-  stage.update()
-}
-
-export function CreateSelectBox(evt: createjs.MouseEvent): void {
-  levelViewScale = gameView.scaleX
-  moveChildrenFromSelectedToObjCont()
-  selectBox.rect.setValues(
-    evt.stageX / levelViewScale,
-    (evt.stageY - gameView.y) / levelViewScale,
-    1,
-    1
-  )
-  selectBox.graphic.graphics.clear()
-  selectBox.graphic.graphics.setStrokeStyle(1)
-  gameView.addChild(selectBox.graphic)
-  drawSelectBox()
-}
-
-export function DragBox(evt: createjs.MouseEvent): void {
-  selectBox.graphic.graphics.clear()
-  selectBox.rect.width = evt.stageX / levelViewScale - selectBox.rect.x
-  selectBox.rect.height =
-    (evt.stageY - gameView.y) / levelViewScale - selectBox.rect.y
-  drawSelectBox()
-}
-
-export function SelectWithBox(): void {
-  // remove selected items not in the box
-  moveChildrenFromSelectedToObjCont()
-  // add items in the box
-  levelDesignConts.map(({ children, getChildAt }) =>
-    children
-      .map((_, i) => getChildAt(i))
-      .forEach((kid) => {
-        // eslint-disable-next-line
-        kid.on('mousedown', selectItem as (evt: Object) => boolean)
-        if (helpers.isInRectangle(kid.x, kid.y, selectBox.rect)) {
-          selectContainer.addChild(kid)
-        }
-      })
-  )
-
-  if (selectContainer.numChildren === 0) {
-    selectBox.graphic.graphics.clear()
-  } else {
-    selectBox.graphic.graphics.clear()
-    selectContainer.alpha = 0.5
+    deleteSelected()
   }
   stage.update()
 }
@@ -776,12 +747,12 @@ function updateWorldContainer(): void {
     !createjs.Tween.hasActiveTweens(gameView) &&
     !createjs.Tween.hasActiveTweens(bg) &&
     !createjs.Tween.hasActiveTweens(starsContainer) &&
-    !catzRocket.state.isCrashed
+    !catzRocket.sharedState.isCrashed
   ) {
     if (
       !zoomOut &&
       catzRocket.sharedAssets.catzRocketContainer.y < 0 &&
-      catzRocket.state.catzState === catzRocket.CatzStateEnum.Normal
+      catzRocket.sharedState.catzState === catzRocket.CatzStateEnum.Normal
     ) {
       createjs.Tween.get(gameView)
         .to(
@@ -816,7 +787,7 @@ function updateWorldContainer(): void {
     } else if (
       zoomOut &&
       catzRocket.sharedAssets.catzRocketContainer.y > 300 &&
-      catzRocket.state.catzState === catzRocket.CatzStateEnum.Normal
+      catzRocket.sharedState.catzState === catzRocket.CatzStateEnum.Normal
     ) {
       createjs.Tween.get(gameView)
         .to(
@@ -1007,7 +978,7 @@ function updateThunderClouds(): void {
     } else if (
       (!kid.lastFired ||
         new Date().valueOf() - kid.lastFired.valueOf() > 300) &&
-      !catzRocket.state.isHit &&
+      !catzRocket.sharedState.isHit &&
       catzRocket.sharedAssets.catzRocketContainer.x <
         kid.x + kid.width * kid.scaleX &&
       catzRocket.sharedAssets.catzRocketContainer.x > kid.x &&
@@ -1036,7 +1007,7 @@ function updateThunderClouds(): void {
       }
       if (!birdHit) {
         if (!debugOptions.godMode) {
-          if (catzRocket.state.isHit) {
+          if (catzRocket.sharedState.isHit) {
             catzFellOfRocket()
           }
         }
@@ -1209,14 +1180,19 @@ function updateDirector(event: createjs.Event): void {
 
 function updateOnlookers(event: createjs.Event): void {
   let xOffset = 0
-  function addOnlooker(onlooker: createjs.Sprite): void {
+  function addOnlooker(onlookerType: OnlookerTypeEnum): void {
+    const onlooker = helpers.createSprite(
+      spriteSheetData.spriteSheets.onlookers,
+      onlookerType,
+      {}
+    )
     const oCont = new createjs.Container()
     oCont.x = 2000 + xOffset
     xOffset += 300
     oCont.y = 180
-    onlooker.x = 180 // eslint-disable-line no-param-reassign
-    onlooker.y = 0 // eslint-disable-line no-param-reassign
-    const variant = `mobHill${Math.floor(Math.random() * 2 + 1)}`
+    onlooker.x = 180
+    onlooker.y = 0
+    const variant = `mob-hill-${Math.floor(Math.random() * 2 + 1)}`
     const hill = helpers.createBitmap(queue.getResult(variant), {
       y: 95,
     })
@@ -1231,36 +1207,16 @@ function updateOnlookers(event: createjs.Event): void {
       villagersApprovalRating,
     } = store.getState()
     if (Math.random() > 1 - kittensApprovalRating) {
-      onlooker = helpers.createSprite(
-        spriteSheetData.spriteSheets.onlookers,
-        'orphans',
-        {}
-      )
-      addOnlooker(onlooker)
+      addOnlooker(OnlookerTypeEnum.orphans)
     }
     if (Math.random() < -catPartyApprovalRating) {
-      onlooker = helpers.createSprite(
-        spriteSheetData.spriteSheets.onlookers,
-        'cat party',
-        {}
-      )
-      addOnlooker(onlooker)
+      addOnlooker(OnlookerTypeEnum.catParty)
     }
     if (Math.random() < -villagersApprovalRating) {
-      onlooker = helpers.createSprite(
-        spriteSheetData.spriteSheets.onlookers,
-        'angry mob',
-        {}
-      )
-      addOnlooker(onlooker)
+      addOnlooker(OnlookerTypeEnum.angryMob)
     }
     if (Math.random() > 1 - villagersApprovalRating) {
-      onlooker = helpers.createSprite(
-        spriteSheetData.spriteSheets.onlookers,
-        'loving mob',
-        {}
-      )
-      addOnlooker(onlooker)
+      addOnlooker(OnlookerTypeEnum.lovingMob)
     }
   }
 
@@ -1275,15 +1231,15 @@ function updateOnlookers(event: createjs.Event): void {
 function updatePointer(): void {
   const progressBar = document.querySelector('.progress-bar')
   if (progressBar instanceof HTMLElement) {
-    progressBar.style.width = `${catzRocket.state.diamondFuel * 10}%`
-    if (catzRocket.state.diamondFuel < 2) {
+    progressBar.style.width = `${catzRocket.sharedState.diamondFuel * 10}%`
+    if (catzRocket.sharedState.diamondFuel < 2) {
       if (fuelBlinkTimer > 10) {
         progressBar.classList.toggle('background-red')
         fuelBlinkTimer = 0
       }
       fuelBlinkTimer += 1
     }
-    if (catzRocket.state.diamondFuel >= 2) {
+    if (catzRocket.sharedState.diamondFuel >= 2) {
       progressBar.classList.remove('background-red')
     }
     // hudPointer.rotation = Math.min(-30 + catzRocket.catzRocket.diamondFuel*135/10,105);
@@ -1330,7 +1286,8 @@ function updateAttackBird(event: createjs.Event): void {
       catzRocket.sharedAssets.catzRocketContainer.y,
       event
     )
-    moveAndCollisionCheck(kid, event)
+    cosnt result = moveAndCollisionCheck(kid, event)
+    kid.
     catzCollisionCheck(kid)
     if (flameCollisionCheck(kid)) {
       kid.temperature += event.delta
@@ -1360,7 +1317,7 @@ function updateVertices(): void {
   let h
   let w
 
-  if (catzRocket.hasFrenzy(catzRocket.state.catzState)) {
+  if (catzRocket.hasFrenzy(catzRocket.sharedState.catzState)) {
     x = catzRocket.sharedAssets.catzRocketContainer.x + 70 * c - 13 * s
     y = catzRocket.sharedAssets.catzRocketContainer.y + 13 * c + 70 * s
     h = newBounds.height / 2 + 5
@@ -1392,7 +1349,7 @@ function updateVertices(): void {
   norm[3].x = -(polygonVertices[3].y - polygonVertices[4].y) / newBounds.noseLen
   norm[3].y = -(polygonVertices[4].x - polygonVertices[3].x) / newBounds.noseLen
 
-  if (catzRocket.state.isWounded) {
+  if (catzRocket.sharedState.isWounded) {
     x = catzRocket.sharedAssets.catzRocketContainer.x - 55 * c + 3 * s
     y = catzRocket.sharedAssets.catzRocketContainer.y - 3 * c - 55 * s
   } else {
@@ -1428,7 +1385,7 @@ function updateVertices(): void {
     (catzVertices[2].x - catzVertices[1].x) /
     catzRocket.sharedAssets.catzBounds.width
 
-  if (catzRocket.hasFrenzy(catzRocket.state.catzState)) {
+  if (catzRocket.hasFrenzy(catzRocket.sharedState.catzState)) {
     x = catzRocket.sharedAssets.catzRocketContainer.x + 55 * c - 13 * s
     y = catzRocket.sharedAssets.catzRocketContainer.y + 13 * c + 55 * s
   } else {
@@ -1557,7 +1514,7 @@ function crash(): void {
 export function update(event: createjs.Event): boolean {
   if (!event.paused) {
     let mult = 1
-    if (catzRocket.hasFrenzy(catzRocket.state.catzState)) mult = 2
+    if (catzRocket.hasFrenzy(catzRocket.sharedState.catzState)) mult = 2
     diSpeed =
       (0.3 +
         0.3 *
@@ -1599,7 +1556,7 @@ export function update(event: createjs.Event): boolean {
 
     if (
       !hasHappend.firstFrenzy &&
-      catzRocket.hasFrenzy(catzRocket.state.catzState)
+      catzRocket.hasFrenzy(catzRocket.sharedState.catzState)
     ) {
       store.dispatch({
         type: ACTION_TYPES.HAS_HAPPEND,
@@ -1620,17 +1577,17 @@ export function update(event: createjs.Event): boolean {
     updateThunderClouds()
     updateAttackBird(event)
     drawCollisionModels()
-    if (catzRocket.state.isCrashed) {
+    if (catzRocket.sharedState.isCrashed) {
       crash()
     }
     debugText.text = `rotation ${catzRocket.sharedAssets.catzRocketContainer.rotation}
-    velocity ${catzRocket.state.catzVelocity}
-    fuel  ${catzRocket.state.diamondFuel}
-    frenzyReady: ${catzRocket.state.frenzyReady}
+    velocity ${catzRocket.sharedState.catzVelocity}
+    fuel  ${catzRocket.sharedState.diamondFuel}
+    frenzyReady: ${catzRocket.sharedState.frenzyReady}
     currentDisplacement: ${currentDisplacement}
     currentLevel: ${currentLevel}
     mousedown: ${mousedown}
-    state: ${catzRocket.state.catzState}
+    state: ${catzRocket.sharedState.catzState}
     diamondContainer: ${diamondContainer.x}`
 
     stage.update(event)
@@ -1673,7 +1630,7 @@ export function gotoGameView(): void {
   // eslint-disable-next-line
   gameListener = createjs.Ticker.on('tick', update as (evt: Object) => boolean)
   createjs.Ticker.framerate = 30
-  catzRocket.start(-20)
+  catzRocket.start()
 
   stage.addEventListener('stagemousedown', function onMouseDown() {
     mousedown = true

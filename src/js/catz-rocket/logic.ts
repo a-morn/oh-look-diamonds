@@ -1,26 +1,40 @@
-import * as R from 'ramda'
+/*
+ * Only pure functions
+ */
+
 import debugOptions from '../debug-options'
 import { DiamondEnum } from '../types'
-import { CatzStateEnum, hasFrenzy } from './utils'
+import { CatzStateEnum, State, hasFrenzy, UpdateResult } from './types'
 
 const LIMIT_VELOCITY = 30
 const MAX_DIAMOND_FUEL = 10
+const LOOP_VELOCITY = 2
 
-type UpdateResult = {
-  newState?: CatzStateEnum
-  newRotation?: number
-  newPosition?: {
-    x: number
-    y: number
-  }
+type UpdateInput = {
+  grav: number
+  wind: number
+  delta: number
+  rocketInAnimation: boolean
+  removeAnimationOnRocket: () => void
+  catzRocketContainerY: number
+  rocketRotation: number
+  diamondFuel: number
+  invincibilityCounter: number
+  catzVelocity: number
+  heightOffset: number
+  catzState: CatzStateEnum
+  frenzyCount: number
+  frenzyTimer: number
+  frenzyReady: boolean
+  isWounded: boolean
 }
 
 const fuelConsumption = {
-  [CatzStateEnum.Normal]: 0,
+  [CatzStateEnum.Normal]: 0.25,
   [CatzStateEnum.Uploop]: 2,
-  [CatzStateEnum.Downloop]: 0.7,
+  [CatzStateEnum.Downloop]: 0.25,
   [CatzStateEnum.SecondUploop]: 3,
-  [CatzStateEnum.SecondDownloop]: 0.8,
+  [CatzStateEnum.SecondDownloop]: 0.25,
   [CatzStateEnum.Slingshot]: 1,
   [CatzStateEnum.TerminalVelocity]: 0,
   [CatzStateEnum.EmergencyBoost]: 3.5,
@@ -33,21 +47,6 @@ const fuelConsumption = {
   [CatzStateEnum.OutOfFuelUpsideDown]: 0,
 }
 
-export const state = {
-  invincibilityCounter: 0,
-  diamondFuel: 5,
-  catzState: CatzStateEnum.Normal,
-  catzPreviousState: CatzStateEnum.Normal,
-  catzVelocity: -20,
-  isHit: false,
-  isWounded: false,
-  frenzyTimer: 0,
-  frenzyCount: 0,
-  heightOffset: 0,
-  isCrashed: false,
-  frenzyReady: false,
-}
-
 const crashBorder = {
   top: -1000,
   bottom: 450,
@@ -58,171 +57,130 @@ export function setCrashBorders(top: number, bottom: number): void {
   crashBorder.bottom = bottom
 }
 
-function debugHandler(): void {
-  if (debugOptions.infiniteFuel && state.diamondFuel < 1) {
-    state.diamondFuel = 1
+function infiniteFuel({ diamondFuel }: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  if (debugOptions.infiniteFuel && diamondFuel < 1) {
+    result.diamondFuel = 1
   }
+  return result
 }
 
-function invincibilityCountDown(minusTime: number): void {
-  if (state.invincibilityCounter > 0) {
-    state.invincibilityCounter -= minusTime
-  }
-}
-
-function diamondFuelLossPerTime(time: number): void {
-  if (state.diamondFuel > 5) {
-    state.diamondFuel -= time / 1000
-  }
-
-  if (state.diamondFuel > 10) {
-    state.diamondFuel -= time / 20
-  }
+function invincibilityCountDown({
+  delta,
+  invincibilityCounter,
+}: UpdateInput): UpdateResult {
+  return { invincibilityCounter: Math.max(0, invincibilityCounter - delta) }
 }
 
 function updateBase(
-  gravWindSum: number,
-  delta: number,
-  canChangeToTerminal: boolean,
-  fellOff: boolean,
-  rotate: boolean,
-  rocketInAnimation: boolean,
-  rocketRotation: number
+  {
+    grav,
+    wind,
+    delta,
+    rocketInAnimation,
+    rocketRotation,
+    catzVelocity,
+    heightOffset,
+  }: UpdateInput,
+  canChangeToTerminal = true,
+  isFalling = false,
+  canRotate = true,
+  gravMultiplier = 1,
+  windMultiplier = 1
 ): UpdateResult {
-  state.catzVelocity += (gravWindSum * delta) / 1000
-  state.heightOffset += (20 * state.catzVelocity * delta) / 1000
-  let newState: CatzStateEnum | undefined
-  let newRotation: number | undefined
-  if (state.catzVelocity >= LIMIT_VELOCITY) {
-    state.catzVelocity = LIMIT_VELOCITY
+  const result: UpdateResult = {}
+  result.catzVelocity = Math.min(
+    catzVelocity +
+      ((gravMultiplier * grav + windMultiplier * wind) * delta) / 1000,
+    LIMIT_VELOCITY
+  )
+  result.heightOffset = heightOffset + (20 * catzVelocity * delta) / 1000
+  if (result.catzVelocity === LIMIT_VELOCITY) {
     if (canChangeToTerminal) {
-      newState = CatzStateEnum.TerminalVelocity
+      result.catzState = CatzStateEnum.TerminalVelocity
     }
   }
 
-  if (rotate && !rocketInAnimation) {
-    if (!fellOff || rocketRotation <= -270 || rocketRotation > -90) {
-      newRotation = (Math.atan(state.catzVelocity / 40) * 360) / 3.14
+  if (canRotate && !rocketInAnimation) {
+    if (!isFalling || rocketRotation <= -270 || rocketRotation > -90) {
+      result.newRotation = (Math.atan(catzVelocity / 40) * 360) / 3.14
     }
     if (rocketRotation <= -180 && rocketRotation > -270) {
-      newRotation = (-Math.atan(state.catzVelocity / 40) * 360) / 3.14
+      result.newRotation = (-Math.atan(result.catzVelocity / 40) * 360) / 3.14
     }
   }
 
-  return { newState, newRotation }
+  return result
 }
 
-function checkFuel(
-  mightBeUpsideDown: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  if (state.diamondFuel === 0) {
+function checkFuel({
+  removeAnimationOnRocket,
+  rocketRotation,
+  diamondFuel,
+}: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  if (diamondFuel === 0) {
     // glass.gotoAndPlay('outOfFuel');
-
     removeAnimationOnRocket()
-    if (mightBeUpsideDown) {
-      if (rocketRotation <= -90 && rocketRotation >= -270) {
-        state.isHit = true
-        return {
-          newState: CatzStateEnum.OutOfFuelUpsideDown,
-        }
-      }
-      return { newState: CatzStateEnum.OutOfFuel }
+    if (rocketRotation <= -90 && rocketRotation >= -270) {
+      result.isHit = true
+      result.catzState = CatzStateEnum.OutOfFuelUpsideDown
+    } else {
+      result.catzState = CatzStateEnum.OutOfFuel
     }
-    return { newState: CatzStateEnum.OutOfFuel }
   }
 
-  return {}
+  return result
 }
 
-function updateNormal(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
+function updateNormal(input: UpdateInput): UpdateResult {
   return {
-    ...updateBase(
-      grav + wind,
-      delta,
-      true,
-      false,
-      true,
-      rocketInAnimation,
-      rocketRotation
-    ),
-    ...checkFuel(false, removeAnimationOnRocket, rocketRotation),
+    ...updateBase(input),
+    ...checkFuel(input),
   }
 }
 
-export function catzEndLoop(): CatzStateEnum {
-  switch (state.catzState) {
+export function catzEndLoop(catzState: CatzStateEnum): UpdateResult {
+  const result: UpdateResult = {}
+  switch (catzState) {
     case CatzStateEnum.Uploop:
     case CatzStateEnum.SecondUploop:
     case CatzStateEnum.TerminalVelocity:
     case CatzStateEnum.EmergencyBoost: {
-      return CatzStateEnum.Normal
+      result.catzState = CatzStateEnum.Normal
+      break
     }
     case CatzStateEnum.SecondDownloop: {
-      return CatzStateEnum.Slingshot
+      result.catzState = CatzStateEnum.Slingshot
+      break
     }
     case CatzStateEnum.Downloop: {
-      return CatzStateEnum.SlammerReady
+      result.catzState = CatzStateEnum.SlammerReady
+      break
     }
     case CatzStateEnum.FrenzyUploop: {
-      return CatzStateEnum.Frenzy
+      result.catzState = CatzStateEnum.Frenzy
+      break
     }
     default:
-      return CatzStateEnum.Normal
+      result.catzState = CatzStateEnum.Normal
+      break
   }
+  return result
 }
 
-function updateFellOff(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  rocketRotation: number
-): UpdateResult {
-  const newStateEndLoop = catzEndLoop()
-  if (newStateEndLoop) {
-    return { newState: newStateEndLoop }
-  }
-  return updateBase(
-    grav + wind,
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateFellOff(input: UpdateInput): UpdateResult {
+  const newStateEndLoop = catzEndLoop(input.catzState)
+  return { ...updateBase(input, false, true), ...newStateEndLoop }
 }
 
-function updateOutOfFuel(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  rocketRotation: number
-): UpdateResult {
-  const newStateUpdateBase = updateBase(
-    grav + wind,
-    delta,
-    false,
-    true,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateOutOfFuel(input: UpdateInput): UpdateResult {
+  const newStateUpdateBase = updateBase(input, false, true, false)
 
-  if (state.diamondFuel > 0) {
+  if (input.diamondFuel > 0) {
     return {
       ...newStateUpdateBase,
-      newState: CatzStateEnum.Normal,
+      catzState: CatzStateEnum.Normal,
     }
   }
 
@@ -231,260 +189,167 @@ function updateOutOfFuel(
   }
 }
 
-function updateOutOfFuelUpsideDown(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  rocketRotation: number
-): UpdateResult {
-  return updateBase(
-    grav + wind,
-    delta,
-    false,
-    true,
-    false,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateOutOfFuelUpsideDown(input: UpdateInput): UpdateResult {
+  return updateBase(input, false, true, false)
 }
 
-function updateFrenzy2(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  rocketRotation: number
-): UpdateResult {
-  return updateBase(
-    0.5 * (grav + wind),
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateFrenzy2(input: UpdateInput): UpdateResult {
+  return updateBase(input, false, false, true, 0.5, 0.5)
 }
 
-function updateFrenzyUploop(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  rocketRotation: number
-): UpdateResult {
-  return updateBase(
-    -0.5 * (2.3 * grav - wind),
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateFrenzyUploop(input: UpdateInput): UpdateResult {
+  return updateBase(input, false, false, true, -1.1, 1.1)
 }
 
-function updateTerminal(
-  delta: number,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  state.heightOffset += (20 * state.catzVelocity * delta) / 1000
+function updateTerminal(input: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  result.heightOffset =
+    input.heightOffset + (20 * input.catzVelocity * input.delta) / 1000
+  result.newRotation = -280
   return {
-    ...checkFuel(false, removeAnimationOnRocket, rocketRotation),
-    newRotation: -280,
+    ...checkFuel(input),
+    ...result,
   }
 }
 
-function updateEmergency(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  const newStateUpdateBase = updateBase(
-    -10 * grav - 3.7 * wind,
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
-  if (newStateUpdateBase) {
-    return newStateUpdateBase
-  }
+function updateEmergency(input: UpdateInput): UpdateResult {
+  const newStateUpdateBase = updateBase(input, false, false, true, -10, 3.7)
+  const result: UpdateResult = {}
 
-  if (rocketRotation < 0) {
-    return {
-      ...checkFuel(false, removeAnimationOnRocket, rocketRotation),
-      newState: CatzStateEnum.Uploop,
-    }
+  if (input.rocketRotation < 0) {
+    result.catzState = CatzStateEnum.Uploop
   }
-  return checkFuel(false, removeAnimationOnRocket, rocketRotation)
+  return { ...checkFuel(input), ...newStateUpdateBase, ...result }
 }
 
-function updateDownloop(
-  grav: number,
-  wind: number,
-  delta: number,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  state.catzVelocity +=
-    (((2 - 8 * Math.sin(rocketRotation)) * grav + 6 * wind) * delta) / 1000 +
+function updateDownloop(input: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  result.catzVelocity =
+    input.catzVelocity +
+    (((LOOP_VELOCITY - 8 * Math.sin(input.rocketRotation)) * input.grav +
+      6 * input.wind) *
+      input.delta) /
+      1000 +
     0.4
-  return checkFuel(true, removeAnimationOnRocket, rocketRotation)
+  return { ...checkFuel(input), ...result }
 }
 
-function updateSlammer(
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  if (rocketRotation < -250) {
-    removeAnimationOnRocket()
-    state.catzVelocity = LIMIT_VELOCITY
+function updateSlammer(input: UpdateInput): UpdateResult {
+  if (input.rocketRotation < -250) {
+    input.removeAnimationOnRocket()
+    const catzVelocity = LIMIT_VELOCITY
     return {
-      ...checkFuel(true, removeAnimationOnRocket, rocketRotation),
-      newState: CatzStateEnum.TerminalVelocity,
+      ...checkFuel(input),
+      catzState: CatzStateEnum.TerminalVelocity,
+      catzVelocity,
     }
   }
-  return checkFuel(true, removeAnimationOnRocket, rocketRotation)
+  return checkFuel(input)
 }
 
-function updateUploop(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  const updateBaseResult = updateBase(
-    -(3.2 * grav - wind),
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateUploop(input: UpdateInput): UpdateResult {
+  const updateBaseResult = updateBase(input, false, false, true, -3.2, -3.2)
+  const result: UpdateResult = {}
 
-  const downloop =
-    rocketRotation < -60 ? { newState: CatzStateEnum.Downloop } : {}
+  if (input.rocketRotation < -60) {
+    result.catzState = CatzStateEnum.Downloop
+  }
 
   return {
     ...updateBaseResult,
-    ...downloop,
-    ...checkFuel(false, removeAnimationOnRocket, rocketRotation),
+    ...checkFuel(input),
+    ...result,
   }
 }
 
-function updateSecondUploop(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  const updateBaesResult = updateBase(
-    -(5.5 * grav - 2 * wind),
-    delta,
-    false,
-    false,
-    true,
-    rocketInAnimation,
-    rocketRotation
-  )
+function updateSecondUploop(input: UpdateInput): UpdateResult {
+  const updateBaesResult = updateBase(input, false, false, true, -5.5, -2)
 
-  const newRotation = !rocketRotation
-    ? (Math.atan(state.catzVelocity / 40) * 360) / 3.14
-    : undefined
-  if (rocketRotation < -60) {
-    state.heightOffset +=
-      110 * Math.sin(((rocketRotation + 110) / 360) * 2 * Math.PI)
+  const result: UpdateResult = {}
+  if (!input.rocketInAnimation) {
+    result.newRotation = (Math.atan(input.catzVelocity / 40) * 360) / 3.14
   }
-  // return CatzStateEnum.SecondDownloop
+  if (result.newRotation || input.rocketRotation < -60) {
+    result.heightOffset =
+      input.heightOffset +
+      110 *
+        Math.sin(
+          (((result.newRotation || input.rocketRotation) + 110) / 360) *
+            2 *
+            Math.PI
+        )
+    result.catzState = CatzStateEnum.SecondDownloop
+  }
   return {
     ...updateBaesResult,
-    ...checkFuel(false, removeAnimationOnRocket, rocketRotation),
-    newRotation,
+    ...checkFuel(input),
+    ...result,
   }
 }
 
-function updateSecondDownloop(
-  grav: number,
-  wind: number,
-  delta: number,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  if (wind >= 0) {
-    state.heightOffset += ((150 + 12 * wind) * delta) / 1000
+function updateSecondDownloop(input: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  if (input.wind >= 0) {
+    result.heightOffset =
+      input.heightOffset + ((150 + 12 * input.wind) * input.delta) / 1000
   } else {
-    state.heightOffset += ((150 + 40 * wind) * delta) / 1000
+    result.heightOffset =
+      input.heightOffset + ((150 + 40 * input.wind) * input.delta) / 1000
   }
 
-  return checkFuel(true, removeAnimationOnRocket, rocketRotation)
+  return checkFuel(input)
 }
 
-function updateSlingshot(
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  if (rocketRotation < -400) {
-    removeAnimationOnRocket()
-    state.heightOffset -=
-      110 * Math.sin(((rocketRotation + 110) / 360) * 2 * Math.PI)
-    state.catzVelocity = -20
-
-    return {
-      ...checkFuel(true, removeAnimationOnRocket, rocketRotation),
-      newState: CatzStateEnum.Normal,
-    }
+function updateSlingshot(input: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  if (input.rocketRotation < -400) {
+    input.removeAnimationOnRocket()
+    result.heightOffset =
+      input.heightOffset -
+      110 * Math.sin(((input.rocketRotation + 110) / 360) * 2 * Math.PI)
+    result.catzVelocity = -20
+    result.catzState = CatzStateEnum.Normal
   }
   return {
-    ...checkFuel(true, removeAnimationOnRocket, rocketRotation),
+    ...checkFuel(input),
+    ...result,
   }
 }
 
-function updateFrenzy(delta: number): UpdateResult {
-  state.frenzyReady =
-    !hasFrenzy(state.catzState) &&
-    state.frenzyCount > 0 &&
-    state.diamondFuel >= MAX_DIAMOND_FUEL
+function updateFrenzy(input: UpdateInput): UpdateResult {
+  const result: UpdateResult = {}
+  result.frenzyReady =
+    !hasFrenzy(input.catzState) &&
+    input.frenzyCount > 0 &&
+    input.diamondFuel >= MAX_DIAMOND_FUEL
 
   let newState: CatzStateEnum | undefined
 
-  if (state.catzState === CatzStateEnum.Frenzy) {
-    state.frenzyTimer += delta
-    if (state.frenzyTimer > 1500) {
-      state.frenzyCount = 0
-      state.frenzyTimer = 0
-      newState = CatzStateEnum.Normal
+  if (input.catzState === CatzStateEnum.Frenzy) {
+    result.frenzyTimer = input.frenzyTimer + input.delta
+    if (input.frenzyTimer > 1500) {
+      result.frenzyCount = 0
+      result.frenzyTimer = 0
+      result.catzState = CatzStateEnum.Normal
     }
-  } else if (state.frenzyReady) {
-    if (state.frenzyTimer > 500) {
-      if (state.catzState === CatzStateEnum.SecondDownloop) {
-        newState = CatzStateEnum.Slingshot
+  } else if (input.frenzyReady) {
+    if (input.frenzyTimer > 500) {
+      if (input.catzState === CatzStateEnum.SecondDownloop) {
+        result.catzState = CatzStateEnum.Slingshot
       }
       if (
-        state.catzState !== CatzStateEnum.Downloop &&
-        state.catzState !== CatzStateEnum.SlammerReady &&
-        state.catzState !== CatzStateEnum.Slammer &&
-        state.catzState !== CatzStateEnum.Slingshot
+        input.catzState !== CatzStateEnum.Downloop &&
+        input.catzState !== CatzStateEnum.SlammerReady &&
+        input.catzState !== CatzStateEnum.Slammer &&
+        input.catzState !== CatzStateEnum.Slingshot
       ) {
         // glass.gotoAndPlay('frenzy');
-        state.diamondFuel = MAX_DIAMOND_FUEL / 2
-        state.isWounded = false
-        state.frenzyTimer = 0
+        result.diamondFuel = MAX_DIAMOND_FUEL / 2
+        result.isWounded = false
+        result.frenzyTimer = 0
         if (
-          state.catzState === CatzStateEnum.Uploop ||
-          state.catzState === CatzStateEnum.SecondUploop
+          input.catzState === CatzStateEnum.Uploop ||
+          input.catzState === CatzStateEnum.SecondUploop
         ) {
           newState = CatzStateEnum.FrenzyUploop
         }
@@ -492,258 +357,189 @@ function updateFrenzy(delta: number): UpdateResult {
       }
     }
 
-    state.frenzyTimer += delta
+    result.frenzyTimer = input.frenzyTimer + input.delta
   }
-  return { newState }
+  return result
 }
 
-function updateDependingOnState(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  rocketRotation: number
-): UpdateResult {
-  switch (state.catzState) {
+function updateDependingOnState(input: UpdateInput): UpdateResult {
+  let method: (input: UpdateInput) => UpdateResult
+  switch (input.catzState) {
     case CatzStateEnum.Normal: {
-      const foo = updateNormal(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
-      return foo
+      method = updateNormal
+      break
     }
     case CatzStateEnum.FellOffRocket:
-      return updateFellOff(grav, wind, delta, rocketInAnimation, rocketRotation)
+      method = updateFellOff
+      break
     case CatzStateEnum.OutOfFuel:
-      return updateOutOfFuel(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        rocketRotation
-      )
+      method = updateOutOfFuel
+      break
     case CatzStateEnum.OutOfFuelUpsideDown:
-      return updateOutOfFuelUpsideDown(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        rocketRotation
-      )
+      method = updateOutOfFuelUpsideDown
+      break
     case CatzStateEnum.Frenzy:
-      return updateFrenzy2(grav, wind, delta, rocketInAnimation, rocketRotation)
+      method = updateFrenzy2
+      break
     case CatzStateEnum.FrenzyUploop:
-      return updateFrenzyUploop(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        rocketRotation
-      )
+      method = updateFrenzyUploop
+      break
     case CatzStateEnum.TerminalVelocity:
-      return updateTerminal(delta, removeAnimationOnRocket, rocketRotation)
+      method = updateTerminal
+      break
     case CatzStateEnum.EmergencyBoost:
-      return updateEmergency(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
+      method = updateEmergency
+      break
     case CatzStateEnum.Uploop:
-      return updateUploop(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
+      method = updateUploop
+      break
     case CatzStateEnum.Downloop:
     case CatzStateEnum.SlammerReady:
-      return updateDownloop(
-        grav,
-        wind,
-        delta,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
+      method = updateDownloop
+      break
     case CatzStateEnum.Slammer:
-      return updateSlammer(removeAnimationOnRocket, rocketRotation)
+      method = updateSlammer
+      break
     case CatzStateEnum.SecondUploop:
-      return updateSecondUploop(
-        grav,
-        wind,
-        delta,
-        rocketInAnimation,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
+      method = updateSecondUploop
+      break
     case CatzStateEnum.SecondDownloop:
-      return updateSecondDownloop(
-        grav,
-        wind,
-        delta,
-        removeAnimationOnRocket,
-        rocketRotation
-      )
+      method = updateSecondDownloop
+      break
     case CatzStateEnum.Slingshot:
-      return updateSlingshot(removeAnimationOnRocket, rocketRotation)
+      method = updateSlingshot
+      break
     default:
-      throw new Error(`Unhandled case: ${state.catzState}`)
+      throw new Error(`Unhandled case: ${input.catzState}`)
   }
+
+  return method(input)
 }
 
-export function update(
-  grav: number,
-  wind: number,
-  delta: number,
-  rocketInAnimation: boolean,
-  removeAnimationOnRocket: () => void,
-  catzRocketContainerY: number,
-  rocketRotation: number
-): UpdateResult {
-  console.log(state.catzVelocity)
-  debugHandler()
-  invincibilityCountDown(delta)
-  diamondFuelLossPerTime(delta)
+export function update(input: UpdateInput): UpdateResult {
+  const infiniteFuelResult = infiniteFuel(input)
+  invincibilityCountDown(input)
   const updateResult = {
-    ...updateFrenzy(delta),
-    ...updateDependingOnState(
-      grav,
-      wind,
-      delta,
-      rocketInAnimation,
-      removeAnimationOnRocket,
-      rocketRotation
-    ),
+    ...updateFrenzy(input),
+    ...updateDependingOnState(input),
   }
-  const newPosition = {
-    x: 0,
-    y: 0,
-  }
-  if (state.catzState !== CatzStateEnum.OutOfFuelUpsideDown) {
+  const result: UpdateResult = {}
+  if (input.catzState !== CatzStateEnum.OutOfFuelUpsideDown) {
     if (
-      state.catzState !== CatzStateEnum.SecondDownloop &&
-      state.catzState !== CatzStateEnum.Slingshot
+      input.catzState !== CatzStateEnum.SecondDownloop &&
+      input.catzState !== CatzStateEnum.Slingshot
     ) {
-      newPosition.x =
-        200 + Math.cos(((rocketRotation + 90) / 360) * 2 * Math.PI) * 160
-      newPosition.y =
-        200 +
-        Math.sin(((rocketRotation + 90) / 360) * 2 * Math.PI) * 210 +
-        state.heightOffset
+      result.newPosition = {
+        x:
+          200 +
+          Math.cos(((input.rocketRotation + 90) / 360) * 2 * Math.PI) * 160,
+        y:
+          200 +
+          Math.sin(((input.rocketRotation + 90) / 360) * 2 * Math.PI) * 210 +
+          input.heightOffset,
+      }
     } else {
-      newPosition.x =
-        255 + Math.cos(((rocketRotation + 90) / 360) * 2 * Math.PI) * 80
-      newPosition.y =
-        200 +
-        Math.sin(((rocketRotation + 90) / 360) * 2 * Math.PI) * 100 +
-        state.heightOffset
+      result.newPosition = {
+        x:
+          255 +
+          Math.cos(((input.rocketRotation + 90) / 360) * 2 * Math.PI) * 80,
+        y:
+          200 +
+          Math.sin(((input.rocketRotation + 90) / 360) * 2 * Math.PI) * 100 +
+          input.heightOffset,
+      }
     }
   }
 
   if (
-    catzRocketContainerY > crashBorder.bottom ||
-    catzRocketContainerY < crashBorder.top
+    input.catzRocketContainerY > crashBorder.bottom ||
+    input.catzRocketContainerY < crashBorder.top
   ) {
-    state.isCrashed = true
+    result.isCrashed = true
   }
-  state.diamondFuel -= (fuelConsumption[state.catzState] * delta) / 1000
-  state.diamondFuel = Math.max(state.diamondFuel, 0)
+  result.diamondFuel = Math.max(
+    input.diamondFuel - (fuelConsumption[input.catzState] * input.delta) / 1000,
+    0
+  )
 
-  return { ...updateResult, newPosition }
+  return {
+    ...updateResult,
+    ...result,
+    ...infiniteFuelResult,
+  }
 }
 
-export function reset(): void {
-  state.frenzyCount = 0
-  state.diamondFuel = 0
-  state.heightOffset = 0
-  state.catzVelocity = -20
-}
+export function pickupDiamond(input: State, size: DiamondEnum): UpdateResult {
+  const result: UpdateResult = {}
 
-export function start(velocity: number): void {
-  state.isWounded = false
-  state.isHit = false
-  state.isCrashed = false
-  state.catzVelocity = velocity
-  state.diamondFuel = 4
-}
-
-export function pickupDiamond(size: DiamondEnum): void {
-  if (state.diamondFuel < 10 && state.catzState !== CatzStateEnum.Frenzy) {
+  if (input.diamondFuel < 10 && input.catzState !== CatzStateEnum.Frenzy) {
     switch (size) {
       case DiamondEnum.shard:
-        state.diamondFuel += 0.2
-        state.frenzyCount += 0.1
+        result.diamondFuel = input.diamondFuel + 0.2
+        result.frenzyCount = input.frenzyCount + 0.1
         break
       case DiamondEnum.great:
-        state.diamondFuel += 2
-        state.frenzyCount += 5
+        result.diamondFuel = input.diamondFuel + 2
+        result.frenzyCount = input.frenzyCount + 5
         break
       default:
-        throw new Error(`Unhandled case: ${state.catzState}`)
+        throw new Error(`Unhandled case: ${size}`)
     }
   }
+  return result
 }
 
-export function loopDone(rocketRotation: number): CatzStateEnum {
-  if (state.isWounded) {
-    state.isWounded = false
+export function loopDone(
+  isWounded: boolean,
+  catzState: CatzStateEnum,
+  rocketRotation: number
+): UpdateResult {
+  const result: UpdateResult = {}
+  if (isWounded) {
+    result.isWounded = false
   }
 
-  let newState: CatzStateEnum | undefined
-
-  if (state.catzState === CatzStateEnum.SlammerReady) {
-    newState = CatzStateEnum.Normal
-    state.catzVelocity = Math.tan((rocketRotation * 3.14) / 360) * 40
+  if (catzState === CatzStateEnum.SlammerReady) {
+    result.catzState = CatzStateEnum.Normal
+    result.catzVelocity = Math.tan((rocketRotation * 3.14) / 360) * 40
   } else {
-    state.catzVelocity = Math.tan((rocketRotation * 3.14) / 360) * 40
-    newState = CatzStateEnum.SecondUploop
+    result.catzState = CatzStateEnum.SecondUploop
+    result.catzVelocity = Math.tan((rocketRotation * 3.14) / 360) * 40
   }
 
-  return newState
+  return result
 }
 
-export function canCollide(): boolean {
-  return (
-    state.catzState !== CatzStateEnum.FellOffRocket &&
-    !hasFrenzy(state.catzState)
-  )
+export function canCollide(catzState: CatzStateEnum): boolean {
+  return catzState !== CatzStateEnum.FellOffRocket && !hasFrenzy(catzState)
 }
 
-export function catzUp(rocketRotation: number): CatzStateEnum | null {
-  let newState: CatzStateEnum | null = null
-  if (
-    state.diamondFuel > 0 &&
-    state.catzState !== CatzStateEnum.FellOffRocket
-  ) {
-    if (state.catzState === CatzStateEnum.Normal) {
-      state.diamondFuel -= 0.25
-      state.catzVelocity -= 2
-      newState = CatzStateEnum.Uploop
-    }
-    if (state.catzState === CatzStateEnum.Frenzy) {
-      state.catzVelocity -= 2
-      newState = CatzStateEnum.FrenzyUploop
-    }
-    if (state.catzState === CatzStateEnum.TerminalVelocity) {
-      newState = CatzStateEnum.EmergencyBoost
-    }
+export function catzUp(
+  { diamondFuel, catzState, catzVelocity }: State,
+  rocketRotation: number
+): UpdateResult {
+  const result: UpdateResult = {}
+  if (diamondFuel > 0 && catzState !== CatzStateEnum.FellOffRocket) {
     if (
-      state.catzState === CatzStateEnum.SlammerReady &&
-      rocketRotation > -250
+      catzState === CatzStateEnum.Normal ||
+      catzState === CatzStateEnum.Frenzy
     ) {
-      newState = CatzStateEnum.Slammer
+      result.catzVelocity = catzVelocity - LOOP_VELOCITY
+      if (catzState === CatzStateEnum.Normal) {
+        result.catzState = CatzStateEnum.Uploop
+      }
+      if (catzState === CatzStateEnum.Frenzy) {
+        result.catzState = CatzStateEnum.FrenzyUploop
+      }
+    }
+    if (catzState === CatzStateEnum.TerminalVelocity) {
+      result.catzState = CatzStateEnum.EmergencyBoost
+    }
+    if (catzState === CatzStateEnum.SlammerReady && rocketRotation > -250) {
+      result.catzState = CatzStateEnum.Slammer
     }
   }
 
   // glass.gotoAndPlay('outOfFuel');
-  return newState
+  return result
 }
